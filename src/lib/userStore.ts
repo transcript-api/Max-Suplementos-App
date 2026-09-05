@@ -4,7 +4,8 @@ import { OnboardingProfileInput, generatePersonalizedObjectives } from './object
 import { calculateLevelFromXP, calculateDailyForm } from './gamification';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
-export { authService, AppUser } from './authService';
+export { authService } from './authService';
+export type { AppUser } from './authService';
 
 export interface UserAppState {
   userId: string;
