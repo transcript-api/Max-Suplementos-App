@@ -13,25 +13,31 @@ interface MaxAiTabProps {
   initialPrompt?: string;
   currentProtein: number;
   streakDays: number;
+  userName?: string;
 }
 
 export const MaxAiTab: React.FC<MaxAiTabProps> = ({
   initialPrompt,
   currentProtein,
   streakDays,
+  userName = 'Atleta',
 }) => {
+  const isNew = streakDays === 0;
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'm1',
       sender: 'ai',
-      text: `Hola Santiago, veo que hoy vas excelente. Ya registraste tu entrenamiento de empuje y llevas ${currentProtein}/150 g de proteína. Te faltan solo 22 g para cerrar tu Form diaria y asegurar el bonus de racha. ¿En qué te puedo asesorar ahora?`,
-      timestamp: '17:42',
+      text: isNew
+        ? `¡Hola ${userName}! Bienvenido a MAX AI, tu coach de rendimiento y nutrición deportiva. Hoy inicia tu camino en MAXMIND. Llevas ${currentProtein}g de proteína registrados hoy. Estoy listo para ayudarte a armar comidas con lo que tengas en tu heladera, resolver dudas de suplementos y alcanzar tu primera racha. ¿En qué te puedo asesorar ahora?`
+        : `Hola ${userName}, veo que hoy vas excelente. Llevas ${currentProtein}g de proteína registrados y una racha activa de ${streakDays} días. ¿En qué te puedo asesorar ahora?`,
+      timestamp: 'Ahora',
       options: [
-        { title: '1. Yogur griego natural (200g) + 1 scoop Whey', protein: '32g PROT', calories: '185 kcal' },
-        { title: '2. Ensalada de atún al agua con 2 claras', protein: '34g PROT', calories: '190 kcal' },
-        { title: '3. Tortilla de 4 claras con 50g pechuga', protein: '28g PROT', calories: '160 kcal' },
+        { title: '1. Opciones altas en proteína con ingredientes simples', protein: '25-35g PROT', calories: '180-250 kcal' },
+        { title: '2. Ensalada o bowl rápido de atún con huevos', protein: '34g PROT', calories: '190 kcal' },
+        { title: '3. Tortilla proteica de claras y vegetales', protein: '28g PROT', calories: '160 kcal' },
       ],
-      quickReplies: ['Tengo yogur y proteína', 'Solo atún y huevos', '¿Qué entreno mañana?']
+      quickReplies: ['¿Cómo organizar mis comidas de hoy?', 'Tengo huevos y pollo en casa', '¿Qué suplementos me convienen?']
     }
   ]);
 

@@ -3,6 +3,23 @@
  * Nutrición deportiva, estimación de comidas y sugerencias de macros
  */
 
+export interface MicronutrientItem {
+  name: string;
+  amount: string;
+  dailyValuePct: number;
+  category: 'mineral' | 'vitamina' | 'aminoacido';
+  role: string;
+}
+
+export interface MicronutrientBreakdown {
+  isComplexMenu: boolean;
+  densityScore: number;
+  bioavailabilityNote: string;
+  minerals: MicronutrientItem[];
+  vitamins: MicronutrientItem[];
+  aminoAcids: MicronutrientItem[];
+}
+
 export interface MealSuggestion {
   mealName: string;
   protein: number;
@@ -11,6 +28,8 @@ export interface MealSuggestion {
   ingredientsUsed: string[];
   instructions: string;
   reason: string;
+  isComplexMenu?: boolean;
+  micronutrients?: MicronutrientBreakdown;
 }
 
 export interface FoodEstimateResult {

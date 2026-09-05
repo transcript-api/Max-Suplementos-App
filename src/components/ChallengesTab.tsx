@@ -10,8 +10,8 @@ interface ChallengesTabProps {
 export const ChallengesTab: React.FC<ChallengesTabProps> = ({
   xp,
   streakDays,
-  userName = 'Santiago',
-  isDemoMode = true,
+  userName = 'Atleta',
+  isDemoMode = false,
 }) => {
   const [activeTab, setActiveTab] = useState<'retos' | 'ranking' | 'recompensas' | 'suplementos'>('retos');
   const [rankingPeriod, setRankingPeriod] = useState<'semanal' | 'mensual' | 'global'>('semanal');
@@ -297,35 +297,39 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           <div className="p-3.5 bg-[#102A56]/60 border border-[#2563EB]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-[#2563EB] text-white flex items-center justify-center font-bold flex-shrink-0">
-                #127
+                {isDemoMode ? '#127' : '#1'}
               </div>
               <div>
                 <span className="text-xs font-bold text-white block">
-                  {isDemoMode ? '¡A solo 12 XP de superar el puesto #126!' : 'Comenzando tu ascenso en la liga'}
+                  {isDemoMode ? '¡A solo 12 XP de superar el puesto #126!' : 'Liga Bronce · Atleta en Iniciación'}
                 </span>
                 <span className="text-[11px] text-[#CBD5E1]">
                   {isDemoMode
                     ? 'Cumple una tarea diaria más hoy para adelantar a Mateo R. (4.872 XP).'
-                    : 'Registra tus tareas diarias de hoy para escalar en la tabla global.'}
+                    : 'Registra tus primeros objetivos diarios para sumar XP y ascender a Liga Plata.'}
                 </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-lg bg-[#2563EB]/20 text-[#3B82F6] text-xs font-black border border-[#2563EB]/40 whitespace-nowrap">
-              {isDemoMode ? '+12 XP' : '¡Subí ya!'}
+              {isDemoMode ? '+12 XP' : '¡Empezá hoy!'}
             </span>
           </div>
 
           <div className="space-y-2">
-            {[
+            {(isDemoMode ? [
               { rank: 1, name: 'Lucas F.', xp: 5120, badge: '🥇', level: 'Nivel 8', delta: '+150' },
               { rank: 2, name: 'Camila V.', xp: 5040, badge: '🥈', level: 'Nivel 8', delta: '+120' },
               { rank: 3, name: 'Martín G.', xp: 4980, badge: '🥉', level: 'Nivel 7', delta: '+95' },
               { rank: 125, name: 'Ignacio M.', xp: 4890, badge: '', level: 'Nivel 7', delta: '+30' },
               { rank: 126, name: 'Mateo R.', xp: 4872, badge: '', level: 'Nivel 7', delta: '+15' },
-              { rank: 127, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: isDemoMode ? 'Nivel 7' : 'Nivel 1', isYou: true, delta: '+45' },
+              { rank: 127, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: 'Nivel 7', isYou: true, delta: '+45' },
               { rank: 128, name: 'Valentin D.', xp: 4840, badge: '', level: 'Nivel 7', delta: '+20' },
               { rank: 129, name: 'Agustín P.', xp: 4815, badge: '', level: 'Nivel 6', delta: '+10' },
-            ].map((atleta) => (
+            ] : [
+              { rank: 1, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: 'Nivel 1 Básico', isYou: true, delta: '+0' },
+              { rank: 2, name: 'Nicolás B.', xp: Math.max(0, xp - 10), badge: '', level: 'Nivel 1 Básico', delta: '+0' },
+              { rank: 3, name: 'Sofía M.', xp: Math.max(0, xp - 20), badge: '', level: 'Nivel 1 Básico', delta: '+0' },
+            ]).map((atleta) => (
               <div
                 key={atleta.rank}
                 className={`flex items-center justify-between p-3 rounded-xl border transition-all ${

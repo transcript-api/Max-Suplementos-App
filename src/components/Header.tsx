@@ -1,5 +1,6 @@
 import React from 'react';
 import { SyncStatus } from '../lib/offlineSync';
+import { MaxMindLogo } from './MaxMindLogo';
 
 interface HeaderProps {
   currentTab: string;
@@ -17,14 +18,14 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   currentTab,
   onProfileClick,
-  streakDays = 12,
+  streakDays = 0,
   isDark = true,
   onToggleDark,
   syncStatus,
   onManualSync,
-  isDemoMode = true,
+  isDemoMode = false,
   onToggleDemoMode,
-  userName = 'Santiago',
+  userName = 'Atleta',
 }) => {
   const getTitle = () => {
     switch (currentTab) {
@@ -35,28 +36,16 @@ export const Header: React.FC<HeaderProps> = ({
       case 'max-ai': return 'MAX AI';
       case 'retos': return 'Retos';
       case 'perfil': return 'Perfil';
-      default: return 'MAXFORM';
+      default: return 'MAXMIND';
     }
   };
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 dark:bg-[#0c0e12]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-[#1d2024] border-slate-200 pt-safe transition-colors duration-200">
       <div className="h-16 px-4 max-w-[1280px] mx-auto flex items-center justify-between">
-        {/* Logo & Marca */}
-        <div className="flex items-center gap-2.5">
-          <img 
-            alt="MAXFORM Logo" 
-            className="h-8 w-auto object-contain rounded-md" 
-            src="https://lh3.googleusercontent.com/aida/AEtjO1W-1OkTB85R5IfT2PGhDWBPbi3ZqqPttYelnE4TRH24XwLRAs-AJhR8X9mXE6u9krPg7ZEgNdnXC0lrGegTojvPP0djaChpq-GNpSk8qW98LjQODzsmInCTIvtPt-pqj15s5Kr29bO_5u4A2KxL-V9JO9wdy5UxqHmCLwLoYcePVaXvoG01PcVcsMNm8Mc3KdS3PbFYyUPWnOAjzzDJbrA_2GMmzUlxcfO3_pP1qEKACZvjkmEoXRj0dU38"
-          />
-          <div className="flex flex-col">
-            <span className="font-headline-md text-headline-md tracking-tight uppercase dark:text-white text-slate-900 font-bold leading-none">
-              MAXFORM
-            </span>
-            <span className="text-[9px] dark:text-[#8d90a0] text-slate-500 font-bold tracking-wider uppercase mt-0.5">
-              Performance System
-            </span>
-          </div>
+        {/* Logo & Marca MAXMIND (Sin fondo) */}
+        <div className="flex items-center">
+          <MaxMindLogo variant="horizontal" size="sm" isDark={isDark} />
         </div>
 
         {/* Indicador de sincronización Offline/Firestore, Sección y Acciones */}
@@ -126,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${isDemoMode ? 'bg-[#3B82F6]' : 'bg-emerald-400'}`}></span>
-              <span>{isDemoMode ? 'Demo' : 'Real (0 XP)'}</span>
+              <span>{isDemoMode ? 'Demo' : 'Nuevo Atleta'}</span>
             </button>
           )}
 

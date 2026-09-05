@@ -24,24 +24,43 @@ export const StatsTab: React.FC<StatsTabProps> = ({
 }) => {
   const [metricView, setMetricView] = useState<'semanal' | 'racha'>('semanal');
 
-  // Datos de cumplimiento porcentual semanal
-  const weeklyComplianceData = [
-    { day: 'Lun', cumplimiento: 82, meta: 80, agua: 100, entrenamiento: 100, sueno: 75 },
-    { day: 'Mar', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
-    { day: 'Mié', cumplimiento: 76, meta: 80, agua: 80, entrenamiento: 100, sueno: 60 },
-    { day: 'Jue', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
-    { day: 'Vie', cumplimiento: 88, meta: 80, agua: 90, entrenamiento: 100, sueno: 80 },
-    { day: 'Sáb', cumplimiento: 92, meta: 80, agua: 100, entrenamiento: 100, sueno: 85 },
-    { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: 90, entrenamiento: 100, sueno: 92 },
-  ];
+  // Datos de cumplimiento porcentual semanal adaptados dinámicamente si es un nuevo atleta
+  const isNewAthlete = streakDays === 0;
+
+  const weeklyComplianceData = isNewAthlete
+    ? [
+        { day: 'Lun', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
+        { day: 'Mar', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
+        { day: 'Mié', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
+        { day: 'Jue', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
+        { day: 'Vie', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
+        { day: 'Sáb', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
+        { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: formScore > 0 ? formScore : 0, entrenamiento: formScore > 0 ? formScore : 0, sueno: 0 },
+      ]
+    : [
+        { day: 'Lun', cumplimiento: 82, meta: 80, agua: 100, entrenamiento: 100, sueno: 75 },
+        { day: 'Mar', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
+        { day: 'Mié', cumplimiento: 76, meta: 80, agua: 80, entrenamiento: 100, sueno: 60 },
+        { day: 'Jue', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
+        { day: 'Vie', cumplimiento: 88, meta: 80, agua: 90, entrenamiento: 100, sueno: 80 },
+        { day: 'Sáb', cumplimiento: 92, meta: 80, agua: 100, entrenamiento: 100, sueno: 85 },
+        { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: 90, entrenamiento: 100, sueno: 92 },
+      ];
 
   // Datos de evolución histórica de la racha de días cumplidos
-  const streakHistoryData = [
-    { periodo: 'Sem 1', rachaDias: 4, consistencia: 70 },
-    { periodo: 'Sem 2', rachaDias: 7, consistencia: 85 },
-    { periodo: 'Sem 3', rachaDias: 10, consistencia: 90 },
-    { periodo: 'Actual', rachaDias: streakDays, consistencia: 94 },
-  ];
+  const streakHistoryData = isNewAthlete
+    ? [
+        { periodo: 'Sem 1', rachaDias: 0, consistencia: 0 },
+        { periodo: 'Sem 2', rachaDias: 0, consistencia: 0 },
+        { periodo: 'Sem 3', rachaDias: 0, consistencia: 0 },
+        { periodo: 'Actual', rachaDias: streakDays, consistencia: formScore },
+      ]
+    : [
+        { periodo: 'Sem 1', rachaDias: 4, consistencia: 70 },
+        { periodo: 'Sem 2', rachaDias: 7, consistencia: 85 },
+        { periodo: 'Sem 3', rachaDias: 10, consistencia: 90 },
+        { periodo: 'Actual', rachaDias: streakDays, consistencia: 94 },
+      ];
 
   const averageWeekly = Math.round(
     weeklyComplianceData.reduce((acc, curr) => acc + curr.cumplimiento, 0) / weeklyComplianceData.length

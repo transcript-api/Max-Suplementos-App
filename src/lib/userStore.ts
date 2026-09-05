@@ -39,6 +39,10 @@ export interface UserAppState {
   foodHistory: any[];
   supplementHistory: any[];
   progressHistory: any[];
+  dailyHistory?: Record<string, number>;
+  isPro?: boolean;
+  proExpiry?: string;
+  referralCode?: string;
   challengesCompleted: number;
   lastActiveDate: string;
   createdAt: string;
@@ -141,6 +145,59 @@ export const SANTIAGO_DEMO_STATE: UserAppState = {
   updatedAt: new Date().toISOString(),
 };
 
+export const INITIAL_CLEAN_TASKS: DailyTaskItem[] = [
+  {
+    id: 'agua',
+    title: 'Hidratación Basal (Meta: 2.5L)',
+    subtitle: '0.0L consumidos · Faltan 2.5L',
+    detail: 'Mantiene volemia y transporte celular activo.',
+    xpReward: 10,
+    completed: false,
+    icon: 'water_drop',
+    accentColor: '#06B6D4',
+  },
+  {
+    id: 'entrenamiento',
+    title: 'Sesión de Entrenamiento',
+    subtitle: 'Actividad física programada',
+    detail: 'Completa tu sesión diaria de fuerza o acondicionamiento.',
+    xpReward: 25,
+    completed: false,
+    icon: 'fitness_center',
+    accentColor: '#3B82F6',
+  },
+  {
+    id: 'nutricion',
+    title: 'Alcanzar Meta de Proteína',
+    subtitle: '0g alcanzados hoy',
+    detail: 'Síntesis proteica y balance de aminoácidos.',
+    xpReward: 20,
+    completed: false,
+    icon: 'egg_alt',
+    accentColor: '#10B981',
+  },
+  {
+    id: 'suplemento',
+    title: 'Suplementación Diaria',
+    subtitle: 'Toma según tu protocolo',
+    detail: 'Optimización y recuperación biológica.',
+    xpReward: 10,
+    completed: false,
+    icon: 'medication',
+    accentColor: '#8B5CF6',
+  },
+  {
+    id: 'sueno',
+    title: 'Descanso Nocturno (7-8 Horas)',
+    subtitle: 'Recuperación neuromuscular',
+    detail: 'Regeneración celular y ritmo circadiano.',
+    xpReward: 15,
+    completed: false,
+    icon: 'bedtime',
+    accentColor: '#EC4899',
+  },
+];
+
 /**
  * Crea el estado inicial puro para un NUEVO USUARIO.
  * REGLA ABSOLUTA: TODO NUEVO USUARIO EMPIEZA ESTRICTAMENTE DESDE CERO.
@@ -161,11 +218,16 @@ export function createCleanInitialUserState(userId: string, email: string, name:
     hydration: 0,
     protein: 0,
     commitmentLevel: 'Básico',
-    tasks: [], // Se inicializa luego del onboarding
+    tasks: INITIAL_CLEAN_TASKS,
     macros: {
       protein: 130,
       carbs: 180,
       fats: 55,
+      calories: 1800,
+    },
+    targets: {
+      hydrationLiters: 2.5,
+      proteinGrams: 130,
       calories: 1800,
     },
     onboardingCompleted: false,
@@ -175,6 +237,9 @@ export function createCleanInitialUserState(userId: string, email: string, name:
     foodHistory: [],
     supplementHistory: [],
     progressHistory: [],
+    dailyHistory: {},
+    isPro: false,
+    referralCode: `MAX-${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
     challengesCompleted: 0,
     lastActiveDate: todayStr,
     createdAt: new Date().toISOString(),

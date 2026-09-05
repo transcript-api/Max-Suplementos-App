@@ -1,6 +1,6 @@
 {
-  "name": "MAXFORM Performance Health System",
-  "short_name": "MAXFORM",
+  "name": "MAXMIND Performance System",
+  "short_name": "MAXMIND",
   "description": "Sistema de tracking de nutrición, entrenamiento y optimización metabólica con IA",
   "start_url": "/",
   "display": "standalone",

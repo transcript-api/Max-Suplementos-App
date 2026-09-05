@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CommitmentLevel } from '../types';
 import { OnboardingProfileInput } from '../lib/objectiveEngine';
+import { MaxMindLogo } from './MaxMindLogo';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -209,8 +210,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
       <div className="relative w-full max-w-xl bg-[#0B1220] border border-[#1E293B] rounded-3xl p-5 sm:p-7 shadow-2xl text-white space-y-6 my-auto">
         {/* Encabezado con Indicador de Progreso Dinámico (1 / 6) */}
         <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-pulse"></span>
+          <div className="flex items-center gap-2.5">
+            <MaxMindLogo variant="symbol" size="xs" isDark={true} />
             <span className="font-bold text-xs uppercase tracking-wider text-[#3B82F6]">
               Configuración Inicial · {step} / 6
             </span>
@@ -272,7 +273,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 ¿Cuál es tu objetivo principal?
               </h2>
               <p className="text-xs sm:text-sm text-slate-400">
-                MAXFORM calibrará tus calorías, proteínas y objetivos diarios según esta meta.
+                MAXMIND calibrará tus calorías, proteínas y objetivos diarios según esta meta.
               </p>
             </div>
 

@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { calculateLevelFromXP } from '../lib/gamification';
+import { ExpandableMealSuggestionCard } from './ExpandableMealSuggestionCard';
+import { ProteinWeeklyChart } from './ProteinWeeklyChart';
+import { MealSuggestion } from '../lib/gemini';
 
 interface HomeTabProps {
   onNavigateTab: (tab: string, prompt?: string) => void;
@@ -10,6 +13,8 @@ interface HomeTabProps {
   totalObjectivesCount?: number;
   formScore: number;
   streakDays: number;
+  protein?: number;
+  onAddProtein?: (amount: number) => void;
   userName?: string;
   firstDashboardSeen?: boolean;
   onDismissFirstDashboard?: () => void;
@@ -25,11 +30,23 @@ export const HomeTab: React.FC<HomeTabProps> = ({
   totalObjectivesCount = 5,
   formScore,
   streakDays,
+  protein = 120,
+  onAddProtein,
   userName = 'Atleta',
   firstDashboardSeen = true,
   onDismissFirstDashboard,
   isDemoMode = false,
 }) => {
+  const [mealSuggestion, setMealSuggestion] = useState<MealSuggestion>({
+    mealName: 'Bowl proteico de pollo con quinoa, palta y espinacas',
+    protein: 42,
+    calories: 460,
+    preparationTime: '12 min',
+    ingredientsUsed: ['Pechuga de pollo grillada (160g)', 'Quinoa cocida', 'Palta en láminas', 'Espinacas frescas'],
+    instructions: 'Dispón la base de quinoa templada con la pechuga en tiras, palta y hojas de espinaca. Adereza con gotas de oliva y limón.',
+    reason: 'Aporte de alto valor biológico con perfil completo de electrolitos para optimizar la síntesis proteica.',
+    isComplexMenu: true,
+  });
   const maxHydration = 3.0;
   const isHydrationDone = hydration >= maxHydration;
   const hydrationPct = Math.min(100, Math.round((hydration / maxHydration) * 100));
@@ -419,6 +436,23 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           </button>
         </div>
       </section>
+
+      {/* Sugerencia de Comida Inteligente con Desglose Expandible de Micronutrientes */}
+      <ExpandableMealSuggestionCard
+        mealSuggestion={mealSuggestion}
+        onApplyMeal={(p) => (onAddProtein ? onAddProtein(p) : onNavigateTab('nutricion'))}
+        onNavigateTab={onNavigateTab}
+        isDark={true}
+      />
+
+      {/* Resumen Gráfico del Cumplimiento de la Meta de Proteínas (Últimos 7 Días) */}
+      <ProteinWeeklyChart
+        currentProtein={protein}
+        targetProtein={150}
+        streakDays={streakDays}
+        isDark={true}
+        onNavigateNutrition={() => onNavigateTab('nutricion')}
+      />
 
       {/* Tarjeta: RANKING GLOBAL */}
       <section className="rounded-xl bg-[#191c20] p-5 shadow-md border border-[#282a2f] space-y-2">

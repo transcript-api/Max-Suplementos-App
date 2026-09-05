@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="100%" height="100%" fill="none">
+  <!-- MAXMIND Dark Mode Logo - Transparent Background -->
+  <defs>
+    <!-- Vibrant Royal Blue Accent -->
+    <linearGradient id="maxmind-blue-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="50%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+
+    <!-- Crisp White / Light Platinum for Dark Theme Contrast -->
+    <linearGradient id="maxmind-white-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+  </defs>
+
+  <!-- EMBLEM ICON -->
+  <g id="maxmind-emblem-dark" transform="translate(500, 210)">
+    <!-- LEFT HALF -->
+    <polygon 
+      points="-168,-65 -122,-118 -122,55 -168,110" 
+      fill="url(#maxmind-white-dark)" 
+    />
+
+    <polygon 
+      points="-116,-165 -9,-38 -9,-9 -116,-136" 
+      fill="url(#maxmind-blue-dark)" 
+    />
+
+    <polygon 
+      points="-116,-136 -9,-9 -9,110 -116,-15" 
+      fill="url(#maxmind-white-dark)" 
+    />
+
+    <!-- RIGHT HALF (Symmetric) -->
+    <polygon 
+      points="168,-65 122,-118 122,55 168,110" 
+      fill="url(#maxmind-white-dark)" 
+    />
+
+    <polygon 
+      points="116,-165 9,-38 9,-9 116,-136" 
+      fill="url(#maxmind-blue-dark)" 
+    />
+
+    <polygon 
+      points="116,-136 9,-9 9,110 116,-15" 
+      fill="url(#maxmind-white-dark)" 
+    />
+  </g>
+
+  <!-- WORDMARK: M A X M I N D (Crisp White) -->
+  <g id="maxmind-wordmark-dark" fill="url(#maxmind-white-dark)">
+    <!-- LETTER M -->
+    <path d="M 120 560 L 120 495 L 140 495 L 175 536 L 210 495 L 230 495 L 230 560 L 214 560 L 214 518 L 182 556 L 168 556 L 136 518 L 136 560 Z" />
+
+    <!-- LETTER A (Modern Chevron with Inset Blue Triangle) -->
+    <path d="M 252 560 L 290 495 L 308 495 L 346 560 L 328 560 L 318 542 L 280 542 L 270 560 Z M 287 528 L 311 528 L 299 508 Z" />
+
+    <!-- LETTER X -->
+    <path d="M 366 560 L 398 526 L 368 495 L 388 495 L 409 517 L 430 495 L 450 495 L 420 526 L 452 560 L 432 560 L 409 535 L 386 560 Z" />
+
+    <!-- LETTER M -->
+    <path d="M 470 560 L 470 495 L 490 495 L 525 536 L 560 495 L 580 495 L 580 560 L 564 560 L 564 518 L 532 556 L 518 556 L 486 518 L 486 560 Z" />
+
+    <!-- LETTER I -->
+    <path d="M 605 560 L 605 495 L 623 495 L 623 560 Z" />
+
+    <!-- LETTER N -->
+    <path d="M 648 560 L 648 495 L 666 495 L 706 542 L 706 495 L 724 495 L 724 560 L 706 560 L 666 513 L 666 560 Z" />
+
+    <!-- LETTER D -->
+    <path d="M 748 560 L 748 495 L 784 495 C 810 495 826 508 826 527.5 C 826 547 810 560 784 560 Z M 766 544 L 782 544 C 797 544 807 538 807 527.5 C 807 517 797 511 782 511 L 766 511 Z" />
+  </g>
+
+  <!-- ACCENT BLUE TRIANGLE INSIDE 'A' -->
+  <polygon points="299,520 286,542 312,542" fill="url(#maxmind-blue-dark)" />
+</svg>

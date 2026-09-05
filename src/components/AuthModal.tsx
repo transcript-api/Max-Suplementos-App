@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { authService, AppUser } from '../lib/authService';
+import { MaxMindLogo } from './MaxMindLogo';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -56,14 +57,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
       <div className="relative w-full max-w-md bg-[#0B1220] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 my-auto">
-        {/* Encabezado con Logo y Marca */}
+        {/* Encabezado con Logo y Marca MAXMIND */}
         <div className="flex flex-col items-center text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#2563EB] flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <span className="material-symbols-outlined text-[28px] text-white">bolt</span>
+          <div className="mb-1">
+            <MaxMindLogo variant="symbol" size="lg" isDark={true} />
           </div>
           <h2 className="text-2xl font-bold text-white tracking-tight">
-            {mode === 'register' && 'Crea tu Cuenta MAXFORM'}
-            {mode === 'login' && 'Bienvenido de Nuevo'}
+            {mode === 'register' && 'Crea tu Cuenta MAXMIND'}
+            {mode === 'login' && 'Bienvenido a MAXMIND'}
             {mode === 'recovery' && 'Recuperar Contraseña'}
           </h2>
           <p className="text-xs text-slate-400 max-w-xs">
@@ -228,7 +229,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <>
                   <span>
                     {mode === 'register' && 'Crear Cuenta y Comenzar Onboarding'}
-                    {mode === 'login' && 'Entrar a MAXFORM'}
+                    {mode === 'login' && 'Entrar a MAXMIND'}
                     {mode === 'recovery' && 'Enviar Enlace de Recuperación'}
                   </span>
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

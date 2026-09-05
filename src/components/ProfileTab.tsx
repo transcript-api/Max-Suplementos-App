@@ -7,8 +7,11 @@ interface ProfileTabProps {
   userName?: string;
   userEmail?: string;
   isDemoMode?: boolean;
+  isPro?: boolean;
+  proExpiry?: string;
   onToggleDemoMode?: (demo: boolean) => void;
   onOpenOnboarding?: () => void;
+  onResetNewUser?: () => void;
   onOpenPremium?: () => void;
   onLogout?: () => void;
   onDeleteAccount?: () => void;
@@ -20,11 +23,14 @@ interface ProfileTabProps {
 export const ProfileTab: React.FC<ProfileTabProps> = ({
   xp,
   streakDays,
-  userName = 'Santiago',
+  userName = 'Atleta',
   userEmail,
-  isDemoMode = true,
+  isDemoMode = false,
+  isPro = false,
+  proExpiry,
   onToggleDemoMode,
   onOpenOnboarding,
+  onResetNewUser,
   onOpenPremium,
   onLogout,
   onDeleteAccount,
@@ -80,9 +86,9 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
     if ("Notification" in window) {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
-          new Notification("MAXFORM: Meta de Hidratación", {
+          new Notification("MAXMIND: Meta de Hidratación", {
             body: "¡Vas en 2.1L! Un vaso más y aseguras el 100% de tu Form Diaria.",
-            icon: "https://lh3.googleusercontent.com/aida/AEtjO1W-1OkTB85R5IfT2PGhDWBPbi3ZqqPttYelnE4TRH24XwLRAs-AJhR8X9mXE6u9krPg7ZEgNdnXC0lrGegTojvPP0djaChpq-GNpSk8qW98LjQODzsmInCTIvtPt-pqj15s5Kr29bO_5u4A2KxL-V9JO9wdy5UxqHmCLwLoYcePVaXvoG01PcVcsMNm8Mc3KdS3PbFYyUPWnOAjzzDJbrA_2GMmzUlxcfO3_pP1qEKACZvjkmEoXRj0dU38"
+            icon: "/maxmind-symbol.svg"
           });
           setNotificationStatus("Notificación de prueba enviada a tu dispositivo.");
         } else {
@@ -138,10 +144,22 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               type="button"
               onClick={onOpenOnboarding}
               className="px-3 py-2 rounded-xl bg-[#2563EB] hover:bg-[#3B82F6] text-white text-xs font-bold transition-all active:scale-95 shadow-md flex items-center gap-1"
-              title="Reiniciar onboarding para configurar nuevo atleta"
+              title="Abrir asistente de metas para configurar perfil"
+            >
+              <span className="material-symbols-outlined text-[16px]">tune</span>
+              <span>Metas</span>
+            </button>
+          )}
+
+          {onResetNewUser && (
+            <button
+              type="button"
+              onClick={onResetNewUser}
+              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold transition-all active:scale-95 shadow-md flex items-center gap-1"
+              title="Reiniciar como nuevo usuario desde cero"
             >
               <span className="material-symbols-outlined text-[16px]">restart_alt</span>
-              <span>Onboarding</span>
+              <span>Reset</span>
             </button>
           )}
         </div>
@@ -202,24 +220,45 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
 
       {/* Banner MAXFORM Pro */}
       {onOpenPremium && (
-        <div className="p-4 bg-gradient-to-r from-[#102A56] to-[#0B1220] border border-[#2563EB]/40 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+        <div className={`p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg border ${
+          isPro 
+            ? 'bg-gradient-to-r from-[#0F291E] to-[#0B1220] border-emerald-500/40'
+            : 'bg-gradient-to-r from-[#102A56] to-[#0B1220] border-[#2563EB]/40'
+        }`}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border ${
+              isPro 
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+            }`}>
               <span className="material-symbols-outlined text-[24px]">workspace_premium</span>
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white">MAXFORM Pro & Beneficios MAX Suplementos</h4>
+              <div className="flex items-center gap-2">
+                <h4 className="text-sm font-bold text-white">MAXMIND Pro & Beneficios MAX Suplementos</h4>
+                {isPro && (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase tracking-wider">
+                    ACTIVO
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-[#CBD5E1]">
-                Desbloquea el análisis con IA de comidas por foto y 20% OFF en suplementación.
+                {isPro 
+                  ? `Suscripción Pro activa hasta ${proExpiry ? new Date(proExpiry).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 días'}. IA sin límites y 20% OFF en tienda.`
+                  : 'Desbloquea el análisis con IA de comidas por foto y 20% OFF en suplementación.'}
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onOpenPremium}
-            className="w-full sm:w-auto px-4 py-2 bg-[#2563EB] hover:bg-[#3B82F6] text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap"
+            className={`w-full sm:w-auto px-4 py-2 text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap ${
+              isPro
+                ? 'bg-emerald-600 hover:bg-emerald-500'
+                : 'bg-[#2563EB] hover:bg-[#3B82F6]'
+            }`}
           >
-            Ver Planes & Beneficios
+            {isPro ? 'Gestionar Membresía' : 'Ver Planes & Canjear'}
           </button>
         </div>
       )}

@@ -17,6 +17,9 @@ import { ProfileTab } from './components/ProfileTab';
 import { ConsistencyChallenges } from './components/ConsistencyChallenges';
 import { OnboardingModal } from './components/OnboardingModal';
 import { PremiumModal } from './components/PremiumModal';
+import { ExpandableMealSuggestionCard } from './components/ExpandableMealSuggestionCard';
+import { ProteinWeeklyChart } from './components/ProteinWeeklyChart';
+import { SupplementReplenishmentCard } from './components/SupplementReplenishmentCard';
 import { suggestMealFromFoods, MealSuggestion } from './lib/gemini';
 import { db, ensureAuthUser } from './lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -119,6 +122,8 @@ interface DashboardProps {
   userName?: string;
   firstDashboardSeen?: boolean;
   onDismissFirstDashboard?: () => void;
+  dailyHistory?: Record<string, number>;
+  isDemoMode?: boolean;
 }
 
 /**
@@ -148,9 +153,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   isDark,
   syncStatus,
   onManualSync,
-  userName = 'Santiago',
+  userName = 'Atleta',
   firstDashboardSeen = true,
   onDismissFirstDashboard,
+  dailyHistory = {},
+  isDemoMode = false,
 }) => {
   const currentLevelConfig = LEVEL_CONFIGS[commitmentLevel] || LEVEL_CONFIGS.Avanzado;
 
@@ -549,62 +556,33 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         )}
 
-        {/* Tarjeta de Sugerencia Resultante */}
+        {/* Tarjeta de Sugerencia Resultante con Detalles Expandibles de Micronutrientes */}
         {mealSuggestion && (
-          <div className="p-4 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-[#2563eb] dark:text-[#b4c5ff] tracking-wider block">
-                  Recomendación para cerrar tu Form Diaria:
-                </span>
-                <h3 className="font-headline-md text-base font-bold dark:text-white text-slate-900 mt-0.5">
-                  {mealSuggestion.mealName}
-                </h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-lg bg-[#2563eb] text-white text-xs font-extrabold shadow-sm">
-                  +{mealSuggestion.protein}g Proteína
-                </span>
-                <span className="px-2 py-1 rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-200 text-xs font-bold dark:text-white text-slate-800">
-                  {mealSuggestion.calories} kcal
-                </span>
-                <span className="px-2 py-1 rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-200 text-xs font-medium dark:text-[#8d90a0] text-slate-500">
-                  ⏱️ {mealSuggestion.preparationTime}
-                </span>
-              </div>
-            </div>
-
-            <p className="text-xs dark:text-[#c3c6d7] text-slate-600 leading-relaxed">
-              {mealSuggestion.instructions}
-            </p>
-
-            {mealSuggestion.reason && (
-              <p className="text-[11px] dark:text-[#8d90a0] text-slate-500 italic">
-                «{mealSuggestion.reason}»
-              </p>
-            )}
-
-            <div className="pt-2 flex flex-col sm:flex-row gap-2">
-              <button
-                type="button"
-                onClick={() => handleApplySuggestedMeal(mealSuggestion.protein)}
-                className="flex-1 py-2.5 px-4 rounded-xl bg-[#2563eb] hover:bg-[#3b82f6] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                <span>Registrar y sumar +{mealSuggestion.protein}g a mi Form</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onNavigateTab('nutricion')}
-                className="py-2.5 px-4 rounded-xl dark:bg-[#1d2024] bg-white hover:bg-slate-100 dark:hover:bg-[#282a2f] dark:text-white text-slate-800 border dark:border-[#282a2f] border-slate-200 font-bold text-xs transition-colors"
-              >
-                Ver en Nutrición
-              </button>
-            </div>
-          </div>
+          <ExpandableMealSuggestionCard
+            mealSuggestion={mealSuggestion}
+            onApplyMeal={handleApplySuggestedMeal}
+            onNavigateTab={onNavigateTab}
+            isDark={isDark}
+          />
         )}
       </section>
+
+      {/* Resumen Gráfico del Cumplimiento de la Meta de Proteínas (Últimos 7 Días) */}
+      <ProteinWeeklyChart
+        currentProtein={protein}
+        targetProtein={150}
+        streakDays={streakDays}
+        isDark={isDark}
+        onNavigateNutrition={() => onNavigateTab('nutricion')}
+        dailyHistory={dailyHistory}
+        isDemoMode={isDemoMode}
+      />
+
+      {/* Módulo de Reposición Inteligente de Suplementos & Referidos */}
+      <SupplementReplenishmentCard
+        userName={userName}
+        isDark={isDark}
+      />
 
       {/* 5. Chat Rápido 'MAX AI' con Estimación de Comidas */}
       <section className="space-y-2">
@@ -665,27 +643,41 @@ export default function App() {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState<boolean>(false);
 
-  // Modo Demo vs Modo Usuario Real
+  // Modo Demo vs Modo Usuario Real (Por defecto FALSE -> Nuevo Usuario)
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => {
     const user = authService.getCurrentUser();
     if (user) return false;
     const saved = localStorage.getItem('maxform_is_demo_mode');
-    return saved !== null ? saved === 'true' : true;
+    return saved === 'true';
   });
 
-  // Estado del usuario activo (Santiago en Demo, o estado aislado y namespaced para cada atleta)
+  // Estado del usuario activo (Por defecto estado limpio en cero absoluto)
   const [userState, setUserState] = useState<UserState>(() => {
     const user = authService.getCurrentUser();
     const savedDemo = localStorage.getItem('maxform_is_demo_mode');
-    const isDemo = !user && (savedDemo === null || savedDemo === 'true');
+    const isDemo = !user && savedDemo === 'true';
     if (isDemo) {
       return SANTIAGO_DEMO_STATE;
     }
     if (user) {
       return loadLocalUserState(user.uid, user.email, user.displayName);
     }
-    return createCleanInitialUserState('guest_athlete', 'guest@maxform.app', 'Atleta');
+    return loadLocalUserState('new_athlete', '', 'Atleta');
   });
+
+  // Limpieza inicial forzosa para garantizar arranque como Nuevo Usuario en esta sesión
+  useEffect(() => {
+    const isNewUserReady = localStorage.getItem('maxform_new_user_v3_ready');
+    if (!isNewUserReady) {
+      localStorage.setItem('maxform_is_demo_mode', 'false');
+      localStorage.setItem('maxform_new_user_v3_ready', 'true');
+      const freshUser = createCleanInitialUserState('new_athlete', '', 'Atleta');
+      setUserState(freshUser);
+      saveUserData(freshUser);
+      setIsDemoMode(false);
+      setIsOnboardingOpen(true);
+    }
+  }, []);
 
   // Escuchar cambios de sesión con authService
   useEffect(() => {
@@ -718,7 +710,7 @@ export default function App() {
   }, [isDemoMode, userState.onboardingCompleted]);
 
   // Valores derivados para consumo reactivo
-  const userName = userState.name;
+  const userName = userState.name || 'Atleta';
   const xp = userState.xp;
   const streakDays = userState.streakDays;
   const hydration = userState.hydration;
@@ -737,7 +729,7 @@ export default function App() {
       // Activar Demo de Santiago
       setUserState(SANTIAGO_DEMO_STATE);
     } else {
-      // Activar Cuenta Real
+      // Activar Cuenta Real / Nuevo Atleta
       if (currentUser) {
         const loaded = loadLocalUserState(currentUser.uid, currentUser.email, currentUser.displayName);
         setUserState(loaded);
@@ -745,10 +737,25 @@ export default function App() {
           setIsOnboardingOpen(true);
         }
       } else {
-        // Abrir modal de autenticación para que cree su cuenta desde cero
-        setIsAuthModalOpen(true);
+        const loaded = loadLocalUserState('new_athlete', '', 'Atleta');
+        setUserState(loaded);
+        if (!loaded.onboardingCompleted) {
+          setIsOnboardingOpen(true);
+        }
       }
     }
+  };
+
+  // Reiniciar la aplicación a un estado 100% limpio como nuevo usuario
+  const handleResetToNewUser = () => {
+    localStorage.removeItem('maxform_user_v2_new_athlete');
+    localStorage.removeItem('maxform_onboarding_draft_new_athlete');
+    localStorage.setItem('maxform_is_demo_mode', 'false');
+    const freshUser = createCleanInitialUserState('new_athlete', '', 'Atleta');
+    setUserState(freshUser);
+    saveUserData(freshUser);
+    setIsDemoMode(false);
+    setIsOnboardingOpen(true);
   };
 
   // Finalización del Onboarding (Regla: Inicia siempre desde cero absoluto)
@@ -1099,10 +1106,19 @@ export default function App() {
     });
   };
 
-  // Añadir proteína directa
+  const lastProteinTapRef = useRef<number>(0);
+
+  // Añadir proteína directa con protección anti-spam y persistencia en dailyHistory
   const handleAddProtein = (amount: number) => {
+    const now = Date.now();
+    // Bloquear spam clicks consecutivos menores a 350ms
+    if (now - lastProteinTapRef.current < 350) {
+      return;
+    }
+    lastProteinTapRef.current = now;
+
     const target = userState.targets?.proteinGrams || 150;
-    const nextProtein = Math.min(300, userState.protein + amount);
+    const nextProtein = Math.min(350, userState.protein + amount);
     const nextMacros: MacroNutrients = {
       ...userState.macros,
       protein: nextProtein,
@@ -1122,6 +1138,13 @@ export default function App() {
     const completedCount = nextTasks.filter((t) => t.completed).length;
     const nextForm = calculateDailyForm(completedCount, nextTasks.length);
 
+    // Registro histórico del día de hoy en formato ISO YYYY-MM-DD
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const nextDailyHistory = {
+      ...(userState.dailyHistory || {}),
+      [todayIso]: nextProtein,
+    };
+
     const updated: UserState = {
       ...userState,
       protein: nextProtein,
@@ -1129,6 +1152,7 @@ export default function App() {
       tasks: nextTasks,
       formScore: nextForm,
       completedObjectives: completedCount,
+      dailyHistory: nextDailyHistory,
     };
     setUserState(updated);
     if (!isDemoMode && currentUser) saveUserData(updated);
@@ -1137,6 +1161,7 @@ export default function App() {
       amount,
       macros: nextMacros,
       protein: nextProtein,
+      dailyHistory: nextDailyHistory,
       timestamp: Date.now(),
     });
   };
@@ -1338,6 +1363,8 @@ export default function App() {
             userName={userName}
             firstDashboardSeen={userState.firstDashboardSeen ?? true}
             onDismissFirstDashboard={handleDismissFirstDashboard}
+            dailyHistory={userState.dailyHistory}
+            isDemoMode={isDemoMode}
           />
         )}
 
@@ -1365,6 +1392,7 @@ export default function App() {
             initialPrompt={aiPrompt}
             currentProtein={protein}
             streakDays={streakDays}
+            userName={userName}
           />
         )}
 
@@ -1384,8 +1412,11 @@ export default function App() {
             userName={userName}
             userEmail={currentUser?.email}
             isDemoMode={isDemoMode}
+            isPro={userState.isPro}
+            proExpiry={userState.proExpiry}
             onToggleDemoMode={handleToggleDemoMode}
             onOpenOnboarding={() => setIsOnboardingOpen(true)}
+            onResetNewUser={handleResetToNewUser}
             onOpenPremium={() => setIsPremiumModalOpen(true)}
             onLogout={handleLogout}
             onDeleteAccount={handleDeleteAccount}
@@ -1412,13 +1443,20 @@ export default function App() {
         isDark={isDark}
       />
 
-      {/* Modal de Planes MAXFORM Premium */}
+      {/* Modal de Planes MAXMIND Premium */}
       <PremiumModal
         isOpen={isPremiumModalOpen}
         onClose={() => setIsPremiumModalOpen(false)}
-        onUpgrade={() => {
+        onUpgrade={(durationDays = 30) => {
           setIsPremiumModalOpen(false);
-          alert('¡30 Días de MAXFORM Pro activados con éxito para tu cuenta!');
+          const expiryDate = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+          const updated: UserState = {
+            ...userState,
+            isPro: true,
+            proExpiry: expiryDate,
+          };
+          setUserState(updated);
+          if (!isDemoMode && currentUser) saveUserData(updated);
         }}
         isDark={isDark}
       />
