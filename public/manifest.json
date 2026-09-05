@@ -1,0 +1,21 @@
+{
+  "name": "MAXFORM Performance Health System",
+  "short_name": "MAXFORM",
+  "description": "Sistema de tracking de nutrición, entrenamiento y optimización metabólica con IA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111318",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuB00Sme5qLyZzyIcklY0V1cNgikF0b-przMsFdt9GlxaDvjn41F6y-xbkVD5ke3cL80Ug9uhsWESJxMGuCMTNvUtMAnjCpU3FOpHn7ZRbCwS_U97WAfOyfA_iLMXBcCrxvgHFd_KuE_9H20o5rVMKworvuJ7T_KvRzBEfK5-8cWzNQyhT4Syy65tezqrvCui3VxNf0_ctWPMHP3yWL077ZYnGDwYAP6ukdWpgVJAQwJUFxXEam8u9NFkw",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/aida-public/AB6AXuB00Sme5qLyZzyIcklY0V1cNgikF0b-przMsFdt9GlxaDvjn41F6y-xbkVD5ke3cL80Ug9uhsWESJxMGuCMTNvUtMAnjCpU3FOpHn7ZRbCwS_U97WAfOyfA_iLMXBcCrxvgHFd_KuE_9H20o5rVMKworvuJ7T_KvRzBEfK5-8cWzNQyhT4Syy65tezqrvCui3VxNf0_ctWPMHP3yWL077ZYnGDwYAP6ukdWpgVJAQwJUFxXEam8u9NFkw",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

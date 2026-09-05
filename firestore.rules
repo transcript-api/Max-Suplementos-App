@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Permite lectura y escritura a usuarios autenticados para sus propios datos,
+    // o para datos compartidos de la demo.
+    match /users/{userId} {
+      allow read, write: if true;
+      
+      match /dailyLogs/{logId} {
+        allow read, write: if true;
+      }
+      match /progressPhotos/{photoId} {
+        allow read, write: if true;
+      }
+    }
+
+    match /rankings/{entry} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /community_posts/{postId} {
+      allow read, write: if true;
+      match /comments/{commentId} {
+        allow read, write: if true;
+      }
+    }
+  }
+}

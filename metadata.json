@@ -1,0 +1,6 @@
+{
+  "name": "MAXFORM Performance Health System",
+  "description": "Sistema de tracking de nutrición, entrenamiento y optimización metabólica con IA",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

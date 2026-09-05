@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --bg-surface: #111318;
+    --bg-surface-container-lowest: #0c0e12;
+    --bg-surface-container-low: #191c20;
+    --bg-surface-container: #1d2024;
+    --bg-surface-container-high: #282a2f;
+    --bg-surface-container-highest: #333539;
+    --text-on-surface: #e2e2e8;
+    --text-on-surface-variant: #c3c6d7;
+    --text-outline: #8d90a0;
+    --text-primary: #b4c5ff;
+    --bg-primary-container: #2563eb;
+    --text-secondary: #adc6ff;
+  }
+
+  html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  html.dark, html.dark body {
+    background-color: #111318;
+    color: #e2e2e8;
+  }
+
+  html:not(.dark), html:not(.dark) body {
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+  }
+
+  .pt-safe {
+    padding-top: max(0.5rem, env(safe-area-inset-top, 0.5rem));
+  }
+}
+
+/* Material Symbols sizing and rendering */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  line-height: 1;
+  display: inline-block;
+}
+
+.material-symbols-fill {
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Scrollbar hide utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* MAXFORM Custom Color Classes matching Stitch Design */
+.bg-surface { background-color: #111318; }
+.bg-surface-dim { background-color: #111318; }
+.bg-surface-bright { background-color: #37393e; }
+.bg-surface-container-lowest { background-color: #0c0e12; }
+.bg-surface-container-low { background-color: #191c20; }
+.bg-surface-container { background-color: #1d2024; }
+.bg-surface-container-high { background-color: #282a2f; }
+.bg-surface-container-highest { background-color: #333539; }
+.bg-surface-variant { background-color: #333539; }
+
+.bg-primary-container { background-color: #2563eb; }
+.bg-secondary-container { background-color: #0566d9; }
+.bg-tertiary-container { background-color: #576d9d; }
+
+.text-on-surface { color: #e2e2e8; }
+.text-on-surface-variant { color: #c3c6d7; }
+.text-primary { color: #b4c5ff; }
+.text-secondary { color: #adc6ff; }
+.text-tertiary { color: #b0c6fc; }
+.text-outline { color: #8d90a0; }
+.text-outline-variant { color: #434655; }
+.text-on-primary { color: #002a78; }
+.text-on-primary-container { color: #eeefff; }
+
+.border-outline-variant { border-color: #434655; }
+.border-surface-variant { border-color: #333539; }
+.border-primary-container { border-color: #2563eb; }
+
+/* Custom Typography */
+.font-headline-xl { font-size: 32px; line-height: 38px; font-weight: 700; letter-spacing: -0.02em; }
+.font-headline-xl-mobile { font-size: 26px; line-height: 32px; font-weight: 700; letter-spacing: -0.015em; }
+.font-headline-lg { font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; }
+.font-headline-md { font-size: 18px; line-height: 24px; font-weight: 600; letter-spacing: -0.005em; }
+.font-metric-stat { font-size: 28px; line-height: 32px; font-weight: 700; letter-spacing: -0.02em; }
+.font-display-hero-mobile { font-size: 40px; line-height: 44px; font-weight: 800; letter-spacing: -0.025em; }
+.font-body-lg { font-size: 16px; line-height: 24px; font-weight: 400; }
+.font-body-md { font-size: 14px; line-height: 20px; font-weight: 400; }
+.font-body-sm { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: 0.01em; }
+.font-label-caps { font-size: 11px; line-height: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* Spacing tokens */
+.p-space-xs { padding: 0.5rem; }
+.p-space-sm { padding: 0.75rem; }
+.p-space-md { padding: 1rem; }
+.p-space-lg { padding: 1.5rem; }
+.p-space-xl { padding: 2rem; }
+.gap-space-2xs { gap: 0.25rem; }
+.gap-space-xs { gap: 0.5rem; }
+.gap-space-sm { gap: 0.75rem; }
+.gap-space-md { gap: 1rem; }
+.space-y-space-xs > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem; }
+.space-y-space-sm > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem; }
+.space-y-space-md > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+.space-y-space-lg > :not([hidden]) ~ :not([hidden]) { margin-top: 1.5rem; }
