@@ -1,10 +1,10 @@
 /**
  * MAXFORM Performance Health System
- * Módulo de Persistencia Offline y Sincronización Automática con Firestore
+ * Módulo de Persistencia Offline y Sincronización Automática con Supabase PostgreSQL
  */
 
-import { doc, setDoc, addDoc, collection } from 'firebase/firestore';
-import { db, ensureAuthUser } from './firebase';
+import { supabase, ensureAuthUser, isSupabaseConfigured } from './supabase';
+import { supabaseRepository } from './supabaseRepository';
 
 export interface OfflineFoodLog {
   id: string;
@@ -57,7 +57,6 @@ class OfflineSyncManager {
         const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
         console.log('MAXFORM Service Worker registrado correctamente:', registration.scope);
 
-        // Escuchar mensajes del SW (ej: background sync trigger)
         navigator.serviceWorker.addEventListener('message', (event) => {
           if (event.data?.type === 'TRIGGER_OFFLINE_SYNC') {
             console.log('Disparador de Background Sync recibido desde Service Worker');
@@ -84,7 +83,7 @@ class OfflineSyncManager {
   // Escuchar estado de red en vivo
   private initNetworkListeners(): void {
     window.addEventListener('online', async () => {
-      console.log('Conexión reestablecida. Iniciando reconciliación inteligente con Firestore...');
+      console.log('Conexión reestablecida. Iniciando sincronización inteligente con Supabase...');
       this.isOnline = true;
       this.notify();
 
@@ -100,13 +99,12 @@ class OfflineSyncManager {
     });
 
     window.addEventListener('offline', () => {
-      console.log('Conexión perdida. MAXFORM operando en modo offline seguro.');
+      console.warn('MAXFORM en modo Offline. Cambios registrados localmente en cola protegida.');
       this.isOnline = false;
       this.notify();
     });
   }
 
-  // Suscripción a cambios de estado de sincronización
   public subscribe(listener: (status: SyncStatus) => void): () => void {
     this.listeners.push(listener);
     listener(this.getStatus());
@@ -117,21 +115,20 @@ class OfflineSyncManager {
 
   private notify(): void {
     const status = this.getStatus();
-    this.listeners.forEach((listener) => listener(status));
+    this.listeners.forEach((l) => l(status));
   }
 
   public getStatus(): SyncStatus {
-    const queue = this.getQueue();
     return {
       isOnline: this.isOnline,
       isSyncing: this.isSyncing,
-      pendingCount: queue.length,
+      pendingCount: this.getQueue().length,
       lastSyncTime: this.lastSyncTime,
       lastError: this.lastError,
     };
   }
 
-  // Obtener cola local
+  // Cola en localStorage para persistencia segura entre recargas
   public getQueue(): SyncQueueItem[] {
     try {
       const raw = localStorage.getItem(SYNC_QUEUE_KEY);
@@ -202,17 +199,24 @@ class OfflineSyncManager {
     queue.push(item);
     this.saveQueue(queue);
 
-    // Si estamos en línea, intentar sincronizar de inmediato
+    // Si estamos en línea, sincronizar de inmediato
     if (this.isOnline) {
       await this.syncPendingActions();
     }
   }
 
-  // Sincronizar cola pendiente con Firestore
+  // Sincronizar cola pendiente con Supabase
   public async syncPendingActions(): Promise<boolean> {
     if (this.isSyncing) return false;
     const queue = this.getQueue();
     if (queue.length === 0) {
+      this.lastSyncTime = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      this.notify();
+      return true;
+    }
+
+    if (!isSupabaseConfigured()) {
+      // Si Supabase aún no está configurado, la cola se mantiene localmente sin fallar
       this.lastSyncTime = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
       this.notify();
       return true;
@@ -223,56 +227,37 @@ class OfflineSyncManager {
 
     try {
       const user = await ensureAuthUser();
-      const userId = user?.uid || 'santiago-athlete-01';
+      const userId = user?.id || 'santiago-athlete-01';
 
       const remainingQueue: SyncQueueItem[] = [];
 
       for (const item of queue) {
         try {
-          if (!db) throw new Error('Firestore no inicializado');
-
           if (item.type === 'TASK_UPDATE' || item.type === 'STATE_FULL') {
-            const userDocRef = doc(db, 'users', userId);
-            await setDoc(userDocRef, {
+            await supabaseRepository.saveAthleteState({
               ...item.payload,
-              lastSyncedAt: new Date().toISOString(),
-              offlineSynced: true,
-            }, { merge: true });
+              userId,
+            });
           } else if (item.type === 'FOOD_LOG') {
-            // Guardar en subcolección de registros nutricionales
-            const foodLogsRef = collection(db, 'users', userId, 'foodLogs');
-            await addDoc(foodLogsRef, {
-              ...item.payload,
-              syncedAt: new Date().toISOString(),
+            await supabaseRepository.addFoodLog(userId, {
+              name: item.payload.name,
+              protein: item.payload.protein,
+              carbs: item.payload.carbs,
+              fats: item.payload.fats,
+              calories: item.payload.calories,
             });
-
-            // Actualizar también el documento del usuario
-            const userDocRef = doc(db, 'users', userId);
-            await setDoc(userDocRef, {
-              protein: item.payload.updatedProtein,
-              carbs: item.payload.updatedCarbs,
-              fats: item.payload.updatedFats,
-              calories: item.payload.updatedCalories,
-              lastMealAdded: item.payload.name,
-              lastMealTime: item.payload.timestamp,
-            }, { merge: true });
           } else if (item.type === 'MACROS_UPDATE') {
-            const userDocRef = doc(db, 'users', userId);
-            await setDoc(userDocRef, {
-              macros: item.payload,
-              lastUpdated: new Date().toISOString(),
-            }, { merge: true });
-          } else if (item.type === 'CHALLENGE_CLAIM') {
-            const challengesRef = collection(db, 'users', userId, 'claimedChallenges');
-            await addDoc(challengesRef, {
-              ...item.payload,
-              claimedAt: new Date().toISOString(),
-            });
+            await supabase
+              .from('athlete_states')
+              .update({
+                protein: item.payload.protein,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('user_id', userId);
           }
         } catch (err: any) {
-          console.warn(`Error sincronizando item ${item.id} a Firestore:`, err);
+          console.warn(`Error sincronizando item ${item.id} a Supabase:`, err);
           item.retryCount += 1;
-          // Si falló por falta de red, detener y mantener los restantes
           remainingQueue.push(item);
           break;
         }
@@ -283,8 +268,8 @@ class OfflineSyncManager {
       this.lastError = remainingQueue.length > 0 ? 'Sincronización parcial diferida' : null;
       return remainingQueue.length === 0;
     } catch (error: any) {
-      console.error('Error durante sincronización con Firestore:', error);
-      this.lastError = error?.message || 'Error de conexión con Firestore';
+      console.error('Error durante sincronización con Supabase:', error);
+      this.lastError = error?.message || 'Error de conexión con Supabase';
       return false;
     } finally {
       this.isSyncing = false;

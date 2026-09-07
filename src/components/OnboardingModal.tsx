@@ -113,11 +113,36 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     title: string;
     sub: string;
     badgeColor: string;
+    specs: string;
   }> = [
-    { id: 'Básico', title: 'Básico', sub: 'Primeros pasos. Creando la base de disciplina y adaptación.', badgeColor: 'border-slate-500 text-slate-300' },
-    { id: 'Intermedio', title: 'Intermedio', sub: 'Construyendo consistencia. Ya entrenas regularmente.', badgeColor: 'border-blue-500 text-blue-300' },
-    { id: 'Avanzado', title: 'Avanzado', sub: 'Alto nivel de compromiso. Entrenamientos y macros precisos.', badgeColor: 'border-indigo-500 text-indigo-300' },
-    { id: 'Extremo', title: 'Extremo', sub: 'Máxima consistencia. Estilo de vida 100% enfocado en rendimiento.', badgeColor: 'border-purple-500 text-purple-300' },
+    { 
+      id: 'Básico', 
+      title: 'Básico', 
+      sub: 'Iniciación y hábito saludable. Sin fricción ni saturación mental.', 
+      badgeColor: 'border-emerald-500 text-emerald-300',
+      specs: '3 tareas diarias · 2.2L agua · 1.3g/kg prot · 3 sesiones ligeras'
+    },
+    { 
+      id: 'Intermedio', 
+      title: 'Intermedio', 
+      sub: 'Construyendo constancia atlética. Sobrecarga progresiva y 4 macros.', 
+      badgeColor: 'border-blue-500 text-blue-300',
+      specs: '4 tareas diarias · 2.8L agua · 1.7g/kg prot · 4 sesiones estructuradas'
+    },
+    { 
+      id: 'Avanzado', 
+      title: 'Avanzado', 
+      sub: 'Alto rendimiento. Rutina pesada RPE 8-9, leucina mTOR y timing.', 
+      badgeColor: 'border-indigo-500 text-indigo-300',
+      specs: '5 tareas diarias · 3.3L agua · 2.0g/kg prot · 5 sesiones de rigor'
+    },
+    { 
+      id: 'Extremo', 
+      title: 'Extremo', 
+      sub: 'Élite · Tolerancia Cero. Macros exactos al gramo y disciplina total.', 
+      badgeColor: 'border-rose-500 text-rose-300',
+      specs: '6 tareas diarias · 3.8L agua · 2.3g/kg prot · 5-6 sesiones de máxima intensidad'
+    },
   ];
 
   const trainingOptions = [
@@ -326,6 +351,19 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               </p>
             </div>
 
+            {/* Aviso explicativo del protocolo de 14 días y oportunidad de cambio */}
+            <div className="p-3 rounded-xl bg-[#1E293B]/70 border border-[#2563EB]/40 text-xs text-blue-200 flex items-start gap-2.5">
+              <span className="text-base leading-none">⚖️</span>
+              <div className="space-y-0.5">
+                <strong className="block text-blue-100 font-bold text-xs">
+                  Regla de Protocolo y Adaptación Biológica (14 Días)
+                </strong>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Cada nivel calibra tus objetivos, agua y proteína. Al entrar a la app tendrás <strong>1 oportunidad para recalibrarlo</strong>; posteriormente entrarás en un ciclo cerrado de <strong>14 días obligatorios</strong> para asegurar adaptaciones fisiológicas reales sin cambiar a capricho.
+                </p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 gap-3">
               {experienceLevels.map((lvl) => {
                 const isSelected = experienceLevel === lvl.id;
@@ -334,26 +372,30 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     key={lvl.id}
                     type="button"
                     onClick={() => setExperienceLevel(lvl.id)}
-                    className={`p-4 rounded-2xl border text-left transition-all active:scale-[0.99] flex items-center justify-between ${
+                    className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all active:scale-[0.99] flex flex-col gap-2 ${
                       isSelected
                         ? 'bg-[#1E293B] border-[#2563EB] text-white ring-1 ring-[#2563EB]/40 shadow-lg'
                         : 'bg-[#151D30] border-[#1E293B] text-slate-300 hover:border-slate-600'
                     }`}
                   >
-                    <div className="space-y-1">
+                    <div className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-sm text-white">{lvl.title}</span>
                         <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold ${lvl.badgeColor}`}>
                           Nivel de Compromiso
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400">{lvl.sub}</p>
+                      {isSelected && (
+                        <span className="material-symbols-outlined text-[#3B82F6] text-[20px]">
+                          check_circle
+                        </span>
+                      )}
                     </div>
-                    {isSelected && (
-                      <span className="material-symbols-outlined text-[#3B82F6] text-[22px]">
-                        check_circle
-                      </span>
-                    )}
+                    <p className="text-xs text-slate-400">{lvl.sub}</p>
+                    <div className="pt-1.5 border-t border-slate-700/50 text-[11px] font-semibold text-slate-300 flex items-center gap-1.5">
+                      <span className="text-[#3B82F6]">⚡</span>
+                      <span>{lvl.specs}</span>
+                    </div>
                   </button>
                 );
               })}

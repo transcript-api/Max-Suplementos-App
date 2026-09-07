@@ -22,6 +22,55 @@ async function startServer() {
     return aiClient;
   }
 
+  // Wrapper resiliente para llamadas a Gemini con reintentos y fallback ante picos de demanda (503/429)
+  async function generateGeminiContentSafe(params: {
+    contents: any;
+    config?: any;
+    preferredModel?: string;
+  }) {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY no está configurada");
+    }
+
+    const ai = getAI();
+    const modelsToTry = [params.preferredModel || 'gemini-3.8-flash', 'gemini-flash-latest'];
+    let lastError: any = null;
+
+    for (const model of modelsToTry) {
+      try {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Timeout de solicitud Gemini")), 6000)
+        );
+
+        const response = (await Promise.race([
+          ai.models.generateContent({
+            model,
+            contents: params.contents,
+            config: params.config,
+          }),
+          timeoutPromise,
+        ])) as any;
+
+        return response;
+      } catch (err: any) {
+        lastError = err;
+        const isUnavailable =
+          err?.status === 'UNAVAILABLE' ||
+          err?.code === 503 ||
+          String(err?.message || '').includes('high demand') ||
+          String(err?.message || '').includes('Timeout') ||
+          String(err || '').includes('503');
+        if (isUnavailable) {
+          console.warn(`[MAXMIND AI] ${model} experimenta alta demanda o latencia (503). Intentando alternativa...`);
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          continue;
+        }
+        throw err;
+      }
+    }
+    throw lastError;
+  }
+
   // In-memory atomic tracking for XP & daily completions (anti-exploit & server-authoritative)
   interface CompletedRecord {
     userId: string;
@@ -434,7 +483,6 @@ async function startServer() {
   app.post("/api/ai/refrigerator", async (req, res) => {
     try {
       const { ingredients, missingProtein, goal } = req.body;
-      const ai = getAI();
       const foodListStr = Array.isArray(ingredients) && ingredients.length > 0 ? ingredients.join(", ") : "pollo, huevos, arroz, tomate, cebolla, queso magro";
       const targetProtein = missingProtein ? Number(missingProtein) : 25;
 
@@ -455,15 +503,15 @@ Genera una sugerencia estructurada en formato JSON estricto:
   "confirmationNotice": "Confirma para añadir automáticamente estos macronutrientes a tu registro diario."
 }`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+      const response = await generateGeminiContentSafe({
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
 
       const parsed = JSON.parse(response.text || "{}");
       res.json(parsed);
-    } catch (err) {
+    } catch (err: any) {
+      console.warn("[MAXMIND AI] Fallback determinista para refrigerador:", err?.message || err);
       res.json({
         title: "Salteado proteico de pollo con huevos y tomate",
         protein: 34,
@@ -482,7 +530,6 @@ Genera una sugerencia estructurada en formato JSON estricto:
   app.post("/api/ai/coach", async (req, res) => {
     try {
       const { message, context } = req.body;
-      const ai = getAI();
       
       const athleteName = context?.userName || 'Atleta';
       const athleteLevel = context?.level || 1;
@@ -503,8 +550,7 @@ Instrucciones:
 3. Si el usuario te envía un plato o comida, estima proteína, carbohidratos, grasas y calorías.
 4. Siempre mantén una mentalidad de alto rendimiento, consistencia y disciplina ("Tú vs Tú").`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+      const response = await generateGeminiContentSafe({
         contents: [
           { role: "user", parts: [{ text: message }] }
         ],
@@ -517,8 +563,8 @@ Instrucciones:
       const reply = response.text || "Entendido. Mantengamos la consistencia con tus macros.";
       res.json({ reply });
     } catch (err: any) {
-      console.error("Error en AI Coach:", err);
-      // Fallback inteligente si no hay clave API configurada
+      console.warn("[MAXMIND AI] Fallback para AI Coach:", err?.message || err);
+      // Fallback inteligente contextualizado
       const name = req.body?.context?.userName || 'Atleta';
       const currProt = req.body?.context?.currentProtein || 0;
       res.json({
@@ -531,7 +577,6 @@ Instrucciones:
   app.post("/api/ai/analyze-food", async (req, res) => {
     try {
       const { imageBase64, textDescription } = req.body;
-      const ai = getAI();
 
       const prompt = `Analiza esta comida para el sistema MAXFORM. 
 Descripción o imagen del usuario: "${textDescription || 'Foto adjunta de plato'}".
@@ -559,8 +604,7 @@ Devuelve un JSON estrictamente válido con la estructura:
       }
       contents.push({ text: prompt });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+      const response = await generateGeminiContentSafe({
         contents: contents,
         config: {
           responseMimeType: "application/json"
@@ -569,8 +613,8 @@ Devuelve un JSON estrictamente válido con la estructura:
 
       const parsed = JSON.parse(response.text || "{}");
       res.json(parsed);
-    } catch (err) {
-      console.error("Error analizando comida:", err);
+    } catch (err: any) {
+      console.warn("[MAXMIND AI] Fallback para analyze-food:", err?.message || err);
       // Fallback predictivo
       res.json({
         title: "Pechuga grillada con arroz y huevos camperos",
@@ -592,7 +636,6 @@ Devuelve un JSON estrictamente válido con la estructura:
   app.post("/api/ai/fridge-recipes", async (req, res) => {
     try {
       const { ingredients, goal } = req.body;
-      const ai = getAI();
       const prompt = `El atleta tiene estos ingredientes en su heladera: ${ingredients?.join(", ") || "pollo, huevos, arroz, tomate, cebolla"}.
 Objetivo: ${goal || "Más proteína"}.
 Crea una receta de alto rendimiento para MAXFORM en formato JSON:
@@ -605,14 +648,14 @@ Crea una receta de alto rendimiento para MAXFORM en formato JSON:
   "steps": ["Paso 1", "Paso 2", "Paso 3"]
 }`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+      const response = await generateGeminiContentSafe({
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
 
       res.json(JSON.parse(response.text || "{}"));
-    } catch (err) {
+    } catch (err: any) {
+      console.warn("[MAXMIND AI] Fallback para fridge-recipes:", err?.message || err);
       res.json({
         recipeTitle: "Bowl de pollo alto en proteína",
         prepTime: "15 min",
@@ -632,7 +675,6 @@ Crea una receta de alto rendimiento para MAXFORM en formato JSON:
   app.post("/api/ai/suggest-meal", async (req, res) => {
     try {
       const { foods, missingProtein } = req.body;
-      const ai = getAI();
       const foodListStr = Array.isArray(foods) && foods.length > 0 ? foods.join(", ") : "pechuga de pollo, huevos, atún, yogur griego, avena, espinaca";
       const targetProtein = missingProtein ? Number(missingProtein) : 22;
 
@@ -676,16 +718,15 @@ Genera una sugerencia de comida estructurada en formato JSON estricto, incluyend
   }
 }`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+      const response = await generateGeminiContentSafe({
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
 
       const parsed = JSON.parse(response.text || "{}");
       res.json(parsed);
-    } catch (err) {
-      console.error("Error en suggest-meal:", err);
+    } catch (err: any) {
+      console.warn("[MAXMIND AI] Fallback nutricional determinista para suggest-meal:", err?.message || err);
       const targetProtein = req.body.missingProtein ? Number(req.body.missingProtein) : 22;
       res.json({
         mealName: "Omelette proteico de atún y claras con espinaca",
@@ -728,7 +769,6 @@ Genera una sugerencia de comida estructurada en formato JSON estricto, incluyend
   app.post("/api/ai/simple-food-estimate", async (req, res) => {
     try {
       const { text } = req.body;
-      const ai = getAI();
       const prompt = `El usuario comió: "${text || "2 huevos revueltos con una rebanada de pan integral"}".
 Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSON estrictamente válido:
 {
@@ -741,16 +781,15 @@ Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSO
   "nutritionTip": "Consejo deportivo breve sobre este aporte de macronutrientes"
 }`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.8-flash",
+      const response = await generateGeminiContentSafe({
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
 
       const parsed = JSON.parse(response.text || "{}");
       res.json(parsed);
-    } catch (err) {
-      console.error("Error en simple-food-estimate:", err);
+    } catch (err: any) {
+      console.warn("[MAXMIND AI] Fallback para simple-food-estimate:", err?.message || err);
       res.json({
         foodSummary: req.body.text || "2 huevos revueltos con pan tostado",
         protein: 18,

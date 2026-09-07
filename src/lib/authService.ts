@@ -1,13 +1,4 @@
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut as firebaseSignOut, 
-  sendPasswordResetEmail,
-  onAuthStateChanged as firebaseOnAuthStateChanged,
-  User as FirebaseUser
-} from 'firebase/auth';
-import { auth } from './firebase';
+import { supabase, isSupabaseConfigured } from './supabase';
 
 export interface AppUser {
   uid: string;
@@ -46,28 +37,43 @@ class AuthService {
     this.initSession();
   }
 
-  private initSession() {
-    // Escuchar cambios en Firebase Auth si está disponible
+  private async initSession() {
+    // Escuchar cambios de sesión en Supabase Auth si está configurado
     try {
-      if (auth) {
-        firebaseOnAuthStateChanged(auth, (fbUser) => {
-          if (fbUser && fbUser.email) {
+      if (isSupabaseConfigured()) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.user) {
+          const user = session.user;
+          const appUser: AppUser = {
+            uid: user.id,
+            email: user.email || '',
+            displayName: user.user_metadata?.display_name || user.email?.split('@')[0] || 'Atleta',
+            createdAt: user.created_at || new Date().toISOString(),
+          };
+          this.setCurrentUser(appUser);
+        } else {
+          this.loadLocalActiveSession();
+        }
+
+        supabase.auth.onAuthStateChange((_event, session) => {
+          if (session && session.user) {
+            const user = session.user;
             const appUser: AppUser = {
-              uid: fbUser.uid,
-              email: fbUser.email,
-              displayName: fbUser.displayName || fbUser.email.split('@')[0],
-              createdAt: fbUser.metadata.creationTime || new Date().toISOString(),
+              uid: user.id,
+              email: user.email || '',
+              displayName: user.user_metadata?.display_name || user.email?.split('@')[0] || 'Atleta',
+              createdAt: user.created_at || new Date().toISOString(),
             };
             this.setCurrentUser(appUser);
-            return;
+          } else if (_event === 'SIGNED_OUT') {
+            this.setCurrentUser(null);
           }
-          // Si no hay usuario de Firebase autenticado por email, comprobar sesión local
-          this.loadLocalActiveSession();
         });
       } else {
         this.loadLocalActiveSession();
       }
-    } catch {
+    } catch (err) {
+      console.warn('[AuthService] Inicialización de sesión local fallback:', err);
       this.loadLocalActiveSession();
     }
   }
@@ -112,7 +118,7 @@ class AuthService {
     return this.currentUser;
   }
 
-  // Registro de nuevo usuario
+  // Registro de nuevo usuario en Supabase Auth
   public async register(email: string, password: string, displayName: string): Promise<AppUser> {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = displayName.trim();
@@ -129,27 +135,34 @@ class AuthService {
 
     let uid = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    // Intentar registrar en Firebase Auth
-    try {
-      if (auth) {
-        const cred = await createUserWithEmailAndPassword(auth, cleanEmail, password);
-        if (cred.user) {
-          uid = cred.user.uid;
+    // Registro con Supabase Auth
+    if (isSupabaseConfigured()) {
+      const { data, error } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password,
+        options: {
+          data: {
+            display_name: cleanName,
+          },
+        },
+      });
+
+      if (error) {
+        if (error.message.includes('already registered')) {
+          throw new Error('Este correo ya se encuentra registrado. Por favor inicia sesión.');
         }
+        throw new Error(error.message);
       }
-    } catch (fbErr: any) {
-      // Si Firebase responde con email-already-in-use, relanzar
-      if (fbErr.code === 'auth/email-already-in-use') {
-        throw new Error('Este correo ya se encuentra registrado. Por favor inicia sesión.');
+
+      if (data.user) {
+        uid = data.user.id;
       }
-      console.warn('Registro Firebase online diferido o local fallback:', fbErr.message);
     }
 
-    // Registrar en almacenamiento de usuarios para aislamiento estricto
+    // Registrar también localmente para alta disponibilidad offline
     const users = getLocalUsers();
-    // Verificar si el correo ya existe localmente
     const existing = Object.values(users).find((u) => u.email === cleanEmail);
-    if (existing) {
+    if (existing && !isSupabaseConfigured()) {
       throw new Error('Este correo electrónico ya está registrado.');
     }
 
@@ -157,7 +170,7 @@ class AuthService {
       uid,
       email: cleanEmail,
       displayName: cleanName,
-      passwordHash: btoa(password), // Simulación de verificación local
+      passwordHash: btoa(password),
       createdAt: new Date().toISOString(),
     };
     saveLocalUsers(users);
@@ -173,33 +186,35 @@ class AuthService {
     return newUser;
   }
 
-  // Inicio de sesión
+  // Inicio de sesión con Supabase Auth
   public async login(email: string, password: string): Promise<AppUser> {
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !password) {
       throw new Error('Por favor completa todos los campos.');
     }
 
-    // Intentar en Firebase Auth
-    try {
-      if (auth) {
-        const cred = await signInWithEmailAndPassword(auth, cleanEmail, password);
-        if (cred.user) {
-          const appUser: AppUser = {
-            uid: cred.user.uid,
-            email: cred.user.email || cleanEmail,
-            displayName: cred.user.displayName || cleanEmail.split('@')[0],
-            createdAt: cred.user.metadata.creationTime || new Date().toISOString(),
-          };
-          this.setCurrentUser(appUser);
-          return appUser;
-        }
+    // Intentar inicio de sesión en Supabase
+    if (isSupabaseConfigured()) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+
+      if (error) {
+        console.warn('[Supabase Auth] Fallo online, verificando sesión local:', error.message);
+      } else if (data.user) {
+        const appUser: AppUser = {
+          uid: data.user.id,
+          email: data.user.email || cleanEmail,
+          displayName: data.user.user_metadata?.display_name || cleanEmail.split('@')[0],
+          createdAt: data.user.created_at || new Date().toISOString(),
+        };
+        this.setCurrentUser(appUser);
+        return appUser;
       }
-    } catch (fbErr: any) {
-      console.warn('Login Firebase online diferido, verificando local:', fbErr.code);
     }
 
-    // Verificación en usuarios locales
+    // Verificación en usuarios locales (fallback offline)
     const users = getLocalUsers();
     const found = Object.values(users).find(
       (u) => u.email === cleanEmail && u.passwordHash === btoa(password)
@@ -220,30 +235,29 @@ class AuthService {
     return appUser;
   }
 
-  // Recuperación de contraseña
+  // Recuperación de contraseña vía Supabase
   public async resetPassword(email: string): Promise<void> {
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !cleanEmail.includes('@')) {
       throw new Error('Por favor ingresa un correo electrónico válido.');
     }
 
-    try {
-      if (auth) {
-        await sendPasswordResetEmail(auth, cleanEmail);
+    if (isSupabaseConfigured()) {
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);
+      if (error) {
+        throw new Error(error.message);
       }
-    } catch (e) {
-      console.warn('Reset password email online diferido:', e);
     }
   }
 
   // Cierre de sesión
   public async logout(): Promise<void> {
-    try {
-      if (auth) {
-        await firebaseSignOut(auth);
+    if (isSupabaseConfigured()) {
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.warn('Supabase signOut error:', e);
       }
-    } catch (e) {
-      console.warn('Firebase signOut error:', e);
     }
     this.setCurrentUser(null);
   }
@@ -254,7 +268,6 @@ class AuthService {
     delete users[userId];
     saveLocalUsers(users);
 
-    // Limpiar claves asociadas a este usuario
     const keysToRemove = [
       `maxform_user_${userId}_profile`,
       `maxform_user_${userId}_state`,

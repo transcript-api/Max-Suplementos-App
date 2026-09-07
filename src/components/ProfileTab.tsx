@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { calculateLevelFromXP } from '../lib/gamification';
+import { LEVEL_PROTOCOLS, checkLevelCooldown, CooldownStatus } from '../lib/levelProtocols';
+import { CommitmentLevel } from '../types';
 
 interface ProfileTabProps {
   xp: number;
@@ -18,6 +20,11 @@ interface ProfileTabProps {
   onOpenAuth?: () => void;
   weightKg?: number;
   formScore?: number;
+  commitmentLevel?: CommitmentLevel;
+  levelSelectedAt?: string;
+  levelGraceAvailable?: boolean;
+  nextLevelChangeAllowedAt?: string;
+  onOpenLevelModal?: () => void;
 }
 
 export const ProfileTab: React.FC<ProfileTabProps> = ({
@@ -37,8 +44,12 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   onOpenAuth,
   weightKg,
   formScore = 0,
+  commitmentLevel = 'Básico',
+  levelSelectedAt,
+  levelGraceAvailable = false,
+  nextLevelChangeAllowedAt,
+  onOpenLevelModal,
 }) => {
-  const [commitmentLevel, setCommitmentLevel] = useState<'Básico' | 'Intermedio' | 'Avanzado' | 'Extremo'>('Avanzado');
   const [bpm, setBpm] = useState(72);
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
@@ -277,54 +288,85 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         </div>
       )}
 
-      {/* Selector de Nivel de Compromiso */}
-      <div className="bg-[#1d2024] rounded-xl p-5 border border-[#282a2f] space-y-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">tune</span>
-            <h3 className="font-headline-md text-white font-bold">Nivel de Compromiso</h3>
-          </div>
-          <p className="text-xs text-[#8d90a0] mt-1">
-            Ajusta el rigor de las recomendaciones de MAX AI y la tolerancia de tus metas metabólicas.
-          </p>
-        </div>
+      {/* Protocolo de Nivel de Compromiso y Cooldown */}
+      {(() => {
+        const proto = LEVEL_PROTOCOLS[commitmentLevel] || LEVEL_PROTOCOLS.Básico;
+        const cooldown: CooldownStatus = checkLevelCooldown(
+          levelSelectedAt,
+          levelGraceAvailable,
+          nextLevelChangeAllowedAt
+        );
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {(['Básico', 'Intermedio', 'Avanzado', 'Extremo'] as const).map((lvl) => (
-            <button
-              key={lvl}
-              type="button"
-              onClick={() => setCommitmentLevel(lvl)}
-              className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all text-center border ${
-                commitmentLevel === lvl
-                  ? 'bg-[#2563eb] text-white border-[#2563eb] shadow-md scale-[1.02]'
-                  : 'bg-[#191c20] text-[#8d90a0] border-[#282a2f] hover:text-white'
-              }`}
+        return (
+          <div className="bg-[#1d2024] rounded-xl p-5 border border-[#282a2f] space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">tune</span>
+                  <h3 className="font-headline-md text-white font-bold">Protocolo de Nivel de Compromiso</h3>
+                </div>
+                <p className="text-xs text-[#8d90a0] mt-1">
+                  Ciclos cerrados de 14 días para asegurar adaptaciones fisiológicas reales sin alternar a capricho.
+                </p>
+              </div>
+
+              {onOpenLevelModal && (
+                <button
+                  type="button"
+                  onClick={onOpenLevelModal}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border self-start sm:self-auto bg-[#14161c] text-white hover:scale-[1.02] shadow-sm flex items-center gap-1.5"
+                  style={{ borderColor: `${proto.themeColor}55` }}
+                >
+                  {cooldown.isAllowed ? (
+                    <>
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{cooldown.hasGraceOpportunity ? '⚡ Recalibrar nivel (1 oportunidad)' : '🔄 Calibrar próximo ciclo'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>🔒</span>
+                      <span className="text-amber-300">Bloqueado: {cooldown.daysRemaining}d {cooldown.hoursRemaining}h</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {/* Banner de estado del protocolo actual */}
+            <div 
+              className={`p-3.5 rounded-xl border ${proto.bgTint} ${proto.borderTint} flex items-start justify-between gap-3`}
             >
-              {lvl}
-            </button>
-          ))}
-        </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-black text-white">Nivel Actual: {proto.name}</span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${proto.badgeClass}`}>
+                    {proto.badgeTitle}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 italic">
+                  "{proto.tagline}"
+                </p>
+                <div className="pt-2 grid grid-cols-2 gap-2 text-[11px] text-slate-400">
+                  <div>🏋️ {proto.weeklyWorkouts} ({proto.workoutDuration})</div>
+                  <div>🥩 {proto.proteinRatio}</div>
+                  <div>💧 {proto.hydrationGoal}</div>
+                  <div>📋 {proto.taskCount} tareas diarias</div>
+                </div>
+              </div>
+            </div>
 
-        {/* Explicación del nivel seleccionado */}
-        <div className="p-3.5 bg-[#191c20] rounded-xl border border-[#282a2f] space-y-1.5 text-xs text-[#c3c6d7]">
-          <span className="text-[#b4c5ff] font-bold block uppercase tracking-wider text-[11px]">
-            Reglas del Nivel {commitmentLevel}:
-          </span>
-          {commitmentLevel === 'Básico' && (
-            <p>2 litros de agua diarios, registro libre sin pesaje obligatorio, 3 entrenamientos semanales.</p>
-          )}
-          {commitmentLevel === 'Intermedio' && (
-            <p>120g de proteína asegurada, control calórico moderado, 4 entrenamientos y chequeo quincenal.</p>
-          )}
-          {commitmentLevel === 'Avanzado' && (
-            <p>150g de proteína estricta, telemetría biométrica continua, 3L de agua y control de sobrecarga progresiva en cada sesión.</p>
-          )}
-          {commitmentLevel === 'Extremo' && (
-            <p>Pesaje al gramo, fotos biométricas cada 7 días, telemetría cardíaca en vivo, sin cheat meals permitidas.</p>
-          )}
-        </div>
-      </div>
+            {/* Explicación científica del período de 14 días */}
+            <div className="p-3 bg-[#13151a] rounded-xl border border-[#23252b] text-xs text-slate-400 space-y-1">
+              <span className="text-slate-300 font-bold block text-[11px]">
+                ⚖️ Por qué el protocolo exige 14 días:
+              </span>
+              <p className="text-[11px] leading-relaxed">
+                La síntesis proteica miofibrilar, los depósitos de glucógeno y la adaptación del sistema nervioso central requieren estabilidad en el estímulo. MAXFORM restringe el cambio a 1 oportunidad inicial y posteriormente ventanas quincenales.
+              </p>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Dispositivos Wearables Sincronizados */}
       <div className="bg-[#1d2024] rounded-xl p-5 border border-[#282a2f] space-y-4">

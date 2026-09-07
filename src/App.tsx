@@ -22,8 +22,8 @@ import { ProteinWeeklyChart } from './components/ProteinWeeklyChart';
 import { SupplementReplenishmentCard } from './components/SupplementReplenishmentCard';
 import { AnimatedCounter } from './components/AnimatedCounter';
 import { suggestMealFromFoods, MealSuggestion } from './lib/gemini';
-import { db, ensureAuthUser } from './lib/firebase';
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { ensureAuthUser } from './lib/supabase';
+import { supabaseRepository } from './lib/supabaseRepository';
 import { offlineSync, SyncStatus } from './lib/offlineSync';
 import { MacroNutrients } from './types';
 import { reconcileAthleteData, LocalAthleteState } from './lib/reconciliation';
@@ -42,7 +42,10 @@ import {
   deleteUserData
 } from './lib/userStore';
 import { calculateLevelFromXP, calculateDailyForm, calculateStreak } from './lib/gamification';
-import { OnboardingProfileInput } from './lib/objectiveEngine';
+import { OnboardingProfileInput, generatePersonalizedObjectives } from './lib/objectiveEngine';
+import { ProtocolChangeModal } from './components/ProtocolChangeModal';
+import { LevelExclusivesCard } from './components/LevelExclusivesCard';
+import { checkLevelCooldown } from './lib/levelProtocols';
 
 export type CommitmentLevel = 'Básico' | 'Intermedio' | 'Avanzado' | 'Extremo';
 
@@ -114,6 +117,10 @@ interface DashboardProps {
   onClaimReward: (xp: number, title: string) => void;
   commitmentLevel: CommitmentLevel;
   setCommitmentLevel: (lvl: CommitmentLevel) => void;
+  levelSelectedAt?: string;
+  levelGraceAvailable?: boolean;
+  nextLevelChangeAllowedAt?: string;
+  onOpenLevelModal: () => void;
   tasks: DailyTaskItem[];
   onToggleTask: (taskId: DailyTaskItem['id']) => void;
   energyPercent: number;
@@ -148,6 +155,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onClaimReward,
   commitmentLevel,
   setCommitmentLevel,
+  levelSelectedAt,
+  levelGraceAvailable,
+  nextLevelChangeAllowedAt,
+  onOpenLevelModal,
   tasks,
   onToggleTask,
   energyPercent,
@@ -394,29 +405,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
 
-          {/* Selector de Nivel de Compromiso con los colores especificados */}
-          <div className="flex items-center gap-1 p-1 rounded-xl dark:bg-[#111318] bg-slate-100 border dark:border-[#282a2f] border-slate-200 self-start sm:self-auto">
-            {(['Básico', 'Intermedio', 'Avanzado', 'Extremo'] as const).map((lvl) => {
-              const isSelected = commitmentLevel === lvl;
-              const cfg = LEVEL_CONFIGS[lvl];
-              return (
-                <button
-                  key={lvl}
-                  type="button"
-                  onClick={() => setCommitmentLevel(lvl)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
-                    isSelected
-                      ? 'text-white shadow-md scale-[1.02]'
-                      : 'dark:text-[#8d90a0] text-slate-500 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                  style={{
-                    backgroundColor: isSelected ? cfg.barColor : 'transparent',
-                  }}
-                >
-                  {lvl}
-                </button>
-              );
-            })}
+          {/* Indicador de Protocolo de Nivel y Cooldown */}
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={onOpenLevelModal}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all dark:bg-[#111318] bg-slate-100 hover:scale-[1.02] shadow-sm"
+              style={{
+                borderColor: `${currentLevelConfig.barColor}55`,
+              }}
+            >
+              <span
+                className="w-2.5 h-2.5 rounded-full"
+                style={{ backgroundColor: currentLevelConfig.barColor }}
+              />
+              <span className="dark:text-white text-slate-800 font-extrabold">
+                {commitmentLevel}
+              </span>
+              <span className="text-[10px] text-slate-400">· Protocolo</span>
+              <span className="text-xs opacity-75">⚖️</span>
+            </button>
           </div>
         </div>
 
@@ -472,6 +480,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </section>
+
+      {/* 2.5. Card Exclusiva del Nivel de Compromiso (Exigencias, reglas de Form y estado de cooldown) */}
+      <LevelExclusivesCard
+        level={commitmentLevel}
+        levelSelectedAt={levelSelectedAt}
+        levelGraceAvailable={levelGraceAvailable}
+        nextLevelChangeAllowedAt={nextLevelChangeAllowedAt}
+        onOpenLevelModal={onOpenLevelModal}
+        completedTasksCount={completedTasksCount}
+        totalTasksCount={tasks.length}
+        formScore={energyPercent}
+      />
 
       {/* 3. Componente DailyTasks con Casillas de Verificación Interactivas */}
       <DailyTasks
@@ -654,6 +674,7 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState<boolean>(false);
+  const [isProtocolModalOpen, setIsProtocolModalOpen] = useState<boolean>(false);
 
   // Modo Demo vs Modo Usuario Real (Por defecto FALSE -> Nuevo Usuario)
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => {
@@ -857,28 +878,23 @@ export default function App() {
     details?: string[];
   } | null>(null);
 
-  // Manejador central de resolución de conflictos y reconciliación con Firestore
-  const reconcileWithFirestore = useCallback(
+  // Manejador central de resolución de conflictos y reconciliación con Supabase PostgreSQL
+  const reconcileWithSupabase = useCallback(
     async (
       trigger: 'initial' | 'online' | 'manual' | 'snapshot',
       forcedSnapshot?: any
     ): Promise<boolean> => {
       try {
         const user = await ensureAuthUser();
-        if (!user || !db) return false;
-        const userId = currentUser ? currentUser.uid : 'guest_athlete';
-        const userDocRef = doc(db, 'users', userId);
+        const userId = currentUser ? currentUser.uid : (user?.id || 'guest_athlete');
 
         let remoteData = forcedSnapshot;
         if (!remoteData) {
-          const snap = await getDoc(userDocRef);
-          if (snap.exists()) {
-            remoteData = snap.data();
-          }
+          remoteData = await supabaseRepository.loadAthleteState(userId);
         }
 
         if (!remoteData) {
-          console.log('[Reconciliación MAXFORM] No hay snapshot remoto en Firestore; preservando estado local.');
+          console.log('[Reconciliación MAXFORM] No hay snapshot remoto en Supabase; preservando estado local.');
           return false;
         }
 
@@ -913,16 +929,12 @@ export default function App() {
             return updated;
           });
 
-          // Escribir el estado unificado y libre de conflictos a Firestore
-          await setDoc(
-            userDocRef,
-            {
-              ...merged,
-              lastSyncedAt: new Date().toISOString(),
-              offlineSynced: true,
-            },
-            { merge: true }
-          );
+          // Escribir el estado unificado y libre de conflictos a Supabase PostgreSQL
+          await supabaseRepository.saveAthleteState({
+            ...currentLocal,
+            ...merged,
+            userId,
+          });
 
           // Limpiar cola pendiente puesto que sus deltas ya fueron consolidados en el snapshot
           if (pendingQueue.length > 0) {
@@ -944,7 +956,7 @@ export default function App() {
 
         return false;
       } catch (err) {
-        console.warn('[Reconciliación MAXFORM] Error al sincronizar con Firestore:', err);
+        console.warn('[Reconciliación MAXFORM] Error al sincronizar con Supabase:', err);
         return false;
       }
     },
@@ -953,72 +965,100 @@ export default function App() {
 
   // Sincronización y reconciliación manual iniciada por el usuario
   const handleManualSync = useCallback(async () => {
-    await reconcileWithFirestore('manual');
+    await reconcileWithSupabase('manual');
     await offlineSync.syncPendingActions();
-  }, [reconcileWithFirestore]);
+  }, [reconcileWithSupabase]);
 
   // Suscripción al recuperador de red (evento 'online' del navegador)
   useEffect(() => {
     const unregister = offlineSync.registerReconciler(async () => {
-      console.log('[MAXFORM] Red recuperada: ejecutando reconciliador contra Firestore...');
-      await reconcileWithFirestore('online');
+      console.log('[MAXFORM] Red recuperada: ejecutando reconciliador contra Supabase...');
+      await reconcileWithSupabase('online');
     });
 
     return unregister;
-  }, [reconcileWithFirestore]);
+  }, [reconcileWithSupabase]);
 
-  // Listener en tiempo real de Firestore para recibir cambios externos
+  // Listener en tiempo real de Supabase (Postgres Changes) para recibir cambios externos
   useEffect(() => {
-    let unsubscribeSnapshot: (() => void) | undefined;
-
-    async function initSnapshotListener() {
-      try {
-        const user = await ensureAuthUser();
-        if (!user || !db) return;
-        const userId = currentUser ? currentUser.uid : (isDemoMode ? 'santiago-athlete-01' : 'guest_athlete');
-        const userDocRef = doc(db, 'users', userId);
-
-        unsubscribeSnapshot = onSnapshot(
-          userDocRef,
-          (snapshot) => {
-            if (snapshot.metadata.hasPendingWrites) {
-              return;
-            }
-
-            if (snapshot.exists()) {
-              const remoteData = snapshot.data();
-              reconcileWithFirestore('snapshot', remoteData);
-            }
-          },
-          (error) => {
-            console.warn('[MAXFORM] Listener de snapshot offline diferido:', error);
-          }
-        );
-      } catch (e) {
-        console.warn('[MAXFORM] Error inicializando listener de Firestore:', e);
-      }
-    }
-
-    initSnapshotListener();
+    const userId = currentUser ? currentUser.uid : (isDemoMode ? 'santiago-athlete-01' : 'guest_athlete');
+    const unsubscribe = supabaseRepository.subscribeToAthleteChanges(userId, (remoteData) => {
+      reconcileWithSupabase('snapshot', remoteData);
+    });
 
     return () => {
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
+      if (unsubscribe) unsubscribe();
     };
-  }, [reconcileWithFirestore, currentUser, isDemoMode]);
+  }, [reconcileWithSupabase, currentUser, isDemoMode]);
 
-  // Cargar estado inicial y reconciliar con Firestore
+  // Cargar estado inicial y reconciliar con Supabase
   useEffect(() => {
-    reconcileWithFirestore('initial');
-  }, [reconcileWithFirestore]);
+    reconcileWithSupabase('initial');
+  }, [reconcileWithSupabase]);
 
-  // Nivel de compromiso
-  const setCommitmentLevel = (lvl: CommitmentLevel) => {
+  // Cambio y recalibración de nivel de compromiso bajo protocolo de 14 días
+  const handleConfirmLevelChange = (newLvl: CommitmentLevel) => {
+    // 1. Verificar cooldown y oportunidad de gracia
+    const cooldown = checkLevelCooldown(
+      userState.levelSelectedAt,
+      userState.levelGraceAvailable,
+      userState.nextLevelChangeAllowedAt
+    );
+    if (!cooldown.isAllowed) {
+      return;
+    }
+
+    // 2. Recalibrar objetivos y metas nutricionales con el nuevo nivel
+    const input: OnboardingProfileInput = userState.onboardingData || {
+      name: userState.name || 'Atleta',
+      gender: 'Hombre',
+      main_goal: 'Recomposición corporal',
+      experience_level: newLvl,
+      weight: userState.biometrics?.weightKg || 75,
+      height: userState.biometrics?.heightCm || 175,
+      age: userState.biometrics?.age || 26,
+      training_type: 'Gimnasio',
+      training_days_per_week: newLvl === 'Básico' ? 3 : newLvl === 'Intermedio' ? 4 : 5,
+      diet_type: 'Omnívora',
+      supplements: [],
+      supplement_timing: 'Mañana',
+    };
+
+    const updatedInput: OnboardingProfileInput = {
+      ...input,
+      experience_level: newLvl,
+    };
+
+    const generated = generatePersonalizedObjectives(updatedInput);
+    const completedCount = generated.dailyObjectives.filter((t) => t.completed).length;
+    const formScore = calculateDailyForm(completedCount, generated.dailyObjectives.length);
+
+    const now = new Date();
+    const nextAllowed = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString();
+
     const updated: UserState = {
       ...userState,
-      commitmentLevel: lvl,
+      commitmentLevel: newLvl,
+      levelSelectedAt: now.toISOString(),
+      levelGraceAvailable: false, // Consumida la oportunidad libre tras el primer cambio
+      nextLevelChangeAllowedAt: nextAllowed,
+      tasks: generated.dailyObjectives,
+      macros: generated.macros,
+      targets: {
+        hydrationLiters: generated.hydrationTargetLiters,
+        proteinGrams: generated.proteinTargetGrams,
+        calories: generated.calorieTarget,
+      },
+      onboardingData: updatedInput,
+      formScore,
+      completedObjectives: completedCount,
+      updatedAt: now.toISOString(),
     };
+
     setUserState(updated);
-    if (!isDemoMode && currentUser) saveUserData(updated);
+    if (!isDemoMode) {
+      saveUserData(updated);
+    }
   };
 
   // Manejador para alternar tareas diarias
@@ -1364,7 +1404,11 @@ export default function App() {
             onAddMealEntry={handleAddMealEntry}
             onClaimReward={handleClaimReward}
             commitmentLevel={commitmentLevel}
-            setCommitmentLevel={setCommitmentLevel}
+            setCommitmentLevel={handleConfirmLevelChange}
+            levelSelectedAt={userState.levelSelectedAt}
+            levelGraceAvailable={userState.levelGraceAvailable}
+            nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+            onOpenLevelModal={() => setIsProtocolModalOpen(true)}
             tasks={tasks}
             onToggleTask={handleToggleTask}
             energyPercent={energyPercent}
@@ -1451,6 +1495,11 @@ export default function App() {
             onOpenAuth={() => setIsAuthModalOpen(true)}
             weightKg={userState.biometrics?.weightKg}
             formScore={energyPercent}
+            commitmentLevel={commitmentLevel}
+            levelSelectedAt={userState.levelSelectedAt}
+            levelGraceAvailable={userState.levelGraceAvailable}
+            nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+            onOpenLevelModal={() => setIsProtocolModalOpen(true)}
           />
         )}
       </main>
@@ -1469,6 +1518,17 @@ export default function App() {
         onClose={() => setIsOnboardingOpen(false)}
         onComplete={handleOnboardingComplete}
         isDark={isDark}
+      />
+
+      {/* Modal de Protocolo de Nivel y Cooldown de 14 Días */}
+      <ProtocolChangeModal
+        isOpen={isProtocolModalOpen}
+        onClose={() => setIsProtocolModalOpen(false)}
+        currentLevel={commitmentLevel}
+        levelSelectedAt={userState.levelSelectedAt}
+        levelGraceAvailable={userState.levelGraceAvailable}
+        nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+        onConfirmLevelChange={handleConfirmLevelChange}
       />
 
       {/* Modal de Planes MAXMIND Premium */}

@@ -51,41 +51,49 @@ export function generatePersonalizedObjectives(input: OnboardingProfileInput): G
   const safeHeight = Math.max(120, Math.min(230, height || 170));
   const safeAge = Math.max(14, Math.min(95, age || 25));
 
-  // 1. Cálculo de Hidratación Basal
-  // ~35 ml por kg de peso corporal
-  const rawHydration = (safeWeight * 35) / 1000;
-  const hydrationTarget = Number(Math.max(2.0, Math.min(3.8, rawHydration)).toFixed(1));
+  // 1. Cálculo de Hidratación según Nivel de Exigencia
+  let baseHydration = (safeWeight * 35) / 1000;
+  if (experience_level === 'Básico') {
+    baseHydration = Math.min(2.3, Math.max(2.0, (safeWeight * 30) / 1000));
+  } else if (experience_level === 'Intermedio') {
+    baseHydration = Math.min(3.0, Math.max(2.7, (safeWeight * 36) / 1000));
+  } else if (experience_level === 'Avanzado') {
+    baseHydration = Math.min(3.5, Math.max(3.2, (safeWeight * 42) / 1000));
+  } else if (experience_level === 'Extremo') {
+    baseHydration = Math.min(4.0, Math.max(3.6, (safeWeight * 48) / 1000));
+  }
+  const hydrationTarget = Number(baseHydration.toFixed(1));
 
-  // 2. Cálculo de Proteína
+  // 2. Cálculo de Proteína según Nivel de Exigencia
   let proteinFactor = 1.6;
-  if (primary_goal === 'Ganar masa muscular') {
-    proteinFactor = experience_level === 'Avanzado' || experience_level === 'Extremo' ? 2.0 : 1.8;
-  } else if (primary_goal === 'Perder grasa') {
-    proteinFactor = 2.0; // Preservación muscular en déficit
-  } else if (primary_goal === 'Mejorar mi rendimiento') {
-    proteinFactor = 1.8;
-  } else {
-    proteinFactor = 1.5;
+  if (experience_level === 'Básico') {
+    proteinFactor = primary_goal === 'Ganar masa muscular' ? 1.4 : 1.3;
+  } else if (experience_level === 'Intermedio') {
+    proteinFactor = primary_goal === 'Ganar masa muscular' ? 1.8 : 1.6;
+  } else if (experience_level === 'Avanzado') {
+    proteinFactor = primary_goal === 'Ganar masa muscular' ? 2.0 : 1.9;
+  } else if (experience_level === 'Extremo') {
+    proteinFactor = primary_goal === 'Ganar masa muscular' ? 2.3 : 2.2;
   }
   const proteinGrams = Math.round(safeWeight * proteinFactor);
 
   // 3. Estimación de TMB y Calorías (Mifflin-St Jeor)
   const bmr = 10 * safeWeight + 6.25 * safeHeight - 5 * safeAge + 5;
   let activityMultiplier = 1.35;
-  if (training_frequency === '0') activityMultiplier = 1.2;
-  else if (training_frequency === '1–2') activityMultiplier = 1.35;
-  else if (training_frequency === '3–4') activityMultiplier = 1.5;
-  else if (training_frequency === '5–6' || training_frequency === '7') activityMultiplier = 1.65;
+  if (experience_level === 'Básico') activityMultiplier = 1.25;
+  else if (experience_level === 'Intermedio') activityMultiplier = 1.45;
+  else if (experience_level === 'Avanzado') activityMultiplier = 1.65;
+  else if (experience_level === 'Extremo') activityMultiplier = 1.8;
 
   const tdee = Math.round(bmr * activityMultiplier);
   let targetCalories = tdee;
   if (primary_goal === 'Ganar masa muscular') {
-    targetCalories = tdee + 280; // Superávit moderado
+    targetCalories = tdee + (experience_level === 'Extremo' ? 380 : 260);
   } else if (primary_goal === 'Perder grasa') {
-    targetCalories = Math.max(1400, tdee - 400); // Déficit controlado
+    targetCalories = Math.max(1400, tdee - (experience_level === 'Extremo' ? 480 : 350));
   }
 
-  const fatsGrams = Math.round((safeWeight * 0.85));
+  const fatsGrams = Math.round((safeWeight * (experience_level === 'Extremo' ? 0.9 : 0.8)));
   const caloriesFromProteinAndFat = proteinGrams * 4 + fatsGrams * 9;
   const remainingCaloriesForCarbs = Math.max(200, targetCalories - caloriesFromProteinAndFat);
   const carbsGrams = Math.round(remainingCaloriesForCarbs / 4);
@@ -97,130 +105,143 @@ export function generatePersonalizedObjectives(input: OnboardingProfileInput): G
     calories: targetCalories,
   };
 
-  // 4. Generación determinista de Objetivos Diarios (DailyTaskItem)
+  // 4. Generación determinista de Objetivos Diarios (DailyTaskItem) según Nivel
   const objectives: DailyTaskItem[] = [];
 
-  // OBJETIVO 1: ENTRENAMIENTO / ACTIVIDAD FÍSICA
-  if (training_frequency === '0') {
+  // TAREA 1: ENTRENAMIENTO / ACTIVIDAD ADAPTADA AL NIVEL
+  if (experience_level === 'Básico') {
     objectives.push({
       id: 'entrenamiento',
-      title: 'Caminata Activa & Movilidad',
-      subtitle: '25-30 min a paso ligero',
-      detail: 'Activación cardiovascular suave para crear el hábito sin sobrecarga articular.',
-      xpReward: DEFAULT_XP_CONFIG.training,
-      completed: false, // ¡TODO NUEVO USUARIO EMPIEZA EN FALSO!
-      icon: 'directions_walk',
-      accentColor: '#3B82F6',
-    });
-  } else {
-    let workoutTitle = 'Sesión de Entrenamiento';
-    let workoutSubtitle = '45-60 min programados';
-    let workoutDetail = 'Completar la sesión enfocada en técnica y control de carga.';
-    let icon = 'fitness_center';
-
-    if (training_type.includes('Gimnasio')) {
-      workoutTitle = 'Fuerza & Hipertrofia (Gimnasio)';
-      workoutSubtitle = 'Rutina de pesas programada';
-      workoutDetail = 'Trabajo de sobrecarga progresiva y estímulo mecánico muscular.';
-      icon = 'fitness_center';
-    } else if (training_type.includes('Running')) {
-      workoutTitle = 'Sesión de Running';
-      workoutSubtitle = 'Distancia o tiempo planificado';
-      workoutDetail = 'Cardio y resistencia aeróbica según tu planificación semanal.';
-      icon = 'directions_run';
-    } else if (training_type.includes('Cross training')) {
-      workoutTitle = 'WOD / Cross Training';
-      workoutSubtitle = 'Alta intensidad funcional';
-      workoutDetail = 'Sesión de acondicionamiento metabólico y fuerza aplicada.';
-      icon = 'bolt';
-    } else if (training_type.includes('Entrenamiento en casa')) {
-      workoutTitle = 'Rutina Funcional en Casa';
-      workoutSubtitle = '30-45 min peso corporal y bandas';
-      workoutDetail = 'Ejercicios de empuje, tracción y estabilidad corporal.';
-      icon = 'home';
-    } else if (training_type.includes('Deportes')) {
-      workoutTitle = 'Práctica Deportiva';
-      workoutSubtitle = 'Entrenamiento de campo o cancha';
-      workoutDetail = 'Desarrollo de habilidades específicas y condición física deportiva.';
-      icon = 'sports_soccer';
-    }
-
-    objectives.push({
-      id: 'entrenamiento',
-      title: workoutTitle,
-      subtitle: workoutSubtitle,
-      detail: workoutDetail,
+      title: 'Caminata Activa o Movilidad (25 min)',
+      subtitle: 'Ritmo ligero y sin sobreesfuerzo',
+      detail: 'Crea el hábito de movimiento diario sin sobrecargar articulaciones.',
       xpReward: DEFAULT_XP_CONFIG.training,
       completed: false,
-      icon,
+      icon: 'directions_walk',
+      accentColor: '#10B981',
+    });
+  } else if (experience_level === 'Intermedio') {
+    objectives.push({
+      id: 'entrenamiento',
+      title: 'Sesión Estructurada (45-50 min)',
+      subtitle: 'Fuerza, cardio o funcional planificado',
+      detail: 'Cumplir los bloques de trabajo con descansos medidos y buena técnica.',
+      xpReward: DEFAULT_XP_CONFIG.training,
+      completed: false,
+      icon: 'fitness_center',
       accentColor: '#3B82F6',
+    });
+  } else if (experience_level === 'Avanzado') {
+    objectives.push({
+      id: 'entrenamiento',
+      title: 'Entreno de Alto Rendimiento (60 min)',
+      subtitle: 'Sobrecarga progresiva y RPE 8-9',
+      detail: 'Monitorea series efectivas cerca del fallo muscular o potencia aeróbica.',
+      xpReward: DEFAULT_XP_CONFIG.training + 5,
+      completed: false,
+      icon: 'bolt',
+      accentColor: '#8B5CF6',
+    });
+  } else {
+    // Extremo
+    objectives.push({
+      id: 'entrenamiento',
+      title: 'Entrenamiento Élite · Máxima Intensidad',
+      subtitle: '75+ min o sesión planificada de alta carga',
+      detail: 'Tolerancia cero a descansos excesivos. Estímulo máximo neuromuscular.',
+      xpReward: DEFAULT_XP_CONFIG.training + 10,
+      completed: false,
+      icon: 'local_fire_department',
+      accentColor: '#EF4444',
     });
   }
 
-  // OBJETIVO 2: PROTEÍNA Y ALIMENTACIÓN
+  // TAREA 2: NUTRICIÓN Y PROTEÍNA
   const dietLabel = dietary_preferences ? ` (${dietary_preferences})` : '';
   objectives.push({
     id: 'nutricion',
-    title: `Alcanzar ${proteinGrams}g de Proteína${dietLabel}`,
-    subtitle: `Meta nutricional para ${primary_goal.toLowerCase()}`,
-    detail: `Consumo distribuido a lo largo del día para apoyar la síntesis proteica y saciedad.`,
+    title: `Consumir ${proteinGrams}g de Proteína${dietLabel}`,
+    subtitle: experience_level === 'Extremo' 
+      ? 'Pesado estricto al gramo (Tolerancia cero)'
+      : experience_level === 'Avanzado'
+      ? 'Fuentes de alto valor biológico (Leucina mTOR)'
+      : 'Distribución balanceada a lo largo del día',
+    detail: `Objetivo nutricional calibrado a tu nivel ${experience_level}.`,
     xpReward: DEFAULT_XP_CONFIG.protein,
     completed: false,
     icon: 'egg_alt',
-    accentColor: '#10B981',
+    accentColor: experience_level === 'Extremo' ? '#EF4444' : experience_level === 'Avanzado' ? '#8B5CF6' : experience_level === 'Intermedio' ? '#3B82F6' : '#10B981',
   });
 
-  // OBJETIVO 3: HIDRATACIÓN BASAL
+  // TAREA 3: HIDRATACIÓN
   objectives.push({
     id: 'agua',
-    title: `Hidratación Basal (${hydrationTarget}L)`,
-    subtitle: 'Consumo constante a lo largo del día',
-    detail: 'Mantiene la volemia, transporte de electrolitos y rendimiento cognitivo.',
+    title: `Hidratación (${hydrationTarget}L)`,
+    subtitle: experience_level === 'Extremo' 
+      ? 'Aporte de electrolitos y sales post-esfuerzo'
+      : 'Consumo constante a lo largo de la jornada',
+    detail: 'Mantiene el volumen plasmático, excreción renal y rendimiento celular.',
     xpReward: DEFAULT_XP_CONFIG.hydration,
     completed: false,
     icon: 'water_drop',
     accentColor: '#06B6D4',
   });
 
-  // OBJETIVO 4: SUPLEMENTACIÓN DEPORTIVA (SI CORRESPONDE)
-  if (supplements.length > 0) {
-    const primarySupp = supplements[0];
-    const suppNames = supplements.map((s) => s.name).join(' + ');
+  // TAREA 4: INTERMEDIO, AVANZADO Y EXTREMO (Movilidad o suplementación)
+  if (experience_level !== 'Básico') {
+    if (supplements.length > 0 || experience_level === 'Avanzado' || experience_level === 'Extremo') {
+      const suppName = supplements.length > 0 ? supplements.map(s => s.name).join(' + ') : 'Creatina (5g) / Proteína';
+      objectives.push({
+        id: 'suplemento',
+        title: `Protocolo de Suplementación (${suppName})`,
+        subtitle: 'Tomas cronometradas según tu ventana metabólica',
+        detail: 'Mantiene la saturación de fosfocreatina y soporte inmunológico.',
+        xpReward: DEFAULT_XP_CONFIG.supplement,
+        completed: false,
+        icon: 'medication',
+        accentColor: '#8B5CF6',
+      });
+    } else {
+      objectives.push({
+        id: 'movilidad',
+        title: 'Pausa de Movilidad & Recuperación (15 min)',
+        subtitle: 'Estiramiento dinámico o descompresión',
+        detail: 'Reducción de rigidez articular y estimulación del retorno venoso.',
+        xpReward: DEFAULT_XP_CONFIG.supplement,
+        completed: false,
+        icon: 'self_improvement',
+        accentColor: '#10B981',
+      });
+    }
+  }
+
+  // TAREA 5: AVANZADO Y EXTREMO (Descanso e Higiene del Sueño)
+  if (experience_level === 'Avanzado' || experience_level === 'Extremo') {
     objectives.push({
-      id: 'suplemento',
-      title: `Tomas de Suplementación (${suppNames})`,
-      subtitle: primarySupp.preferred_time || 'Según tu ventana diaria óptima',
-      detail: 'Toma regular de tus suplementos para mantener saturación y apoyo energético.',
-      xpReward: DEFAULT_XP_CONFIG.supplement,
+      id: 'sueno',
+      title: 'Higiene del Sueño & Descanso (7.5 - 8h)',
+      subtitle: 'Habitación oscura y sin pantallas 30 min antes',
+      detail: 'Clave para la liberación de GH y regeneración del sistema nervioso central.',
+      xpReward: DEFAULT_XP_CONFIG.sleep,
       completed: false,
-      icon: 'medication',
-      accentColor: '#8B5CF6',
-    });
-  } else {
-    // Si no toma suplementos, crear objetivo de recuperación o hábitos
-    objectives.push({
-      id: 'suplemento',
-      title: 'Pausa de Estiramiento o Movilidad',
-      subtitle: '10 minutos al levantarte o antes de dormir',
-      detail: 'Descompresión articular y relajación miofascial activa.',
-      xpReward: DEFAULT_XP_CONFIG.supplement,
-      completed: false,
-      icon: 'self_improvement',
-      accentColor: '#8B5CF6',
+      icon: 'bedtime',
+      accentColor: '#EC4899',
     });
   }
 
-  // OBJETIVO 5: SUEÑO Y RECUPERACIÓN
-  objectives.push({
-    id: 'sueno',
-    title: 'Descanso Reparador (7-8 Horas)',
-    subtitle: 'Higiene del sueño y oscuridad',
-    detail: 'Vital para la segregación de hormona de crecimiento y recuperación neuromuscular.',
-    xpReward: DEFAULT_XP_CONFIG.sleep,
-    completed: false,
-    icon: 'bedtime',
-    accentColor: '#EC4899',
-  });
+  // TAREA 6: EXTREMO (Tolerancia cero: Cierre y registro riguroso)
+  if (experience_level === 'Extremo') {
+    objectives.push({
+      id: 'cierre_elite',
+      title: 'Registro y Auditoría Total de la Jornada',
+      subtitle: 'Cero estimaciones; control exacto antes de las 23:00',
+      detail: 'El atleta de élite evalúa su jornada y deja lista la planificación de mañana.',
+      xpReward: 20,
+      completed: false,
+      icon: 'verified',
+      accentColor: '#F59E0B',
+    });
+  }
 
   return {
     dailyObjectives: objectives,

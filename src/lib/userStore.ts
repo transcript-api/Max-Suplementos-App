@@ -2,8 +2,7 @@ import { DailyTaskItem } from '../components/DailyTasks';
 import { MacroNutrients } from '../types';
 import { OnboardingProfileInput, generatePersonalizedObjectives } from './objectiveEngine';
 import { calculateLevelFromXP, calculateDailyForm } from './gamification';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from './firebase';
+import { supabaseRepository } from './supabaseRepository';
 export { authService } from './authService';
 export type { AppUser } from './authService';
 
@@ -20,6 +19,9 @@ export interface UserAppState {
   hydration: number;
   protein: number;
   commitmentLevel: 'Básico' | 'Intermedio' | 'Avanzado' | 'Extremo';
+  levelSelectedAt?: string;
+  levelGraceAvailable?: boolean;
+  nextLevelChangeAllowedAt?: string;
   tasks: DailyTaskItem[];
   macros: MacroNutrients;
   targets?: {
@@ -218,6 +220,9 @@ export function createCleanInitialUserState(userId: string, email: string, name:
     hydration: 0,
     protein: 0,
     commitmentLevel: 'Básico',
+    levelSelectedAt: new Date().toISOString(),
+    levelGraceAvailable: true, // 1 oportunidad tras el onboarding
+    nextLevelChangeAllowedAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     tasks: INITIAL_CLEAN_TASKS,
     macros: {
       protein: 130,
@@ -286,26 +291,22 @@ export function deleteUserData(userId: string): void {
 }
 
 /**
- * Carga el estado del usuario: primero intenta de Firestore si hay conexión,
+ * Carga el estado del usuario: primero intenta de Supabase PostgreSQL si hay conexión,
  * y luego de su clave de almacenamiento local aislada.
  */
 export async function loadUserData(userId: string, email: string, name: string): Promise<UserAppState> {
   const storageKey = getUserStorageKey(userId);
 
-  // 1. Intentar cargar desde Firestore
+  // 1. Intentar cargar desde Supabase PostgreSQL
   try {
-    if (db) {
-      const docRef = doc(db, 'users', userId);
-      const snap = await getDoc(docRef);
-      if (snap.exists()) {
-        const remote = snap.data() as UserAppState;
-        // Guardar copia local de este usuario
-        localStorage.setItem(storageKey, JSON.stringify(remote));
-        return remote;
-      }
+    const remote = await supabaseRepository.loadAthleteState(userId);
+    if (remote) {
+      // Guardar copia local de este usuario
+      localStorage.setItem(storageKey, JSON.stringify(remote));
+      return remote;
     }
   } catch (err) {
-    console.warn('[userStore] Consulta Firestore diferida:', err);
+    console.warn('[userStore] Consulta Supabase diferida:', err);
   }
 
   // 2. Fallback a estado local
@@ -313,7 +314,7 @@ export async function loadUserData(userId: string, email: string, name: string):
 }
 
 /**
- * Guarda el estado del usuario en su clave local y lo sincroniza en Firestore
+ * Guarda el estado del usuario en su clave local y lo sincroniza en Supabase PostgreSQL
  */
 export async function saveUserData(state: UserAppState): Promise<void> {
   if (!state || !state.userId) return;
@@ -330,14 +331,11 @@ export async function saveUserData(state: UserAppState): Promise<void> {
     console.warn('[userStore] Error escribiendo en localStorage:', e);
   }
 
-  // Guardar en Firestore si está disponible y no es el usuario demo
-  if (db && !state.userId.includes('demo')) {
-    try {
-      const docRef = doc(db, 'users', state.userId);
-      await setDoc(docRef, updatedState, { merge: true });
-    } catch (err) {
-      console.warn('[userStore] Escritura en Firestore diferida:', err);
-    }
+  // Guardar en Supabase PostgreSQL de forma asíncrona
+  if (!state.userId.includes('demo')) {
+    supabaseRepository.saveAthleteState(updatedState).catch((err) => {
+      console.warn('[userStore] Escritura en Supabase diferida:', err);
+    });
   }
 }
 
@@ -361,6 +359,9 @@ export function initializeUserFromOnboarding(
     ...currentState,
     name: onboardingInput.name.trim() || currentState.name,
     commitmentLevel: onboardingInput.experience_level,
+    levelSelectedAt: new Date().toISOString(),
+    levelGraceAvailable: true, // Dispone de 1 oportunidad tras el onboarding para cambiarlo
+    nextLevelChangeAllowedAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     tasks: generated.dailyObjectives,
     macros: generated.macros,
     targets: {

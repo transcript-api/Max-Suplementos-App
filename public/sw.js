@@ -1,12 +1,12 @@
 // MAXFORM Performance System - Service Worker (Offline Cache & Sync)
-const CACHE_NAME = 'maxform-cache-v1';
+const CACHE_NAME = 'maxform-cache-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/src/main.tsx',
-  '/src/App.tsx',
-  '/src/index.css'
+  '/maxmind-symbol.svg',
+  '/maxmind-logo.svg',
+  '/maxmind-logo-dark.svg'
 ];
 
 // Instalación: Cachear shell de la aplicación
