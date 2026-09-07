@@ -297,66 +297,78 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           <div className="p-3.5 bg-[#102A56]/60 border border-[#2563EB]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-[#2563EB] text-white flex items-center justify-center font-bold flex-shrink-0">
-                {isDemoMode ? '#127' : '#1'}
+                {isDemoMode ? '#127' : (xp > 0 ? '#1' : '-')}
               </div>
               <div>
                 <span className="text-xs font-bold text-white block">
-                  {isDemoMode ? '¡A solo 12 XP de superar el puesto #126!' : 'Liga Bronce · Atleta en Iniciación'}
+                  {isDemoMode 
+                    ? '¡A solo 12 XP de superar el puesto #126!' 
+                    : (xp > 0 ? 'Liga Bronce · Atleta en Ascenso' : 'Todavía no tenés una posición')}
                 </span>
                 <span className="text-[11px] text-[#CBD5E1]">
                   {isDemoMode
                     ? 'Cumple una tarea diaria más hoy para adelantar a Mateo R. (4.872 XP).'
-                    : 'Registra tus primeros objetivos diarios para sumar XP y ascender a Liga Plata.'}
+                    : (xp > 0 ? '¡Seguí sumando XP con tus tareas para subir en la Liga!' : 'Completá tus primeros objetivos para entrar al ranking.')}
                 </span>
               </div>
             </div>
             <span className="px-2.5 py-1 rounded-lg bg-[#2563EB]/20 text-[#3B82F6] text-xs font-black border border-[#2563EB]/40 whitespace-nowrap">
-              {isDemoMode ? '+12 XP' : '¡Empezá hoy!'}
+              {isDemoMode ? '+12 XP' : (xp > 0 ? `${xp} XP` : '0 XP')}
             </span>
           </div>
 
           <div className="space-y-2">
-            {(isDemoMode ? [
-              { rank: 1, name: 'Lucas F.', xp: 5120, badge: '🥇', level: 'Nivel 8', delta: '+150' },
-              { rank: 2, name: 'Camila V.', xp: 5040, badge: '🥈', level: 'Nivel 8', delta: '+120' },
-              { rank: 3, name: 'Martín G.', xp: 4980, badge: '🥉', level: 'Nivel 7', delta: '+95' },
-              { rank: 125, name: 'Ignacio M.', xp: 4890, badge: '', level: 'Nivel 7', delta: '+30' },
-              { rank: 126, name: 'Mateo R.', xp: 4872, badge: '', level: 'Nivel 7', delta: '+15' },
-              { rank: 127, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: 'Nivel 7', isYou: true, delta: '+45' },
-              { rank: 128, name: 'Valentin D.', xp: 4840, badge: '', level: 'Nivel 7', delta: '+20' },
-              { rank: 129, name: 'Agustín P.', xp: 4815, badge: '', level: 'Nivel 6', delta: '+10' },
-            ] : [
-              { rank: 1, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: 'Nivel 1 Básico', isYou: true, delta: '+0' },
-              { rank: 2, name: 'Nicolás B.', xp: Math.max(0, xp - 10), badge: '', level: 'Nivel 1 Básico', delta: '+0' },
-              { rank: 3, name: 'Sofía M.', xp: Math.max(0, xp - 20), badge: '', level: 'Nivel 1 Básico', delta: '+0' },
-            ]).map((atleta) => (
-              <div
-                key={atleta.rank}
-                className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                  atleta.isYou
-                    ? 'bg-[#102A56]/80 border-[#2563EB] text-white font-bold shadow-md ring-1 ring-[#2563EB]/50'
-                    : 'bg-[#0B1220] border-[#1E293B] text-[#CBD5E1]'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className={`w-8 text-xs font-bold text-center ${atleta.isYou ? 'text-[#3B82F6]' : 'text-[#64748B]'}`}>
-                    {atleta.badge || `#${atleta.rank}`}
-                  </span>
-                  <div>
-                    <span className="text-sm font-semibold text-white block">{atleta.name}</span>
-                    <span className="text-xs text-[#64748B]">{atleta.level}</span>
+            {!isDemoMode && xp === 0 ? (
+              <div className="p-8 rounded-xl bg-[#0B1220] border border-[#1E293B] text-center space-y-2.5">
+                <div className="w-12 h-12 rounded-full bg-[#2563EB]/20 text-[#3B82F6] mx-auto flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[24px]">emoji_events</span>
+                </div>
+                <h4 className="font-bold text-white text-base">Todavía no tenés una posición en el ranking</h4>
+                <p className="text-xs text-[#94A3B8] max-w-sm mx-auto leading-relaxed">
+                  Completá tus primeros objetivos diarios (entrenamiento, proteína, hidratación) para sumar XP y clasificar oficialmente en la tabla de la Liga.
+                </p>
+              </div>
+            ) : (
+              (isDemoMode ? [
+                { rank: 1, name: 'Lucas F.', xp: 5120, badge: '🥇', level: 'Nivel 8', delta: '+150' },
+                { rank: 2, name: 'Camila V.', xp: 5040, badge: '🥈', level: 'Nivel 8', delta: '+120' },
+                { rank: 3, name: 'Martín G.', xp: 4980, badge: '🥉', level: 'Nivel 7', delta: '+95' },
+                { rank: 125, name: 'Ignacio M.', xp: 4890, badge: '', level: 'Nivel 7', delta: '+30' },
+                { rank: 126, name: 'Mateo R.', xp: 4872, badge: '', level: 'Nivel 7', delta: '+15' },
+                { rank: 127, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: 'Nivel 7', isYou: true, delta: '+45' },
+                { rank: 128, name: 'Valentin D.', xp: 4840, badge: '', level: 'Nivel 7', delta: '+20' },
+                { rank: 129, name: 'Agustín P.', xp: 4815, badge: '', level: 'Nivel 6', delta: '+10' },
+              ] : [
+                { rank: 1, name: `${userName} (Tú)`, xp: xp, badge: '⭐', level: 'Nivel 1 Básico', isYou: true, delta: `+${xp}` },
+              ]).map((atleta) => (
+                <div
+                  key={atleta.rank}
+                  className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                    atleta.isYou
+                      ? 'bg-[#102A56]/80 border-[#2563EB] text-white font-bold shadow-md ring-1 ring-[#2563EB]/50'
+                      : 'bg-[#0B1220] border-[#1E293B] text-[#CBD5E1]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`w-8 text-xs font-bold text-center ${atleta.isYou ? 'text-[#3B82F6]' : 'text-[#64748B]'}`}>
+                      {atleta.badge || `#${atleta.rank}`}
+                    </span>
+                    <div>
+                      <span className="text-sm font-semibold text-white block">{atleta.name}</span>
+                      <span className="text-xs text-[#64748B]">{atleta.level}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-bold text-[#3B82F6]">{atleta.xp.toLocaleString('es-ES')} XP</span>
+                    {atleta.isYou ? (
+                      <span className="block text-[10px] text-emerald-400 font-bold">Tu posición actual</span>
+                    ) : (
+                      <span className="block text-[10px] text-[#64748B]">{atleta.delta} hoy</span>
+                    )}
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-sm font-bold text-[#3B82F6]">{atleta.xp.toLocaleString('es-ES')} XP</span>
-                  {atleta.isYou ? (
-                    <span className="block text-[10px] text-emerald-400 font-bold">Tu posición actual</span>
-                  ) : (
-                    <span className="block text-[10px] text-[#64748B]">{atleta.delta} hoy</span>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       )}

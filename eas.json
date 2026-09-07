@@ -1,0 +1,53 @@
+{
+  "cli": {
+    "version": ">= 10.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "APP_ENV": "development",
+        "API_BASE_URL": "https://ais-dev-2xnxexvv4idnw24qydhvuo-409540619037.us-east1.run.app"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "APP_ENV": "staging",
+        "API_BASE_URL": "https://ais-pre-2xnxexvv4idnw24qydhvuo-409540619037.us-east1.run.app"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "APP_ENV": "production",
+        "API_BASE_URL": "https://api.maxmindperformance.com"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "track": "production",
+        "serviceAccountKeyPath": "./google-service-account.json"
+      },
+      "ios": {
+        "appleId": "moraesvalen2008@gmail.com",
+        "ascAppId": "6481239840"
+      }
+    }
+  }
+}

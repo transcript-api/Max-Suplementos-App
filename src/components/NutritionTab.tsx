@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { MacroNutrients } from '../types';
+import { MealIdeasCatalog } from './MealIdeasCatalog';
+import { AddRecipeModal } from './AddRecipeModal';
+import { getIngredientImage } from '../data/ingredientImages';
 
 interface NutritionTabProps {
   hydration: number;
@@ -24,7 +27,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   onAddProtein,
   onAddMealEntry,
   currentProtein,
-  macros = { protein: currentProtein, carbs: 210, fats: 58, calories: 1920 },
+  macros = { protein: currentProtein, carbs: 0, fats: 0, calories: currentProtein * 4 },
   isDark = true,
 }) => {
   const [activeFilter, setActiveFilter] = useState<'Más proteína' | 'Menos calorías' | 'Más rápido (<10m)'>('Más proteína');
@@ -33,6 +36,8 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   const [inputFoodText, setInputFoodText] = useState('Comí pollo con arroz y dos huevos');
   const [customInputOpen, setCustomInputOpen] = useState(false);
   const [addedSuccessMessage, setAddedSuccessMessage] = useState<string | null>(null);
+  const [showMealIdeas, setShowMealIdeas] = useState(false);
+  const [showAddRecipeModal, setShowAddRecipeModal] = useState(false);
 
   const effectiveProtein = macros.protein || currentProtein;
   const effectiveCarbs = macros.carbs || 210;
@@ -120,7 +125,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   return (
     <div className="flex flex-col w-full px-4 space-y-5 max-w-[1280px] mx-auto pb-24">
       {/* Dynamic Header */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
         <div>
           <span className="font-label-caps text-label-caps text-[#adc6ff] tracking-wider uppercase block font-bold">
             Optimización Metabólica
@@ -130,18 +135,33 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           </h1>
         </div>
 
-        {/* Date Switcher Pill */}
-        <div className="flex items-center bg-[#282a2f] rounded-full px-3 py-1 gap-1 shadow-sm border border-[#333539]">
-          <button aria-label="Día anterior" className="text-[#8d90a0] hover:text-white transition-colors flex items-center justify-center p-0.5">
-            <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+        <div className="flex items-center gap-2">
+          {/* Botón Destacado CREAR PLATO en el Header */}
+          <button
+            type="button"
+            onClick={() => setShowAddRecipeModal(true)}
+            className="bg-gradient-to-r from-[#2563eb] to-[#3b82f6] hover:from-[#1d4ed8] hover:to-[#2563eb] text-white font-bold text-xs px-3.5 py-2 rounded-full shadow-lg border border-blue-400/30 flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[18px]">add_circle</span>
+            <span className="whitespace-nowrap font-black">Crear Plato</span>
+            <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.2 rounded-full font-black hidden xs:inline">+30 XP</span>
           </button>
-          <div className="flex items-center gap-1.5 px-1">
-            <span className="material-symbols-outlined text-[16px] text-[#b4c5ff]">calendar_today</span>
-            <span className="font-label-caps text-label-caps text-white whitespace-nowrap font-bold">Hoy, 24 Oct</span>
+
+          {/* Date Switcher Pill */}
+          <div className="flex items-center bg-[#282a2f] rounded-full px-3 py-1 gap-1 shadow-sm border border-[#333539]">
+            <button aria-label="Día anterior" className="text-[#8d90a0] hover:text-white transition-colors flex items-center justify-center p-0.5">
+              <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+            </button>
+            <div className="flex items-center gap-1.5 px-1">
+              <span className="material-symbols-outlined text-[16px] text-[#b4c5ff]">calendar_today</span>
+              <span className="font-label-caps text-label-caps text-white whitespace-nowrap font-bold">
+                Hoy, {new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(new Date())}
+              </span>
+            </div>
+            <button aria-label="Día siguiente" className="text-[#8d90a0] hover:text-white transition-colors flex items-center justify-center p-0.5">
+              <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+            </button>
           </div>
-          <button aria-label="Día siguiente" className="text-[#8d90a0] hover:text-white transition-colors flex items-center justify-center p-0.5">
-            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-          </button>
         </div>
       </div>
 
@@ -151,6 +171,111 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <span>{addedSuccessMessage}</span>
         </div>
       )}
+
+      {/* Módulo Dual: Ideas de Comida (Uruguay 🇺🇾 & Brasil 🇧🇷) + Crear Plato */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5">
+        {/* Tarjeta 1: Catálogo de Ideas de Comida */}
+        <div 
+          onClick={() => setShowMealIdeas(true)}
+          className="lg:col-span-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1b2230] via-[#16181d] to-[#121418] border border-[#2563eb]/40 p-4 sm:p-5 shadow-xl hover:border-[#2563eb] transition-all cursor-pointer group active:scale-[0.99] flex flex-col justify-between"
+        >
+          {/* Glow de fondo */}
+          <div className="absolute top-0 right-0 w-48 h-48 bg-[#2563eb]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#2563eb]/20 transition-all" />
+
+          <div className="relative z-10 space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="bg-[#2563eb]/30 text-[#adc6ff] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#2563eb]/40 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[13px]">restaurant_menu</span>
+                Catálogo de Rendimiento
+              </span>
+              <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
+                <span>🇺🇾 Uruguay & 🇧🇷 Brasil</span>
+              </span>
+              <span className="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-amber-500/30">
+                +50 Platos Fitness
+              </span>
+            </div>
+
+            <h2 className="text-lg sm:text-xl font-black text-white group-hover:text-[#b4c5ff] transition-colors flex items-center gap-2">
+              <span>Ideas de Comida</span>
+              <span className="text-base sm:text-lg">💡</span>
+            </h2>
+
+            <p className="text-xs sm:text-sm text-[#c3c6d7] leading-relaxed">
+              Explorá más de 50 recetas altas en proteína de Uruguay y Brasil (Chivito fit, Picanha magra, Feijoada proteica, Escondidinho y más) con fotos de alimentos reales, ingredientes y registro en 1 tap.
+            </p>
+          </div>
+
+          <div className="relative z-10 pt-4 flex items-center justify-between">
+            <span className="text-xs text-[#8d90a0] font-semibold hidden sm:inline">
+              Toca para abrir la galería completa de recetas
+            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMealIdeas(true);
+              }}
+              className="bg-[#2563eb] group-hover:bg-[#3b82f6] text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer ml-auto"
+            >
+              <span>Ver Catálogo de Platos</span>
+              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">
+                arrow_forward
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Tarjeta 2: Botón/Card MUY VISIBLE de Crear Plato */}
+        <div
+          onClick={() => setShowAddRecipeModal(true)}
+          className="lg:col-span-4 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#19243a] via-[#161a24] to-[#12151d] border-2 border-dashed border-[#2563eb]/60 hover:border-[#3b82f6] p-4 sm:p-5 shadow-xl transition-all cursor-pointer group active:scale-[0.99] flex flex-col justify-between"
+        >
+          <div className="space-y-2 relative z-10">
+            <div className="flex items-center justify-between">
+              <span className="bg-[#2563eb]/30 text-[#adc6ff] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#2563eb]/50 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[13px]">add_circle</span>
+                Tus Recetas
+              </span>
+              <span className="bg-amber-500/20 text-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-amber-500/30">
+                +30 XP
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2.5 pt-1">
+              <div className="w-10 h-10 rounded-xl bg-[#2563eb] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
+                <span className="material-symbols-outlined text-[24px]">soup_kitchen</span>
+              </div>
+              <div>
+                <h3 className="text-base font-black text-white group-hover:text-[#adc6ff] transition-colors leading-tight">
+                  Crear Mi Plato
+                </h3>
+                <span className="text-[11px] text-[#8d90a0]">
+                  Añadí tu comida personalizada
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#c3c6d7] leading-relaxed pt-1">
+              Subí tus comidas criollas o brasileñas con sus macros exactos e ingredientes para tenerlas siempre en tu catálogo.
+            </p>
+          </div>
+
+          <div className="relative z-10 pt-4">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAddRecipeModal(true);
+              }}
+              className="w-full bg-gradient-to-r from-[#2563eb] to-[#3b82f6] hover:from-[#1d4ed8] hover:to-[#2563eb] text-white font-bold text-xs sm:text-sm py-2.5 px-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+            >
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              <span>Crear Plato Ahora</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Telemetry Overview: Caloric Core & Target Balance */}
       <div className="bg-[#1d2024] rounded-xl p-5 shadow-md relative overflow-hidden border border-[#282a2f]">
@@ -395,12 +520,12 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Potenciado por MAX AI</span>
         </div>
 
-        {/* Dual Action Triggers */}
-        <div className="grid grid-cols-2 gap-3">
+        {/* Acciones de Registro Rápido: 4 opciones visibles */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <button 
             type="button"
             onClick={() => setCustomInputOpen(!customInputOpen)}
-            className="bg-[#282a2f] hover:bg-[#37393e] active:scale-[0.98] transition-all p-4 rounded-xl text-left flex flex-col justify-between h-28 shadow-sm border border-[#333539]"
+            className="bg-[#282a2f] hover:bg-[#37393e] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#333539]"
           >
             <div className="w-8 h-8 rounded-lg bg-[#2563eb]/20 text-[#b4c5ff] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">edit_note</span>
@@ -411,7 +536,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
           </button>
 
-          <label className="bg-[#282a2f] hover:bg-[#37393e] active:scale-[0.98] transition-all p-4 rounded-xl text-left flex flex-col justify-between h-28 shadow-sm border border-[#333539] cursor-pointer">
+          <label className="bg-[#282a2f] hover:bg-[#37393e] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#333539] cursor-pointer">
             <div className="w-8 h-8 rounded-lg bg-[#0566d9]/30 text-[#adc6ff] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">photo_camera</span>
             </div>
@@ -433,6 +558,54 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               }} 
             />
           </label>
+
+          {/* Tarjeta 3: Ideas de Comida (Uruguay 🇺🇾 & Brasil 🇧🇷) */}
+          <button 
+            type="button"
+            onClick={() => setShowMealIdeas(true)}
+            className="bg-gradient-to-br from-[#1d273a] to-[#16181d] hover:from-[#25324b] hover:to-[#1a1d24] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#2563eb]/40 group cursor-pointer"
+          >
+            <div className="flex items-center justify-between w-full">
+              <div className="w-8 h-8 rounded-lg bg-[#2563eb] text-white flex items-center justify-center shadow-md">
+                <span className="material-symbols-outlined text-[18px]">restaurant_menu</span>
+              </div>
+              <span className="text-[10px] font-extrabold bg-[#2563eb]/30 text-[#adc6ff] px-1.5 py-0.5 rounded border border-[#2563eb]/40">
+                +54 Platos
+              </span>
+            </div>
+            <div>
+              <span className="font-body-md text-body-md font-bold text-white group-hover:text-[#adc6ff] transition-colors block">
+                Ideas de Comida
+              </span>
+              <span className="font-body-sm text-body-sm text-[#8d90a0]">
+                🇺🇾 Uruguay & 🇧🇷 Brasil
+              </span>
+            </div>
+          </button>
+
+          {/* Tarjeta 4: Crear Mi Plato */}
+          <button 
+            type="button"
+            onClick={() => setShowAddRecipeModal(true)}
+            className="bg-gradient-to-br from-[#1e2a47] to-[#12151e] hover:from-[#273860] hover:to-[#171b26] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-lg border-2 border-[#3b82f6]/70 group cursor-pointer"
+          >
+            <div className="flex items-center justify-between w-full">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-400 text-black flex items-center justify-center shadow-md font-black">
+                <span className="material-symbols-outlined text-[20px] font-bold">add</span>
+              </div>
+              <span className="text-[10px] font-black bg-amber-400/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-400/30">
+                +30 XP
+              </span>
+            </div>
+            <div>
+              <span className="font-body-md text-body-md font-black text-white group-hover:text-amber-300 transition-colors block">
+                Crear Plato
+              </span>
+              <span className="font-body-sm text-body-sm text-[#adc6ff]">
+                Subir tu propia receta
+              </span>
+            </div>
+          </button>
         </div>
 
         {/* Interactive Simulated Natural Language Parser */}
@@ -602,13 +775,33 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             Combina el pollo salteado con cebolla y tomate en cubos sobre el arroz templado, coronado con clara/huevo poché para maximizar el aporte biológico de aminoácidos.
           </p>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => setShowRecipeModal(true)}
+              className="bg-[#2563eb] hover:bg-[#3b82f6] text-white font-body-md font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer"
+            >
+              <span>Ver receta guiada</span>
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowAddRecipeModal(true)}
+              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-body-md font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px] font-black">add_circle</span>
+              <span>Crear Mi Plato (+30 XP)</span>
+            </button>
+          </div>
+
           <button
             type="button"
-            onClick={() => setShowRecipeModal(true)}
-            className="w-full bg-[#2563eb] hover:bg-[#3b82f6] text-white font-body-md font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+            onClick={() => setShowMealIdeas(true)}
+            className="w-full bg-[#1b2438] hover:bg-[#25324b] text-[#adc6ff] hover:text-white font-body-sm font-black py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all border border-[#2563eb]/40 cursor-pointer shadow-sm"
           >
-            <span>Ver receta guiada paso a paso</span>
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            <span className="material-symbols-outlined text-[18px] text-[#2563eb]">restaurant_menu</span>
+            <span>Ver Catálogo Completo: +54 Ideas de Comida (Uruguay 🇺🇾 & Brasil 🇧🇷)</span>
           </button>
         </div>
       </div>
@@ -620,94 +813,146 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <span className="font-label-caps text-label-caps text-[#b4c5ff] font-bold">3 / 4 Ingestas</span>
         </div>
 
-        <div className="space-y-2">
+        {/* Grid de 2 columnas en móvil para las comidas del día */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
           {/* Desayuno */}
-          <div className="bg-[#1d2024] rounded-xl p-4 flex items-center justify-between shadow-sm border border-[#282a2f]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#282a2f] text-[#b4c5ff] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px]">wb_twilight</span>
+          <div className="bg-[#1d2024] hover:bg-[#212429] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-[#282a2f] transition-all">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#282a2f] text-[#b4c5ff] flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[16px] sm:text-[18px]">wb_twilight</span>
+                </div>
+                <span className="bg-[#282a2f] text-[#8d90a0] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold">
+                  08:15
+                </span>
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-body-md text-body-md font-bold text-white">Desayuno</span>
-                  <span className="bg-[#282a2f] text-[#8d90a0] font-label-caps text-label-caps px-1.5 py-0.5 rounded">08:15</span>
-                </div>
-                <p className="font-body-sm text-body-sm text-[#8d90a0]">Omelette de 3 claras y avena</p>
+                <span className="font-body-md text-xs sm:text-sm font-bold text-white block">
+                  Desayuno
+                </span>
+                <p className="text-[11px] sm:text-xs text-[#8d90a0] line-clamp-1 leading-snug">
+                  Omelette de claras y avena
+                </p>
               </div>
             </div>
-            <div className="text-right">
-              <span className="font-body-md text-body-md font-bold text-[#b4c5ff] block">32g P</span>
-              <span className="font-label-caps text-label-caps text-[#8d90a0]">480 kcal</span>
+
+            <div className="pt-2 mt-2 border-t border-[#282a2f]/60 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-black text-[#b4c5ff]">32g P</span>
+              <span className="text-[10px] sm:text-xs text-[#8d90a0] font-medium">480 kcal</span>
             </div>
           </div>
 
           {/* Almuerzo */}
-          <div className="bg-[#1d2024] rounded-xl p-4 flex items-center justify-between shadow-sm border border-[#282a2f]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#282a2f] text-[#b4c5ff] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px]">sunny</span>
+          <div className="bg-[#1d2024] hover:bg-[#212429] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-[#282a2f] transition-all">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#282a2f] text-[#b4c5ff] flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[16px] sm:text-[18px]">sunny</span>
+                </div>
+                <span className="bg-[#282a2f] text-[#8d90a0] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold">
+                  13:30
+                </span>
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-body-md text-body-md font-bold text-white">Almuerzo</span>
-                  <span className="bg-[#282a2f] text-[#8d90a0] font-label-caps text-label-caps px-1.5 py-0.5 rounded">13:30</span>
-                </div>
-                <p className="font-body-sm text-body-sm text-[#8d90a0]">Pechuga con batata asada</p>
+                <span className="font-body-md text-xs sm:text-sm font-bold text-white block">
+                  Almuerzo
+                </span>
+                <p className="text-[11px] sm:text-xs text-[#8d90a0] line-clamp-1 leading-snug">
+                  Pechuga con batata asada
+                </p>
               </div>
             </div>
-            <div className="text-right">
-              <span className="font-body-md text-body-md font-bold text-[#b4c5ff] block">48g P</span>
-              <span className="font-label-caps text-label-caps text-[#8d90a0]">690 kcal</span>
+
+            <div className="pt-2 mt-2 border-t border-[#282a2f]/60 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-black text-[#b4c5ff]">48g P</span>
+              <span className="text-[10px] sm:text-xs text-[#8d90a0] font-medium">690 kcal</span>
             </div>
           </div>
 
           {/* Merienda */}
-          <div className="bg-[#1d2024] rounded-xl p-4 flex items-center justify-between shadow-sm border border-[#282a2f]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#282a2f] text-[#b4c5ff] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px]">bolt</span>
+          <div className="bg-[#1d2024] hover:bg-[#212429] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-[#282a2f] transition-all">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#282a2f] text-[#b4c5ff] flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[16px] sm:text-[18px]">bolt</span>
+                </div>
+                <span className="bg-[#282a2f] text-[#8d90a0] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold">
+                  17:10
+                </span>
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-body-md text-body-md font-bold text-white">Merienda</span>
-                  <span className="bg-[#282a2f] text-[#8d90a0] font-label-caps text-label-caps px-1.5 py-0.5 rounded">17:10</span>
-                </div>
-                <p className="font-body-sm text-body-sm text-[#8d90a0]">Shake de proteína y frutos secos</p>
+                <span className="font-body-md text-xs sm:text-sm font-bold text-white block">
+                  Merienda
+                </span>
+                <p className="text-[11px] sm:text-xs text-[#8d90a0] line-clamp-1 leading-snug">
+                  Shake de proteína y nueces
+                </p>
               </div>
             </div>
-            <div className="text-right">
-              <span className="font-body-md text-body-md font-bold text-[#b4c5ff] block">30g P</span>
-              <span className="font-label-caps text-label-caps text-[#8d90a0]">350 kcal</span>
+
+            <div className="pt-2 mt-2 border-t border-[#282a2f]/60 flex items-center justify-between">
+              <span className="text-xs sm:text-sm font-black text-[#b4c5ff]">30g P</span>
+              <span className="text-[10px] sm:text-xs text-[#8d90a0] font-medium">350 kcal</span>
             </div>
           </div>
 
           {/* Cena (Pendiente) */}
-          <div className="bg-[#282a2f]/60 rounded-xl p-4 flex items-center justify-between shadow-sm border border-[#333539]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#0c0e12] text-[#8d90a0] flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px]">bedtime</span>
+          <div className="bg-[#1d2024]/70 hover:bg-[#212429] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-dashed border-[#3b82f6]/50 transition-all">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#0c0e12] text-[#8d90a0] flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[16px] sm:text-[18px]">bedtime</span>
+                </div>
+                <span className="bg-[#2563eb]/20 text-[#b4c5ff] text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded uppercase font-extrabold">
+                  Pendiente
+                </span>
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-body-md text-body-md font-bold text-white">Cena</span>
-                  <span className="bg-[#2563eb]/20 text-[#b4c5ff] font-label-caps text-label-caps px-2 py-0.5 rounded uppercase font-bold">
-                    Pendiente
-                  </span>
-                </div>
-                <p className="font-body-sm text-body-sm text-[#b4c5ff]">Sugerencia AI: Completar 22g de proteína</p>
+                <span className="font-body-md text-xs sm:text-sm font-bold text-white block">
+                  Cena
+                </span>
+                <p className="text-[11px] sm:text-xs text-[#b4c5ff] line-clamp-1 leading-snug">
+                  Sugerencia: +22g proteína
+                </p>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleConfirmPredictiveEntry}
-              className="bg-[#1d2024] hover:bg-[#37393e] text-white font-label-caps text-label-caps px-3 py-2 rounded-lg transition-colors flex items-center gap-1 border border-[#282a2f] font-bold active:scale-95"
-            >
-              <span className="material-symbols-outlined text-[14px]">add</span>
-              Cargar
-            </button>
+            <div className="pt-2 mt-2 border-t border-[#282a2f]/60 flex items-center justify-between gap-1">
+              <span className="text-[11px] sm:text-xs font-bold text-[#8d90a0]">Meta hoy</span>
+              <button
+                type="button"
+                onClick={handleConfirmPredictiveEntry}
+                className="bg-[#2563eb] hover:bg-[#3b82f6] text-white text-[11px] sm:text-xs px-2.5 py-1 rounded-lg transition-colors flex items-center gap-0.5 font-bold active:scale-95 cursor-pointer shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[14px]">add</span>
+                <span>Cargar</span>
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Barra de Acciones Flotante Persistente */}
+      <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-8 z-30 flex items-center gap-2 animate-fadeIn">
+        <button
+          type="button"
+          onClick={() => setShowMealIdeas(true)}
+          className="bg-[#1b2230]/95 hover:bg-[#25324b] text-white text-xs font-bold px-3.5 py-2.5 rounded-full shadow-2xl border border-[#2563eb]/50 backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-[18px] text-[#adc6ff]">restaurant_menu</span>
+          <span className="hidden sm:inline">Ideas de Comida</span>
+          <span className="bg-[#2563eb]/30 text-[#adc6ff] text-[10px] px-1.5 py-0.2 rounded-full font-black">54+</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowAddRecipeModal(true)}
+          className="bg-gradient-to-r from-[#2563eb] via-[#3b82f6] to-[#2563eb] hover:scale-105 text-white text-xs font-black px-4 py-2.5 rounded-full shadow-2xl border border-blue-300/40 backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ring-2 ring-blue-500/30"
+        >
+          <span className="material-symbols-outlined text-[20px] font-black">add_circle</span>
+          <span>Crear Plato</span>
+          <span className="bg-amber-400 text-black text-[10px] px-1.5 py-0.2 rounded-full font-black ml-0.5">+30 XP</span>
+        </button>
       </div>
 
       {/* Modal de Receta Guiada Paso a Paso */}
@@ -741,6 +986,35 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 </div>
               </div>
 
+              {/* Alimentos con Fotos Reales */}
+              <div className="space-y-2 pt-1">
+                <span className="text-[11px] font-bold text-[#adc6ff] uppercase tracking-wider block">
+                  Alimentos Reales del Plato:
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { name: 'Pechuga de pollo (180g)', query: 'pechuga de pollo' },
+                    { name: 'Huevos / Claras (2 u)', query: 'huevo' },
+                    { name: 'Arroz integral (150g)', query: 'arroz integral' },
+                    { name: 'Tomate y Cebolla fresca', query: 'tomate' },
+                  ].map((item, i) => {
+                    const visual = getIngredientImage(item.query);
+                    return (
+                      <div key={i} className="flex items-center gap-2 bg-[#1d2024] p-2 rounded-xl border border-[#282a2f]">
+                        <img 
+                          src={visual.image} 
+                          alt={item.name}
+                          className="w-8 h-8 rounded-lg object-cover border border-[#333539]" 
+                        />
+                        <span className="text-xs font-semibold text-white leading-tight">
+                          {item.name}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               <h4 className="text-white font-bold pt-2">Pasos guiados:</h4>
               <ol className="space-y-2 list-decimal list-inside text-sm">
                 <li>Corta 180g de pechuga de pollo en cubos y saltea con gotas de aceite de oliva, orégano y sal baja en sodio.</li>
@@ -762,6 +1036,34 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           </div>
         </div>
       )}
+
+      {/* Catálogo de Ideas de Comida Completo (Uruguay 🇺🇾 & Brasil 🇧🇷) */}
+      {showMealIdeas && (
+        <MealIdeasCatalog
+          onClose={() => setShowMealIdeas(false)}
+          onLogMeal={(meal) => {
+            handleConfirmPredictiveEntry({
+              name: meal.name,
+              protein: meal.protein,
+              carbs: meal.carbs,
+              fats: meal.fats,
+              calories: meal.calories,
+            });
+          }}
+        />
+      )}
+
+      {/* Modal para Crear Plato Directamente */}
+      <AddRecipeModal
+        isOpen={showAddRecipeModal}
+        onClose={() => setShowAddRecipeModal(false)}
+        onRecipeAdded={(recipe) => {
+          setAddedSuccessMessage(`¡Plato "${recipe.name}" creado con éxito! +30 XP sumados a tu perfil.`);
+          setTimeout(() => {
+            setAddedSuccessMessage(null);
+          }, 4000);
+        }}
+      />
     </div>
   );
 };

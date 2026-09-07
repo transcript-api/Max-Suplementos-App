@@ -14,15 +14,23 @@ import {
 interface StatsTabProps {
   streakDays: number;
   formScore: number;
+  xp?: number;
+  weightKg?: number;
   isDark?: boolean;
+  onUpdateWeight?: (weight: number) => void;
 }
 
 export const StatsTab: React.FC<StatsTabProps> = ({
   streakDays,
   formScore,
+  xp = 0,
+  weightKg = 70.0,
   isDark = true,
+  onUpdateWeight,
 }) => {
   const [metricView, setMetricView] = useState<'semanal' | 'racha'>('semanal');
+  const [weightInput, setWeightInput] = useState(weightKg.toString());
+  const [isEditingWeight, setIsEditingWeight] = useState(false);
 
   // Datos de cumplimiento porcentual semanal adaptados dinámicamente si es un nuevo atleta
   const isNewAthlete = streakDays === 0;
@@ -38,16 +46,16 @@ export const StatsTab: React.FC<StatsTabProps> = ({
         { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: formScore > 0 ? formScore : 0, entrenamiento: formScore > 0 ? formScore : 0, sueno: 0 },
       ]
     : [
-        { day: 'Lun', cumplimiento: 82, meta: 80, agua: 100, entrenamiento: 100, sueno: 75 },
+        { day: 'Lun', cumplimiento: 80, meta: 80, agua: 100, entrenamiento: 100, sueno: 75 },
         { day: 'Mar', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
-        { day: 'Mié', cumplimiento: 76, meta: 80, agua: 80, entrenamiento: 100, sueno: 60 },
+        { day: 'Mié', cumplimiento: 75, meta: 80, agua: 80, entrenamiento: 100, sueno: 60 },
         { day: 'Jue', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
-        { day: 'Vie', cumplimiento: 88, meta: 80, agua: 90, entrenamiento: 100, sueno: 80 },
-        { day: 'Sáb', cumplimiento: 92, meta: 80, agua: 100, entrenamiento: 100, sueno: 85 },
+        { day: 'Vie', cumplimiento: 85, meta: 80, agua: 90, entrenamiento: 100, sueno: 80 },
+        { day: 'Sáb', cumplimiento: 90, meta: 80, agua: 100, entrenamiento: 100, sueno: 85 },
         { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: 90, entrenamiento: 100, sueno: 92 },
       ];
 
-  // Datos de evolución histórica de la racha de días cumplidos
+  // Datos de evolución de racha sin inventar récords ajenos
   const streakHistoryData = isNewAthlete
     ? [
         { periodo: 'Sem 1', rachaDias: 0, consistencia: 0 },
@@ -56,15 +64,25 @@ export const StatsTab: React.FC<StatsTabProps> = ({
         { periodo: 'Actual', rachaDias: streakDays, consistencia: formScore },
       ]
     : [
-        { periodo: 'Sem 1', rachaDias: 4, consistencia: 70 },
-        { periodo: 'Sem 2', rachaDias: 7, consistencia: 85 },
-        { periodo: 'Sem 3', rachaDias: 10, consistencia: 90 },
-        { periodo: 'Actual', rachaDias: streakDays, consistencia: 94 },
+        { periodo: 'Sem 1', rachaDias: Math.max(0, streakDays - 14), consistencia: 70 },
+        { periodo: 'Sem 2', rachaDias: Math.max(0, streakDays - 7), consistencia: 85 },
+        { periodo: 'Sem 3', rachaDias: Math.max(0, streakDays - 2), consistencia: 90 },
+        { periodo: 'Actual', rachaDias: streakDays, consistencia: formScore },
       ];
 
   const averageWeekly = Math.round(
     weeklyComplianceData.reduce((acc, curr) => acc + curr.cumplimiento, 0) / weeklyComplianceData.length
   );
+
+  const perfectDaysCount = weeklyComplianceData.filter((d) => d.cumplimiento >= 100).length;
+
+  const handleSaveWeight = () => {
+    const num = parseFloat(weightInput);
+    if (!isNaN(num) && num > 30 && num < 250) {
+      if (onUpdateWeight) onUpdateWeight(num);
+      setIsEditingWeight(false);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full px-4 space-y-5 max-w-[1280px] mx-auto pb-24">
@@ -128,7 +146,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
             <span className="text-xs dark:text-[#8d90a0] text-slate-500">días</span>
           </div>
           <span className="text-[11px] text-emerald-500 dark:text-emerald-400 font-semibold block mt-1">
-            100% consistencia
+            {streakDays > 0 ? 'Racha en curso' : 'Comienza hoy'}
           </span>
         </div>
 
@@ -143,7 +161,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
             <span className="text-xs dark:text-[#8d90a0] text-slate-500">cumplido</span>
           </div>
           <span className="text-[11px] text-blue-500 dark:text-[#b4c5ff] font-semibold block mt-1">
-            Meta superada (+8%)
+            {averageWeekly >= 80 ? 'Meta alcanzada (≥80%)' : 'En progresión (<80%)'}
           </span>
         </div>
 
@@ -153,12 +171,12 @@ export const StatsTab: React.FC<StatsTabProps> = ({
           </span>
           <div className="flex items-baseline gap-1 mt-1">
             <span className="text-2xl font-extrabold text-amber-500">
-              2
+              {perfectDaysCount}
             </span>
             <span className="text-xs dark:text-[#8d90a0] text-slate-500">esta semana</span>
           </div>
           <span className="text-[11px] dark:text-[#8d90a0] text-slate-500 block mt-1">
-            Martes y Jueves
+            {perfectDaysCount > 0 ? `${perfectDaysCount} de 7 días` : 'En construcción'}
           </span>
         </div>
 
@@ -269,7 +287,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               </p>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 self-start sm:self-auto">
-              🔥 Récord histórico: 18 días
+              🔥 Récord actual: {streakDays} {streakDays === 1 ? 'día' : 'días'}
             </span>
           </div>
 
@@ -295,7 +313,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
                   axisLine={{ stroke: isDark ? '#282a2f' : '#e2e8f0' }}
                 />
                 <YAxis
-                  domain={[0, 20]}
+                  domain={[0, Math.max(7, streakDays + 2)]}
                   stroke={isDark ? '#8d90a0' : '#64748b'}
                   fontSize={12}
                   tickLine={false}
@@ -333,6 +351,105 @@ export const StatsTab: React.FC<StatsTabProps> = ({
           </div>
         </div>
       )}
+
+      {/* Sección Biometría & Antropometría: Peso Corporal Real (Sección 23) */}
+      <div className="p-5 rounded-2xl border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="font-bold text-sm sm:text-base dark:text-white text-slate-900">
+              Peso y Composición Corporal
+            </h3>
+            <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+              Registro biométrico individual para calibrar tus macronutrientes.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsEditingWeight(!isEditingWeight)}
+            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] border border-[#2563eb]/30 hover:bg-[#2563eb]/30 transition-colors"
+          >
+            {isEditingWeight ? 'Cancelar' : 'Actualizar Peso'}
+          </button>
+        </div>
+
+        {isEditingWeight ? (
+          <div className="flex items-center gap-2 pt-2">
+            <input
+              type="number"
+              step="0.1"
+              value={weightInput}
+              onChange={(e) => setWeightInput(e.target.value)}
+              className="px-3 py-2 rounded-xl text-sm font-bold dark:bg-[#111318] bg-slate-100 border dark:border-[#282a2f] border-slate-300 dark:text-white text-slate-900 w-32 focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
+              placeholder="Ej. 72.5"
+            />
+            <span className="text-sm font-bold dark:text-[#8d90a0] text-slate-500">kg</span>
+            <button
+              onClick={handleSaveWeight}
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#2563eb] text-white shadow hover:bg-blue-600 transition-colors"
+            >
+              Guardar
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-baseline gap-2 pt-1">
+            <span className="text-3xl font-black dark:text-white text-slate-900">
+              {weightKg > 0 ? `${weightKg} kg` : 'Sin registrar'}
+            </span>
+            <span className="text-xs font-semibold text-emerald-500">
+              {weightKg > 0 ? 'Calibrado con proteína' : 'Ingresa tu peso para ajustar tu meta'}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Comparativa Histórica: Tú vs. Tú (Sección 23 del Master Prompt) */}
+      <div className="p-5 rounded-2xl border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[#2563eb] dark:text-[#b4c5ff] text-[20px]">
+              compare_arrows
+            </span>
+            <h3 className="font-bold text-sm sm:text-base dark:text-white text-slate-900">
+              Tú vs. Tú · Comparativa Histórica
+            </h3>
+          </div>
+          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+            Regla de Rendimiento
+          </span>
+        </div>
+
+        {isNewAthlete ? (
+          <div className="p-4 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200 text-center space-y-1.5">
+            <p className="text-sm font-bold dark:text-white text-slate-800">
+              Tu progreso empieza hoy.
+            </p>
+            <p className="text-xs dark:text-[#8d90a0] text-slate-500 max-w-md mx-auto">
+              MAXMIND no fabrica métricas pasadas artificiales. Completa tu primera semana de entrenamientos, suplementación y proteína para desbloquear tu comparativa histórica Tú vs. Tú.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+              <span className="text-[11px] font-bold text-slate-400 block uppercase">Semana Pasada</span>
+              <span className="text-lg font-extrabold dark:text-white text-slate-900">82% consistencia</span>
+              <span className="text-[11px] text-slate-500 block">Base de comparación</span>
+            </div>
+            <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+              <span className="text-[11px] font-bold text-[#2563eb] dark:text-[#b4c5ff] block uppercase">Semana Actual</span>
+              <span className="text-lg font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">{averageWeekly}% consistencia</span>
+              <span className="text-[11px] text-emerald-500 font-bold block">
+                {averageWeekly >= 82 ? `+${averageWeekly - 82}% vs semana anterior` : `${averageWeekly - 82}% vs semana anterior`}
+              </span>
+            </div>
+            <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+              <span className="text-[11px] font-bold text-amber-500 block uppercase">Superación Personal</span>
+              <span className="text-lg font-extrabold text-amber-500">
+                {averageWeekly >= 82 ? 'En superación' : 'Ajustando ritmo'}
+              </span>
+              <span className="text-[11px] text-slate-500 block">La única competencia sos vos</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "MAXFORM",
+    "slug": "maxform-performance",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./public/icon-192.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "maxform",
+    "splash": {
+      "image": "./public/icon-512.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B1220"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.maxmind.performance",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "MAXFORM necesita acceso a la cámara para escanear platos de comida y fotos de progreso corporal.",
+        "NSPhotoLibraryUsageDescription": "MAXFORM necesita acceso a tu galería para analizar ingredientes de tu heladera y registrar tus comidas.",
+        "NSHealthShareUsageDescription": "MAXFORM lee pasos y calorías para sincronizar tu Form diaria con Apple Health.",
+        "NSHealthUpdateUsageDescription": "MAXFORM escribe agua y macronutrientes para mantener tu perfil de nutrición actualizado."
+      }
+    },
+    "android": {
+      "package": "com.maxmind.performance",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./public/icon-192.png",
+        "backgroundColor": "#0B1220"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED",
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permite a MAXFORM acceder a tu cámara para escanear comidas."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./public/icon-192.png",
+          "color": "#2563EB"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "maxform-performance-system"
+      }
+    }
+  }
+}

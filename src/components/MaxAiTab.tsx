@@ -14,6 +14,16 @@ interface MaxAiTabProps {
   currentProtein: number;
   streakDays: number;
   userName?: string;
+  userId?: string;
+  athleteLevel?: number;
+  weightKg?: number;
+  onAddMealEntry?: (meal: {
+    name: string;
+    protein: number;
+    carbs: number;
+    fats: number;
+    calories: number;
+  }) => void;
 }
 
 export const MaxAiTab: React.FC<MaxAiTabProps> = ({
@@ -21,30 +31,68 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
   currentProtein,
   streakDays,
   userName = 'Atleta',
+  userId = 'athlete_default',
+  athleteLevel = 1,
+  weightKg = 70.0,
+  onAddMealEntry,
 }) => {
   const isNew = streakDays === 0;
 
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'm1',
-      sender: 'ai',
-      text: isNew
-        ? `¡Hola ${userName}! Bienvenido a MAX AI, tu coach de rendimiento y nutrición deportiva. Hoy inicia tu camino en MAXMIND. Llevas ${currentProtein}g de proteína registrados hoy. Estoy listo para ayudarte a armar comidas con lo que tengas en tu heladera, resolver dudas de suplementos y alcanzar tu primera racha. ¿En qué te puedo asesorar ahora?`
-        : `Hola ${userName}, veo que hoy vas excelente. Llevas ${currentProtein}g de proteína registrados y una racha activa de ${streakDays} días. ¿En qué te puedo asesorar ahora?`,
-      timestamp: 'Ahora',
-      options: [
-        { title: '1. Opciones altas en proteína con ingredientes simples', protein: '25-35g PROT', calories: '180-250 kcal' },
-        { title: '2. Ensalada o bowl rápido de atún con huevos', protein: '34g PROT', calories: '190 kcal' },
-        { title: '3. Tortilla proteica de claras y vegetales', protein: '28g PROT', calories: '160 kcal' },
-      ],
-      quickReplies: ['¿Cómo organizar mis comidas de hoy?', 'Tengo huevos y pollo en casa', '¿Qué suplementos me convienen?']
+  const defaultWelcomeMessage: Message = {
+    id: 'm1',
+    sender: 'ai',
+    text: isNew
+      ? `¡Hola ${userName}! Bienvenido a MAX AI, tu coach de rendimiento y nutrición deportiva. Hoy inicia tu camino en MAXMIND. Llevas ${currentProtein}g de proteína registrados hoy. Estoy listo para ayudarte a armar comidas con lo que tengas en tu heladera, resolver dudas de suplementos y alcanzar tu primera racha. ¿En qué te puedo asesorar ahora?`
+      : `Hola ${userName}, veo que hoy vas con paso firme. Llevas ${currentProtein}g de proteína registrados y una racha activa de ${streakDays} días. ¿En qué te puedo asesorar ahora?`,
+    timestamp: 'Ahora',
+    options: [
+      { title: '1. Opciones altas en proteína con ingredientes simples', protein: '25-35g PROT', calories: '180-250 kcal' },
+      { title: '2. Ensalada o bowl rápido de atún con huevos', protein: '34g PROT', calories: '190 kcal' },
+      { title: '3. Tortilla proteica de claras y vegetales', protein: '28g PROT', calories: '160 kcal' },
+    ],
+    quickReplies: ['¿Cómo organizar mis comidas de hoy?', 'Tengo huevos y pollo en casa', '¿Qué suplementos me convienen?']
+  };
+
+  const [messages, setMessages] = useState<Message[]>([defaultWelcomeMessage]);
+
+  // Cargar historial persistido del usuario
+  useEffect(() => {
+    async function loadHistory() {
+      try {
+        const res = await fetch(`/api/ai/chat/history?userId=${encodeURIComponent(userId)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data.history) && data.history.length > 0) {
+            setMessages(data.history);
+          }
+        }
+      } catch (err) {
+        console.warn('Chat offline/local fallback:', err);
+      }
     }
-  ]);
+    loadHistory();
+  }, [userId]);
 
   const [input, setInput] = useState(initialPrompt || '');
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Guardar mensajes automáticamente en backend para persistencia
+  const persistChat = async (nextMessages: Message[]) => {
+    try {
+      await fetch('/api/ai/chat/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          messages: nextMessages,
+        })
+      });
+    } catch (e) {
+      // Offline fallback silently
+    }
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -67,7 +115,8 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
       timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const updatedWithUser = [...messages, userMsg];
+    setMessages(updatedWithUser);
     setInput('');
     setIsLoading(true);
 
@@ -78,11 +127,12 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
         body: JSON.stringify({
           message: query,
           context: {
+            userName,
             currentProtein,
             targetProtein: 150,
             streakDays,
-            athleteLevel: 7,
-            weightKg: 72.4,
+            athleteLevel,
+            weightKg,
           }
         })
       });
@@ -98,16 +148,20 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
         quickReplies: ['Entendido, gracias MAX', '¿Qué ceno esta noche?', 'Verificar mis macros']
       };
 
-      setMessages((prev) => [...prev, aiMsg]);
+      const finalMessages = [...updatedWithUser, aiMsg];
+      setMessages(finalMessages);
+      persistChat(finalMessages);
     } catch (err) {
       console.error(err);
       const fallbackMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: "Para cerrar tus macros de hoy te sugiero combinar 1 scoop de Whey Protein con 150ml de agua o leche descremada. Eso te aporta 24g de proteína pura con apenas 120 kcal. ¡Objetivo sellado!",
+        text: "Para sellar tus macros de hoy te sugiero combinar 1 scoop de Whey Protein con 150ml de agua o leche descremada. Eso te aporta 24g de proteína pura con apenas 120 kcal. ¡Objetivo sellado!",
         timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
       };
-      setMessages((prev) => [...prev, fallbackMsg]);
+      const finalMessages = [...updatedWithUser, fallbackMsg];
+      setMessages(finalMessages);
+      persistChat(finalMessages);
     } finally {
       setIsLoading(false);
     }

@@ -20,6 +20,7 @@ import { PremiumModal } from './components/PremiumModal';
 import { ExpandableMealSuggestionCard } from './components/ExpandableMealSuggestionCard';
 import { ProteinWeeklyChart } from './components/ProteinWeeklyChart';
 import { SupplementReplenishmentCard } from './components/SupplementReplenishmentCard';
+import { AnimatedCounter } from './components/AnimatedCounter';
 import { suggestMealFromFoods, MealSuggestion } from './lib/gemini';
 import { db, ensureAuthUser } from './lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -355,8 +356,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <span className="dark:text-[#8d90a0] text-slate-400">·</span>
           <span className="dark:text-[#8d90a0] text-slate-600 font-medium">Atleta de Rendimiento</span>
           <span className="dark:text-[#8d90a0] text-slate-400">·</span>
-          <span className="font-bold text-[#2563eb] dark:text-[#b4c5ff]">
-            {xp.toLocaleString('es-ES')} XP
+          <span className="font-bold text-[#2563eb] dark:text-[#b4c5ff] inline-flex items-center">
+            <AnimatedCounter
+              value={xp}
+              suffix=" XP"
+              duration={850}
+              className="font-bold text-[#2563eb] dark:text-[#b4c5ff]"
+              deltaBadgeLabel="XP"
+            />
           </span>
         </div>
       </section>
@@ -417,9 +424,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="space-y-3">
           <div className="flex items-baseline justify-between">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl sm:text-4xl font-black dark:text-white text-slate-900 tracking-tight">
-                {energyPercent}%
-              </span>
+              <AnimatedCounter
+                value={energyPercent}
+                suffix="%"
+                duration={850}
+                className="text-3xl sm:text-4xl font-black dark:text-white text-slate-900 tracking-tight"
+                deltaBadgeLabel="%"
+                deltaBadgeClassName="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-black"
+              />
               <span className="text-xs sm:text-sm font-semibold dark:text-[#8d90a0] text-slate-500 uppercase tracking-wide">
                 Energía Diaria
               </span>
@@ -651,14 +663,9 @@ export default function App() {
     return saved === 'true';
   });
 
-  // Estado del usuario activo (Por defecto estado limpio en cero absoluto)
+  // Estado del usuario activo (Por defecto estado limpio en cero absoluto para nuevos atletas)
   const [userState, setUserState] = useState<UserState>(() => {
     const user = authService.getCurrentUser();
-    const savedDemo = localStorage.getItem('maxform_is_demo_mode');
-    const isDemo = !user && savedDemo === 'true';
-    if (isDemo) {
-      return SANTIAGO_DEMO_STATE;
-    }
     if (user) {
       return loadLocalUserState(user.uid, user.email, user.displayName);
     }
@@ -667,10 +674,10 @@ export default function App() {
 
   // Limpieza inicial forzosa para garantizar arranque como Nuevo Usuario en esta sesión
   useEffect(() => {
-    const isNewUserReady = localStorage.getItem('maxform_new_user_v3_ready');
+    const isNewUserReady = localStorage.getItem('maxform_new_user_v4_ready');
     if (!isNewUserReady) {
       localStorage.setItem('maxform_is_demo_mode', 'false');
-      localStorage.setItem('maxform_new_user_v3_ready', 'true');
+      localStorage.setItem('maxform_new_user_v4_ready', 'true');
       const freshUser = createCleanInitialUserState('new_athlete', '', 'Atleta');
       setUserState(freshUser);
       saveUserData(freshUser);
@@ -789,9 +796,11 @@ export default function App() {
   const handleLogout = () => {
     authService.logout();
     setCurrentUser(null);
-    setIsDemoMode(true);
-    localStorage.setItem('maxform_is_demo_mode', 'true');
-    setUserState(SANTIAGO_DEMO_STATE);
+    setIsDemoMode(false);
+    localStorage.setItem('maxform_is_demo_mode', 'false');
+    const freshUser = createCleanInitialUserState('new_athlete', '', 'Atleta');
+    setUserState(freshUser);
+    saveUserData(freshUser);
   };
 
   const handleDeleteAccount = () => {
@@ -799,9 +808,11 @@ export default function App() {
       deleteUserData(currentUser.uid);
       authService.deleteAccount(currentUser.uid);
       setCurrentUser(null);
-      setIsDemoMode(true);
-      localStorage.setItem('maxform_is_demo_mode', 'true');
-      setUserState(SANTIAGO_DEMO_STATE);
+      setIsDemoMode(false);
+      localStorage.setItem('maxform_is_demo_mode', 'false');
+      const freshUser = createCleanInitialUserState('new_athlete', '', 'Atleta');
+      setUserState(freshUser);
+      saveUserData(freshUser);
     }
   };
 
@@ -855,7 +866,7 @@ export default function App() {
       try {
         const user = await ensureAuthUser();
         if (!user || !db) return false;
-        const userId = currentUser ? currentUser.uid : (isDemoMode ? 'santiago-athlete-01' : 'guest_athlete');
+        const userId = currentUser ? currentUser.uid : 'guest_athlete';
         const userDocRef = doc(db, 'users', userId);
 
         let remoteData = forcedSnapshot;
@@ -1372,7 +1383,20 @@ export default function App() {
           <StatsTab
             streakDays={streakDays}
             formScore={energyPercent}
+            xp={xp}
+            weightKg={userState.biometrics?.weightKg || 70}
             isDark={isDark}
+            onUpdateWeight={(newWeight) => {
+              const updatedState: UserState = {
+                ...userState,
+                biometrics: {
+                  ...userState.biometrics,
+                  weightKg: newWeight,
+                }
+              };
+              setUserState(updatedState);
+              saveUserData(updatedState);
+            }}
           />
         )}
 
@@ -1393,6 +1417,10 @@ export default function App() {
             currentProtein={protein}
             streakDays={streakDays}
             userName={userName}
+            userId={currentUser?.uid || userState.userId || 'guest_athlete'}
+            athleteLevel={userState.level || 1}
+            weightKg={userState.biometrics?.weightKg || 70}
+            onAddMealEntry={handleAddMealEntry}
           />
         )}
 

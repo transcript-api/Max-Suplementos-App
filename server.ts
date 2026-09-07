@@ -22,9 +22,460 @@ async function startServer() {
     return aiClient;
   }
 
+  // In-memory atomic tracking for XP & daily completions (anti-exploit & server-authoritative)
+  interface CompletedRecord {
+    userId: string;
+    date: string;
+    objectiveId: string;
+    xpAwarded: number;
+    completedAt: string;
+  }
+  const completedObjectivesStore = new Map<string, CompletedRecord>();
+  const userXpStore = new Map<string, number>();
+  const proteinLogSpamGuard = new Map<string, { lastTap: number; dailyTotal: number; date: string }>();
+  const aiConversationsStore = new Map<string, Array<{ id: string; sender: 'user' | 'ai'; text: string; timestamp: string }>>();
+
+  // XP Reward rules
+  const OBJECTIVE_XP_VALUES: Record<string, number> = {
+    entrenamiento: 25,
+    nutricion: 20,
+    agua: 10,
+    suplemento: 10,
+    pasos: 15,
+    sueno: 15,
+  };
+
+  // Nivel determinista a partir de XP
+  function getLevelInfo(xp: number) {
+    const levelNumber = Math.min(8, Math.floor(xp / 1000) + 1);
+    const levelNames = ['Básico', 'Iniciado', 'Constante', 'Intermedio', 'Dedicado', 'Avanzado', 'Elite', 'Extremo'];
+    return {
+      levelNumber,
+      levelName: levelNames[levelNumber - 1] || 'Básico',
+      xpForNextLevel: levelNumber >= 8 ? 1000 : (levelNumber * 1000) - xp,
+    };
+  }
+
+  // Stores adicionales para trazabilidad autoritaria
+  const foodLogsStore = new Map<string, Array<{ id: string; name: string; protein: number; carbs: number; fats: number; calories: number; timestamp: string }>>();
+  const supplementLogsStore = new Map<string, Array<{ id: string; name: string; dosage: string; takenAt: string }>>();
+  const challengeEnrollments = new Map<string, Set<string>>(); // userId -> Set of challengeIds
+
   // API Health
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
+  // GET /api/me - Información autoritaria del usuario
+  app.get("/api/me", (req, res) => {
+    const userId = (req.query.userId as string) || "athlete_default";
+    const currentXp = userXpStore.get(userId) || 0;
+    const now = new Date();
+    res.json({
+      userId,
+      xp: currentXp,
+      ...getLevelInfo(currentXp),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
+      serverTime: now.toISOString(),
+      canonicalDate: now.toISOString().slice(0, 10),
+      membership: "pro", // Default entitlement
+    });
+  });
+
+  // GET /api/dashboard - Resumen del día
+  app.get("/api/dashboard", (req, res) => {
+    const userId = (req.query.userId as string) || "athlete_default";
+    const todayDate = new Date().toISOString().slice(0, 10);
+    const currentXp = userXpStore.get(userId) || 0;
+
+    // Calcular objetivos completados hoy
+    const userCompleted = Array.from(completedObjectivesStore.entries())
+      .filter(([k]) => k.startsWith(`${userId}_${todayDate}`))
+      .map(([, v]) => v.objectiveId);
+
+    const proteinEntry = proteinLogSpamGuard.get(userId);
+    const todayProtein = (proteinEntry && proteinEntry.date === todayDate) ? proteinEntry.dailyTotal : 0;
+
+    res.json({
+      date: todayDate,
+      serverTimestamp: new Date().toISOString(),
+      totalXp: currentXp,
+      levelInfo: getLevelInfo(currentXp),
+      completedObjectives: userCompleted,
+      formPercentage: Math.round((userCompleted.length / 6) * 100),
+      nutrition: {
+        protein: todayProtein,
+        targetProtein: 150,
+      },
+    });
+  });
+
+  // GET /api/progress - Progreso histórico real (Tú vs. Tú)
+  app.get("/api/progress", (req, res) => {
+    const userId = (req.query.userId as string) || "athlete_default";
+    const currentXp = userXpStore.get(userId) || 0;
+    const foods = foodLogsStore.get(userId) || [];
+    const supplements = supplementLogsStore.get(userId) || [];
+
+    res.json({
+      userId,
+      currentXp,
+      totalMealsLogged: foods.length,
+      totalSupplementsLogged: supplements.length,
+      isZeroState: currentXp === 0 && foods.length === 0,
+      tuVsTu: {
+        message: currentXp === 0 
+          ? "Tu progreso empieza hoy. Completa tus primeros objetivos para desbloquear la comparativa histórica."
+          : "Continúa superándote cada día. La única competencia eres tú mismo.",
+      }
+    });
+  });
+
+  // POST /api/food/log - Registro seguro de comida
+  app.post("/api/food/log", (req, res) => {
+    const { userId, name, protein, carbs, fats, calories } = req.body;
+    if (!userId || !name) {
+      return res.status(400).json({ success: false, error: "userId y name son requeridos." });
+    }
+
+    const logs = foodLogsStore.get(userId) || [];
+    const newEntry = {
+      id: "food_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7),
+      name: String(name).slice(0, 100),
+      protein: Math.min(150, Math.max(0, Number(protein) || 0)),
+      carbs: Math.min(300, Math.max(0, Number(carbs) || 0)),
+      fats: Math.min(150, Math.max(0, Number(fats) || 0)),
+      calories: Math.min(2500, Math.max(0, Number(calories) || 0)),
+      timestamp: new Date().toISOString(),
+    };
+
+    logs.push(newEntry);
+    foodLogsStore.set(userId, logs.slice(-100)); // Mantener últimas 100 comidas
+
+    res.json({ success: true, entry: newEntry });
+  });
+
+  // DELETE /api/food/:id - Eliminar registro de comida
+  app.delete("/api/food/:id", (req, res) => {
+    const { id } = req.params;
+    const userId = (req.query.userId as string) || "athlete_default";
+    const logs = foodLogsStore.get(userId) || [];
+    const filtered = logs.filter((l) => l.id !== id);
+    foodLogsStore.set(userId, filtered);
+    res.json({ success: true, deletedId: id });
+  });
+
+  // POST /api/supplements - Registrar configuración o toma
+  app.post("/api/supplements", (req, res) => {
+    const { userId, name, dosage } = req.body;
+    if (!userId || !name) {
+      return res.status(400).json({ success: false, error: "userId y name son requeridos." });
+    }
+    const current = supplementLogsStore.get(userId) || [];
+    const entry = {
+      id: "supp_" + Date.now(),
+      name: String(name),
+      dosage: dosage || "1 toma",
+      takenAt: new Date().toISOString(),
+    };
+    current.push(entry);
+    supplementLogsStore.set(userId, current.slice(-50));
+    res.json({ success: true, entry });
+  });
+
+  // POST /api/supplements/:id/log - Toma con timestamp autoritario
+  app.post("/api/supplements/:id/log", (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.body;
+    res.json({
+      success: true,
+      supplementId: id,
+      userId: userId || "athlete_default",
+      loggedAt: new Date().toISOString(),
+      message: "Suplemento registrado con éxito."
+    });
+  });
+
+  // GET /api/challenges - Lista de desafíos disponibles
+  app.get("/api/challenges", (req, res) => {
+    const userId = (req.query.userId as string) || "athlete_default";
+    const enrolled = challengeEnrollments.get(userId) || new Set();
+
+    const challenges = [
+      { id: "c1", title: "7 Días de Constancia", xpReward: 500, category: "racha", duration: "7 días", enrolled: enrolled.has("c1") },
+      { id: "c2", title: "Semana de Hidratación (+3L/día)", xpReward: 300, category: "agua", duration: "7 días", enrolled: enrolled.has("c2") },
+      { id: "c3", title: "30 Días de Form Impecable", xpReward: 1500, category: "elite", duration: "30 días", enrolled: enrolled.has("c3") },
+    ];
+    res.json({ challenges });
+  });
+
+  // POST /api/challenges/:id/join - Unirse a un desafío
+  app.post("/api/challenges/:id/join", (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: "userId es requerido." });
+    }
+    let userSet = challengeEnrollments.get(userId);
+    if (!userSet) {
+      userSet = new Set();
+      challengeEnrollments.set(userId, userSet);
+    }
+    userSet.add(id);
+    res.json({ success: true, joinedChallengeId: id, enrolledAt: new Date().toISOString() });
+  });
+
+  // GET /api/leaderboard - Ranking autoritario
+  app.get("/api/leaderboard", (req, res) => {
+    const userId = (req.query.userId as string) || "athlete_default";
+    const userXp = userXpStore.get(userId) || 0;
+
+    res.json({
+      league: userXp > 1000 ? "Plata" : "Bronce",
+      userRank: userXp > 0 ? 1 : null,
+      userXp,
+      hasPosition: userXp > 0,
+      emptyMessage: userXp === 0 ? "Todavía no tenés una posición. Completá tus primeros objetivos para entrar al ranking." : null,
+    });
+  });
+
+  // POST /api/objectives/:id/complete - Alias paramétrico
+  app.post("/api/objectives/:id/complete", (req, res) => {
+    req.body.objectiveId = req.params.id;
+    // Redirigir lógicamente al handler existente
+    const { userId, objectiveId, date: reqDate } = req.body;
+    if (!userId || !objectiveId) {
+      return res.status(400).json({ success: false, error: "userId y objectiveId son requeridos." });
+    }
+
+    const todayDate = reqDate || new Date().toISOString().slice(0, 10);
+    const trackingKey = `${userId}_${todayDate}_${objectiveId}`;
+
+    if (completedObjectivesStore.has(trackingKey)) {
+      const existing = completedObjectivesStore.get(trackingKey)!;
+      const currentXp = userXpStore.get(userId) || 0;
+      return res.json({
+        success: true,
+        alreadyCompleted: true,
+        message: "El objetivo ya fue completado previamente en la fecha especificada.",
+        xpAwarded: 0,
+        totalXp: currentXp,
+        ...getLevelInfo(currentXp),
+        completedAt: existing.completedAt,
+      });
+    }
+
+    const reward = OBJECTIVE_XP_VALUES[objectiveId] || 15;
+    const currentXp = userXpStore.get(userId) || 0;
+    const nextXp = currentXp + reward;
+    userXpStore.set(userId, nextXp);
+
+    completedObjectivesStore.set(trackingKey, {
+      userId,
+      date: todayDate,
+      objectiveId,
+      xpAwarded: reward,
+      completedAt: new Date().toISOString(),
+    });
+
+    return res.json({
+      success: true,
+      alreadyCompleted: false,
+      xpAwarded: reward,
+      totalXp: nextXp,
+      objectiveId,
+      date: todayDate,
+      ...getLevelInfo(nextXp),
+    });
+  });
+
+  // API Autoritaria: Completar objetivo y adjudicar XP con idempotencia y prevención de duplicados
+  app.post("/api/objectives/complete", (req, res) => {
+    const { userId, objectiveId, date: reqDate, idempotencyKey } = req.body;
+    if (!userId || !objectiveId) {
+      return res.status(400).json({ success: false, error: "userId y objectiveId son requeridos." });
+    }
+
+    const todayDate = reqDate || new Date().toISOString().slice(0, 10);
+    const trackingKey = `${userId}_${todayDate}_${objectiveId}`;
+
+    // Verificar si ya fue completado hoy
+    if (completedObjectivesStore.has(trackingKey)) {
+      const existing = completedObjectivesStore.get(trackingKey)!;
+      const currentXp = userXpStore.get(userId) || 0;
+      return res.json({
+        success: true,
+        alreadyCompleted: true,
+        message: "El objetivo ya fue completado previamente en la fecha especificada.",
+        xpAwarded: 0,
+        totalXp: currentXp,
+        ...getLevelInfo(currentXp),
+        completedAt: existing.completedAt,
+      });
+    }
+
+    const reward = OBJECTIVE_XP_VALUES[objectiveId] || 15;
+    const currentXp = userXpStore.get(userId) || 0;
+    const nextXp = currentXp + reward;
+    userXpStore.set(userId, nextXp);
+
+    completedObjectivesStore.set(trackingKey, {
+      userId,
+      date: todayDate,
+      objectiveId,
+      xpAwarded: reward,
+      completedAt: new Date().toISOString(),
+    });
+
+    return res.json({
+      success: true,
+      alreadyCompleted: false,
+      xpAwarded: reward,
+      totalXp: nextXp,
+      objectiveId,
+      date: todayDate,
+      ...getLevelInfo(nextXp),
+    });
+  });
+
+  // API Autoritaria: Anti-exploit para registro de proteína
+  app.post("/api/xp/log-protein", (req, res) => {
+    const { userId, amount, date: reqDate, targetProtein = 150 } = req.body;
+    if (!userId || typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ success: false, error: "Parámetros inválidos para registro de proteína." });
+    }
+
+    // Regla de negocio anti-exploit: máx 80g de proteína en un solo registro
+    if (amount > 80) {
+      return res.status(400).json({
+        success: false,
+        error: "Exceso de dosis: un registro individual no puede superar los 80g de proteína.",
+      });
+    }
+
+    const now = Date.now();
+    const todayDate = reqDate || new Date().toISOString().slice(0, 10);
+    const spamEntry = proteinLogSpamGuard.get(userId) || { lastTap: 0, dailyTotal: 0, date: todayDate };
+
+    // Reset si cambió de fecha
+    if (spamEntry.date !== todayDate) {
+      spamEntry.dailyTotal = 0;
+      spamEntry.date = todayDate;
+    }
+
+    // Prevención de spam clicks (mínimo 300ms entre taps consecutivos)
+    if (now - spamEntry.lastTap < 300) {
+      return res.status(429).json({
+        success: false,
+        error: "Límite de frecuencia excedido. Evita presionar repetidamente de forma consecutiva.",
+      });
+    }
+
+    // Techo fisiológico diario: máx 350g por día
+    if (spamEntry.dailyTotal + amount > 350) {
+      return res.status(400).json({
+        success: false,
+        error: "Límite diario de 350g de proteína alcanzado para el día de hoy.",
+      });
+    }
+
+    spamEntry.lastTap = now;
+    spamEntry.dailyTotal += amount;
+    proteinLogSpamGuard.set(userId, spamEntry);
+
+    // Verificar si cumple meta para adjudicar XP del objetivo nutrición de forma segura
+    let xpAwarded = 0;
+    const nutritionKey = `${userId}_${todayDate}_nutricion`;
+    let totalXp = userXpStore.get(userId) || 0;
+
+    if (spamEntry.dailyTotal >= targetProtein && !completedObjectivesStore.has(nutritionKey)) {
+      xpAwarded = OBJECTIVE_XP_VALUES.nutricion;
+      totalXp += xpAwarded;
+      userXpStore.set(userId, totalXp);
+
+      completedObjectivesStore.set(nutritionKey, {
+        userId,
+        date: todayDate,
+        objectiveId: 'nutricion',
+        xpAwarded,
+        completedAt: new Date().toISOString(),
+      });
+    }
+
+    return res.json({
+      success: true,
+      amountAdded: amount,
+      dailyTotal: spamEntry.dailyTotal,
+      targetMet: spamEntry.dailyTotal >= targetProtein,
+      xpAwarded,
+      totalXp,
+      ...getLevelInfo(totalXp),
+    });
+  });
+
+  // API Persistencia de Conversación MAX AI (Aislamiento por usuario)
+  app.get("/api/ai/chat/history", (req, res) => {
+    const userId = (req.query.userId as string) || 'guest';
+    const history = aiConversationsStore.get(userId) || [];
+    res.json({ history });
+  });
+
+  app.post("/api/ai/chat/save", (req, res) => {
+    const { userId, messages } = req.body;
+    if (!userId || !Array.isArray(messages)) {
+      return res.status(400).json({ success: false, error: "userId y messages son requeridos." });
+    }
+    // Guardar últimos 50 mensajes por atleta
+    aiConversationsStore.set(userId, messages.slice(-50));
+    res.json({ success: true, count: messages.length });
+  });
+
+  // API Refrigerator AI: Detección inteligente de ingredientes y sugerencia para confirmación de usuario
+  app.post("/api/ai/refrigerator", async (req, res) => {
+    try {
+      const { ingredients, missingProtein, goal } = req.body;
+      const ai = getAI();
+      const foodListStr = Array.isArray(ingredients) && ingredients.length > 0 ? ingredients.join(", ") : "pollo, huevos, arroz, tomate, cebolla, queso magro";
+      const targetProtein = missingProtein ? Number(missingProtein) : 25;
+
+      const prompt = `Eres el asistente de cocina y nutrición deportiva de MAXMIND.
+El usuario tiene en su heladera estos ingredientes: ${foodListStr}.
+Meta de proteína faltante: ${targetProtein}g. Objetivo: ${goal || 'Alto en proteína'}.
+
+Genera una sugerencia estructurada en formato JSON estricto:
+{
+  "title": "Nombre de la comida",
+  "protein": ${targetProtein},
+  "carbs": 30,
+  "fats": 10,
+  "calories": 330,
+  "prepTime": "12 min",
+  "ingredientsUsed": ["Ingrediente 1", "Ingrediente 2"],
+  "instructions": "Pasos concisos de preparación.",
+  "confirmationNotice": "Confirma para añadir automáticamente estos macronutrientes a tu registro diario."
+}`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.8-flash",
+        contents: prompt,
+        config: { responseMimeType: "application/json" }
+      });
+
+      const parsed = JSON.parse(response.text || "{}");
+      res.json(parsed);
+    } catch (err) {
+      res.json({
+        title: "Salteado proteico de pollo con huevos y tomate",
+        protein: 34,
+        carbs: 22,
+        fats: 9,
+        calories: 305,
+        prepTime: "10 min",
+        ingredientsUsed: ["Pechuga de pollo grillada", "2 huevos camperos", "Tomate fresco"],
+        instructions: "Corta la pechuga en tiras, saltea 4 min en sartén antiadherente, añade los huevos revueltos y acompaña con tomate en cubos.",
+        confirmationNotice: "Confirma para añadir automáticamente estos macronutrientes a tu registro diario."
+      });
+    }
   });
 
   // API AI Coach Metabólico
@@ -418,6 +869,67 @@ Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSO
     });
   });
 
+  // POST /api/redeem-coupon - Alias de arquitectura unificada
+  app.post("/api/redeem-coupon", (req, res, next) => {
+    // Redirige internamente al handler de cupones autoritario
+    const { code, userEmail } = req.body;
+    if (!code || typeof code !== 'string') {
+      return res.status(400).json({ success: false, message: 'Ingresa un código de ticket o cupón válido.' });
+    }
+    const cleanCode = code.trim().toUpperCase();
+    const coupon = COUPON_DATABASE[cleanCode];
+    if (!coupon) {
+      return res.status(404).json({ success: false, message: 'Código inválido o inexistente.' });
+    }
+    if (coupon.currentUses >= coupon.maxUses) {
+      return res.status(409).json({ success: false, message: 'Límite de usos alcanzado.' });
+    }
+    coupon.currentUses += 1;
+    return res.json({
+      success: true,
+      entitlement: {
+        plan: coupon.plan,
+        durationDays: coupon.durationDays,
+        validUntil: new Date(Date.now() + coupon.durationDays * 86400000).toISOString(),
+      },
+      message: `Cupón ${cleanCode} canjeado con éxito.`,
+    });
+  });
+
+  // POST /api/ai/chat - Alias de API estándar para clientes móviles y web
+  app.post("/api/ai/chat", async (req, res) => {
+    try {
+      const { message, context } = req.body;
+      const ai = getAI();
+      const prompt = `Eres MAX AI, el asistente personal de nutrición y rendimiento deportivo de MAXFORM.
+Contexto del atleta: Nombre: ${context?.userName || 'Atleta'}, Nivel: ${context?.athleteLevel || 1}, Proteína hoy: ${context?.currentProtein || 0}g de ${context?.targetProtein || 150}g, Racha: ${context?.streakDays || 0} días.
+Pregunta o mensaje: "${message || '¿Qué puedo comer hoy?'}"
+Responde en español de forma concisa, motivadora y basada en ciencia deportiva.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.8-flash",
+        contents: prompt,
+      });
+
+      res.json({
+        reply: response.text || "¡Vamos con todo! Mantén la consistencia y sella tu Form diaria.",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (e) {
+      res.json({
+        reply: "Para sellar tus objetivos de hoy, prioriza fuentes de proteína magra como pollo, atún o claras de huevo.",
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+
+  // POST /api/ai/estimate-food - Alias estándar
+  app.post("/api/ai/estimate-food", (req, res, next) => {
+    // Reenvía a /api/ai/simple-food-estimate
+    req.url = "/api/ai/simple-food-estimate";
+    app._router.handle(req, res, next);
+  });
+
   // API Dispatcher de Webhooks para Automatizaciones (n8n / WhatsApp / CRM)
   app.post("/api/webhooks/trigger", (req, res) => {
     const { event, athleteName, phone, payload } = req.body;
@@ -452,7 +964,7 @@ Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSO
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(__dirname, 'dist');
+    const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
