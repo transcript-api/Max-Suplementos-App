@@ -3,6 +3,12 @@ import { MacroNutrients } from '../types';
 import { OnboardingProfileInput, generatePersonalizedObjectives } from './objectiveEngine';
 import { calculateLevelFromXP, calculateDailyForm } from './gamification';
 import { supabaseRepository } from './supabaseRepository';
+import { 
+  DailyHabitsData, 
+  DEFAULT_DAILY_HABITS, 
+  getTodayLocalDateString, 
+  ensureHabitsAreCurrent 
+} from './dailyHabits';
 export { authService } from './authService';
 export type { AppUser } from './authService';
 
@@ -23,6 +29,7 @@ export interface UserAppState {
   levelGraceAvailable?: boolean;
   nextLevelChangeAllowedAt?: string;
   tasks: DailyTaskItem[];
+  dailyHabits?: DailyHabitsData;
   macros: MacroNutrients;
   targets?: {
     hydrationLiters: number;
@@ -42,6 +49,7 @@ export interface UserAppState {
   supplementHistory: any[];
   progressHistory: any[];
   dailyHistory?: Record<string, number>;
+  hydrationHistory?: Record<string, number>;
   isPro?: boolean;
   proExpiry?: string;
   referralCode?: string;
@@ -119,6 +127,66 @@ export const SANTIAGO_DEMO_STATE: UserAppState = {
       accentColor: '#EC4899',
     },
   ],
+  dailyHabits: {
+    lastResetDate: new Date().toISOString().split('T')[0],
+    habits: [
+      {
+        id: 'habit_reading',
+        title: 'Lectura & Enfoque Mental',
+        subtitle: '15-20 min de lectura de desarrollo, enfoque o aprendizaje',
+        category: 'lectura',
+        icon: 'auto_stories',
+        energyBoost: 4,
+        xpReward: 15,
+        completed: true,
+        completedAt: '08:45',
+      },
+      {
+        id: 'habit_sleep',
+        title: 'Monitoreo de Sueño & Descanso',
+        subtitle: 'Registrar descanso nocturno (meta 7-8h) y optimizar recuperación',
+        category: 'sueno',
+        icon: 'bedtime',
+        energyBoost: 5,
+        xpReward: 20,
+        completed: true,
+        completedAt: '07:30',
+      },
+      {
+        id: 'habit_meditation',
+        title: 'Meditación & Respiración Consciente',
+        subtitle: '10 min de respiración diafragmática, mindfulness o calma mental',
+        category: 'meditacion',
+        icon: 'self_improvement',
+        energyBoost: 4,
+        xpReward: 15,
+        completed: false,
+      },
+      {
+        id: 'habit_morning_sunlight',
+        title: 'Luz Solar & Movilidad Matutina',
+        subtitle: '10-15 min de exposición solar directa y estiramientos al despertar',
+        category: 'salud',
+        icon: 'wb_sunny',
+        energyBoost: 3,
+        xpReward: 10,
+        completed: true,
+        completedAt: '09:00',
+      },
+      {
+        id: 'habit_digital_detox',
+        title: 'Desconexión Digital Nocturna',
+        subtitle: 'Cero pantallas 30-45 min antes de dormir para descanso profundo',
+        category: 'sueno',
+        icon: 'phonelink_off',
+        energyBoost: 4,
+        xpReward: 15,
+        completed: false,
+      },
+    ],
+    streakDays: 4,
+    totalCompletedAllTime: 18,
+  },
   macros: {
     protein: 160,
     carbs: 220,
@@ -141,6 +209,24 @@ export const SANTIAGO_DEMO_STATE: UserAppState = {
     { date: '2026-08-15', weight: 73.5 },
     { date: '2026-09-01', weight: 72.4 },
   ],
+  dailyHistory: {
+    '2026-08-31': 145,
+    '2026-09-01': 162,
+    '2026-09-02': 158,
+    '2026-09-03': 165,
+    '2026-09-04': 152,
+    '2026-09-05': 168,
+    '2026-09-06': 128,
+  },
+  hydrationHistory: {
+    '2026-08-31': 2.75,
+    '2026-09-01': 3.1,
+    '2026-09-02': 2.6,
+    '2026-09-03': 3.25,
+    '2026-09-04': 2.9,
+    '2026-09-05': 3.0,
+    '2026-09-06': 2.1,
+  },
   challengesCompleted: 3,
   lastActiveDate: new Date().toISOString().split('T')[0],
   createdAt: '2026-08-01T10:00:00.000Z',
@@ -224,6 +310,12 @@ export function createCleanInitialUserState(userId: string, email: string, name:
     levelGraceAvailable: true, // 1 oportunidad tras el onboarding
     nextLevelChangeAllowedAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     tasks: INITIAL_CLEAN_TASKS,
+    dailyHabits: {
+      lastResetDate: todayStr,
+      habits: DEFAULT_DAILY_HABITS.map((h) => ({ ...h, completed: false })),
+      streakDays: 0,
+      totalCompletedAllTime: 0,
+    },
     macros: {
       protein: 130,
       carbs: 180,
@@ -243,6 +335,7 @@ export function createCleanInitialUserState(userId: string, email: string, name:
     supplementHistory: [],
     progressHistory: [],
     dailyHistory: {},
+    hydrationHistory: {},
     isPro: false,
     referralCode: `MAX-${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
     challengesCompleted: 0,
@@ -270,6 +363,11 @@ export function loadLocalUserState(userId: string, email = '', name = ''): UserA
     if (localRaw) {
       const parsed = JSON.parse(localRaw) as UserAppState;
       if (parsed && parsed.userId === userId) {
+        const { habitsData, wasReset } = ensureHabitsAreCurrent(parsed.dailyHabits);
+        parsed.dailyHabits = habitsData;
+        if (wasReset) {
+          saveUserData(parsed);
+        }
         return parsed;
       }
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MaxMindLogo } from './MaxMindLogo';
 
 interface PremiumModalProps {
@@ -14,10 +14,10 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
   onUpgrade,
   isDark = true,
 }) => {
-  const [couponCode, setCouponCode] = React.useState('');
-  const [isValidatingCoupon, setIsValidatingCoupon] = React.useState(false);
-  const [couponError, setCouponError] = React.useState<string | null>(null);
-  const [couponSuccess, setCouponSuccess] = React.useState<string | null>(null);
+  const [couponCode, setCouponCode] = useState('');
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponSuccess, setCouponSuccess] = useState<string | null>(null);
 
   if (!isOpen) return null;
 

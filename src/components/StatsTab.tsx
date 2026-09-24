@@ -10,6 +10,8 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
+import { HydrationWeeklyChart } from './HydrationWeeklyChart';
+import { ProteinWeeklyChart } from './ProteinWeeklyChart';
 
 interface StatsTabProps {
   streakDays: number;
@@ -18,6 +20,15 @@ interface StatsTabProps {
   weightKg?: number;
   isDark?: boolean;
   onUpdateWeight?: (weight: number) => void;
+  currentHydration?: number;
+  targetHydration?: number;
+  hydrationHistory?: Record<string, number>;
+  onAddWater?: () => void;
+  currentProtein?: number;
+  targetProtein?: number;
+  proteinDailyHistory?: Record<string, number>;
+  isDemoMode?: boolean;
+  onNavigateNutrition?: () => void;
 }
 
 export const StatsTab: React.FC<StatsTabProps> = ({
@@ -27,8 +38,18 @@ export const StatsTab: React.FC<StatsTabProps> = ({
   weightKg = 70.0,
   isDark = true,
   onUpdateWeight,
+  currentHydration = 0,
+  targetHydration = 2.5,
+  hydrationHistory = {},
+  onAddWater,
+  currentProtein = 0,
+  targetProtein = 150,
+  proteinDailyHistory = {},
+  isDemoMode = false,
+  onNavigateNutrition,
 }) => {
   const [metricView, setMetricView] = useState<'semanal' | 'racha'>('semanal');
+  const [nutritionChartMode, setNutritionChartMode] = useState<'both' | 'hydration' | 'protein'>('both');
   const [weightInput, setWeightInput] = useState(weightKg.toString());
   const [isEditingWeight, setIsEditingWeight] = useState(false);
 
@@ -351,6 +372,112 @@ export const StatsTab: React.FC<StatsTabProps> = ({
           </div>
         </div>
       )}
+
+      {/* Telemetría Metabólica: Hidratación (Línea) y Proteínas (Barras) con Recharts */}
+      <div className="space-y-4 pt-1">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl dark:bg-[#191c20] bg-white border dark:border-[#282a2f] border-slate-200 shadow-sm">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
+              <span className="font-label-caps text-xs text-cyan-500 uppercase tracking-widest font-bold">
+                Metabolismo & Volemia
+              </span>
+            </div>
+            <h2 className="font-headline-md text-base sm:text-lg font-bold dark:text-white text-slate-900 mt-0.5">
+              Telemetría Nutricional: Hidratación & Proteína
+            </h2>
+            <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+              Visualización analítica de los últimos 7 días con Recharts: balance hídrico en Litros y síntesis proteica en Gramos.
+            </p>
+          </div>
+
+          {/* Selector de modo de vista */}
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-[#111318] border dark:border-[#282a2f] border-slate-200 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => setNutritionChartMode('both')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                nutritionChartMode === 'both'
+                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+              }`}
+            >
+              <span>⚡ Ambos</span>
+              <span className="hidden sm:inline">en Paralelo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setNutritionChartMode('hydration')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                nutritionChartMode === 'hydration'
+                  ? 'bg-cyan-600 text-white shadow-sm'
+                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+              }`}
+            >
+              <span className="text-cyan-400">💧</span>
+              <span>Hidratación</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setNutritionChartMode('protein')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                nutritionChartMode === 'protein'
+                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+              }`}
+            >
+              <span>🥩</span>
+              <span>Proteínas</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Renderizado de gráficos con Recharts */}
+        {nutritionChartMode === 'both' ? (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+            <HydrationWeeklyChart
+              currentHydration={currentHydration}
+              targetHydration={targetHydration}
+              streakDays={streakDays}
+              isDark={isDark}
+              onAddWater={onAddWater}
+              onNavigateNutrition={onNavigateNutrition}
+              hydrationHistory={hydrationHistory}
+              isDemoMode={isDemoMode}
+            />
+            <ProteinWeeklyChart
+              currentProtein={currentProtein}
+              targetProtein={targetProtein}
+              streakDays={streakDays}
+              isDark={isDark}
+              onNavigateNutrition={onNavigateNutrition}
+              dailyHistory={proteinDailyHistory}
+              isDemoMode={isDemoMode}
+            />
+          </div>
+        ) : nutritionChartMode === 'hydration' ? (
+          <HydrationWeeklyChart
+            currentHydration={currentHydration}
+            targetHydration={targetHydration}
+            streakDays={streakDays}
+            isDark={isDark}
+            onAddWater={onAddWater}
+            onNavigateNutrition={onNavigateNutrition}
+            hydrationHistory={hydrationHistory}
+            isDemoMode={isDemoMode}
+          />
+        ) : (
+          <ProteinWeeklyChart
+            currentProtein={currentProtein}
+            targetProtein={targetProtein}
+            streakDays={streakDays}
+            isDark={isDark}
+            onNavigateNutrition={onNavigateNutrition}
+            dailyHistory={proteinDailyHistory}
+            isDemoMode={isDemoMode}
+          />
+        )}
+      </div>
 
       {/* Sección Biometría & Antropometría: Peso Corporal Real (Sección 23) */}
       <div className="p-5 rounded-2xl border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md">

@@ -16,6 +16,7 @@ interface DailyTasksProps {
   onToggleTask: (taskId: DailyTaskItem['id']) => void;
   hydration: number;
   onAddWater: () => void;
+  onReduceWater?: () => void;
   isDark?: boolean;
 }
 
@@ -24,6 +25,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
   onToggleTask,
   hydration,
   onAddWater,
+  onReduceWater,
   isDark = true,
 }) => {
   const completedCount = tasks.filter((t) => t.completed).length;
@@ -127,20 +129,36 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                 </div>
               </div>
 
-              {/* Acción secundaria para Agua (botón rápido +250ml) */}
+              {/* Acción secundaria para Agua (botón rápido +250ml y corrección -250ml) */}
               {task.id === 'agua' && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddWater();
-                  }}
-                  className="ml-2 px-2.5 py-1 rounded-lg text-xs font-bold dark:bg-[#2563eb]/20 bg-blue-50 dark:text-[#b4c5ff] text-blue-600 hover:bg-blue-100 dark:hover:bg-[#2563eb]/30 transition-colors flex items-center gap-1 border dark:border-[#2563eb]/30 border-blue-200"
-                  title="Añadir 250ml de agua"
-                >
-                  <span className="material-symbols-outlined text-[14px]">add</span>
-                  <span>250ml</span>
-                </button>
+                <div className="flex items-center gap-1.5 ml-2">
+                  {onReduceWater && hydration > 0 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onReduceWater();
+                      }}
+                      className="px-2 py-1 rounded-lg text-xs font-bold dark:bg-rose-500/15 bg-rose-50 dark:text-rose-400 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-500/25 transition-colors flex items-center gap-0.5 border dark:border-rose-500/30 border-rose-200"
+                      title="Restar 250ml si te equivocaste"
+                    >
+                      <span className="material-symbols-outlined text-[13px]">remove</span>
+                      <span className="hidden sm:inline">250ml</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddWater();
+                    }}
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold dark:bg-[#2563eb]/20 bg-blue-50 dark:text-[#b4c5ff] text-blue-600 hover:bg-blue-100 dark:hover:bg-[#2563eb]/30 transition-colors flex items-center gap-1 border dark:border-[#2563eb]/30 border-blue-200"
+                    title="Añadir 250ml de agua"
+                  >
+                    <span className="material-symbols-outlined text-[14px]">add</span>
+                    <span>250ml</span>
+                  </button>
+                </div>
               )}
             </div>
           );

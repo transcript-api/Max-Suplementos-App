@@ -4,11 +4,14 @@ import { MacroNutrients } from '../types';
 import { MealIdeasCatalog } from './MealIdeasCatalog';
 import { AddRecipeModal } from './AddRecipeModal';
 import { getIngredientImage } from '../data/ingredientImages';
+import { GoogleMapsExplorer } from './GoogleMapsExplorer';
 
 interface NutritionTabProps {
   hydration: number;
   onAddWater: () => void;
+  onReduceWater?: () => void;
   onAddProtein: (amount: number) => void;
+  onReduceProtein?: (amount: number) => void;
   onAddMealEntry?: (meal: {
     name: string;
     protein: number;
@@ -16,6 +19,17 @@ interface NutritionTabProps {
     fats: number;
     calories: number;
   }) => void;
+  onDeleteMealEntry?: (mealId: string) => void;
+  onUpdateDirectIntake?: (protein: number, water: number, carbs?: number, fats?: number) => void;
+  foodHistory?: Array<{
+    id: string;
+    name: string;
+    protein: number;
+    carbs: number;
+    fats: number;
+    calories: number;
+    timestamp: number | string;
+  }>;
   currentProtein: number;
   macros?: MacroNutrients;
   isDark?: boolean;
@@ -24,8 +38,13 @@ interface NutritionTabProps {
 export const NutritionTab: React.FC<NutritionTabProps> = ({
   hydration,
   onAddWater,
+  onReduceWater,
   onAddProtein,
+  onReduceProtein,
   onAddMealEntry,
+  onDeleteMealEntry,
+  onUpdateDirectIntake,
+  foodHistory = [],
   currentProtein,
   macros = { protein: currentProtein, carbs: 0, fats: 0, calories: currentProtein * 4 },
   isDark = true,
@@ -38,6 +57,14 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   const [addedSuccessMessage, setAddedSuccessMessage] = useState<string | null>(null);
   const [showMealIdeas, setShowMealIdeas] = useState(false);
   const [showAddRecipeModal, setShowAddRecipeModal] = useState(false);
+  const [showCalibrateModal, setShowCalibrateModal] = useState(false);
+  const [showMapsExplorer, setShowMapsExplorer] = useState(false);
+
+  // Estados para la calibración manual directa
+  const [calibProtein, setCalibProtein] = useState<number>(macros.protein || currentProtein);
+  const [calibWater, setCalibWater] = useState<number>(hydration);
+  const [calibCarbs, setCalibCarbs] = useState<number>(macros.carbs || 210);
+  const [calibFats, setCalibFats] = useState<number>(macros.fats || 58);
 
   const effectiveProtein = macros.protein || currentProtein;
   const effectiveCarbs = macros.carbs || 210;
@@ -513,6 +540,253 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         </div>
       </div>
 
+      {/* Panel de Corrección Rápida y Deshacer Errores de Consumo */}
+      <div className="bg-[#191c20] rounded-xl p-4 border border-[#282a2f] shadow-md space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+              <span className="material-symbols-outlined text-[18px]">tune</span>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                Corrección de Consumo & Deshacer
+                <span className="text-[10px] bg-amber-500/20 text-amber-300 font-extrabold px-2 py-0.5 rounded-full border border-amber-500/30">
+                  ¿Te equivocaste?
+                </span>
+              </h3>
+              <p className="text-xs text-[#8d90a0]">
+                Ajustá o restá si agregaste más gramos o líquido de lo que realmente consumiste.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setCalibProtein(effectiveProtein);
+              setCalibWater(hydration);
+              setCalibCarbs(effectiveCarbs);
+              setCalibFats(effectiveFats);
+              setShowCalibrateModal(true);
+            }}
+            className="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#2563eb]/20 hover:bg-[#2563eb]/30 border border-[#2563eb]/40 text-[#adc6ff] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[15px]">edit_calendar</span>
+            <span>Calibrar Valores Exactos</span>
+          </button>
+        </div>
+
+        {/* Botones Rápidos para Restar o Sumar */}
+        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#282a2f]">
+          <span className="text-[11px] font-bold text-[#8d90a0] uppercase tracking-wider block mr-1">
+            Ajustes Rápidos:
+          </span>
+
+          {onReduceProtein && effectiveProtein > 0 && (
+            <>
+              <button
+                type="button"
+                onClick={() => onReduceProtein(10)}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+                title="Restar 10g de proteína"
+              >
+                <span className="material-symbols-outlined text-[14px]">remove</span>
+                <span>-10g Prot</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onReduceProtein(25)}
+                className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+                title="Restar 25g de proteína"
+              >
+                <span className="material-symbols-outlined text-[14px]">remove</span>
+                <span>-25g Prot</span>
+              </button>
+            </>
+          )}
+
+          {onReduceWater && hydration > 0 && (
+            <button
+              type="button"
+              onClick={onReduceWater}
+              className="px-2.5 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+              title="Restar 250ml de agua"
+            >
+              <span className="material-symbols-outlined text-[14px]">remove</span>
+              <span>-250ml Agua</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => onAddProtein(25)}
+            className="px-2.5 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ml-auto"
+            title="Sumar 25g de proteína"
+          >
+            <span className="material-symbols-outlined text-[14px]">add</span>
+            <span>+25g Prot</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onAddWater}
+            className="px-2.5 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+            title="Sumar 250ml de agua"
+          >
+            <span className="material-symbols-outlined text-[14px]">add</span>
+            <span>+250ml Agua</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Historial de Comidas Registradas de Hoy con Opción de Eliminar / Deshacer */}
+      {foodHistory && foodHistory.length > 0 && (
+        <div className="bg-[#191c20] rounded-xl p-4 border border-[#282a2f] shadow-md space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#2563eb] text-[20px]">receipt_long</span>
+              <h3 className="text-sm font-bold text-white">
+                Comidas Registradas Hoy ({foodHistory.length})
+              </h3>
+            </div>
+            <span className="text-[11px] text-[#8d90a0]">
+              Tocá eliminar para descontar los macros de cualquier comida
+            </span>
+          </div>
+
+          <div className="divide-y divide-[#282a2f]">
+            {foodHistory.map((item) => (
+              <div key={item.id} className="py-2.5 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h4 className="text-xs sm:text-sm font-bold text-white truncate">
+                    {item.name}
+                  </h4>
+                  <div className="flex items-center gap-2 text-[11px] text-[#8d90a0] mt-0.5">
+                    <span className="text-[#b4c5ff] font-bold">+{item.protein}g P</span>
+                    <span>·</span>
+                    <span>{item.carbs}g C</span>
+                    <span>·</span>
+                    <span>{item.fats}g G</span>
+                    <span>·</span>
+                    <span>{item.calories} kcal</span>
+                  </div>
+                </div>
+
+                {onDeleteMealEntry && (
+                  <button
+                    type="button"
+                    onClick={() => onDeleteMealEntry(item.id)}
+                    className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shrink-0 active:scale-95"
+                    title="Eliminar comida y restar sus macros"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">delete</span>
+                    <span>Deshacer</span>
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Calibración Exacta de Totales */}
+      {showCalibrateModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#191c20] rounded-2xl max-w-sm w-full p-5 border border-[#282a2f] shadow-2xl space-y-4 text-white animate-fadeIn">
+            <div className="flex items-center justify-between border-b border-[#282a2f] pb-3">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#2563eb]">tune</span>
+                <h3 className="text-base font-bold">Corregir Totales de Hoy</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCalibrateModal(false)}
+                className="text-[#8d90a0] hover:text-white p-1"
+              >
+                <span className="material-symbols-outlined text-[18px]">close</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-[#8d90a0]">
+              Ingresá los valores exactos acumulados que realmente consumiste hoy para calibrar tu balance:
+            </p>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-bold text-[#adc6ff] block mb-1">Proteína total de hoy (gramos):</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="350"
+                  value={calibProtein}
+                  onChange={(e) => setCalibProtein(Math.max(0, parseInt(e.target.value) || 0))}
+                  className="w-full bg-[#0c0e12] border border-[#282a2f] rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-[#b4c5ff] block mb-1">Agua total de hoy (Litros):</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="10"
+                  value={calibWater}
+                  onChange={(e) => setCalibWater(Math.max(0, parseFloat(e.target.value) || 0))}
+                  className="w-full bg-[#0c0e12] border border-[#282a2f] rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="font-bold text-emerald-400 block mb-1">Carbos (g):</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={calibCarbs}
+                    onChange={(e) => setCalibCarbs(Math.max(0, parseInt(e.target.value) || 0))}
+                    className="w-full bg-[#0c0e12] border border-[#282a2f] rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-amber-400 block mb-1">Grasas (g):</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={calibFats}
+                    onChange={(e) => setCalibFats(Math.max(0, parseInt(e.target.value) || 0))}
+                    className="w-full bg-[#0c0e12] border border-[#282a2f] rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 pt-2 border-t border-[#282a2f]">
+              <button
+                type="button"
+                onClick={() => setShowCalibrateModal(false)}
+                className="flex-1 py-2 px-3 rounded-xl bg-[#282a2f] hover:bg-[#333539] text-xs font-bold text-[#c3c6d7] transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onUpdateDirectIntake) {
+                    onUpdateDirectIntake(calibProtein, calibWater, calibCarbs, calibFats);
+                  }
+                  setShowCalibrateModal(false);
+                }}
+                className="flex-1 py-2 px-3 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-xs font-bold text-white transition-colors shadow-md"
+              >
+                Guardar Corrección
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Smart Logging Section */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -520,8 +794,8 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Potenciado por MAX AI</span>
         </div>
 
-        {/* Acciones de Registro Rápido: 4 opciones visibles */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {/* Acciones de Registro Rápido: 5 opciones con Google Maps */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <button 
             type="button"
             onClick={() => setCustomInputOpen(!customInputOpen)}
@@ -602,11 +876,49 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 Crear Plato
               </span>
               <span className="font-body-sm text-body-sm text-[#adc6ff]">
-                Subir tu propia receta
+                Subir receta
+              </span>
+            </div>
+          </button>
+
+          {/* Tarjeta 5: Comida Fit Cerca (Google Maps) */}
+          <button 
+            type="button"
+            onClick={() => setShowMapsExplorer(!showMapsExplorer)}
+            className={`bg-gradient-to-br from-[#2a1725] to-[#16181d] hover:from-[#3a2034] hover:to-[#1a1d24] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border transition-colors group cursor-pointer ${
+              showMapsExplorer ? 'border-rose-400 ring-2 ring-rose-400/30' : 'border-rose-500/40'
+            }`}
+          >
+            <div className="flex items-center justify-between w-full">
+              <div className="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center shadow-md">
+                <span className="material-symbols-outlined text-[18px]">pin_drop</span>
+              </div>
+              <span className="text-[10px] font-extrabold bg-rose-500/20 text-rose-300 px-1.5 py-0.5 rounded border border-rose-500/30">
+                Maps
+              </span>
+            </div>
+            <div>
+              <span className="font-body-md text-body-md font-bold text-white group-hover:text-rose-300 transition-colors block">
+                Comida Fit Cerca
+              </span>
+              <span className="font-body-sm text-body-sm text-[#8d90a0]">
+                Google Maps & AI
               </span>
             </div>
           </button>
         </div>
+
+        {/* Sección interactiva de Google Maps Grounding para Comida Fit */}
+        {showMapsExplorer && (
+          <div className="animate-fadeIn">
+            <GoogleMapsExplorer
+              isDark={isDark}
+              defaultCategory="healthy_food"
+              title="Restaurantes Fit & Comida Proteica Cercana"
+              subtitle="Lugares verificados con Google Maps en tiempo real vía Gemini 3.5 Flash"
+            />
+          </div>
+        )}
 
         {/* Interactive Simulated Natural Language Parser */}
         <div className="bg-[#1d2024] rounded-xl p-4 shadow-md space-y-3 border border-[#282a2f]">

@@ -13,6 +13,7 @@ interface HeaderProps {
   isDemoMode?: boolean;
   onToggleDemoMode?: () => void;
   userName?: string;
+  onOpenAudioTranscriber?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,10 +27,12 @@ export const Header: React.FC<HeaderProps> = ({
   isDemoMode = false,
   onToggleDemoMode,
   userName = 'Atleta',
+  onOpenAudioTranscriber,
 }) => {
   const getTitle = () => {
     switch (currentTab) {
       case 'inicio': return 'Inicio';
+      case 'suplementos': return 'Suplementos';
       case 'progreso':
       case 'estadisticas': return 'Estadísticas';
       case 'nutricion': return 'Nutrición';
@@ -122,6 +125,22 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="font-label-caps text-label-caps uppercase dark:text-[#8d90a0] text-slate-500 hidden lg:inline-block dark:bg-[#191c20] bg-slate-100 px-2.5 py-1 rounded-full border dark:border-[#282a2f] border-slate-200">
             {getTitle()}
           </span>
+
+          {/* Botón Transcriptor de Audio con Micrófono (gemini-3.5-transcribe) */}
+          {onOpenAudioTranscriber && (
+            <button
+              type="button"
+              onClick={onOpenAudioTranscriber}
+              aria-label="Transcribir Audio con micrófono (gemini-3.5-transcribe)"
+              title="Transcribir Audio con micrófono (gemini-3.5-transcribe)"
+              className="p-2 rounded-xl dark:bg-[#191c20] bg-slate-100 dark:hover:bg-[#282a2f] hover:bg-slate-200 text-purple-500 dark:text-purple-400 border dark:border-[#282a2f] border-slate-200 transition-all flex items-center justify-center active:scale-95 group relative"
+            >
+              <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">
+                speech_to_text
+              </span>
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-purple-500 ring-2 dark:ring-[#0c0e12] ring-white"></span>
+            </button>
+          )}
 
           {/* Switch Modo Claro / Modo Oscuro */}
           {onToggleDark && (

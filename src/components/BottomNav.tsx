@@ -8,7 +8,7 @@ interface BottomNavProps {
 export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab }) => {
   const tabs = [
     { id: 'inicio', label: 'Inicio', icon: 'home' },
-    { id: 'progreso', label: 'Estadísticas', icon: 'bar_chart' },
+    { id: 'suplementos', label: 'Suplementos', icon: 'medication' },
     { id: 'nutricion', label: 'Nutrición', icon: 'restaurant' },
     { id: 'max-ai', label: 'MAX AI', icon: 'auto_awesome', isSpecial: true },
     { id: 'retos', label: 'Retos', icon: 'emoji_events' },

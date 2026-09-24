@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { RecipeItem, getAllRecipes } from '../data/recipesDatabase';
+import { RecipeItem, getAllRecipes, getRecipeMealTime, MealTimeType } from '../data/recipesDatabase';
 import { RecipeDetailModal } from './RecipeDetailModal';
 import { AddRecipeModal } from './AddRecipeModal';
 import { getIngredientImage } from '../data/ingredientImages';
@@ -24,6 +24,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeItem | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mealTimeFilter, setMealTimeFilter] = useState<'all' | MealTimeType>('all');
   const [countryFilter, setCountryFilter] = useState<'all' | 'uruguay' | 'brasil' | 'frontera'>('all');
   const [quickFilter, setQuickFilter] = useState<'all' | 'high_protein' | 'quick' | 'low_calorie' | 'hypertrophy'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -57,6 +58,12 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
   // Filtrado reactivo en vivo
   const filteredRecipes = useMemo(() => {
     return recipes.filter((r) => {
+      // Filtro por momento del día (Desayuno, Almuerzo, Merienda, Cena, Snacks & Suplementos)
+      if (mealTimeFilter !== 'all') {
+        const time = getRecipeMealTime(r);
+        if (time !== mealTimeFilter) return false;
+      }
+
       // Filtro por país
       if (countryFilter !== 'all' && r.country !== countryFilter) {
         return false;
@@ -79,12 +86,26 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
 
       return true;
     });
-  }, [recipes, countryFilter, quickFilter, searchQuery]);
+  }, [recipes, mealTimeFilter, countryFilter, quickFilter, searchQuery]);
 
   // Contadores para insignias
   const totalCount = recipes.length;
   const uruguayCount = recipes.filter((r) => r.country === 'uruguay').length;
   const brasilCount = recipes.filter((r) => r.country === 'brasil').length;
+
+  const desayunoCount = recipes.filter((r) => getRecipeMealTime(r) === 'desayuno').length;
+  const almuerzoCount = recipes.filter((r) => getRecipeMealTime(r) === 'almuerzo').length;
+  const meriendaCount = recipes.filter((r) => getRecipeMealTime(r) === 'merienda').length;
+  const cenaCount = recipes.filter((r) => getRecipeMealTime(r) === 'cena').length;
+  const snackCount = recipes.filter((r) => getRecipeMealTime(r) === 'snack_suplemento').length;
+
+  const mealTimeMeta: Record<MealTimeType, { label: string; icon: string; badgeColor: string }> = {
+    desayuno: { label: 'Desayuno', icon: 'wb_sunny', badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
+    almuerzo: { label: 'Almuerzo', icon: 'restaurant', badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
+    merienda: { label: 'Merienda', icon: 'bakery_dining', badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30' },
+    cena: { label: 'Cena', icon: 'dark_mode', badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' },
+    snack_suplemento: { label: 'Snack/Supl.', icon: 'bolt', badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
+  };
 
   return (
     <div className="fixed inset-0 z-40 bg-[#0c0e12] flex flex-col overflow-hidden text-white animate-fadeIn">
@@ -155,6 +176,41 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
+        </div>
+
+        {/* Apartado Principal: Categorías por Momento del Día */}
+        <div className="space-y-1">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#8d90a0] block px-0.5">
+            Apartado por Momento del Día:
+          </span>
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+            {[
+              { id: 'all', label: '🍽️ Todos', count: totalCount },
+              { id: 'desayuno', label: '🌅 Desayuno', count: desayunoCount },
+              { id: 'almuerzo', label: '🥗 Almuerzo', count: almuerzoCount },
+              { id: 'merienda', label: '🥪 Merienda', count: meriendaCount },
+              { id: 'cena', label: '🌙 Cena', count: cenaCount },
+              { id: 'snack_suplemento', label: '⚡ Snacks & Supl.', count: snackCount },
+            ].map((mt) => {
+              const isActive = mealTimeFilter === mt.id;
+              return (
+                <button
+                  key={mt.id}
+                  onClick={() => setMealTimeFilter(mt.id as any)}
+                  className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-[#2563eb] to-[#3b82f6] text-white border-blue-400 shadow-md scale-[1.02]'
+                      : 'bg-[#14161a] text-[#8d90a0] border-[#282a2f] hover:text-white hover:border-[#383a40]'
+                  }`}
+                >
+                  <span>{mt.label}</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-white/10 font-black">
+                    {mt.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Filtro por País */}
@@ -300,6 +356,15 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                       <span>{recipe.flag}</span>
                       <span className="hidden xs:inline">{recipe.countryLabel}</span>
                     </span>
+                    {(() => {
+                      const mTime = getRecipeMealTime(recipe);
+                      const meta = mealTimeMeta[mTime];
+                      return (
+                        <span className={`backdrop-blur-md text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full border ${meta.badgeColor}`}>
+                          {meta.label}
+                        </span>
+                      );
+                    })()}
                     {recipe.isCustom && (
                       <span className="bg-amber-500/95 text-black text-[8px] sm:text-[10px] font-black px-1.5 py-0.5 rounded-full">
                         TU RECETA

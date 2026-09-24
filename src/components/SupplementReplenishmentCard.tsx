@@ -14,11 +14,13 @@ export interface SupplementItem {
 interface SupplementReplenishmentCardProps {
   userName?: string;
   isDark?: boolean;
+  onNavigateTab?: (tab: string) => void;
 }
 
 export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardProps> = ({
   userName = 'Atleta',
   isDark = true,
+  onNavigateTab,
 }) => {
   const [supplements, setSupplements] = useState<SupplementItem[]>([
     {
@@ -56,6 +58,9 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
   const [referralCopied, setReferralCopied] = useState(false);
   const [webhookMessage, setWebhookMessage] = useState<string | null>(null);
   const [isSendingWebhook, setIsSendingWebhook] = useState(false);
+  const [takenToday, setTakenToday] = useState<Record<string, boolean>>({
+    creatina: true, // Por defecto una ya tomada como ejemplo motivador
+  });
 
   // Código único de referido para el usuario
   const referralCode = `MAX-${userName.toUpperCase().replace(/\s+/g, '')}-777`;
@@ -70,6 +75,20 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         return sup;
       })
     );
+    setTakenToday((prev) => ({ ...prev, [id]: true }));
+  };
+
+  // Deshacer toma si el usuario se equivocó
+  const handleUndoServing = (id: string) => {
+    setSupplements((prev) =>
+      prev.map((sup) => {
+        if (sup.id === id) {
+          return { ...sup, remainingServings: Math.min(sup.totalServings, sup.remainingServings + 1) };
+        }
+        return sup;
+      })
+    );
+    setTakenToday((prev) => ({ ...prev, [id]: false }));
   };
 
   // Copiar código de referido
@@ -124,7 +143,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
             </div>
             <div>
               <h3 className="font-headline-md text-base font-bold dark:text-white text-slate-900">
-                Pastillero & Reposición Inteligente
+                Centro de Suplementación & Adherencia MAXFORM
               </h3>
               <p className="text-xs dark:text-[#8d90a0] text-slate-500">
                 Monitoreo de stock de tomas para no cortar la saturación de creatina ni la síntesis proteica.
@@ -132,9 +151,54 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
             </div>
           </div>
 
-          <span className="self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">
-            Sincronizado con MAX Suplementos
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {onNavigateTab && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onNavigateTab('suplementos')}
+                  className="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-500 dark:text-rose-400 hover:bg-rose-500/25 text-[11px] font-bold border border-rose-500/30 transition-all flex items-center gap-1"
+                  title="Buscar tiendas en Google Maps con Gemini 3.5 Flash"
+                >
+                  <span className="material-symbols-outlined text-[13px]">pin_drop</span>
+                  <span>Lojas (Google Maps)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onNavigateTab('suplementos')}
+                  className="px-2.5 py-1 rounded-full bg-[#2563eb]/20 text-[#2563eb] dark:text-[#adc6ff] hover:bg-[#2563eb]/30 text-[11px] font-bold border border-[#2563eb]/30 transition-all flex items-center gap-1"
+                >
+                  <span>Tracker V1 & Scanner</span>
+                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                </button>
+              </>
+            )}
+            <span className="px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-500 dark:text-blue-400 text-[11px] font-extrabold border border-blue-500/20">
+              Tomas hoy: {Object.values(takenToday).filter(Boolean).length} / {supplements.length}
+            </span>
+            <span className="self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">
+              MAX Suplementos
+            </span>
+          </div>
+        </div>
+
+        {/* Banner Motivacional de Adherencia */}
+        <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-transparent border border-emerald-500/20 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="material-symbols-outlined text-emerald-500 text-[18px]">verified</span>
+            <span className="dark:text-slate-300 text-slate-700">
+              <strong>Racha de Suplementación: 14 días al 100%.</strong> Cada scoop mantiene tus depósitos saturados para máxima fuerza y síntesis muscular.
+            </span>
+          </div>
+          <a
+            href="https://wa.me/5491100000000?text=Hola%20MAX%20Suplementos!%20Quiero%20asesoramiento%20y%20conocer%20ofertas%20para%20atletas%20MAXFORM"
+            target="_blank"
+            rel="noreferrer"
+            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold whitespace-nowrap transition-colors flex items-center gap-1 shrink-0"
+          >
+            <span className="material-symbols-outlined text-[13px]">chat</span>
+            <span>WhatsApp MAX</span>
+          </a>
         </div>
 
         {webhookMessage && (
@@ -204,15 +268,33 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
 
                 {/* Acciones del Suplemento */}
                 <div className="pt-3 mt-2 border-t dark:border-[#282a2f] border-slate-200 space-y-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTakeServing(sup.id)}
-                    disabled={sup.remainingServings === 0}
-                    className="w-full py-1.5 px-3 rounded-lg dark:bg-[#111318] bg-white hover:bg-slate-100 dark:hover:bg-[#20242b] border dark:border-[#282a2f] border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
-                  >
-                    <span className="material-symbols-outlined text-[16px] text-emerald-500">check</span>
-                    <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
-                  </button>
+                  {takenToday[sup.id] ? (
+                    <div className="flex items-center gap-1.5 w-full">
+                      <div className="flex-1 py-1.5 px-2.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-500 dark:text-emerald-400 text-xs font-bold flex items-center justify-center gap-1">
+                        <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                        <span>Dosis de hoy tomada</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleUndoServing(sup.id)}
+                        className="py-1.5 px-2.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-500 dark:text-rose-400 hover:bg-rose-500/25 text-xs font-bold transition-all flex items-center gap-1 shrink-0"
+                        title="Deshacer si marcaste la toma por error"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">undo</span>
+                        <span>Deshacer</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleTakeServing(sup.id)}
+                      disabled={sup.remainingServings === 0}
+                      className="w-full py-1.5 px-3 rounded-lg bg-[#2563eb] hover:bg-blue-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95 disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">check</span>
+                      <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
+                    </button>
+                  )}
 
                   {isLowStock && (
                     <div className="space-y-1.5 pt-1">
