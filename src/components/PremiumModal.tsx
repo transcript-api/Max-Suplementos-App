@@ -70,7 +70,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
       <div className="relative w-full max-w-lg bg-[#0B1220] border border-[#1E293B] rounded-2xl p-6 sm:p-8 shadow-2xl text-white space-y-5 animate-fadeIn my-auto">
         {/* Botón cerrar */}
         <button

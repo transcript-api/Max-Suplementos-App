@@ -3,25 +3,17 @@
  * Modern React + Tailwind CSS + Firebase + Gemini AI + Recharts
  */
 
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
+import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { usePwaInstall } from './lib/usePwaInstall';
 import { DailyTasks, DailyTaskItem } from './components/DailyTasks';
 import { MaxAiSimpleChat } from './components/MaxAiSimpleChat';
-import { StatsTab } from './components/StatsTab';
-import { ProgressTab } from './components/ProgressTab';
-import { NutritionTab } from './components/NutritionTab';
-import { MaxAiTab } from './components/MaxAiTab';
-import { ChallengesTab } from './components/ChallengesTab';
-import { ProfileTab } from './components/ProfileTab';
 import { ConsistencyChallenges } from './components/ConsistencyChallenges';
-import { OnboardingModal } from './components/OnboardingModal';
-import { PremiumModal } from './components/PremiumModal';
-import { AudioTranscriberModal } from './components/AudioTranscriberModal';
 import { ExpandableMealSuggestionCard } from './components/ExpandableMealSuggestionCard';
 import { ProteinWeeklyChart } from './components/ProteinWeeklyChart';
 import { SupplementReplenishmentCard } from './components/SupplementReplenishmentCard';
-import { SuplementosTab } from './components/SuplementosTab';
 import { AnimatedCounter } from './components/AnimatedCounter';
 import { suggestMealFromFoods, MealSuggestion } from './lib/gemini';
 import { ensureAuthUser } from './lib/supabase';
@@ -30,7 +22,29 @@ import { offlineSync, SyncStatus } from './lib/offlineSync';
 import { MacroNutrients } from './types';
 import { reconcileAthleteData, LocalAthleteState } from './lib/reconciliation';
 
-import { AuthModal } from './components/AuthModal';
+// Módulos pesados diferidos con React.lazy para carga ultrarrápida del bundle principal
+const StatsTab = lazy(() => import('./components/StatsTab').then(m => ({ default: m.StatsTab })));
+const NutritionTab = lazy(() => import('./components/NutritionTab').then(m => ({ default: m.NutritionTab })));
+const MaxAiTab = lazy(() => import('./components/MaxAiTab').then(m => ({ default: m.MaxAiTab })));
+const ChallengesTab = lazy(() => import('./components/ChallengesTab').then(m => ({ default: m.ChallengesTab })));
+const ProfileTab = lazy(() => import('./components/ProfileTab').then(m => ({ default: m.ProfileTab })));
+const SuplementosTab = lazy(() => import('./components/SuplementosTab').then(m => ({ default: m.SuplementosTab })));
+
+const OnboardingModal = lazy(() => import('./components/OnboardingModal').then(m => ({ default: m.OnboardingModal })));
+const PremiumModal = lazy(() => import('./components/PremiumModal').then(m => ({ default: m.PremiumModal })));
+const AudioTranscriberModal = lazy(() => import('./components/AudioTranscriberModal').then(m => ({ default: m.AudioTranscriberModal })));
+const AuthModal = lazy(() => import('./components/AuthModal').then(m => ({ default: m.AuthModal })));
+const ProtocolChangeModal = lazy(() => import('./components/ProtocolChangeModal').then(m => ({ default: m.ProtocolChangeModal })));
+
+const TabLoaderFallback = () => (
+  <div className="w-full flex-1 min-h-[50vh] flex flex-col items-center justify-center p-8 space-y-3">
+    <div className="w-10 h-10 rounded-full border-3 border-blue-500/20 border-t-blue-500 animate-spin" />
+    <span className="text-xs font-semibold tracking-wider uppercase text-slate-400 animate-pulse">
+      Cargando sección...
+    </span>
+  </div>
+);
+
 import { 
   authService, 
   AppUser, 
@@ -45,7 +59,6 @@ import {
 } from './lib/userStore';
 import { calculateLevelFromXP, calculateDailyForm, calculateStreak } from './lib/gamification';
 import { OnboardingProfileInput, generatePersonalizedObjectives } from './lib/objectiveEngine';
-import { ProtocolChangeModal } from './components/ProtocolChangeModal';
 import { LevelExclusivesCard } from './components/LevelExclusivesCard';
 import { checkLevelCooldown } from './lib/levelProtocols';
 import {
@@ -739,6 +752,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('inicio');
   const [aiPrompt, setAiPrompt] = useState<string | undefined>(undefined);
+
+  // Hook de Instalación PWA (Descarga directa desde el navegador)
+  const {
+    isInstallable: isPwaInstallable,
+    isInstalled: isPwaInstalled,
+    isIos,
+    showIosModal,
+    setShowIosModal,
+    triggerInstall,
+  } = usePwaInstall();
 
   // Switch de Modo Claro / Modo Oscuro
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -1795,6 +1818,8 @@ export default function App() {
         onToggleDemoMode={() => handleToggleDemoMode()}
         userName={userName}
         onOpenAudioTranscriber={() => setIsAudioTranscriberOpen(true)}
+        onDownloadApp={triggerInstall}
+        isAppInstalled={isPwaInstalled}
       />
 
       {/* Contenido Principal */}
@@ -1877,168 +1902,182 @@ export default function App() {
           />
         )}
 
-        {currentTab === 'suplementos' && (
-          <SuplementosTab
-            userName={userName}
-            isDark={isDark}
-            onNavigateTab={handleNavigateTab}
-          />
-        )}
+        {currentTab !== 'inicio' && (
+          <Suspense fallback={<TabLoaderFallback />}>
+            {currentTab === 'suplementos' && (
+              <SuplementosTab
+                userName={userName}
+                isDark={isDark}
+                onNavigateTab={handleNavigateTab}
+              />
+            )}
 
-        {(currentTab === 'progreso' || currentTab === 'estadisticas') && (
-          <StatsTab
-            streakDays={streakDays}
-            formScore={energyPercent}
-            xp={xp}
-            weightKg={userState.biometrics?.weightKg || 70}
-            isDark={isDark}
-            onUpdateWeight={(newWeight) => {
-              const updatedState: UserState = {
-                ...userState,
-                biometrics: {
-                  ...userState.biometrics,
-                  weightKg: newWeight,
-                }
-              };
-              setUserState(updatedState);
-              saveUserData(updatedState);
-            }}
-            currentHydration={hydration}
-            targetHydration={userState.targets?.hydrationLiters || 2.5}
-            hydrationHistory={userState.hydrationHistory}
-            onAddWater={handleAddWater}
-            currentProtein={protein}
-            targetProtein={macros.protein || 150}
-            proteinDailyHistory={userState.dailyHistory}
-            isDemoMode={isDemoMode}
-            onNavigateNutrition={() => handleNavigateTab('nutricion')}
-          />
-        )}
+            {(currentTab === 'progreso' || currentTab === 'estadisticas') && (
+              <StatsTab
+                streakDays={streakDays}
+                formScore={energyPercent}
+                xp={xp}
+                weightKg={userState.biometrics?.weightKg || 70}
+                isDark={isDark}
+                onUpdateWeight={(newWeight) => {
+                  const updatedState: UserState = {
+                    ...userState,
+                    biometrics: {
+                      ...userState.biometrics,
+                      weightKg: newWeight,
+                    }
+                  };
+                  setUserState(updatedState);
+                  saveUserData(updatedState);
+                }}
+                currentHydration={hydration}
+                targetHydration={userState.targets?.hydrationLiters || 2.5}
+                hydrationHistory={userState.hydrationHistory}
+                onAddWater={handleAddWater}
+                currentProtein={protein}
+                targetProtein={macros.protein || 150}
+                proteinDailyHistory={userState.dailyHistory}
+                isDemoMode={isDemoMode}
+                onNavigateNutrition={() => handleNavigateTab('nutricion')}
+              />
+            )}
 
-        {currentTab === 'nutricion' && (
-          <NutritionTab
-            hydration={hydration}
-            onAddWater={handleAddWater}
-            onReduceWater={handleReduceWater}
-            onAddProtein={handleAddProtein}
-            onReduceProtein={handleReduceProtein}
-            currentProtein={protein}
-            macros={macros}
-            onAddMealEntry={handleAddMealEntry}
-            onDeleteMealEntry={handleDeleteMealEntry}
-            onUpdateDirectIntake={handleUpdateDirectIntake}
-            foodHistory={userState.foodHistory || []}
-            isDark={isDark}
-          />
-        )}
+            {currentTab === 'nutricion' && (
+              <NutritionTab
+                hydration={hydration}
+                onAddWater={handleAddWater}
+                onReduceWater={handleReduceWater}
+                onAddProtein={handleAddProtein}
+                onReduceProtein={handleReduceProtein}
+                currentProtein={protein}
+                macros={macros}
+                onAddMealEntry={handleAddMealEntry}
+                onDeleteMealEntry={handleDeleteMealEntry}
+                onUpdateDirectIntake={handleUpdateDirectIntake}
+                foodHistory={userState.foodHistory || []}
+                isDark={isDark}
+              />
+            )}
 
-        {currentTab === 'max-ai' && (
-          <MaxAiTab
-            initialPrompt={aiPrompt}
-            currentProtein={protein}
-            streakDays={streakDays}
-            userName={userName}
-            userId={currentUser?.uid || userState.userId || 'guest_athlete'}
-            athleteLevel={userState.level || 1}
-            weightKg={userState.biometrics?.weightKg || 70}
-            onAddMealEntry={handleAddMealEntry}
-            onOpenAudioTranscriber={() => setIsAudioTranscriberOpen(true)}
-          />
-        )}
+            {currentTab === 'max-ai' && (
+              <MaxAiTab
+                initialPrompt={aiPrompt}
+                currentProtein={protein}
+                streakDays={streakDays}
+                userName={userName}
+                userId={currentUser?.uid || userState.userId || 'guest_athlete'}
+                athleteLevel={userState.level || 1}
+                weightKg={userState.biometrics?.weightKg || 70}
+                onAddMealEntry={handleAddMealEntry}
+                onOpenAudioTranscriber={() => setIsAudioTranscriberOpen(true)}
+              />
+            )}
 
-        {currentTab === 'retos' && (
-          <ChallengesTab
-            xp={xp}
-            streakDays={streakDays}
-            userName={userName}
-            isDemoMode={isDemoMode}
-          />
-        )}
+            {currentTab === 'retos' && (
+              <ChallengesTab
+                xp={xp}
+                streakDays={streakDays}
+                userName={userName}
+                isDemoMode={isDemoMode}
+              />
+            )}
 
-        {currentTab === 'perfil' && (
-          <ProfileTab
-            xp={xp}
-            streakDays={streakDays}
-            userName={userName}
-            userEmail={currentUser?.email}
-            isDemoMode={isDemoMode}
-            isPro={userState.isPro}
-            proExpiry={userState.proExpiry}
-            onToggleDemoMode={handleToggleDemoMode}
-            onOpenOnboarding={() => setIsOnboardingOpen(true)}
-            onResetNewUser={handleResetToNewUser}
-            onOpenPremium={() => setIsPremiumModalOpen(true)}
-            onLogout={handleLogout}
-            onDeleteAccount={handleDeleteAccount}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
-            weightKg={userState.biometrics?.weightKg}
-            formScore={energyPercent}
-            commitmentLevel={commitmentLevel}
-            levelSelectedAt={userState.levelSelectedAt}
-            levelGraceAvailable={userState.levelGraceAvailable}
-            nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
-            onOpenLevelModal={() => setIsProtocolModalOpen(true)}
-          />
+            {currentTab === 'perfil' && (
+              <ProfileTab
+                xp={xp}
+                streakDays={streakDays}
+                userName={userName}
+                userEmail={currentUser?.email}
+                isDemoMode={isDemoMode}
+                isPro={userState.isPro}
+                proExpiry={userState.proExpiry}
+                onToggleDemoMode={handleToggleDemoMode}
+                onOpenOnboarding={() => setIsOnboardingOpen(true)}
+                onResetNewUser={handleResetToNewUser}
+                onOpenPremium={() => setIsPremiumModalOpen(true)}
+                onLogout={handleLogout}
+                onDeleteAccount={handleDeleteAccount}
+                onOpenAuth={() => setIsAuthModalOpen(true)}
+                weightKg={userState.biometrics?.weightKg}
+                formScore={energyPercent}
+                commitmentLevel={commitmentLevel}
+                levelSelectedAt={userState.levelSelectedAt}
+                levelGraceAvailable={userState.levelGraceAvailable}
+                nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+                onOpenLevelModal={() => setIsProtocolModalOpen(true)}
+                onDownloadApp={triggerInstall}
+                isAppInstalled={isPwaInstalled}
+              />
+            )}
+          </Suspense>
         )}
       </main>
 
-      {/* Modal de Autenticación y Registro Real */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onAuthSuccess={handleAuthSuccess}
-        isDark={isDark}
-      />
+      {/* Modales diferidos con carga bajo demanda */}
+      <Suspense fallback={null}>
+        {isAuthModalOpen && (
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            onAuthSuccess={handleAuthSuccess}
+            isDark={isDark}
+          />
+        )}
 
-      {/* Modal de Onboarding Inicial / Reconfiguración */}
-      <OnboardingModal
-        isOpen={isOnboardingOpen}
-        onClose={() => setIsOnboardingOpen(false)}
-        onComplete={handleOnboardingComplete}
-        isDark={isDark}
-      />
+        {isOnboardingOpen && (
+          <OnboardingModal
+            isOpen={isOnboardingOpen}
+            onClose={() => setIsOnboardingOpen(false)}
+            onComplete={handleOnboardingComplete}
+            isDark={isDark}
+          />
+        )}
 
-      {/* Modal de Protocolo de Nivel y Cooldown de 14 Días */}
-      <ProtocolChangeModal
-        isOpen={isProtocolModalOpen}
-        onClose={() => setIsProtocolModalOpen(false)}
-        currentLevel={commitmentLevel}
-        levelSelectedAt={userState.levelSelectedAt}
-        levelGraceAvailable={userState.levelGraceAvailable}
-        nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
-        onConfirmLevelChange={handleConfirmLevelChange}
-      />
+        {isProtocolModalOpen && (
+          <ProtocolChangeModal
+            isOpen={isProtocolModalOpen}
+            onClose={() => setIsProtocolModalOpen(false)}
+            currentLevel={commitmentLevel}
+            levelSelectedAt={userState.levelSelectedAt}
+            levelGraceAvailable={userState.levelGraceAvailable}
+            nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+            onConfirmLevelChange={handleConfirmLevelChange}
+          />
+        )}
 
-      {/* Modal de Planes MAXMIND Premium */}
-      <PremiumModal
-        isOpen={isPremiumModalOpen}
-        onClose={() => setIsPremiumModalOpen(false)}
-        onUpgrade={(durationDays = 30) => {
-          setIsPremiumModalOpen(false);
-          const expiryDate = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
-          const updated: UserState = {
-            ...userState,
-            isPro: true,
-            proExpiry: expiryDate,
-          };
-          setUserState(updated);
-          if (!isDemoMode && currentUser) saveUserData(updated);
-        }}
-        isDark={isDark}
-      />
+        {isPremiumModalOpen && (
+          <PremiumModal
+            isOpen={isPremiumModalOpen}
+            onClose={() => setIsPremiumModalOpen(false)}
+            onUpgrade={(durationDays = 30) => {
+              setIsPremiumModalOpen(false);
+              const expiryDate = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+              const updated: UserState = {
+                ...userState,
+                isPro: true,
+                proExpiry: expiryDate,
+              };
+              setUserState(updated);
+              if (!isDemoMode && currentUser) saveUserData(updated);
+            }}
+            isDark={isDark}
+          />
+        )}
 
-      {/* Modal de Transcripción de Audio con gemini-3.5-transcribe */}
-      <AudioTranscriberModal
-        isOpen={isAudioTranscriberOpen}
-        onClose={() => setIsAudioTranscriberOpen(false)}
-        onSendToChat={(text) => {
-          setAiPrompt(text);
-          handleNavigateTab('max-ai');
-        }}
-        onLogMeal={(meal) => {
-          handleAddMealEntry(meal);
-        }}
-      />
+        {isAudioTranscriberOpen && (
+          <AudioTranscriberModal
+            isOpen={isAudioTranscriberOpen}
+            onClose={() => setIsAudioTranscriberOpen(false)}
+            onSendToChat={(text) => {
+              setAiPrompt(text);
+              handleNavigateTab('max-ai');
+            }}
+            onLogMeal={(meal) => {
+              handleAddMealEntry(meal);
+            }}
+          />
+        )}
+      </Suspense>
 
       {/* Barra de Navegación Inferior Flotante */}
       <BottomNav
@@ -2047,6 +2086,17 @@ export default function App() {
           setAiPrompt(undefined);
           handleNavigateTab(tab);
         }}
+      />
+
+      {/* Prompts e Instalación Directa PWA desde Navegador */}
+      <PwaInstallPrompt
+        isInstallable={isPwaInstallable}
+        isInstalled={isPwaInstalled}
+        isIos={isIos}
+        showIosModal={showIosModal}
+        onCloseIosModal={() => setShowIosModal(false)}
+        onInstall={triggerInstall}
+        isDark={isDark}
       />
     </div>
   );

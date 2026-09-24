@@ -25,6 +25,8 @@ interface ProfileTabProps {
   levelGraceAvailable?: boolean;
   nextLevelChangeAllowedAt?: string;
   onOpenLevelModal?: () => void;
+  onDownloadApp?: () => void;
+  isAppInstalled?: boolean;
 }
 
 export const ProfileTab: React.FC<ProfileTabProps> = ({
@@ -49,6 +51,8 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   levelGraceAvailable = false,
   nextLevelChangeAllowedAt,
   onOpenLevelModal,
+  onDownloadApp,
+  isAppInstalled = false,
 }) => {
   const [bpm, setBpm] = useState(72);
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
@@ -456,6 +460,55 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <span className="material-symbols-outlined text-[16px]">notifications_active</span>
             <span>Probar Notificaciones Push de Rendimiento</span>
           </button>
+        </div>
+      </div>
+
+      {/* Aplicación Móvil PWA e Instalación Directa */}
+      <div className="bg-[#151a24] rounded-2xl p-5 border border-[#232b3b] space-y-3.5 shadow-xl">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-600/20 text-[#3b82f6] flex items-center justify-center">
+              <span className="material-symbols-outlined text-[20px]">install_mobile</span>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-white">Aplicación Móvil MAXMIND</h3>
+              <p className="text-[11px] text-slate-400">Instálala en tu teléfono para acceso directo sin barras del navegador.</p>
+            </div>
+          </div>
+          {isAppInstalled ? (
+            <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-extrabold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Instalada
+            </span>
+          ) : (
+            <span className="px-2.5 py-1 rounded-full bg-blue-500/15 text-[#60a5fa] border border-blue-500/30 text-[10px] font-extrabold">
+              PWA Lista
+            </span>
+          )}
+        </div>
+
+        <div className="p-3 bg-[#0d1117] rounded-xl border border-[#1b2230] text-xs text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-1">
+            <span className="font-bold text-white block">
+              {isAppInstalled ? '✅ App ejecutándose en modo nativo' : '📲 Descarga desde el navegador'}
+            </span>
+            <p className="text-[11px] text-slate-400">
+              {isAppInstalled
+                ? 'Tienes instalada la versión completa con aceleración local y soporte offline en tu dispositivo.'
+                : 'Instala con un solo toque desde Google Chrome, Edge o Safari (iOS) sin pasar por tiendas.'}
+            </p>
+          </div>
+
+          {onDownloadApp && !isAppInstalled && (
+            <button
+              type="button"
+              onClick={onDownloadApp}
+              className="px-4 py-2.5 min-h-[44px] rounded-xl bg-[#2563eb] hover:bg-blue-600 text-white font-black text-xs shadow-lg shadow-blue-600/30 active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center gap-2 flex-shrink-0"
+            >
+              <span className="material-symbols-outlined text-[18px]">download_for_offline</span>
+              <span>Instalar en el Teléfono</span>
+            </button>
+          )}
         </div>
       </div>
 

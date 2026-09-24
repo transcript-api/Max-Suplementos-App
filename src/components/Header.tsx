@@ -14,6 +14,8 @@ interface HeaderProps {
   onToggleDemoMode?: () => void;
   userName?: string;
   onOpenAudioTranscriber?: () => void;
+  onDownloadApp?: () => void;
+  isAppInstalled?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -28,6 +30,8 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleDemoMode,
   userName = 'Atleta',
   onOpenAudioTranscriber,
+  onDownloadApp,
+  isAppInstalled = false,
 }) => {
   const getTitle = () => {
     switch (currentTab) {
@@ -44,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 dark:bg-[#0c0e12]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-[#1d2024] border-slate-200 pt-safe transition-colors duration-200">
+    <header className="fixed top-0 inset-x-0 z-40 dark:bg-[#0c0e12]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-[#1d2024] border-slate-200 pt-safe transition-colors duration-200">
       <div className="h-16 px-4 max-w-[1280px] mx-auto flex items-center justify-between">
         {/* Logo & Marca MAXMIND (Sin fondo) */}
         <div className="flex items-center">
@@ -119,6 +123,20 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span className={`w-1.5 h-1.5 rounded-full ${isDemoMode ? 'bg-[#3B82F6]' : 'bg-emerald-400'}`}></span>
               <span>{isDemoMode ? 'Demo' : 'Nuevo Atleta'}</span>
+            </button>
+          )}
+
+          {/* Botón Descargar App / Instalar PWA */}
+          {onDownloadApp && !isAppInstalled && (
+            <button
+              type="button"
+              onClick={onDownloadApp}
+              aria-label="Descargar aplicación en el teléfono"
+              title="Descargar e instalar MAXMIND en tu teléfono"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-[#3b82f6] dark:text-[#93c5fd] border border-blue-500/40 font-black text-[11px] shadow-sm active:scale-95 transition-all touch-manipulation cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[16px]">install_mobile</span>
+              <span className="hidden sm:inline font-extrabold">Descargar App</span>
             </button>
           )}
 

@@ -1,15 +1,21 @@
 import express from "express";
+import compression from "compression";
 import path from "path";
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const currentFilename = typeof __filename !== 'undefined' ? __filename : (typeof import.meta !== 'undefined' && import.meta.url ? fileURLToPath(import.meta.url) : '');
+const currentDirname = typeof __dirname !== 'undefined' ? __dirname : (currentFilename ? path.dirname(currentFilename) : process.cwd());
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // Ultra-fast Gzip / Brotli compression for maximum transfer speed
+  app.use(compression({
+    threshold: 512, // Compress anything larger than 512 bytes
+  }));
 
   app.use(express.json({ limit: '15mb' }));
 
@@ -1508,8 +1514,9 @@ Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSO
     });
   });
 
-  // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  // Vite middleware for development vs high-speed static serving for production
+  const isProduction = process.env.NODE_ENV === "production" || currentFilename.includes('dist');
+  if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -1517,8 +1524,20 @@ Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSO
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
+    // High-performance caching: 1 year immutable for hashed assets, no-cache for index.html
+    app.use(express.static(distPath, {
+      maxAge: '1y',
+      immutable: true,
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html') || filePath.endsWith('sw.js') || filePath.endsWith('manifest.json')) {
+          res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        } else if (filePath.includes('assets')) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      }
+    }));
     app.get('*', (req, res) => {
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

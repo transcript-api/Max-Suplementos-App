@@ -110,7 +110,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
       <div className="bg-[#191c20] text-white rounded-2xl max-w-lg w-full border border-[#282a2f] shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#282a2f] pb-3">

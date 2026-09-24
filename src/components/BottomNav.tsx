@@ -16,7 +16,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab })
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 pb-safe dark:bg-[#191c20]/95 bg-white/95 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.6)] border-t dark:border-[#282a2f] border-slate-200 transition-colors duration-200">
+    <nav className="fixed bottom-0 inset-x-0 z-40 pb-safe dark:bg-[#191c20]/95 bg-white/95 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.6)] border-t dark:border-[#282a2f] border-slate-200 transition-colors duration-200">
       <div className="flex justify-between items-center h-16 px-1 max-w-[1280px] mx-auto">
         {tabs.map((tab) => {
           const isActive = currentTab === tab.id || (tab.id === 'progreso' && currentTab === 'estadisticas');
