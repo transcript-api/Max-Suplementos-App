@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export interface SupplementItem {
   id: string;
@@ -14,19 +14,25 @@ export interface SupplementItem {
 interface SupplementReplenishmentCardProps {
   userName?: string;
   isDark?: boolean;
+  isDemoMode?: boolean;
+  userSupplements?: Array<{ name: string; serving?: string; frequency?: string }>;
+  onTakeServing?: (supplementName: string) => void;
 }
 
 export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardProps> = ({
   userName = 'Atleta',
   isDark = true,
+  isDemoMode = false,
+  userSupplements = [],
+  onTakeServing,
 }) => {
-  const [supplements, setSupplements] = useState<SupplementItem[]>([
+  const SANTIAGO_DEMO_SUPPLEMENTS: SupplementItem[] = [
     {
       id: 'creatina',
       name: 'Creatina Monohidrato Creapure',
       brand: 'MAX Suplementos',
       totalServings: 60,
-      remainingServings: 7, // Pocas tomas -> Gatilla alerta de reposición
+      remainingServings: 7, // Pocas tomas -> Alerta de reposición
       unit: 'dosis (5g)',
       dailyDose: '1 scoop diario post-entreno',
       reorderDiscountPct: 15,
@@ -51,17 +57,56 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       dailyDose: '2 cápsulas con el almuerzo',
       reorderDiscountPct: 10,
     },
-  ]);
+  ];
+
+  // Si es demo, usar stock de Santiago. Si es usuario real, mapear sus suplementos o lista inicial
+  const [supplements, setSupplements] = useState<SupplementItem[]>(() => {
+    if (isDemoMode) return SANTIAGO_DEMO_SUPPLEMENTS;
+    if (userSupplements && userSupplements.length > 0) {
+      return userSupplements.map((s, idx) => ({
+        id: `supp_${idx}`,
+        name: s.name,
+        brand: 'MAX Suplementos',
+        totalServings: 30,
+        remainingServings: 30,
+        unit: s.serving || 'tomas',
+        dailyDose: s.frequency || '1 toma diaria',
+        reorderDiscountPct: 15,
+      }));
+    }
+    return [];
+  });
+
+  // Sincronizar cuando cambia el modo o los suplementos del usuario
+  useEffect(() => {
+    if (isDemoMode) {
+      setSupplements(SANTIAGO_DEMO_SUPPLEMENTS);
+    } else if (userSupplements && userSupplements.length > 0) {
+      setSupplements(
+        userSupplements.map((s, idx) => ({
+          id: `supp_${idx}`,
+          name: s.name,
+          brand: 'MAX Suplementos',
+          totalServings: 30,
+          remainingServings: 30,
+          unit: s.serving || 'tomas',
+          dailyDose: s.frequency || '1 toma diaria',
+          reorderDiscountPct: 15,
+        }))
+      );
+    } else {
+      setSupplements([]);
+    }
+  }, [isDemoMode, userSupplements]);
 
   const [referralCopied, setReferralCopied] = useState(false);
-  const [webhookMessage, setWebhookMessage] = useState<string | null>(null);
-  const [isSendingWebhook, setIsSendingWebhook] = useState(false);
+  const [reminderMessage, setReminderMessage] = useState<string | null>(null);
 
   // Código único de referido para el usuario
   const referralCode = `MAX-${userName.toUpperCase().replace(/\s+/g, '')}-777`;
 
   // Tomar una dosis diaria
-  const handleTakeServing = (id: string) => {
+  const handleTakeServing = (id: string, name: string) => {
     setSupplements((prev) =>
       prev.map((sup) => {
         if (sup.id === id && sup.remainingServings > 0) {
@@ -70,6 +115,10 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         return sup;
       })
     );
+
+    if (onTakeServing) {
+      onTakeServing(name);
+    }
   };
 
   // Copiar código de referido
@@ -81,33 +130,10 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
     setTimeout(() => setReferralCopied(false), 3000);
   };
 
-  // Disparar prueba de webhook para n8n (WhatsApp / CRM)
-  const handleTriggerWebhook = async (item: SupplementItem) => {
-    setIsSendingWebhook(true);
-    setWebhookMessage(null);
-    try {
-      const res = await fetch('/api/webhooks/trigger', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: 'SUPPLEMENT_REORDER_ALERT',
-          athleteName: userName,
-          phone: '+54 9 11 0000-0000',
-          payload: {
-            supplementName: item.name,
-            remainingServings: item.remainingServings,
-            discountPct: item.reorderDiscountPct,
-          },
-        }),
-      });
-      const data = await res.json();
-      setWebhookMessage(data.message || 'Webhook enviado exitosamente a n8n.');
-      setTimeout(() => setWebhookMessage(null), 5000);
-    } catch (err) {
-      setWebhookMessage('Error al disparar el webhook hacia n8n.');
-    } finally {
-      setIsSendingWebhook(false);
-    }
+  // Activar recordatorio de reposición para el usuario
+  const handleToggleReminder = (item: SupplementItem) => {
+    setReminderMessage(`Recordatorio programado: Te avisaremos cuando queden pocas tomas de ${item.name}.`);
+    setTimeout(() => setReminderMessage(null), 4500);
   };
 
   return (
@@ -137,114 +163,122 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
           </span>
         </div>
 
-        {webhookMessage && (
+        {reminderMessage && (
           <div className="p-3 rounded-xl bg-blue-500/15 border border-blue-500/30 text-[#2563eb] dark:text-[#b4c5ff] text-xs flex items-center gap-2 animate-fadeIn">
-            <span className="material-symbols-outlined text-[18px]">forward_to_inbox</span>
-            <span>{webhookMessage}</span>
+            <span className="material-symbols-outlined text-[18px]">notifications_active</span>
+            <span>{reminderMessage}</span>
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {supplements.map((sup) => {
-            const isLowStock = sup.remainingServings <= 7;
-            const pctRemaining = Math.round((sup.remainingServings / sup.totalServings) * 100);
+        {supplements.length === 0 ? (
+          <div className="p-6 text-center rounded-xl border border-dashed dark:border-[#282a2f] border-slate-300 space-y-2">
+            <span className="material-symbols-outlined text-3xl text-slate-400">medication</span>
+            <h4 className="text-sm font-bold dark:text-white text-slate-800">Sin suplementos en tu protocolo</h4>
+            <p className="text-xs dark:text-[#8d90a0] text-slate-500 max-w-sm mx-auto">
+              No has configurado suplementos activos aún. Puedes agregarlos desde tu perfil o configurar tu protocolo según tu nivel de compromiso.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {supplements.map((sup) => {
+              const isLowStock = sup.remainingServings <= 7;
+              const pctRemaining = Math.round((sup.remainingServings / sup.totalServings) * 100);
 
-            return (
-              <div
-                key={sup.id}
-                className={`p-4 rounded-xl border flex flex-col justify-between transition-all ${
-                  isLowStock
-                    ? 'dark:bg-rose-950/20 bg-rose-50/50 border-rose-500/40'
-                    : 'dark:bg-[#191c20] bg-slate-50 border-slate-200 dark:border-[#282a2f]'
-                }`}
-              >
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-1">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#8d90a0] block">
-                        {sup.brand}
-                      </span>
-                      <h4 className="font-bold text-sm dark:text-white text-slate-900 leading-snug">
-                        {sup.name}
-                      </h4>
+              return (
+                <div
+                  key={sup.id}
+                  className={`p-4 rounded-xl border flex flex-col justify-between transition-all ${
+                    isLowStock
+                      ? 'dark:bg-rose-950/20 bg-rose-50/50 border-rose-500/40'
+                      : 'dark:bg-[#191c20] bg-slate-50 border-slate-200 dark:border-[#282a2f]'
+                  }`}
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-1">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-[#8d90a0] block">
+                          {sup.brand}
+                        </span>
+                        <h4 className="font-bold text-sm dark:text-white text-slate-900 leading-snug">
+                          {sup.name}
+                        </h4>
+                      </div>
+                      {isLowStock ? (
+                        <span className="px-2 py-0.5 rounded-md bg-rose-500 text-white text-[10px] font-extrabold animate-pulse whitespace-nowrap">
+                          STOCK BAJO
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-500 text-[10px] font-bold">
+                          OK
+                        </span>
+                      )}
                     </div>
-                    {isLowStock ? (
-                      <span className="px-2 py-0.5 rounded-md bg-rose-500 text-white text-[10px] font-extrabold animate-pulse whitespace-nowrap">
-                        STOCK BAJO
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-500 text-[10px] font-bold">
-                        OK
-                      </span>
+
+                    {/* Barra de progreso de dosis restantes */}
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs">
+                        <span className="dark:text-[#8d90a0] text-slate-500">Restante:</span>
+                        <span className="font-bold dark:text-white text-slate-800">
+                          {sup.remainingServings} de {sup.totalServings} {sup.unit}
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-slate-200 dark:bg-[#111318] rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-500 rounded-full ${
+                            isLowStock ? 'bg-rose-500' : 'bg-[#2563eb]'
+                          }`}
+                          style={{ width: `${pctRemaining}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] dark:text-[#8d90a0] text-slate-500 italic">
+                      Dosis: {sup.dailyDose}
+                    </p>
+                  </div>
+
+                  {/* Acciones del Suplemento */}
+                  <div className="pt-3 mt-2 border-t dark:border-[#282a2f] border-slate-200 space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => handleTakeServing(sup.id, sup.name)}
+                      disabled={sup.remainingServings === 0}
+                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#111318] bg-white hover:bg-slate-100 dark:hover:bg-[#20242b] border dark:border-[#282a2f] border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      <span className="material-symbols-outlined text-[16px] text-emerald-500">check</span>
+                      <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
+                    </button>
+
+                    {isLowStock && (
+                      <div className="space-y-1.5 pt-1">
+                        <a
+                          href={`https://wa.me/5491100000000?text=${encodeURIComponent(
+                            `Hola MAX Suplementos! Se me están terminando las dosis de ${sup.name} en mi app MAXFORM. Quiero pedir reposición con mi ${sup.reorderDiscountPct}% OFF de atleta!`
+                          )}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-md"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">shopping_bag</span>
+                          <span>Pedir Reposición ({sup.reorderDiscountPct}% OFF)</span>
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleToggleReminder(sup)}
+                          className="w-full py-1.5 px-2 rounded-lg border dark:border-[#282a2f] border-slate-200 text-[11px] text-[#2563eb] dark:text-[#b4c5ff] hover:bg-[#2563eb]/10 transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">notifications_active</span>
+                          <span>Recordarme reponer</span>
+                        </button>
+                      </div>
                     )}
                   </div>
-
-                  {/* Barra de progreso de dosis restantes */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="dark:text-[#8d90a0] text-slate-500">Restante:</span>
-                      <span className="font-bold dark:text-white text-slate-800">
-                        {sup.remainingServings} de {sup.totalServings} {sup.unit}
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-200 dark:bg-[#111318] rounded-full overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-500 rounded-full ${
-                          isLowStock ? 'bg-rose-500' : 'bg-[#2563eb]'
-                        }`}
-                        style={{ width: `${pctRemaining}%` }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <p className="text-[11px] dark:text-[#8d90a0] text-slate-500 italic">
-                    Dosis: {sup.dailyDose}
-                  </p>
                 </div>
-
-                {/* Acciones del Suplemento */}
-                <div className="pt-3 mt-2 border-t dark:border-[#282a2f] border-slate-200 space-y-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTakeServing(sup.id)}
-                    disabled={sup.remainingServings === 0}
-                    className="w-full py-1.5 px-3 rounded-lg dark:bg-[#111318] bg-white hover:bg-slate-100 dark:hover:bg-[#20242b] border dark:border-[#282a2f] border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
-                  >
-                    <span className="material-symbols-outlined text-[16px] text-emerald-500">check</span>
-                    <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
-                  </button>
-
-                  {isLowStock && (
-                    <div className="space-y-1.5 pt-1">
-                      <a
-                        href={`https://wa.me/5491100000000?text=${encodeURIComponent(
-                          `Hola MAX Suplementos! Se me están terminando las dosis de ${sup.name} en mi app MAXFORM. Quiero pedir reposición con mi ${sup.reorderDiscountPct}% OFF de atleta!`
-                        )}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-md"
-                      >
-                        <span className="material-symbols-outlined text-[16px]">shopping_bag</span>
-                        <span>Pedir Reposición ({sup.reorderDiscountPct}% OFF)</span>
-                      </a>
-
-                      <button
-                        type="button"
-                        onClick={() => handleTriggerWebhook(sup)}
-                        disabled={isSendingWebhook}
-                        className="w-full py-1 px-2 rounded text-[10px] text-[#8d90a0] hover:dark:text-white hover:text-slate-900 transition-colors flex items-center justify-center gap-1"
-                        title="Simula el envío de webhook hacia n8n para disparo de WhatsApp"
-                      >
-                        <span className="material-symbols-outlined text-[14px]">bolt</span>
-                        <span>Disparar flujo n8n WhatsApp</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* 2. Programa de Referidos & Crecimiento Viral */}

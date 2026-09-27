@@ -51,7 +51,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 20,
     difficulty: 'Fácil',
     xpReward: 30,
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800&auto=format&fit=crop&q=80',
     description: 'La versión definitiva de alto rendimiento del clásico nacional uruguayo. Sin el pan blanco calórico ni mayonesa pesada, pero con lomo magro, jamón cocido natural, huevos a la plancha, morrones y ensalada fresca.',
     ingredients: [
       { name: 'Bife de lomo vacuno magro', quantity: '200g' },
@@ -95,7 +95,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Huevo campero batido con ajo y perejil', quantity: '1 unidad' },
       { name: 'Avena extrafina molida / salvado', quantity: '40g' },
       { name: 'Calabaza o zapallo criollo', quantity: '250g' },
-      { name: 'Nuez moscada y sal marina', quantity: 'al gusto' }
+      { name: 'Nuez moscada y sal marina', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Pasar el filete de nalga por el huevo condimentado con ajo y perejil fresco picado.',
@@ -128,7 +128,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     ingredients: [
       { name: 'Colita de cuadril magra (sin grasa periférica)', quantity: '180g' },
       { name: 'Boniato uruguayo (batata dulce)', quantity: '200g' },
-      { name: 'Romero fresco y sal gruesa', quantity: 'al gusto' },
+      { name: 'Romero fresco y sal gruesa', quantity: '1 pizca (2g)' },
       { name: 'Aceite de oliva virgen extra', quantity: '1 cucharadita (5ml)' }
     ],
     instructions: [
@@ -156,7 +156,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 35,
     difficulty: 'Intermedio',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1554998171-7e599bc95ccd?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80',
     description: 'El ícono de las panaderías y mesas uruguayas reinventado con masa integral casera, espinaca tierna, ricota magra artesanal y abundantes huevos duros.',
     ingredients: [
       { name: 'Espinaca o acelga fresca blanqueada', quantity: '250g' },
@@ -164,7 +164,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Huevos duros enteros', quantity: '2 unidades' },
       { name: 'Claras de huevo líquidas', quantity: '2 unidades' },
       { name: 'Masa integral fina (solo base)', quantity: '1 tapa (50g)' },
-      { name: 'Nuez moscada, sal y pimienta', quantity: 'al gusto' }
+      { name: 'Nuez moscada, sal y pimienta', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Escurrir muy bien la espinaca para retirar todo el exceso de líquido.',
@@ -234,7 +234,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Zanahoria, puerro y cebolla picados', quantity: '120g' },
       { name: 'Tomate triturado natural', quantity: '100g' },
       { name: 'Caldo casero de verduras sin sodio', quantity: '200ml' },
-      { name: 'Pimentón dulce y hojas de laurel', quantity: 'al gusto' }
+      { name: 'Pimentón dulce y hojas de laurel', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Dorar los cubos de carne en una olla con laurel y pimentón dulce.',
@@ -262,7 +262,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 15,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&auto=format&fit=crop&q=80',
     description: 'La tradición parrillera uruguaya en su máxima pureza proteica: corte vacuno magro asado al punto deseado y ensalada criolla fresca de cebolla, morrón y tomate.',
     ingredients: [
       { name: 'Bife de cuadril o bife angosto desgrasado', quantity: '200g' },
@@ -296,7 +296,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 35,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&auto=format&fit=crop&q=80',
     description: 'El clásico pastel de carne familiar con carne picada ultra magra, huevo duro picado y una cremosa cubierta de puré de zapallo kabutiá gratinado.',
     ingredients: [
       { name: 'Carne picada de ternera magra (nalga/lomo)', quantity: '180g' },
@@ -365,14 +365,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 20,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&auto=format&fit=crop&q=80',
     description: 'El plato tradicional de los domingos uruguayos con harina de maíz de molienda fina y salsa casera con cubos de carne desgrasada.',
     ingredients: [
       { name: 'Harina de maíz para polenta cocida', quantity: '180g (cocida)' },
       { name: 'Lomo o nalga en tiritas magras', quantity: '160g' },
       { name: 'Salsa de tomate casera sin azúcar', quantity: '120g' },
       { name: 'Zanahoria rallada y cebolla', quantity: '50g' },
-      { name: 'Orégano seco uruguayo', quantity: 'al gusto' }
+      { name: 'Orégano seco uruguayo', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Cocinar la polenta en agua hirviendo con sal marina y remover hasta lograr textura cremosa.',
@@ -440,7 +440,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Claras de huevo', quantity: '2 unidades' },
       { name: 'Jamón cocido magro / lomito', quantity: '40g' },
       { name: 'Queso dambo uruguayo bajo en grasa', quantity: '30g' },
-      { name: 'Orégano y pimienta', quantity: 'al gusto' }
+      { name: 'Orégano y pimienta', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Batir los huevos y las claras hasta que queden espumosos.',
@@ -474,12 +474,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Claras de huevo', quantity: '3 unidades' },
       { name: 'Ricota magra artesanal', quantity: '60g' },
       { name: 'Arándanos o frutillas frescas', quantity: '50g' },
-      { name: 'Esencia de vainilla y canela', quantity: 'al gusto' }
+      { name: 'Esencia de vainilla y canela', quantity: '1 pizca (2g)' }
     ],
     instructions: [
-      'Licuar o procesar la avena con las claras, la vainilla y un toque de canela.',
-      'Cocinar en sartén antiadherente durante 2 minutos por lado.',
-      'Untar con la ricota magra tibia y cubrir con arándanos frescos.'
+      'Licuar o procesar 50g de harina de avena, 3 claras y 1 huevo entero con la esencia de vainilla y canela durante 45 segundos hasta formar una masa suave, homogénea y espumosa.',
+      'Precalentar una sartén antiadherente de 18cm a fuego medio rociada con spray vegetal durante 60 segundos.',
+      'Verter un tercio de la masa formando un círculo parejo y cocinar a fuego medio-bajo durante 2 minutos hasta que aparezcan burbujas en la superficie.',
+      'Dar vuelta con una espátula delgada y cocinar 1 minuto más del segundo lado hasta dorar. Repetir hasta obtener 3 panqueques esponjosos.',
+      'Montar la torre intercalando 60g de ricota magra fresca entre capa y capa, coronar con 60g de frutos rojos y un hilo fino de 7g de miel pura de monte.'
     ],
     nutritionTip: 'Antioxidantes y polifenoles naturales que reducen el estrés oxidativo provocado por entrenamientos de alta intensidad.'
   },
@@ -507,7 +509,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Huevo campero', quantity: '1 unidad' },
       { name: 'Pan integral tostado de masa madre', quantity: '1 rodaja (40g)' },
       { name: 'Tomate y lechuga criolla', quantity: '80g' },
-      { name: 'Mostaza dijon y sal marina', quantity: 'al gusto' }
+      { name: 'Mostaza dijon y sal marina', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Moldear el cuadril picado en forma de hamburguesa gruesa y salar solo por fuera.',
@@ -538,7 +540,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 20,
     difficulty: 'Fácil',
     xpReward: 30,
-    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1558030006-450675393462?w=800&auto=format&fit=crop&q=80',
     description: 'O sabor inconfundível do churrasco brasileiro adaptado para atletas: picanha com a capa de gordura removida antes do consumo, servida com mandioca (aipim) cozida na água e sal e vinagrete fresco.',
     ingredients: [
       { name: 'Bife de picanha bovina sem a capa de gordura', quantity: '180g' },
@@ -572,7 +574,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 40,
     difficulty: 'Intermedio',
     xpReward: 30,
-    image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=800&auto=format&fit=crop&q=80',
     description: 'A joia da culinária brasileira sem embutidos gordurosos: feijão preto encorpado com lombo de porco magro, patinho bovino em cubos, couve mineira refogada no alho e arroz integral.',
     ingredients: [
       { name: 'Feijão preto cozido com caldo encorpado', quantity: '180g' },
@@ -580,7 +582,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Patinho bovino em cubos', quantity: '80g' },
       { name: 'Couve manteiga fatiada fininha', quantity: '100g' },
       { name: 'Arroz integral cozido', quantity: '100g' },
-      { name: 'Alho, louro e laranja em rodelas', quantity: 'ao gosto' }
+      { name: 'Alho, louro e laranja em rodelas', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Dourar os cubos de lombo e patinho na panela de pressão com alho e folhas de louro.',
@@ -607,7 +609,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 30,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&auto=format&fit=crop&q=80',
     description: 'A clássica refeição de marmita fitness brasileira: peito de frango desfiado suculento refogado no tomate e cheiro-verde, coberto com purê leve de batata doce e gratinado.',
     ingredients: [
       { name: 'Peito de frango desfiado cozido', quantity: '160g' },
@@ -711,7 +713,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 25,
     difficulty: 'Intermedio',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1559742811-822873691df8?w=800&auto=format&fit=crop&q=80',
     description: 'Prato aromático do litoral nordestino com peixe branco nobre e camarões cozidos em leite de coco light, tomates, pimentões coloridos e coentro fresco.',
     ingredients: [
       { name: 'Filé de pescada amarela ou tilápia', quantity: '160g' },
@@ -788,7 +790,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Carne seca magra desfiada e dessalgada', quantity: '120g' },
       { name: 'Arroz integral cozido', quantity: '100g' },
       { name: 'Queijo coalho light em cubos dourados', quantity: '30g' },
-      { name: 'Coentro, cebola roxa e pimenta-de-cheiro', quantity: 'ao gosto' }
+      { name: 'Coentro, cebola roxa e pimenta-de-cheiro', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Refogar a cebola e a pimenta-de-cheiro no spray de azeite.',
@@ -815,14 +817,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 25,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&auto=format&fit=crop&q=80',
     description: 'A tradição de Minas Gerais em versão fit: sobrecoxa sem pele ou peito de frango ensopado com quiabo refogado sem baba e temperos naturais.',
     ingredients: [
       { name: 'Peito ou filé de coxa sem pele em pedaços', quantity: '180g' },
       { name: 'Quiabo fresco cortado em rodelas', quantity: '120g' },
       { name: 'Tomate e cebola picados', quantity: '80g' },
       { name: 'Arroz integral cozido', quantity: '100g' },
-      { name: 'Cúrcuma (açafrão-da-terra) e cheiro-verde', quantity: 'ao gosto' }
+      { name: 'Cúrcuma (açafrão-da-terra) e cheiro-verde', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Refogar o quiabo em frigideira quente com algumas gotas de vinagre para remover a baba e reservar.',
@@ -892,7 +894,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Farelo de aveia integral', quantity: '20g' },
       { name: 'Cebola ralada e alho amassado', quantity: '30g' },
       { name: 'Queijo muçarela light', quantity: '25g' },
-      { name: 'Sal rosa e pimenta-do-reino', quantity: 'ao gosto' }
+      { name: 'Sal rosa e pimenta-do-reino', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Misturar o patinho moído com a aveia, cebola ralada, alho e temperos.',
@@ -919,7 +921,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 20,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&auto=format&fit=crop&q=80',
     description: 'Massa levinha de farelo de aveia com claras, recheada com frango desfiado cremoso e molho de tomate caseiro por cima.',
     ingredients: [
       { name: 'Peito de frango cozido e desfiado', quantity: '140g' },
@@ -958,7 +960,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     ingredients: [
       { name: 'Filé de tilápia fresca', quantity: '200g' },
       { name: 'Mandioquinha (batata-baroa) cozida', quantity: '160g' },
-      { name: 'Alho, limão taiti e cheiro-verde', quantity: 'ao gosto' },
+      { name: 'Alho, limão taiti e cheiro-verde', quantity: '1 pitada (2g)' },
       { name: 'Azeite de oliva virgen extra', quantity: '1 colher de chá' }
     ],
     instructions: [
@@ -986,14 +988,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 8,
     difficulty: 'Fácil',
     xpReward: 20,
-    image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800&auto=format&fit=crop&q=80',
     description: 'O café da manhã tradicional do Nordeste brasileiro: goma de tapioca peneirada na frigideira com recheio cremoso de ovos e sementes de chia.',
     ingredients: [
       { name: 'Goma de tapioca hidratada', quantity: '35g' },
       { name: 'Ovos inteiros camperos', quantity: '2 unidades' },
       { name: 'Clara de ovo', quantity: '1 unidade' },
       { name: 'Sementes de chia', quantity: '1 colher de chá' },
-      { name: 'Sal e orégano', quantity: 'ao gosto' }
+      { name: 'Sal e orégano', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Peneirar a goma de tapioca sobre a frigideira aquecida formando um disco uniforme.',
@@ -1034,9 +1036,12 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Mix de hojas verdes', quantity: '100g' }
     ],
     instructions: [
-      'Marinar la pechuga 10 minutos con el chimichurri.',
-      'Cocinar a la plancha a fuego medio durante 5 minutos por lado hasta que quede jugosa.',
-      'Acompañar con ensalada de hojas verdes aderezada con limón.'
+      'Cortar 200g de pechuga de pollo en forma de bifes parejos de 1.5 cm de grosor para una cocción homogénea.',
+      'Mezclar 15ml de chimichurri casero sin sodio con 5ml de aceite de oliva y pincelar ambos lados de la pechuga, dejando marinar durante 10 minutos.',
+      'Calentar una plancha acanalada o sartén de hierro a fuego medio-alto durante 3 minutos hasta que esté bien caliente.',
+      'Sellar la pechuga durante 4 a 5 minutos del primer lado sin mover para lograr un dorado intenso y retener los jugos.',
+      'Dar vuelta y cocinar 3 minutos del segundo lado hasta alcanzar 74°C en el centro manteniendo la carne tierna y jugosa.',
+      'Servir inmediatamente acompañada de una ensalada fresca de hojas verdes, tomate cherry y gajos de limón.'
     ],
     nutritionTip: 'El chimichurri aporta antioxidantes naturales del orégano y ajo que mejoran la circulación y perfusión muscular.'
   },
@@ -1064,7 +1069,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Farelo de aveia', quantity: '20g' },
       { name: 'Ovo batido', quantity: '1 unidade' },
       { name: 'Molho de tomate caseiro sem açúcar', quantity: '150g' },
-      { name: 'Manjericão fresco e alho', quantity: 'ao gosto' }
+      { name: 'Manjericão fresco e alho', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Misturar a carne com o ovo, aveia, sal e temperos formando bolinhas.',
@@ -1098,12 +1103,15 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Zapallitos verdes cortados en cubos', quantity: '200g' },
       { name: 'Huevos de campo', quantity: '2 unidades' },
       { name: 'Cebolla picada', quantity: '40g' },
-      { name: 'Orégano seco y sal', quantity: 'al gusto' }
+      { name: 'Orégano seco y sal', quantity: '1 pizca (2g)' }
     ],
     instructions: [
-      'Saltear la cebolla y la carne en una sartén antiadherente hasta dorar.',
-      'Añadir los zapallitos en cubos y cocinar 5 minutos.',
-      'Verter los 2 huevos y revolver suavemente hasta integrar.'
+      'Cortar 250g de zapallitos redondos criollos en cubos pequeños de 1.5 cm desechando la parte central con exceso de semillas para evitar exceso de agua.',
+      'En una sartén antiadherente con 5ml de aceite de oliva, dorar 40g de cebolla picada a fuego medio durante 3 minutos.',
+      'Subir el fuego a medio-alto, incorporar 160g de carne picada magra de ternera y 2g de sal marina con orégano, cocinando 5 minutos hasta que la carne esté bien dorada.',
+      'Agregar los zapallitos en cubos y saltear a fuego vivo durante 5 minutos para que se doren sin hervirse en sus propios jugos.',
+      'Bajar el fuego a mínimo, volcar 2 huevos camperos batidos suavemente y revolver con espátula de silicona durante 60 segundos.',
+      'Retirar de la hornalla mientras el huevo aún esté húmedo y cremoso para evitar que se seque. Servir caliente.'
     ],
     nutritionTip: 'Plato volumétrico con alto contenido de agua y potasio que deshincha y mantiene la ingesta calórica al mínimo.'
   },
@@ -1131,12 +1139,15 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Ovo caipira com gema mole', quantity: '1 unidade' },
       { name: 'Feijão carioca cozido com caldo', quantity: '150g' },
       { name: 'Arroz branco ou integral', quantity: '80g' },
-      { name: 'Sal e pimenta moída', quantity: 'ao gosto' }
+      { name: 'Sal e pimenta moída', quantity: '1 pitada (2g)' }
     ],
     instructions: [
-      'Grelhar o bife de alcatra na frigideira bem quente durante 3 minutos de cada lado.',
-      'Fazer o ovo na frigideira com uma colher de sopa de água quente tampando para cozinhar a vapor sem óleo.',
-      'Colocar o ovo sobre o bife ainda quente e servir com arroz e feijão carioca.'
+      'Retirar 180g de bife de alcatra bovina magra da geladeira 15 minutos antes do preparo e temperar com 2g de sal marinho e alho moído.',
+      'Aquecer uma frigideira de fundo grosso ou chapa de ferro em fogo bem alto com 3ml de azeite por 3 minutos até soltar fumaça leve.',
+      'Grelhar o bife de alcatra durante 3 minutos de um lado sem mexer para criar uma crosta saborosa de caramelização.',
+      'Virar o bife e grelhar por mais 2 minutos do outro lado mantendo o ponto suculento rosado no interior. Deixar descansar 2 minutos na tábua.',
+      'Na mesma frigideira a fogo médio-baixo, colocar 1 colher de sopa de água filtrada, quebrar o ovo com cuidado e tampar a panela por 90 segundos para que cozinhe no vapor com a gema mole.',
+      'Montar o prato dispondo o bife grelhado, repousar o ovo com gema mole por cima e guarnecer com 100g de feijão carioca e 80g de arroz integral.'
     ],
     nutritionTip: 'A gema do ovo caipira fornece fosfolipídios, biotina e vitamina D essenciais para a integridade celular.'
   },
@@ -1198,7 +1209,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Mandioca cozida batida com caldo', quantity: '150g' },
       { name: 'Leite de coco light', quantity: '50ml' },
       { name: 'Tomate, cebola e pimentão picados', quantity: '60g' },
-      { name: 'Coentro e limão', quantity: 'ao gosto' }
+      { name: 'Coentro e limão', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Temperar os camarões com limão e sal e selar por 2 minutos na frigideira.',
@@ -1225,7 +1236,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 20,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
     description: 'Entrada y plato frío icónico de las mesas uruguayas: tiernizada, desgrasada y marinada en vinagre de manzana, ajo, perejil y huevo duro picado.',
     ingredients: [
       { name: 'Lengua vacuna tiernizada y desgrasada', quantity: '180g' },
@@ -1266,7 +1277,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Batata inglesa cozida', quantity: '100g' },
       { name: 'Abobrinha verde (para dar volume sem calorias)', quantity: '150g' },
       { name: 'Couve-manteiga cortada em tiras finas', quantity: '80g' },
-      { name: 'Alho dourado e azeite', quantity: 'ao gosto' }
+      { name: 'Alho dourado e azeite', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Cozinhar a batata com a abobrinha e bater com o mixer até formar um caldo cremoso.',
@@ -1300,7 +1311,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Huevos duros enteros', quantity: '2 unidades' },
       { name: 'Zanahoria en juliana', quantity: '50g' },
       { name: 'Hojas de espinaca crudas', quantity: '40g' },
-      { name: 'Gelatina sin sabor y orégano', quantity: 'al gusto' }
+      { name: 'Gelatina sin sabor y orégano', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Extender el matambre, desgrasar al máximo y salpimentar.',
@@ -1334,7 +1345,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Filé de salmão fresco com pele', quantity: '190g' },
       { name: 'Polpa de maracujá fresca sem açúcar', quantity: '60g' },
       { name: 'Aspargos verdes frescos', quantity: '100g' },
-      { name: 'Gengibre ralado e sal marinho', quantity: 'ao gosto' }
+      { name: 'Gengibre ralado e sal marinho', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Grelhar o salmão com a pele para baixo em fogo médio até ficar crocante e virar por 2 minutos.',
@@ -1402,7 +1413,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Clara de ovo', quantity: '1 unidade' },
       { name: 'Queijo coalho light em cubos', quantity: '35g' },
       { name: 'Tomate picadinho sem sementes', quantity: '60g' },
-      { name: 'Orégano seco e manjericão', quantity: 'ao gosto' }
+      { name: 'Orégano seco e manjericão', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Bater os ovos e a clara com sal marinho até espumar.',
@@ -1434,14 +1445,17 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     ingredients: [
       { name: 'Pescado blanco entero abierto o filetes gruesos', quantity: '220g' },
       { name: 'Jugo y ralladura de limones criollos', quantity: '2 unidades' },
-      { name: 'Romero y tomillo frescos', quantity: 'al gusto' },
+      { name: 'Romero y tomillo frescos', quantity: '1 pizca (2g)' },
       { name: 'Aceite de oliva virgen', quantity: '1 cucharadita' },
-      { name: 'Sal gruesa de mar', quantity: 'al gusto' }
+      { name: 'Sal gruesa de mar', quantity: '1 pizca (2g)' }
     ],
     instructions: [
-      'Salar el pescado y colocarlo en la parrilla o plancha bien caliente.',
-      'Pincelar constantemente con el chimichurri de limón, romero y oliva.',
-      'Cocinar 6 minutos del lado de la piel hasta que quede crujiente y dar vuelta 2 minutos más.'
+      'Limpiar 220g de pescado blanco fresco (corvina o merluza negra), secar la superficie con toalla de papel y hacer 3 cortes superficiales transversales.',
+      'Preparar el aliño mezclando 15ml de jugo de limón recién exprimido, 7ml de aceite de oliva, 3g de romero fresco picado y 2g de sal gruesa marina.',
+      'Calentar las rejillas de la parrilla a fuego medio con brasas de leña o una plancha acanalada durante 5 minutos y pincelar con unas gotas de aceite.',
+      'Colocar el pescado con la piel hacia abajo y cocinar a fuego medio durante 6 minutos sin tocar hasta que la piel quede crujiente y se despegue sola.',
+      'Pincelar generosamente la carne con el aliño de limón y romero mientras se cocina.',
+      'Dar vuelta con espátula ancha con delicadeza y cocinar 2 a 3 minutos del otro lado hasta que la carne esté opaca y hojaldrada. Servir con rodajas de limón a las brasas.'
     ],
     nutritionTip: 'Cero carbohidratos, altísima biodisponibilidad y rico en potasio y fósforo para recuperación muscular y articular.'
   },
@@ -1469,7 +1483,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Cenoura e vagem picadinhas', quantity: '100g' },
       { name: 'Arroz branco ou integral soltinho', quantity: '100g' },
       { name: 'Tomate pelado e cebola picada', quantity: '60g' },
-      { name: 'Cheiro-verde picadinho', quantity: 'ao gosto' }
+      { name: 'Cheiro-verde picadinho', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Selar a carne aos poucos em panela bem quente com uma gota de azeite até criar aquele fundinho dourado.',
@@ -1531,7 +1545,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 15,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop&q=80',
     description: 'O acompanhamento favorito do brasileiro reinventado: peito de frango grelhado com farofa crocante feita com flocos de aveia tostados, ovos mexidos e cenoura ralada.',
     ingredients: [
       { name: 'Filé de peito de frango', quantity: '190g' },
@@ -1566,19 +1580,22 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 25,
     difficulty: 'Fácil',
     xpReward: 20,
-    image: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&auto=format&fit=crop&q=80',
     description: 'Caldo de cocción lenta con osobuco desgrasado, puerro, apio, zapallito y zanahoria para reposición celular de invierno.',
     ingredients: [
       { name: 'Carne vacuna magra desmenuzada', quantity: '150g' },
       { name: 'Caldo casero de huesos y verduras desgrasado', quantity: '350ml' },
       { name: 'Apio, puerro y zanahoria en rodajas', quantity: '120g' },
       { name: 'Zapallito en cubitos', quantity: '80g' },
-      { name: 'Hojas de laurel y pimienta en grano', quantity: 'al gusto' }
+      { name: 'Hojas de laurel y pimienta en grano', quantity: '1 pizca (2g)' }
     ],
     instructions: [
-      'Cocinar la carne en el caldo casero con las hierbas hasta que esté suave y tierna.',
-      'Incorporar las verduras y cocinar 12 minutos manteniendo su frescura.',
-      'Servir caliente en cuenco hondo.'
+      'Cortar 160g de carne vacuna magra en cubos parejos de 1.5 cm y sellar en una olla profunda con 5ml de aceite de oliva virgen extra por 4 minutos hasta dorar.',
+      'Añadir 50g de puerro picado, 50g de zanahoria en cubos y 50g de calabaza criolla, sofriendo todo junto durante 3 minutos con hojas de laurel.',
+      'Verter 350ml de caldo casero de verduras o carne caliente y llevar a ebullición suave a fuego medio.',
+      'Bajar a fuego lento, tapar la olla y cocinar durante 15 minutos para que la carne quede tierna y las verduras liberen todos sus nutrientes en el caldo.',
+      'Incorporar 2g de sal marina y una pizca de pimienta en grano recién triturada.',
+      'Servir bien caliente en cuenco hondo espolvoreando perejil fresco picado y unos hilos de puerro crujiente.'
     ],
     nutritionTip: 'Máxima hidratación con electrolitos (sodio, potasio, magnesio) esenciales para prevenir fatiga del sistema nervioso central.'
   },
@@ -1599,14 +1616,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 40,
     difficulty: 'Intermedio',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1558030006-450675393462?w=800&auto=format&fit=crop&q=80',
     description: 'Técnica gaucha uruguaya para tiernizar el matambre: cocido a fuego lento en leche descremada con hierbas aromáticas, ajo y servido con calabaza asada caramelizada al horno.',
     ingredients: [
       { name: 'Matambre vacuno magro desgrasado', quantity: '200g' },
       { name: 'Leche descremada / deslactosada', quantity: '250ml' },
       { name: 'Calabaza criolla en cubos asada', quantity: '200g' },
       { name: 'Dientes de ajo aplastados y laurel', quantity: '2 unidades' },
-      { name: 'Romero fresco y pimienta negra', quantity: 'al gusto' }
+      { name: 'Romero fresco y pimienta negra', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Desgrasar minuciosamente el matambre y cortar en porciones medianas.',
@@ -1633,7 +1650,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 30,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=800&auto=format&fit=crop&q=80',
     description: 'Albóndigas tiernas de ternera magra con avena fina en lugar de pan rallado, estofadas en salsa de tomate natural y servidas con puré mixto de calabaza y papa.',
     ingredients: [
       { name: 'Carne picada de ternera magra (nalga/bola de lomo)', quantity: '180g' },
@@ -1667,7 +1684,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 25,
     difficulty: 'Fácil',
     xpReward: 20,
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1510693206972-df098062cb71?w=800&auto=format&fit=crop&q=80',
     description: 'Solución fitness para eliminar la masa calórica de las tartas tradicionales: abundantes zapallitos en cubos, ricota magra artesanal, claras batidas a punto nieve y toque de orégano serrano.',
     ingredients: [
       { name: 'Zapallitos redondos salteados escurridos', quantity: '250g' },
@@ -1701,14 +1718,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 20,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800&auto=format&fit=crop&q=80',
     description: 'El clásico bife a caballo rioplatense pero con huevos cocinados al agua vaporizada y ensalada rusa ligera con mayonesa de yogur griego y mostaza.',
     ingredients: [
       { name: 'Bife de cuadril vacuno magro', quantity: '180g' },
       { name: 'Huevos cocinados al agua/plancha', quantity: '2 unidades' },
       { name: 'Papa y zanahoria hervidas en cubos con arvejas', quantity: '150g' },
       { name: 'Yogur natural descremado con limón y mostaza', quantity: '50g' },
-      { name: 'Sal marina y pimienta negra', quantity: 'al gusto' }
+      { name: 'Sal marina y pimienta negra', quantity: '1 pizca (2g)' }
     ],
     instructions: [
       'Grelhar el bife en plancha bien caliente 3-4 minutos por lado.',
@@ -1735,14 +1752,14 @@ export const INITIAL_RECIPES: RecipeItem[] = [
     prepTimeMinutes: 30,
     difficulty: 'Fácil',
     xpReward: 25,
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=800&auto=format&fit=crop&q=80',
     description: 'Receita queridinha do fitness brasileiro: carne bovina magra refogada no alho, cebola e tomate fresco, coberta por um purê aveludado de mandioquinha (batata-baroa) e queijo gratinado.',
     ingredients: [
       { name: 'Patinho bovino moído bem magro', quantity: '180g' },
       { name: 'Mandioquinha (batata-baroa) cozida', quantity: '200g' },
       { name: 'Tomate e cebola picadinhos', quantity: '60g' },
       { name: 'Queijo muçarela light ralado', quantity: '20g' },
-      { name: 'Cheiro-verde e páprica defumada', quantity: 'ao gosto' }
+      { name: 'Cheiro-verde e páprica defumada', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Refogar o patinho moído na panela bem quente com cebola, alho, páprica e tomate até secar o caldinho.',
@@ -1843,7 +1860,7 @@ export const INITIAL_RECIPES: RecipeItem[] = [
       { name: 'Filé mignon suíno fatiado em medalhões', quantity: '190g' },
       { name: 'Abacaxi fresco em rodelas grelhadas', quantity: '100g' },
       { name: 'Arroz integral soltinho cozido', quantity: '100g' },
-      { name: 'Alecrim fresco, alho e sal', quantity: 'ao gosto' }
+      { name: 'Alecrim fresco, alho e sal', quantity: '1 pitada (2g)' }
     ],
     instructions: [
       'Temperar os medalhões de filé suíno com alecrim fresco, alho amassado e sal.',

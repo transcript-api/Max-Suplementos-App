@@ -7,7 +7,6 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { DailyTasks, DailyTaskItem } from './components/DailyTasks';
-import { MaxAiSimpleChat } from './components/MaxAiSimpleChat';
 import { StatsTab } from './components/StatsTab';
 import { ProgressTab } from './components/ProgressTab';
 import { NutritionTab } from './components/NutritionTab';
@@ -17,16 +16,15 @@ import { ProfileTab } from './components/ProfileTab';
 import { ConsistencyChallenges } from './components/ConsistencyChallenges';
 import { OnboardingModal } from './components/OnboardingModal';
 import { PremiumModal } from './components/PremiumModal';
-import { ExpandableMealSuggestionCard } from './components/ExpandableMealSuggestionCard';
 import { ProteinWeeklyChart } from './components/ProteinWeeklyChart';
 import { SupplementReplenishmentCard } from './components/SupplementReplenishmentCard';
 import { AnimatedCounter } from './components/AnimatedCounter';
-import { suggestMealFromFoods, MealSuggestion } from './lib/gemini';
 import { ensureAuthUser } from './lib/supabase';
 import { supabaseRepository } from './lib/supabaseRepository';
 import { offlineSync, SyncStatus } from './lib/offlineSync';
 import { MacroNutrients } from './types';
 import { reconcileAthleteData, LocalAthleteState } from './lib/reconciliation';
+import { AdminPanel } from './components/admin/AdminPanel';
 
 import { AuthModal } from './components/AuthModal';
 import { 
@@ -132,6 +130,9 @@ interface DashboardProps {
   onDismissFirstDashboard?: () => void;
   dailyHistory?: Record<string, number>;
   isDemoMode?: boolean;
+  targets?: UserState['targets'];
+  userSupplements?: Array<{ name: string; serving?: string; frequency?: string }>;
+  onTakeSupplement?: (name: string) => void;
 }
 
 /**
@@ -139,7 +140,7 @@ interface DashboardProps {
  * - Saludo e indicador visual dinámico de Racha
  * - Barra de Energía visual (progreso) para el cumplimiento diario con colores por nivel
  * - Componente DailyTasks con casillas de verificación
- * - Sugerencia básica de comida mediante Gemini API basada en proteínas faltantes
+ * - Sugerencia inteligente de comida basada en proteínas faltantes con MAX AI
  * - Chat rápido MAX AI integrado
  */
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -170,67 +171,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onDismissFirstDashboard,
   dailyHistory = {},
   isDemoMode = false,
+  targets,
+  userSupplements,
+  onTakeSupplement,
 }) => {
   const currentLevelConfig = LEVEL_CONFIGS[commitmentLevel] || LEVEL_CONFIGS.Avanzado;
-
-  // Estado para la sugerencia de comida mediante función auxiliar de Gemini
-  const missingProtein = Math.max(0, 150 - protein);
-  const [availableFoods, setAvailableFoods] = useState<string[]>([
-    'Pechuga de pollo',
-    'Huevos camperos',
-    'Atún al agua',
-    'Yogur griego',
-    'Avena',
-    'Espinacas',
-  ]);
-  const [mealSuggestion, setMealSuggestion] = useState<MealSuggestion | null>(null);
-  const [isLoadingSuggestion, setIsLoadingSuggestion] = useState<boolean>(false);
-  const [suggestionMessage, setSuggestionMessage] = useState<string | null>(null);
-
-  // Obtener sugerencia básica de comida usando la función auxiliar conectada a Gemini
-  const loadMealSuggestion = async (foodsList = availableFoods, missing = missingProtein) => {
-    setIsLoadingSuggestion(true);
-    try {
-      const suggestion = await suggestMealFromFoods(foodsList, missing);
-      setMealSuggestion(suggestion);
-    } catch (err) {
-      console.error('Error cargando sugerencia:', err);
-    } finally {
-      setIsLoadingSuggestion(false);
-    }
-  };
-
-  useEffect(() => {
-    loadMealSuggestion(availableFoods, missingProtein);
-  }, []);
-
-  const handleApplySuggestedMeal = (prot: number) => {
-    if (mealSuggestion) {
-      onAddMealEntry({
-        name: mealSuggestion.mealName,
-        protein: mealSuggestion.protein,
-        carbs: 22,
-        fats: 8,
-        calories: mealSuggestion.calories || (prot * 4 + 160),
-      });
-    } else {
-      onAddProtein(prot);
-    }
-    setSuggestionMessage(`¡Comida registrada y sincronizada! +${prot}g de proteína añadidos.`);
-    setTimeout(() => setSuggestionMessage(null), 4000);
-  };
-
-  const handleToggleFoodChip = (food: string) => {
-    let nextFoods: string[];
-    if (availableFoods.includes(food)) {
-      if (availableFoods.length <= 2) return; // al menos 2 alimentos
-      nextFoods = availableFoods.filter((f) => f !== food);
-    } else {
-      nextFoods = [...availableFoods, food];
-    }
-    setAvailableFoods(nextFoods);
-    loadMealSuggestion(nextFoods, missingProtein);
-  };
 
   // Dinámica de Racha: si todas las metas diarias están completadas
   const completedTasksCount = tasks.filter((t) => t.completed).length;
@@ -467,14 +412,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           <div className="flex items-center justify-between text-xs dark:text-[#8d90a0] text-slate-500 pt-1">
             <span>
-              {completedTasksCount} de {tasks.length} metas completas + Proteína ({protein}/150g)
+              {completedTasksCount} de {tasks.length} metas completas + Proteína ({protein}/{targets?.proteinGrams || 150}g)
             </span>
             <button
               type="button"
               onClick={() => onNavigateTab('estadisticas')}
               className="text-xs font-bold text-[#2563eb] dark:text-[#b4c5ff] hover:underline flex items-center gap-1"
             >
-              <span>Ver estadísticas con Recharts</span>
+              <span>Ver estadísticas de consistencia</span>
               <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </button>
           </div>
@@ -512,93 +457,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
         isDark={isDark}
       />
 
-      {/* 5. Sugerencia Básica de Comida mediante API de Gemini (basada en proteínas faltantes) */}
-      <section className="rounded-2xl p-5 border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] flex items-center justify-center">
-              <span className="material-symbols-outlined text-[20px]">restaurant_menu</span>
-            </div>
-            <div>
-              <h2 className="font-headline-md text-sm sm:text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
-                Sugerencia Inteligente de Comida
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff]">
-                  Gemini AI
-                </span>
-              </h2>
-              <p className="text-xs dark:text-[#8d90a0] text-slate-500">
-                Diseñada para cubrir exactamente tus <strong>{missingProtein}g</strong> de proteína faltante.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            disabled={isLoadingSuggestion}
-            onClick={() => loadMealSuggestion(availableFoods, missingProtein)}
-            className="self-start sm:self-auto px-3 py-1.5 rounded-lg text-xs font-bold border dark:border-[#282a2f] border-slate-300 dark:bg-[#1d2024] bg-slate-100 hover:bg-slate-200 dark:hover:bg-[#282a2f] dark:text-white text-slate-800 transition-colors flex items-center gap-1.5"
-          >
-            <span className={`material-symbols-outlined text-[16px] ${isLoadingSuggestion ? 'animate-spin' : ''}`}>
-              refresh
-            </span>
-            <span>{isLoadingSuggestion ? 'Consultando Gemini...' : 'Regenerar'}</span>
-          </button>
-        </div>
-
-        {/* Chips de Alimentos Disponibles */}
-        <div className="space-y-1.5">
-          <span className="text-[11px] font-bold uppercase dark:text-[#8d90a0] text-slate-500 block">
-            Alimentos seleccionados para la sugerencia:
-          </span>
-          <div className="flex flex-wrap gap-1.5">
-            {[
-              'Pechuga de pollo',
-              'Huevos camperos',
-              'Atún al agua',
-              'Yogur griego',
-              'Avena',
-              'Espinacas',
-              'Queso cottage',
-              'Tofu',
-            ].map((food) => {
-              const isSelected = availableFoods.includes(food);
-              return (
-                <button
-                  key={food}
-                  type="button"
-                  onClick={() => handleToggleFoodChip(food)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-all ${
-                    isSelected
-                      ? 'bg-[#2563eb] text-white border-[#2563eb] font-semibold shadow-sm'
-                      : 'dark:bg-[#111318] bg-slate-100 dark:text-[#8d90a0] text-slate-600 dark:border-[#282a2f] border-slate-200 hover:border-slate-300'
-                  }`}
-                >
-                  {isSelected ? '✓ ' : '+ '}
-                  {food}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {suggestionMessage && (
-          <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-300 text-xs font-medium flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">verified</span>
-            <span>{suggestionMessage}</span>
-          </div>
-        )}
-
-        {/* Tarjeta de Sugerencia Resultante con Detalles Expandibles de Micronutrientes */}
-        {mealSuggestion && (
-          <ExpandableMealSuggestionCard
-            mealSuggestion={mealSuggestion}
-            onApplyMeal={handleApplySuggestedMeal}
-            onNavigateTab={onNavigateTab}
-            isDark={isDark}
-          />
-        )}
-      </section>
-
       {/* Resumen Gráfico del Cumplimiento de la Meta de Proteínas (Últimos 7 Días) */}
       <ProteinWeeklyChart
         currentProtein={protein}
@@ -614,33 +472,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <SupplementReplenishmentCard
         userName={userName}
         isDark={isDark}
+        isDemoMode={isDemoMode}
+        userSupplements={userSupplements}
+        onTakeServing={onTakeSupplement}
       />
-
-      {/* 5. Chat Rápido 'MAX AI' con Estimación de Comidas */}
-      <section className="space-y-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#2563eb] text-[20px]">chat</span>
-            <h2 className="font-label-caps text-xs uppercase font-bold tracking-wider dark:text-[#8d90a0] text-slate-500">
-              REGISTRO RÁPIDO DE COMIDAS CON MAX AI
-            </h2>
-          </div>
-          <button
-            type="button"
-            onClick={() => onNavigateTab('max-ai')}
-            className="text-xs font-bold text-[#2563eb] dark:text-[#b4c5ff] hover:underline flex items-center gap-1"
-          >
-            <span>Abrir chat completo</span>
-            <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-          </button>
-        </div>
-
-        <MaxAiSimpleChat
-          onAddProtein={onAddProtein}
-          onAddMealEntry={onAddMealEntry}
-          isDark={isDark}
-        />
-      </section>
     </div>
   );
 };
@@ -1043,10 +878,12 @@ export default function App() {
       levelGraceAvailable: false, // Consumida la oportunidad libre tras el primer cambio
       nextLevelChangeAllowedAt: nextAllowed,
       tasks: generated.dailyObjectives,
-      macros: generated.macros,
+      macros: userState.macros,
       targets: {
         hydrationLiters: generated.hydrationTargetLiters,
         proteinGrams: generated.proteinTargetGrams,
+        carbsGrams: generated.macros.carbs,
+        fatsGrams: generated.macros.fats,
         calories: generated.calorieTarget,
       },
       onboardingData: updatedInput,
@@ -1308,6 +1145,43 @@ export default function App() {
     });
   };
 
+  // Manejo de toma de suplemento real
+  const handleTakeSupplement = (supplementName: string) => {
+    const suppTask = userState.tasks.find(
+      (t) => t.id === 'suplemento' || t.id.toLowerCase().includes('suplement')
+    );
+    if (suppTask && !suppTask.completed) {
+      handleToggleTask(suppTask.id);
+    }
+
+    const nowIso = new Date().toISOString();
+    const newEntry = {
+      id: `supp_${Date.now()}`,
+      name: supplementName,
+      timestamp: nowIso,
+    };
+    const nextHistory = [...(userState.supplementHistory || []), newEntry];
+    const updatedState: UserState = {
+      ...userState,
+      supplementHistory: nextHistory,
+    };
+    setUserState(updatedState);
+    if (!isDemoMode && currentUser) saveUserData(updatedState);
+
+    fetch('/api/supplements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: userState.userId,
+        supplementName,
+        servingsUsed: 1,
+        timestamp: nowIso,
+      }),
+    }).catch(() => {
+      // offline fallback
+    });
+  };
+
   const handleDismissFirstDashboard = () => {
     const updated: UserState = {
       ...userState,
@@ -1420,6 +1294,9 @@ export default function App() {
             onDismissFirstDashboard={handleDismissFirstDashboard}
             dailyHistory={userState.dailyHistory}
             isDemoMode={isDemoMode}
+            targets={userState.targets}
+            userSupplements={userState.onboardingData?.supplements}
+            onTakeSupplement={handleTakeSupplement}
           />
         )}
 
@@ -1430,6 +1307,9 @@ export default function App() {
             xp={xp}
             weightKg={userState.biometrics?.weightKg || 70}
             isDark={isDark}
+            isDemoMode={isDemoMode}
+            dailyHistory={userState.dailyHistory}
+            activityDates={userState.activityDates}
             onUpdateWeight={(newWeight) => {
               const updatedState: UserState = {
                 ...userState,
@@ -1451,6 +1331,7 @@ export default function App() {
             onAddProtein={handleAddProtein}
             currentProtein={protein}
             macros={macros}
+            targets={userState.targets}
             onAddMealEntry={handleAddMealEntry}
           />
         )}
@@ -1493,6 +1374,7 @@ export default function App() {
             onLogout={handleLogout}
             onDeleteAccount={handleDeleteAccount}
             onOpenAuth={() => setIsAuthModalOpen(true)}
+            onOpenAdmin={() => handleNavigateTab('admin')}
             weightKg={userState.biometrics?.weightKg}
             formScore={energyPercent}
             commitmentLevel={commitmentLevel}
@@ -1500,6 +1382,14 @@ export default function App() {
             levelGraceAvailable={userState.levelGraceAvailable}
             nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
             onOpenLevelModal={() => setIsProtocolModalOpen(true)}
+            dailyHistory={userState.dailyHistory}
+          />
+        )}
+
+        {currentTab === 'admin' && (
+          <AdminPanel
+            onBackToApp={() => handleNavigateTab('perfil')}
+            isDark={isDark}
           />
         )}
       </main>

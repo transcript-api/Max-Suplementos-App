@@ -169,8 +169,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
   const toggleMic = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Dictado por voz simulado: "MAX, ¿qué puedo cenar rápido hoy?"');
-      setInput('¿Qué puedo cenar rápido hoy con alta proteína?');
+      setInput('¿Qué puedo cenar hoy para cubrir mi objetivo de proteína?');
       return;
     }
 

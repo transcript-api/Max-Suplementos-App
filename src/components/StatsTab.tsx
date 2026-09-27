@@ -18,6 +18,9 @@ interface StatsTabProps {
   weightKg?: number;
   isDark?: boolean;
   onUpdateWeight?: (weight: number) => void;
+  isDemoMode?: boolean;
+  dailyHistory?: Record<string, number>;
+  activityDates?: string[];
 }
 
 export const StatsTab: React.FC<StatsTabProps> = ({
@@ -27,35 +30,63 @@ export const StatsTab: React.FC<StatsTabProps> = ({
   weightKg = 70.0,
   isDark = true,
   onUpdateWeight,
+  isDemoMode = false,
+  dailyHistory = {},
+  activityDates = [],
 }) => {
   const [metricView, setMetricView] = useState<'semanal' | 'racha'>('semanal');
   const [weightInput, setWeightInput] = useState(weightKg.toString());
   const [isEditingWeight, setIsEditingWeight] = useState(false);
 
-  // Datos de cumplimiento porcentual semanal adaptados dinámicamente si es un nuevo atleta
-  const isNewAthlete = streakDays === 0;
+  const isNewAthlete = streakDays === 0 && (!dailyHistory || Object.keys(dailyHistory).length === 0);
 
-  const weeklyComplianceData = isNewAthlete
-    ? [
-        { day: 'Lun', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
-        { day: 'Mar', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
-        { day: 'Mié', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
-        { day: 'Jue', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
-        { day: 'Vie', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
-        { day: 'Sáb', cumplimiento: 0, meta: 80, agua: 0, entrenamiento: 0, sueno: 0 },
-        { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: formScore > 0 ? formScore : 0, entrenamiento: formScore > 0 ? formScore : 0, sueno: 0 },
-      ]
-    : [
+  // Cumplimiento semanal: en demo muestra la pauta de Santiago; para atletas reales, calcula según registros reales
+  const weeklyComplianceData = (() => {
+    if (isDemoMode) {
+      return [
         { day: 'Lun', cumplimiento: 80, meta: 80, agua: 100, entrenamiento: 100, sueno: 75 },
         { day: 'Mar', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
         { day: 'Mié', cumplimiento: 75, meta: 80, agua: 80, entrenamiento: 100, sueno: 60 },
         { day: 'Jue', cumplimiento: 100, meta: 80, agua: 100, entrenamiento: 100, sueno: 100 },
         { day: 'Vie', cumplimiento: 85, meta: 80, agua: 90, entrenamiento: 100, sueno: 80 },
         { day: 'Sáb', cumplimiento: 90, meta: 80, agua: 100, entrenamiento: 100, sueno: 85 },
-        { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: 90, entrenamiento: 100, sueno: 92 },
+        { day: 'Hoy', cumplimiento: formScore, meta: 80, agua: formScore > 0 ? formScore : 0, entrenamiento: formScore > 0 ? formScore : 0, sueno: formScore > 0 ? Math.round(formScore * 0.9) : 0 },
       ];
+    }
 
-  // Datos de evolución de racha sin inventar récords ajenos
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const now = new Date();
+    const result = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      const dateKey = d.toISOString().split('T')[0];
+      const dayLabel = i === 0 ? 'Hoy' : dayNames[d.getDay()];
+
+      let dayScore = 0;
+      if (i === 0) {
+        dayScore = formScore;
+      } else if (dailyHistory && dailyHistory[dateKey] !== undefined) {
+        dayScore = dailyHistory[dateKey];
+      } else if (activityDates && activityDates.includes(dateKey)) {
+        dayScore = 80;
+      }
+
+      result.push({
+        day: dayLabel,
+        cumplimiento: dayScore,
+        meta: 80,
+        agua: dayScore > 0 ? dayScore : 0,
+        entrenamiento: dayScore > 0 ? dayScore : 0,
+        sueno: dayScore > 0 ? Math.round(dayScore * 0.85) : 0,
+      });
+    }
+
+    return result;
+  })();
+
+  // Datos de evolución de racha
   const streakHistoryData = isNewAthlete
     ? [
         { periodo: 'Sem 1', rachaDias: 0, consistencia: 0 },
@@ -64,9 +95,9 @@ export const StatsTab: React.FC<StatsTabProps> = ({
         { periodo: 'Actual', rachaDias: streakDays, consistencia: formScore },
       ]
     : [
-        { periodo: 'Sem 1', rachaDias: Math.max(0, streakDays - 14), consistencia: 70 },
-        { periodo: 'Sem 2', rachaDias: Math.max(0, streakDays - 7), consistencia: 85 },
-        { periodo: 'Sem 3', rachaDias: Math.max(0, streakDays - 2), consistencia: 90 },
+        { periodo: 'Sem 1', rachaDias: Math.max(0, streakDays - 14), consistencia: streakDays >= 14 ? 80 : 0 },
+        { periodo: 'Sem 2', rachaDias: Math.max(0, streakDays - 7), consistencia: streakDays >= 7 ? 85 : 0 },
+        { periodo: 'Sem 3', rachaDias: Math.max(0, streakDays - 2), consistencia: streakDays >= 2 ? 90 : 0 },
         { periodo: 'Actual', rachaDias: streakDays, consistencia: formScore },
       ];
 
@@ -96,7 +127,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
             </span>
           </div>
           <span className="font-label-caps text-xs px-2.5 py-1 rounded-full dark:bg-[#1d2024] bg-slate-100 dark:text-[#8d90a0] text-slate-600 border dark:border-[#282a2f] border-slate-200 font-semibold">
-            Motor Recharts
+            Consistencia en Tiempo Real
           </span>
         </div>
         <h1 className="font-headline-xl-mobile text-2xl sm:text-3xl font-bold dark:text-white text-slate-900 tracking-tight">

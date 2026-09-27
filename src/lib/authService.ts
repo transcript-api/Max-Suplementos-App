@@ -6,26 +6,43 @@ export interface AppUser {
   displayName: string;
   createdAt: string;
   isDemo?: boolean;
+  isLocalOnly?: boolean;
 }
 
-const LOCAL_USERS_KEY = 'maxform_registered_users_v1';
-const ACTIVE_SESSION_KEY = 'maxform_active_session_uid_v1';
+const ACTIVE_SESSION_KEY = 'maxform_active_session_v2';
+const LOCAL_ATHLETES_KEY = 'maxform_local_athletes_v2';
 
-// Recuperar usuarios locales registrados para fallback offline y multi-cuenta instantánea
-function getLocalUsers(): Record<string, { email: string; passwordHash: string; displayName: string; uid: string; createdAt: string }> {
+// Limpieza proactiva de claves de contraseñas inseguras de versiones previas
+try {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('maxform_registered_users_v1');
+    localStorage.removeItem('maxform_active_session_uid_v1');
+  }
+} catch {
+  // Entorno sin localStorage
+}
+
+interface LocalAthleteProfile {
+  uid: string;
+  displayName: string;
+  email: string;
+  createdAt: string;
+}
+
+function getLocalAthletes(): Record<string, LocalAthleteProfile> {
   try {
-    const raw = localStorage.getItem(LOCAL_USERS_KEY);
+    const raw = localStorage.getItem(LOCAL_ATHLETES_KEY);
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
   }
 }
 
-function saveLocalUsers(users: Record<string, any>) {
+function saveLocalAthletes(athletes: Record<string, LocalAthleteProfile>) {
   try {
-    localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+    localStorage.setItem(LOCAL_ATHLETES_KEY, JSON.stringify(athletes));
   } catch (e) {
-    console.warn('Error guardando usuarios locales:', e);
+    console.warn('Error guardando atletas locales:', e);
   }
 }
 
@@ -38,7 +55,6 @@ class AuthService {
   }
 
   private async initSession() {
-    // Escuchar cambios de sesión en Supabase Auth si está configurado
     try {
       if (isSupabaseConfigured()) {
         const { data: { session } } = await supabase.auth.getSession();
@@ -79,29 +95,31 @@ class AuthService {
   }
 
   private loadLocalActiveSession() {
-    const activeUid = localStorage.getItem(ACTIVE_SESSION_KEY);
-    if (activeUid) {
-      const users = getLocalUsers();
-      const local = users[activeUid];
-      if (local) {
-        this.setCurrentUser({
-          uid: local.uid,
-          email: local.email,
-          displayName: local.displayName,
-          createdAt: local.createdAt,
-        });
-        return;
+    try {
+      const activeRaw = localStorage.getItem(ACTIVE_SESSION_KEY);
+      if (activeRaw) {
+        const parsed = JSON.parse(activeRaw) as AppUser;
+        if (parsed && parsed.uid) {
+          this.setCurrentUser(parsed);
+          return;
+        }
       }
+    } catch {
+      // Ignorar fallback
     }
     this.setCurrentUser(null);
   }
 
   private setCurrentUser(user: AppUser | null) {
     this.currentUser = user;
-    if (user) {
-      localStorage.setItem(ACTIVE_SESSION_KEY, user.uid);
-    } else {
-      localStorage.removeItem(ACTIVE_SESSION_KEY);
+    try {
+      if (user) {
+        localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify(user));
+      } else {
+        localStorage.removeItem(ACTIVE_SESSION_KEY);
+      }
+    } catch {
+      // localStorage no disponible
     }
     this.listeners.forEach((listener) => listener(this.currentUser));
   }
@@ -118,7 +136,10 @@ class AuthService {
     return this.currentUser;
   }
 
-  // Registro de nuevo usuario en Supabase Auth
+  /**
+   * Registro seguro de nuevo usuario.
+   * Regla de seguridad: Si no hay Supabase configurado, no finge almacenamiento de contraseñas con btoa.
+   */
   public async register(email: string, password: string, displayName: string): Promise<AppUser> {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = displayName.trim();
@@ -133,124 +154,137 @@ class AuthService {
       throw new Error('Por favor ingresa tu nombre.');
     }
 
-    let uid = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-    // Registro con Supabase Auth
-    if (isSupabaseConfigured()) {
-      const { data, error } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password,
-        options: {
-          data: {
-            display_name: cleanName,
-          },
-        },
-      });
-
-      if (error) {
-        if (error.message.includes('already registered')) {
-          throw new Error('Este correo ya se encuentra registrado. Por favor inicia sesión.');
-        }
-        throw new Error(error.message);
-      }
-
-      if (data.user) {
-        uid = data.user.id;
-      }
+    if (!isSupabaseConfigured()) {
+      throw new Error(
+        'El backend de autenticación en la nube (Supabase) no está configurado en las variables de entorno. ' +
+        'Para probar la aplicación puedes continuar en Modo Demo o como Atleta Local sin contraseña.'
+      );
     }
 
-    // Registrar también localmente para alta disponibilidad offline
-    const users = getLocalUsers();
-    const existing = Object.values(users).find((u) => u.email === cleanEmail);
-    if (existing && !isSupabaseConfigured()) {
-      throw new Error('Este correo electrónico ya está registrado.');
-    }
-
-    users[uid] = {
-      uid,
+    const { data, error } = await supabase.auth.signUp({
       email: cleanEmail,
-      displayName: cleanName,
-      passwordHash: btoa(password),
-      createdAt: new Date().toISOString(),
-    };
-    saveLocalUsers(users);
+      password,
+      options: {
+        data: {
+          display_name: cleanName,
+        },
+      },
+    });
+
+    if (error) {
+      if (error.message.includes('already registered')) {
+        throw new Error('Este correo ya se encuentra registrado. Por favor inicia sesión.');
+      }
+      throw new Error(error.message);
+    }
+
+    if (!data.user) {
+      throw new Error('No se pudo crear la cuenta de usuario.');
+    }
 
     const newUser: AppUser = {
-      uid,
+      uid: data.user.id,
       email: cleanEmail,
       displayName: cleanName,
-      createdAt: new Date().toISOString(),
+      createdAt: data.user.created_at || new Date().toISOString(),
     };
 
     this.setCurrentUser(newUser);
     return newUser;
   }
 
-  // Inicio de sesión con Supabase Auth
+  /**
+   * Inicio de sesión seguro con Supabase.
+   */
   public async login(email: string, password: string): Promise<AppUser> {
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !password) {
       throw new Error('Por favor completa todos los campos.');
     }
 
-    // Intentar inicio de sesión en Supabase
-    if (isSupabaseConfigured()) {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password,
-      });
-
-      if (error) {
-        console.warn('[Supabase Auth] Fallo online, verificando sesión local:', error.message);
-      } else if (data.user) {
-        const appUser: AppUser = {
-          uid: data.user.id,
-          email: data.user.email || cleanEmail,
-          displayName: data.user.user_metadata?.display_name || cleanEmail.split('@')[0],
-          createdAt: data.user.created_at || new Date().toISOString(),
-        };
-        this.setCurrentUser(appUser);
-        return appUser;
-      }
+    if (!isSupabaseConfigured()) {
+      throw new Error(
+        'El backend de autenticación en la nube (Supabase) no está configurado. ' +
+        'Para ingresar puedes usar el Modo Demo o continuar como Atleta Local.'
+      );
     }
 
-    // Verificación en usuarios locales (fallback offline)
-    const users = getLocalUsers();
-    const found = Object.values(users).find(
-      (u) => u.email === cleanEmail && u.passwordHash === btoa(password)
-    );
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: cleanEmail,
+      password,
+    });
 
-    if (!found) {
-      throw new Error('Credenciales incorrectas. Verifica tu correo y contraseña.');
+    if (error) {
+      throw new Error('Credenciales incorrectas o usuario no verificado: ' + error.message);
+    }
+
+    if (!data.user) {
+      throw new Error('No se pudo recuperar la sesión del usuario.');
     }
 
     const appUser: AppUser = {
-      uid: found.uid,
-      email: found.email,
-      displayName: found.displayName,
-      createdAt: found.createdAt,
+      uid: data.user.id,
+      email: data.user.email || cleanEmail,
+      displayName: data.user.user_metadata?.display_name || cleanEmail.split('@')[0],
+      createdAt: data.user.created_at || new Date().toISOString(),
     };
 
     this.setCurrentUser(appUser);
     return appUser;
   }
 
-  // Recuperación de contraseña vía Supabase
+  /**
+   * Crear o retomar sesión como Atleta Local explícito (sin pretender ser una cuenta en la nube protegida por contraseña)
+   */
+  public continueAsLocalAthlete(displayName?: string): AppUser {
+    const name = displayName?.trim() || 'Atleta';
+    const uid = `local_athlete_${Date.now().toString(36)}`;
+    const athletes = getLocalAthletes();
+
+    const profile: LocalAthleteProfile = {
+      uid,
+      displayName: name,
+      email: `${uid}@local.maxmind.app`,
+      createdAt: new Date().toISOString(),
+    };
+
+    athletes[uid] = profile;
+    saveLocalAthletes(athletes);
+
+    const appUser: AppUser = {
+      uid,
+      email: profile.email,
+      displayName: name,
+      createdAt: profile.createdAt,
+      isLocalOnly: true,
+    };
+
+    this.setCurrentUser(appUser);
+    return appUser;
+  }
+
+  /**
+   * Recuperación de contraseña vía Supabase
+   */
   public async resetPassword(email: string): Promise<void> {
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !cleanEmail.includes('@')) {
       throw new Error('Por favor ingresa un correo electrónico válido.');
     }
 
-    if (isSupabaseConfigured()) {
-      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);
-      if (error) {
-        throw new Error(error.message);
-      }
+    if (!isSupabaseConfigured()) {
+      throw new Error('El servicio de recuperación de contraseñas requiere Supabase configurado.');
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);
+    if (error) {
+      throw new Error(error.message);
     }
   }
 
-  // Cierre de sesión
+  /**
+   * Cierre de sesión
+   */
   public async logout(): Promise<void> {
     if (isSupabaseConfigured()) {
       try {
@@ -262,13 +296,16 @@ class AuthService {
     this.setCurrentUser(null);
   }
 
-  // Eliminación completa de cuenta (aislamiento y privacidad)
+  /**
+   * Eliminación completa de cuenta y datos asociados para aislamiento absoluto
+   */
   public async deleteAccount(userId: string): Promise<void> {
-    const users = getLocalUsers();
-    delete users[userId];
-    saveLocalUsers(users);
+    const athletes = getLocalAthletes();
+    delete athletes[userId];
+    saveLocalAthletes(athletes);
 
     const keysToRemove = [
+      `maxform_user_v2_${userId}`,
       `maxform_user_${userId}_profile`,
       `maxform_user_${userId}_state`,
       `maxform_user_${userId}_macros`,
@@ -280,7 +317,14 @@ class AuthService {
       `maxform_onboarding_draft_${userId}`,
     ];
 
-    keysToRemove.forEach((k) => localStorage.removeItem(k));
+    keysToRemove.forEach((k) => {
+      try {
+        localStorage.removeItem(k);
+      } catch {
+        // Ignorar
+      }
+    });
+
     await this.logout();
   }
 }

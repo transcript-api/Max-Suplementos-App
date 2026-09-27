@@ -1,8 +1,13 @@
+import "dotenv/config";
 import express from "express";
 import path from "path";
+import fs from "fs";
+import crypto from "crypto";
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { INITIAL_RECIPES, RecipeItem } from "./src/data/recipesDatabase";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -110,6 +115,338 @@ async function startServer() {
   const supplementLogsStore = new Map<string, Array<{ id: string; name: string; dosage: string; takenAt: string }>>();
   const challengeEnrollments = new Map<string, Set<string>>(); // userId -> Set of challengeIds
 
+  // Stores del Panel Administrador y Protocolos
+  interface AuditLogItem {
+    id: string;
+    action: string;
+    adminUser: string;
+    details: string;
+    timestamp: string;
+  }
+  let auditLogsStore: AuditLogItem[] = [
+    {
+      id: "audit_init",
+      action: "SYSTEM_INIT",
+      adminUser: "system",
+      details: "Inicialización de base de datos y control de integridad",
+      timestamp: new Date().toISOString(),
+    }
+  ];
+
+  interface LevelProtocolConfig {
+    id: 'Básico' | 'Intermedio' | 'Avanzado' | 'Extremo';
+    name: string;
+    weeklyWorkouts: string;
+    workoutDuration: string;
+    proteinRatio: string;
+    hydrationGoal: string;
+    taskCount: number;
+    active: boolean;
+  }
+
+  let levelProtocolsStore: Record<string, LevelProtocolConfig> = {
+    Básico: {
+      id: 'Básico',
+      name: 'Básico',
+      weeklyWorkouts: '3 sesiones semanales',
+      workoutDuration: '25-35 minutos',
+      proteinRatio: '1.4g por kg',
+      hydrationGoal: '2.0L diarios',
+      taskCount: 3,
+      active: true,
+    },
+    Intermedio: {
+      id: 'Intermedio',
+      name: 'Intermedio',
+      weeklyWorkouts: '4 sesiones semanales',
+      workoutDuration: '40-50 minutos',
+      proteinRatio: '1.8g por kg',
+      hydrationGoal: '2.5L diarios',
+      taskCount: 4,
+      active: true,
+    },
+    Avanzado: {
+      id: 'Avanzado',
+      name: 'Avanzado',
+      weeklyWorkouts: '5 sesiones semanales',
+      workoutDuration: '55-75 minutos',
+      proteinRatio: '2.2g por kg',
+      hydrationGoal: '3.0L diarios',
+      taskCount: 5,
+      active: true,
+    },
+    Extremo: {
+      id: 'Extremo',
+      name: 'Extremo',
+      weeklyWorkouts: '6 sesiones semanales',
+      workoutDuration: '75-90 minutos',
+      proteinRatio: '2.6g por kg',
+      hydrationGoal: '3.5L diarios',
+      taskCount: 6,
+      active: true,
+    },
+  };
+
+  let recipesCatalogStore: RecipeItem[] = [...INITIAL_RECIPES];
+  const redeemedCouponsStore = new Set<string>();
+
+  // --- Capa de Persistencia en Servidor (Supabase PostgreSQL + Fallback Local) ---
+  const supabaseServerUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "";
+  const supabaseServerKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+  let supabaseAdmin: SupabaseClient | null = null;
+
+  if (
+    supabaseServerUrl &&
+    supabaseServerKey &&
+    supabaseServerUrl.startsWith("https://") &&
+    !supabaseServerUrl.includes("placeholder")
+  ) {
+    try {
+      supabaseAdmin = createClient(supabaseServerUrl, supabaseServerKey);
+      console.log("[MAXMIND Server] Base de datos autoritaria Supabase PostgreSQL conectada.");
+    } catch (err) {
+      console.warn("[MAXMIND Server] Advertencia al inicializar Supabase Server Client:", err);
+    }
+  } else {
+    console.log(
+      "[MAXMIND Server] [AVISO DE DESPLIEGUE] SUPABASE_URL / SERVICE_ROLE_KEY no detectadas. " +
+      "Operando en 'Modo de Contingencia Local' (.data/server_state.json). " +
+      "Aviso: Este almacenamiento en disco local es para desarrollo offline y NO sobrevive a reinicios en arquitecturas serverless efímeras (Vercel) o Cloud Run multi-instancia."
+    );
+  }
+
+  // Almacén de sesiones administrativas efímeras generadas en el servidor
+  interface AdminSession {
+    token: string;
+    email: string;
+    role: "admin";
+    createdAt: string;
+    expiresAt: number;
+  }
+  const adminSessionsStore = new Map<string, AdminSession>();
+
+  // Persistencia autoritaria en disco para desarrollo local offline
+  const DATA_DIR = path.join(__dirname, '.data');
+  const DATA_FILE = path.join(DATA_DIR, 'server_state.json');
+
+  async function loadServerState() {
+    // 1. Cargar almacenamiento local de contingencia
+    try {
+      if (fs.existsSync(DATA_FILE)) {
+        const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed.userXp)) {
+          parsed.userXp.forEach(([k, v]: [string, number]) => userXpStore.set(k, v));
+        }
+        if (Array.isArray(parsed.completedObjectives)) {
+          parsed.completedObjectives.forEach(([k, v]: [string, CompletedRecord]) => completedObjectivesStore.set(k, v));
+        }
+        if (Array.isArray(parsed.foodLogs)) {
+          parsed.foodLogs.forEach(([k, v]: [string, any[]]) => foodLogsStore.set(k, v));
+        }
+        if (Array.isArray(parsed.supplementLogs)) {
+          parsed.supplementLogs.forEach(([k, v]: [string, any[]]) => supplementLogsStore.set(k, v));
+        }
+        if (Array.isArray(parsed.challengeEnrollments)) {
+          parsed.challengeEnrollments.forEach(([k, v]: [string, string[]]) => challengeEnrollments.set(k, new Set(v)));
+        }
+        if (Array.isArray(parsed.aiConversations)) {
+          parsed.aiConversations.forEach(([k, v]: [string, any[]]) => aiConversationsStore.set(k, v));
+        }
+        if (Array.isArray(parsed.proteinLogSpam)) {
+          parsed.proteinLogSpam.forEach(([k, v]: [string, any]) => proteinLogSpamGuard.set(k, v));
+        }
+        if (Array.isArray(parsed.auditLogs) && parsed.auditLogs.length > 0) {
+          auditLogsStore = parsed.auditLogs;
+        }
+        if (parsed.levelProtocols && typeof parsed.levelProtocols === 'object') {
+          levelProtocolsStore = { ...levelProtocolsStore, ...parsed.levelProtocols };
+        }
+        if (Array.isArray(parsed.recipesCatalog) && parsed.recipesCatalog.length > 0) {
+          recipesCatalogStore = parsed.recipesCatalog;
+        }
+        if (Array.isArray(parsed.redeemedCoupons)) {
+          parsed.redeemedCoupons.forEach((c: string) => redeemedCouponsStore.add(c));
+        }
+        console.log('[MAXMIND Server] Estado persistente restaurado desde disco con éxito.');
+      }
+    } catch (e) {
+      console.warn('[MAXMIND Server] Error al leer estado persistente local:', e);
+    }
+
+    // 2. Si Supabase PostgreSQL está disponible, sincronizar datos autoritarios de la nube
+    if (supabaseAdmin) {
+      try {
+        const { data: dbRecipes, error: errRec } = await supabaseAdmin.from('recipes_catalog').select('*');
+        if (!errRec && Array.isArray(dbRecipes) && dbRecipes.length > 0) {
+          recipesCatalogStore = dbRecipes.map((r: any) => ({
+            id: r.id,
+            name: r.name,
+            country: r.country || 'uruguay',
+            countryLabel: r.country_label || 'Uruguay',
+            flag: r.flag || '🇺🇾',
+            category: r.category || 'almuerzo_cena',
+            categoryLabel: r.category_label || 'Almuerzo / Cena',
+            goal: r.goal || 'hipertrofia',
+            goalLabel: r.goal_label || 'Hipertrofia Muscular',
+            protein: Number(r.protein) || 0,
+            calories: Number(r.calories) || 0,
+            carbs: Number(r.carbs) || 0,
+            fats: Number(r.fats) || 0,
+            prepTimeMinutes: Number(r.prep_time_minutes) || 15,
+            difficulty: r.difficulty || 'Fácil',
+            xpReward: Number(r.xp_reward) || 25,
+            image: r.image || '',
+            description: r.description || '',
+            ingredients: Array.isArray(r.ingredients) ? r.ingredients : [],
+            instructions: Array.isArray(r.instructions) ? r.instructions : [],
+            nutritionTip: r.nutrition_tip || '',
+            isCustom: Boolean(r.is_custom),
+          }));
+          console.log(`[MAXMIND Server] Sincronizadas ${recipesCatalogStore.length} recetas desde Supabase PostgreSQL.`);
+        }
+
+        const { data: dbProtocols, error: errProto } = await supabaseAdmin.from('level_protocols').select('*');
+        if (!errProto && Array.isArray(dbProtocols) && dbProtocols.length > 0) {
+          dbProtocols.forEach((p: any) => {
+            if (p.id && levelProtocolsStore[p.id]) {
+              levelProtocolsStore[p.id] = {
+                ...levelProtocolsStore[p.id],
+                weeklyWorkouts: p.weekly_workouts || levelProtocolsStore[p.id].weeklyWorkouts,
+                workoutDuration: p.workout_duration || levelProtocolsStore[p.id].workoutDuration,
+                proteinRatio: p.protein_ratio || levelProtocolsStore[p.id].proteinRatio,
+                hydrationGoal: p.hydration_goal || levelProtocolsStore[p.id].hydrationGoal,
+                taskCount: p.task_count ?? levelProtocolsStore[p.id].taskCount,
+                active: p.active ?? levelProtocolsStore[p.id].active,
+              };
+            }
+          });
+          console.log('[MAXMIND Server] Protocolos de nivel sincronizados desde Supabase PostgreSQL.');
+        }
+
+        const { data: dbAudit, error: errAudit } = await supabaseAdmin
+          .from('admin_audit_logs')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(100);
+        if (!errAudit && Array.isArray(dbAudit) && dbAudit.length > 0) {
+          auditLogsStore = dbAudit.map((a: any) => ({
+            id: a.id,
+            action: a.action,
+            adminUser: a.admin_user,
+            details: a.details,
+            timestamp: a.created_at,
+          }));
+          console.log(`[MAXMIND Server] Sincronizados ${auditLogsStore.length} logs de auditoría desde Supabase PostgreSQL.`);
+        }
+      } catch (err) {
+        console.warn('[MAXMIND Server] Error al sincronizar con Supabase en el inicio:', err);
+      }
+    }
+  }
+
+  loadServerState();
+
+  let saveTimer: any = null;
+  function persistServerStateDebounced() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try {
+        if (!fs.existsSync(DATA_DIR)) {
+          fs.mkdirSync(DATA_DIR, { recursive: true });
+        }
+        const data = {
+          userXp: Array.from(userXpStore.entries()),
+          completedObjectives: Array.from(completedObjectivesStore.entries()),
+          foodLogs: Array.from(foodLogsStore.entries()),
+          supplementLogs: Array.from(supplementLogsStore.entries()),
+          challengeEnrollments: Array.from(challengeEnrollments.entries()).map(([k, set]) => [k, Array.from(set)]),
+          aiConversations: Array.from(aiConversationsStore.entries()),
+          proteinLogSpam: Array.from(proteinLogSpamGuard.entries()),
+          auditLogs: auditLogsStore.slice(-150),
+          levelProtocols: levelProtocolsStore,
+          recipesCatalog: recipesCatalogStore,
+          redeemedCoupons: Array.from(redeemedCouponsStore),
+          savedAt: new Date().toISOString(),
+          persistenceMode: supabaseAdmin ? "supabase_cloud_postgres" : "local_disk_fallback",
+        };
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+      } catch (err) {
+        console.warn('[MAXMIND Server] Error al persistir estado en disco:', err);
+      }
+    }, 200);
+  }
+
+  // Sincronización transparente con Supabase PostgreSQL para mutaciones administrativas
+  async function syncToSupabase(table: 'recipes' | 'protocols' | 'audit', payload: any) {
+    if (!supabaseAdmin) return;
+    try {
+      if (table === 'recipes') {
+        await supabaseAdmin.from('recipes_catalog').upsert({
+          id: payload.id,
+          name: payload.name,
+          country: payload.country,
+          country_label: payload.countryLabel,
+          flag: payload.flag,
+          category: payload.category,
+          category_label: payload.categoryLabel,
+          goal: payload.goal,
+          goal_label: payload.goalLabel,
+          protein: payload.protein,
+          calories: payload.calories,
+          carbs: payload.carbs,
+          fats: payload.fats,
+          prep_time_minutes: payload.prepTimeMinutes,
+          difficulty: payload.difficulty,
+          xp_reward: payload.xpReward,
+          image: payload.image,
+          description: payload.description,
+          ingredients: payload.ingredients,
+          instructions: payload.instructions,
+          nutrition_tip: payload.nutritionTip,
+          is_custom: payload.isCustom,
+          updated_at: new Date().toISOString(),
+        });
+      } else if (table === 'protocols') {
+        await supabaseAdmin.from('level_protocols').upsert({
+          id: payload.id,
+          name: payload.name,
+          weekly_workouts: payload.weeklyWorkouts,
+          workout_duration: payload.workoutDuration,
+          protein_ratio: payload.proteinRatio,
+          hydration_goal: payload.hydrationGoal,
+          task_count: payload.taskCount,
+          active: payload.active,
+          updated_at: new Date().toISOString(),
+        });
+      } else if (table === 'audit') {
+        await supabaseAdmin.from('admin_audit_logs').insert({
+          id: payload.id,
+          action: payload.action,
+          admin_user: payload.adminUser,
+          details: payload.details,
+          created_at: payload.timestamp,
+        });
+      }
+    } catch (err) {
+      console.warn(`[MAXMIND Server] Error sincronizando ${table} con Supabase:`, err);
+    }
+  }
+
+  function recordAuditLog(action: string, adminUser: string, details: string) {
+    const entry: AuditLogItem = {
+      id: "audit_" + Date.now() + "_" + Math.random().toString(36).substring(2, 6),
+      action,
+      adminUser: adminUser || "admin@maxsuplementos.com",
+      details,
+      timestamp: new Date().toISOString(),
+    };
+    auditLogsStore.unshift(entry);
+    if (auditLogsStore.length > 200) auditLogsStore.pop();
+    persistServerStateDebounced();
+    syncToSupabase('audit', entry);
+  }
+
   // API Health
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -200,6 +537,7 @@ async function startServer() {
 
     logs.push(newEntry);
     foodLogsStore.set(userId, logs.slice(-100)); // Mantener últimas 100 comidas
+    persistServerStateDebounced();
 
     res.json({ success: true, entry: newEntry });
   });
@@ -211,6 +549,7 @@ async function startServer() {
     const logs = foodLogsStore.get(userId) || [];
     const filtered = logs.filter((l) => l.id !== id);
     foodLogsStore.set(userId, filtered);
+    persistServerStateDebounced();
     res.json({ success: true, deletedId: id });
   });
 
@@ -229,6 +568,7 @@ async function startServer() {
     };
     current.push(entry);
     supplementLogsStore.set(userId, current.slice(-50));
+    persistServerStateDebounced();
     res.json({ success: true, entry });
   });
 
@@ -236,6 +576,15 @@ async function startServer() {
   app.post("/api/supplements/:id/log", (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
+    const current = supplementLogsStore.get(userId || "athlete_default") || [];
+    current.push({
+      id: "supp_log_" + Date.now(),
+      name: `Suplemento #${id}`,
+      dosage: "1 toma",
+      takenAt: new Date().toISOString(),
+    });
+    supplementLogsStore.set(userId || "athlete_default", current.slice(-50));
+    persistServerStateDebounced();
     res.json({
       success: true,
       supplementId: id,
@@ -271,6 +620,7 @@ async function startServer() {
       challengeEnrollments.set(userId, userSet);
     }
     userSet.add(id);
+    persistServerStateDebounced();
     res.json({ success: true, joinedChallengeId: id, enrolledAt: new Date().toISOString() });
   });
 
@@ -326,6 +676,7 @@ async function startServer() {
       xpAwarded: reward,
       completedAt: new Date().toISOString(),
     });
+    persistServerStateDebounced();
 
     return res.json({
       success: true,
@@ -375,6 +726,7 @@ async function startServer() {
       xpAwarded: reward,
       completedAt: new Date().toISOString(),
     });
+    persistServerStateDebounced();
 
     return res.json({
       success: true,
@@ -450,6 +802,7 @@ async function startServer() {
         completedAt: new Date().toISOString(),
       });
     }
+    persistServerStateDebounced();
 
     return res.json({
       success: true,
@@ -476,6 +829,7 @@ async function startServer() {
     }
     // Guardar últimos 50 mensajes por atleta
     aiConversationsStore.set(userId, messages.slice(-50));
+    persistServerStateDebounced();
     res.json({ success: true, count: messages.length });
   });
 
@@ -969,30 +1323,400 @@ Responde en español de forma concisa, motivadora y basada en ciencia deportiva.
     app._router.handle(req, res, next);
   });
 
-  // API Dispatcher de Webhooks para Automatizaciones (n8n / WhatsApp / CRM)
-  app.post("/api/webhooks/trigger", (req, res) => {
+  // --- API Dispatcher de Webhooks (n8n / WhatsApp / CRM) ---
+  app.post("/api/webhooks/trigger", async (req, res) => {
     const { event, athleteName, phone, payload } = req.body;
     const timestamp = new Date().toISOString();
 
-    // Simulación y registro de eventos clave para el flujo n8n
     console.log(`[n8n Automation Event] [${timestamp}] Evento: ${event} para ${athleteName || 'Atleta'}`);
 
-    let automationMessage = "Evento registrado.";
-    if (event === "SUPPLEMENT_REORDER_ALERT") {
-      automationMessage = `Alerta de reposición enviada a n8n para WhatsApp: "${athleteName}, te quedan pocas tomas de tu suplemento. Reponé con 15% OFF."`;
-    } else if (event === "STREAK_RESCUE") {
-      automationMessage = `Rescate de racha enviado a n8n: "Atleta ${athleteName}, aún estás a tiempo de sellar tu Form diaria."`;
-    } else if (event === "DAILY_SUMMARY") {
-      automationMessage = `Resumen diario enviado para reporte de WhatsApp / CRM.`;
+    if (process.env.N8N_WEBHOOK_URL) {
+      try {
+        const response = await fetch(process.env.N8N_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event,
+            athleteName,
+            phone,
+            payload,
+            timestamp,
+          }),
+        });
+        return res.json({
+          success: response.ok,
+          isConfigured: true,
+          simulated: false,
+          event,
+          timestamp,
+          message: response.ok ? "Notificación entregada a n8n exitosamente." : "Error en endpoint n8n.",
+        });
+      } catch (err: any) {
+        return res.json({
+          success: false,
+          isConfigured: true,
+          simulated: false,
+          error: err.message,
+          message: "No se pudo conectar con el webhook n8n configurado.",
+        });
+      }
     }
 
     return res.json({
       success: true,
+      isConfigured: false,
+      simulated: true,
       event,
       timestamp,
-      deliveredVia: "n8n_integration_hub",
-      message: automationMessage
+      message: "Evento registrado en servidor (variable N8N_WEBHOOK_URL no configurada).",
     });
+  });
+
+  // --- API de Cupones y Tickets de Compra Físicos ---
+  app.post("/api/coupons/redeem", (req, res) => {
+    const { code, userId } = req.body;
+    if (!code || typeof code !== "string") {
+      return res.status(400).json({ success: false, message: "Código no proporcionado." });
+    }
+    const cleanCode = code.trim().toUpperCase();
+    const VALID_PROMO_CODES: Record<string, { durationDays: number; name: string }> = {
+      "MAXPRO30": { durationDays: 30, name: "30 Días de Prueba MAXMIND Pro" },
+      "TICKET-8849": { durationDays: 30, name: "Ticket Sucursal MAX Suplementos" },
+      "SANTIAGO100": { durationDays: 30, name: "Campaña Atletas Santiago" },
+      "MAXMINDVIP": { durationDays: 60, name: "Pase VIP 60 Días" },
+    };
+
+    if (VALID_PROMO_CODES[cleanCode]) {
+      const promo = VALID_PROMO_CODES[cleanCode];
+      redeemedCouponsStore.add(`${cleanCode}_${userId || 'anon'}_${Date.now()}`);
+      persistServerStateDebounced();
+      recordAuditLog("COUPON_REDEEMED", userId || "atleta", `Canjeó cupón ${cleanCode} (${promo.name})`);
+      return res.json({
+        success: true,
+        durationDays: promo.durationDays,
+        message: `¡Código validado! Has activado ${promo.name}.`,
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: "Código inválido o expirado. Verifica el código de tu ticket de compra.",
+    });
+  });
+
+  // --- API de Pagos Stripe (Preparado sin simulación engañosa) ---
+  app.post("/api/stripe/checkout", (req, res) => {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return res.json({
+        success: false,
+        isConfigured: false,
+        message: "La pasarela de pago online está en preparación. Puedes activar tu plan Pro canjeando el código de tu ticket en tiendas MAX.",
+      });
+    }
+    return res.json({
+      success: false,
+      isConfigured: true,
+      message: "Iniciando pasarela de pago...",
+    });
+  });
+
+  // --- API Pública de Catálogo de Recetas ---
+  app.get("/api/recipes", (req, res) => {
+    res.json({ success: true, recipes: recipesCatalogStore });
+  });
+
+  // --- Middleware de Autenticación de Administrador Autoritario del Servidor ---
+  // ADMIN_SECRET_KEY debe estar configurada en .env — NUNCA usar la clave de fallback en producción.
+  const ADMIN_SECRET_KEY = (() => {
+    const key = process.env.ADMIN_SECRET_KEY;
+    if (!key) {
+      if (process.env.NODE_ENV === 'production') {
+        console.error('[MAXMIND SECURITY] CRÍTICO: ADMIN_SECRET_KEY no está configurada en variables de entorno. El panel administrativo está DESHABILITADO en producción hasta que se configure esta variable.');
+        return null; // Las rutas admin rechazarán cualquier autenticación
+      }
+      // En desarrollo: usar clave local temporal con advertencia
+      console.warn('[MAXMIND DEV] ADVERTENCIA: Usando clave administrativa de desarrollo local. Configura ADMIN_SECRET_KEY en .env para producción.');
+      return 'maxmind-dev-only-2026';
+    }
+    return key;
+  })();
+  const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "admin@maxsuplementos.com,gerencia@maxsuplementos.com")
+    .split(",")
+    .map((e) => e.trim().toLowerCase());
+
+  const verifyAdminAuth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const authHeader = (req.headers["authorization"] as string) || (req.headers["x-admin-session"] as string) || "";
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: "Autenticación requerida: No se proporcionó token de sesión administrativo.",
+      });
+    }
+
+    // 1. Validar si es un token de sesión efímera generado en el servidor
+    const session = adminSessionsStore.get(token);
+    if (session) {
+      if (Date.now() > session.expiresAt) {
+        adminSessionsStore.delete(token);
+        return res.status(401).json({
+          success: false,
+          error: "La sesión administrativa ha expirado. Inicia sesión nuevamente.",
+        });
+      }
+      (req as any).adminUser = session.email;
+      (req as any).adminRole = session.role;
+      return next();
+    }
+
+    // 2. Si no es una sesión efímera, validar si es un JWT emitido por Supabase Auth
+    if (supabaseAdmin) {
+      try {
+        const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+        if (user && !error) {
+          const isUserAdmin =
+            user.app_metadata?.role === "admin" ||
+            user.user_metadata?.role === "admin" ||
+            (user.email && ADMIN_EMAILS.includes(user.email.toLowerCase()));
+
+          if (isUserAdmin) {
+            (req as any).adminUser = user.email || "supabase_admin";
+            (req as any).adminRole = "admin";
+            return next();
+          } else {
+            // Usuario autenticado legítimo, pero carece de permisos de administrador
+            return res.status(403).json({
+              success: false,
+              error: "Acceso denegado: El usuario autenticado no cuenta con rol de administrador verificado.",
+            });
+          }
+        }
+      } catch (err) {
+        // Token no válido en Supabase
+      }
+    }
+
+    // 3. Token no reconocido o sin privilegios suficientes
+    return res.status(403).json({
+      success: false,
+      error: "Acceso denegado: Token de autorización administrativo inválido o rol insuficiente.",
+    });
+  };
+
+  // --- ENDPOINTS ADMINISTRATIVOS (/api/admin/*) ---
+
+  // POST /api/admin/login - Autenticación administrativa segura (devuelve token efímero, NUNCA la clave maestra)
+  app.post("/api/admin/login", (req, res) => {
+    // Si la clave maestra no está configurada en producción, el panel está deshabilitado
+    if (!ADMIN_SECRET_KEY) {
+      return res.status(503).json({
+        success: false,
+        error: "El panel administrativo no está habilitado en este entorno. Contacta al equipo técnico.",
+      });
+    }
+
+    const { key, email } = req.body;
+    const cleanEmail = (email || "admin@maxsuplementos.com").trim().toLowerCase();
+
+    if (key && key === ADMIN_SECRET_KEY) {
+      // Generar token de sesión efímero criptográfico
+      const sessionToken = "adm_" + crypto.randomUUID() + "_" + crypto.randomBytes(16).toString("hex");
+      const expiresAt = Date.now() + 8 * 3600 * 1000; // 8 horas de validez
+
+      adminSessionsStore.set(sessionToken, {
+        token: sessionToken,
+        email: cleanEmail,
+        role: "admin",
+        createdAt: new Date().toISOString(),
+        expiresAt,
+      });
+
+      recordAuditLog("ADMIN_LOGIN_SUCCESS", cleanEmail, "Sesión administrativa iniciada con token efímero");
+
+      return res.json({
+        success: true,
+        sessionToken,
+        expiresAt,
+        adminUser: {
+          email: cleanEmail,
+          role: "admin",
+        },
+      });
+    }
+
+    recordAuditLog("ADMIN_LOGIN_FAILED", cleanEmail, "Intento de login con clave maestra errónea");
+    return res.status(401).json({
+      success: false,
+      error: "Credenciales administrativas incorrectas.",
+    });
+  });
+
+  // POST /api/admin/logout - Revocación de sesión administrativa en servidor
+  app.post("/api/admin/logout", verifyAdminAuth, (req, res) => {
+    const authHeader = (req.headers["authorization"] as string) || (req.headers["x-admin-session"] as string) || "";
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+    const adminUser = (req as any).adminUser || "admin";
+
+    if (token && adminSessionsStore.has(token)) {
+      adminSessionsStore.delete(token);
+    }
+    recordAuditLog("ADMIN_LOGOUT", adminUser, "Sesión administrativa cerrada correctamente");
+
+    res.json({
+      success: true,
+      message: "Sesión administrativa revocada en el servidor.",
+    });
+  });
+
+  // GET /api/admin/status - Diagnóstico de integraciones, persistencia y telemetría
+  app.get("/api/admin/status", verifyAdminAuth, (req, res) => {
+    const supabaseConfigured = Boolean(process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL);
+    const geminiConfigured = Boolean(process.env.GEMINI_API_KEY);
+    const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY);
+    const n8nConfigured = Boolean(process.env.N8N_WEBHOOK_URL);
+
+    res.json({
+      success: true,
+      persistence: {
+        engine: supabaseAdmin ? "Supabase PostgreSQL (Nube Distribuida)" : "Almacenamiento Local en Disco (.data/server_state.json)",
+        isDistributedProduction: Boolean(supabaseAdmin),
+        multiInstanceSafe: Boolean(supabaseAdmin),
+        status: supabaseAdmin ? "Producción Activa (PostgreSQL)" : "Modo Contingencia Local (Desarrollo)",
+        note: supabaseAdmin
+          ? "Datos sincronizados de forma persistente a través de todas las réplicas en la nube."
+          : "Aviso: El archivo JSON local opera como contingencia para desarrollo offline y no sobrevive a reinicios en plataformas serverless (Vercel) o contenedores efímeros sin volúmenes (Cloud Run).",
+      },
+      integrations: {
+        supabase: {
+          name: "Supabase DB & Auth",
+          configured: supabaseConfigured,
+          mode: supabaseConfigured ? "Nube Real (PostgreSQL)" : "Almacenamiento Local Aislado",
+          status: supabaseConfigured ? "Conectado" : "No configurado",
+        },
+        gemini: {
+          name: "MAX AI Engine (Google Gemini)",
+          configured: geminiConfigured,
+          mode: geminiConfigured ? "Producción (Gemini Flash)" : "Motor Resiliente Local",
+          status: geminiConfigured ? "En línea" : "Modo Contingencia",
+        },
+        stripe: {
+          name: "Pasarela de Pago (Stripe)",
+          configured: stripeConfigured,
+          mode: stripeConfigured ? "Checkout Real" : "En preparación (Canje de tickets activo)",
+          status: stripeConfigured ? "Activo" : "No configurado",
+        },
+        n8n: {
+          name: "Automatizaciones n8n / WhatsApp",
+          configured: n8nConfigured,
+          mode: n8nConfigured ? `Despacho Real (${process.env.N8N_WEBHOOK_URL})` : "Registro en Servidor",
+          status: n8nConfigured ? "Enlace Activo" : "Standby",
+        },
+      },
+      metrics: {
+        activeUsers: userXpStore.size,
+        activeAdminSessions: adminSessionsStore.size,
+        totalFoodLogs: Array.from(foodLogsStore.values()).reduce((acc, curr) => acc + curr.length, 0),
+        totalSupplementLogs: Array.from(supplementLogsStore.values()).reduce((acc, curr) => acc + curr.length, 0),
+        totalRecipes: recipesCatalogStore.length,
+        totalAuditLogs: auditLogsStore.length,
+        uptimeSeconds: Math.floor(process.uptime()),
+        serverTimestamp: new Date().toISOString(),
+      },
+    });
+  });
+
+  // GET /api/admin/recipes - Listar recetas
+  app.get("/api/admin/recipes", verifyAdminAuth, (req, res) => {
+    res.json({ success: true, recipes: recipesCatalogStore });
+  });
+
+  // POST /api/admin/recipes - Crear o actualizar receta
+  app.post("/api/admin/recipes", verifyAdminAuth, (req, res) => {
+    const recipeData = req.body;
+    if (!recipeData.name || !recipeData.protein) {
+      return res.status(400).json({ success: false, error: "Nombre y proteína son obligatorios." });
+    }
+
+    const adminUser = (req as any).adminUser || (req.headers["x-admin-email"] as string) || "admin@maxsuplementos.com";
+    const existingIndex = recipesCatalogStore.findIndex((r) => r.id === recipeData.id);
+
+    if (existingIndex >= 0) {
+      recipesCatalogStore[existingIndex] = { ...recipesCatalogStore[existingIndex], ...recipeData };
+      recordAuditLog("UPDATE_RECIPE", adminUser, `Actualizó la receta "${recipeData.name}" (${recipeData.id})`);
+      syncToSupabase('recipes', recipesCatalogStore[existingIndex]);
+    } else {
+      const newRecipe: RecipeItem = {
+        id: recipeData.id || "rec_" + Date.now(),
+        name: recipeData.name,
+        country: recipeData.country || "uruguay",
+        countryLabel: recipeData.countryLabel || "Uruguay",
+        flag: recipeData.flag || "🇺🇾",
+        category: recipeData.category || "almuerzo_cena",
+        categoryLabel: recipeData.categoryLabel || "Almuerzo / Cena",
+        goal: recipeData.goal || "hipertrofia",
+        goalLabel: recipeData.goalLabel || "Hipertrofia Muscular",
+        protein: Number(recipeData.protein) || 0,
+        calories: Number(recipeData.calories) || 0,
+        carbs: Number(recipeData.carbs) || 0,
+        fats: Number(recipeData.fats) || 0,
+        prepTimeMinutes: Number(recipeData.prepTimeMinutes) || 15,
+        difficulty: recipeData.difficulty || "Fácil",
+        xpReward: Number(recipeData.xpReward) || 25,
+        image: recipeData.image || "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800",
+        description: recipeData.description || "",
+        ingredients: recipeData.ingredients || [],
+        instructions: recipeData.instructions || [],
+        nutritionTip: recipeData.nutritionTip || "",
+        isCustom: true,
+      };
+      recipesCatalogStore.unshift(newRecipe);
+      recordAuditLog("CREATE_RECIPE", adminUser, `Creó la nueva receta "${newRecipe.name}"`);
+      syncToSupabase('recipes', newRecipe);
+    }
+    persistServerStateDebounced();
+    res.json({ success: true, count: recipesCatalogStore.length });
+  });
+
+  // DELETE /api/admin/recipes/:id - Eliminar receta
+  app.delete("/api/admin/recipes/:id", verifyAdminAuth, (req, res) => {
+    const { id } = req.params;
+    const adminUser = (req as any).adminUser || (req.headers["x-admin-email"] as string) || "admin@maxsuplementos.com";
+    const found = recipesCatalogStore.find((r) => r.id === id);
+    recipesCatalogStore = recipesCatalogStore.filter((r) => r.id !== id);
+    recordAuditLog("DELETE_RECIPE", adminUser, `Eliminó la receta "${found ? found.name : id}"`);
+    persistServerStateDebounced();
+    if (supabaseAdmin) {
+      Promise.resolve(supabaseAdmin.from('recipes_catalog').delete().eq('id', id)).catch(() => {});
+    }
+    res.json({ success: true, deletedId: id });
+  });
+
+  // GET /api/admin/protocols - Parámetros de protocolos por nivel
+  app.get("/api/admin/protocols", verifyAdminAuth, (req, res) => {
+    res.json({ success: true, protocols: levelProtocolsStore });
+  });
+
+  // POST /api/admin/protocols - Ajustar parámetros de nivel
+  app.post("/api/admin/protocols", verifyAdminAuth, (req, res) => {
+    const { levelId, updates } = req.body;
+    const adminUser = (req as any).adminUser || (req.headers["x-admin-email"] as string) || "admin@maxsuplementos.com";
+    if (!levelId || !levelProtocolsStore[levelId]) {
+      return res.status(400).json({ success: false, error: "Nivel de protocolo no válido." });
+    }
+    levelProtocolsStore[levelId] = {
+      ...levelProtocolsStore[levelId],
+      ...updates,
+    };
+    recordAuditLog("UPDATE_PROTOCOL", adminUser, `Actualizó parámetros del nivel ${levelId}: ${JSON.stringify(updates)}`);
+    persistServerStateDebounced();
+    syncToSupabase('protocols', levelProtocolsStore[levelId]);
+    res.json({ success: true, protocol: levelProtocolsStore[levelId] });
+  });
+
+  // GET /api/admin/audit - Consultar bitácora de auditoría
+  app.get("/api/admin/audit", verifyAdminAuth, (req, res) => {
+    res.json({ success: true, auditLogs: auditLogsStore });
   });
 
   // Vite middleware for development

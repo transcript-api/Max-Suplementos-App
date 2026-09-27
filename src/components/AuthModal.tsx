@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { authService, AppUser } from '../lib/authService';
+import { isSupabaseConfigured } from '../lib/supabase';
 import { MaxMindLogo } from './MaxMindLogo';
 
 interface AuthModalProps {
@@ -8,6 +9,7 @@ interface AuthModalProps {
   onClose?: () => void;
   onSwitchToDemo?: () => void;
   initialMode?: 'login' | 'register' | 'recovery';
+  isDark?: boolean;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
@@ -54,6 +56,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
+  const handleContinueLocal = () => {
+    const user = authService.continueAsLocalAthlete(name || 'Atleta');
+    onSuccess(user);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
       <div className="relative w-full max-w-md bg-[#0B1220] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 my-auto">
@@ -95,6 +102,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             >
               Iniciar Sesión
             </button>
+          </div>
+        )}
+
+        {/* Banner de Modo Sin Supabase / Local */}
+        {!isSupabaseConfigured() && (
+          <div className="p-3.5 bg-blue-950/40 border border-blue-500/30 rounded-2xl text-xs space-y-2.5">
+            <div className="flex items-start gap-2">
+              <span className="material-symbols-outlined text-blue-400 text-[18px] shrink-0 mt-0.5">info</span>
+              <p className="text-slate-300 text-[11px] leading-relaxed">
+                <strong>Modo Local / Demo activo:</strong> Supabase no está configurado en las variables de entorno. Para garantizar seguridad, no se almacenan contraseñas simuladas ni reversibles.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleContinueLocal}
+                className="flex-1 py-2 px-3 bg-[#2563EB] hover:bg-blue-600 text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-[16px]">person_add</span>
+                <span>Atleta Local (Desde cero)</span>
+              </button>
+              {onSwitchToDemo && (
+                <button
+                  type="button"
+                  onClick={onSwitchToDemo}
+                  className="py-2 px-3 bg-[#151D30] hover:bg-[#1E293B] text-slate-300 font-semibold text-xs rounded-xl border border-[#1E293B] transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-[16px]">play_circle</span>
+                  <span>Demo Santiago</span>
+                </button>
+              )}
+            </div>
           </div>
         )}
 

@@ -184,3 +184,92 @@ CREATE TRIGGER on_auth_user_created
 CREATE INDEX IF NOT EXISTS idx_daily_tasks_user_date ON public.daily_tasks(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_food_logs_user_date ON public.food_logs(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_xp_tx_user_date ON public.xp_transactions(user_id, date);
+
+-- ==============================================================================
+-- 10. Tabla: Catálogo Global de Recetas (recipes_catalog) - Persistencia en Producción
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.recipes_catalog (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  country TEXT DEFAULT 'uruguay',
+  country_label TEXT DEFAULT 'Uruguay',
+  flag TEXT DEFAULT '🇺🇾',
+  category TEXT DEFAULT 'almuerzo_cena',
+  category_label TEXT DEFAULT 'Almuerzo / Cena',
+  goal TEXT DEFAULT 'hipertrofia',
+  goal_label TEXT DEFAULT 'Hipertrofia Muscular',
+  protein NUMERIC(5,1) DEFAULT 0,
+  calories NUMERIC(6,1) DEFAULT 0,
+  carbs NUMERIC(5,1) DEFAULT 0,
+  fats NUMERIC(5,1) DEFAULT 0,
+  prep_time_minutes INTEGER DEFAULT 15,
+  difficulty TEXT DEFAULT 'Fácil',
+  xp_reward INTEGER DEFAULT 25,
+  image TEXT DEFAULT '',
+  description TEXT DEFAULT '',
+  ingredients JSONB DEFAULT '[]'::jsonb,
+  instructions JSONB DEFAULT '[]'::jsonb,
+  nutrition_tip TEXT DEFAULT '',
+  is_custom BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.recipes_catalog ENABLE ROW LEVEL SECURITY;
+
+-- Cualquier usuario puede consultar las recetas públicas del catálogo
+CREATE POLICY "Lectura pública del catálogo de recetas"
+  ON public.recipes_catalog FOR SELECT
+  USING (true);
+
+-- Solo el backend o administradores autenticados pueden modificar recetas
+CREATE POLICY "Escritura de recetas restringida a administradores"
+  ON public.recipes_catalog FOR ALL
+  USING (
+    auth.jwt() ->> 'role' = 'service_role' OR 
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND (email = 'admin@maxsuplementos.com' OR is_pro = true))
+  );
+
+-- ==============================================================================
+-- 11. Tabla: Parámetros de Protocolos de Nivel (level_protocols)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.level_protocols (
+  id TEXT PRIMARY KEY, -- 'Básico', 'Intermedio', 'Avanzado', 'Extremo'
+  name TEXT NOT NULL,
+  weekly_workouts TEXT NOT NULL,
+  workout_duration TEXT NOT NULL,
+  protein_ratio TEXT NOT NULL,
+  hydration_goal TEXT NOT NULL,
+  task_count INTEGER DEFAULT 3,
+  active BOOLEAN DEFAULT TRUE,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.level_protocols ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Lectura pública de protocolos de nivel"
+  ON public.level_protocols FOR SELECT
+  USING (true);
+
+CREATE POLICY "Edición de protocolos restringida a servicio/admin"
+  ON public.level_protocols FOR ALL
+  USING (auth.jwt() ->> 'role' = 'service_role');
+
+-- ==============================================================================
+-- 12. Tabla: Bitácora de Auditoría Administrativa (admin_audit_logs)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.admin_audit_logs (
+  id TEXT PRIMARY KEY DEFAULT ('aud_' || uuid_generate_v4()),
+  action TEXT NOT NULL,
+  admin_user TEXT NOT NULL,
+  details TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.admin_audit_logs ENABLE ROW LEVEL SECURITY;
+
+-- Solo accesible por el rol de servicio o administradores
+CREATE POLICY "Auditoría restringida al rol de servicio"
+  ON public.admin_audit_logs FOR ALL
+  USING (auth.jwt() ->> 'role' = 'service_role');
+

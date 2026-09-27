@@ -15,6 +15,16 @@ interface RecipeDetailModalProps {
   }) => void;
 }
 
+// Helper para escalar cantidades numéricas según la porción (ej: 200g -> 300g con 1.5x)
+export const scaleQuantity = (quantityStr: string, multiplier: number): string => {
+  if (multiplier === 1) return quantityStr;
+  return quantityStr.replace(/(\d+(?:\.\d+)?)\s*(g|ml|kg|l|unidades?|huevos?|taza|cucharadas?|cucharaditas?|colher|colheres|fetas?|rodajas?|dientes?)?/gi, (match, num, unit) => {
+    const val = parseFloat(num);
+    const scaled = Math.round(val * multiplier * 10) / 10;
+    return `${scaled}${unit ? (unit.startsWith(' ') ? unit : ' ' + unit) : ''}`;
+  });
+};
+
 export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
   recipe,
   onClose,
@@ -22,7 +32,9 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
 }) => {
   const [portionMultiplier, setPortionMultiplier] = useState<number>(1);
   const [checkedIngredients, setCheckedIngredients] = useState<Record<number, boolean>>({});
+  const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>({});
   const [loggedSuccess, setLoggedSuccess] = useState(false);
+  const [copyToast, setCopyToast] = useState(false);
   const [activeTab, setActiveTab] = useState<'ingredientes' | 'pasos' | 'macros'>('ingredientes');
   const [ingredientCategoryFilter, setIngredientCategoryFilter] = useState<string>('all');
 
@@ -40,9 +52,20 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
     }));
   };
 
+  const toggleStep = (index: number) => {
+    setCompletedSteps((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
   const totalIngredients = recipe.ingredients.length;
   const checkedCount = Object.values(checkedIngredients).filter(Boolean).length;
   const progressPercent = Math.round((checkedCount / totalIngredients) * 100);
+
+  const totalSteps = recipe.instructions.length;
+  const completedStepsCount = Object.values(completedSteps).filter(Boolean).length;
+  const stepsProgressPercent = Math.round((completedStepsCount / totalSteps) * 100);
 
   const markAllIngredients = (value: boolean) => {
     const updated: Record<number, boolean> = {};
@@ -50,6 +73,40 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
       updated[idx] = value;
     });
     setCheckedIngredients(updated);
+  };
+
+  const handleCopyRecipe = () => {
+    const scaledIngredientsText = recipe.ingredients
+      .map((i) => `• ${i.name}: ${scaleQuantity(i.quantity, portionMultiplier)}`)
+      .join('\n');
+
+    const instructionsText = recipe.instructions
+      .map((step, idx) => `Paso ${idx + 1}: ${step}`)
+      .join('\n\n');
+
+    const textToCopy = `🍽️ RECETA FIT: ${recipe.name.toUpperCase()} (${recipe.countryLabel} ${recipe.flag})
+⚖️ Porción: ${portionMultiplier}x
+📊 MACROS POR PORCIÓN:
+• Proteína: ${currentProtein}g
+• Calorías: ${currentCalories} kcal
+• Carbohidratos: ${currentCarbs}g
+• Grasas: ${currentFats}g
+⏱️ Tiempo estimado: ${recipe.prepTimeMinutes} min
+
+🛒 INGREDIENTES EXACTOS:
+${scaledIngredientsText}
+
+👨‍🍳 PREPARACIÓN PASO A PASO:
+${instructionsText}
+
+💡 TIP DEL NUTRICIONISTA MAX:
+${recipe.nutritionTip}`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(textToCopy);
+    }
+    setCopyToast(true);
+    setTimeout(() => setCopyToast(false), 2800);
   };
 
   const handleLogToDaily = () => {
@@ -98,6 +155,14 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn">
+      {/* Toast de receta copiada */}
+      {copyToast && (
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-[#10b981] text-black px-4 py-2.5 rounded-xl shadow-2xl border border-emerald-300 font-black text-xs sm:text-sm flex items-center gap-2 animate-bounce">
+          <span className="material-symbols-outlined text-[20px]">content_copy</span>
+          <span>¡Receta exacta y gramajes copiados al portapapeles!</span>
+        </div>
+      )}
+
       <div className="bg-[#16181d] border border-[#282a2f] w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
         {/* Header con imagen del plato */}
         <div className="relative w-full h-56 sm:h-64 bg-[#212429] flex-shrink-0">
@@ -116,19 +181,32 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
           {/* Botón cerrar */}
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 transition-all active:scale-95 z-10"
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center border border-white/20 transition-all active:scale-95 z-10 cursor-pointer"
             aria-label="Cerrar ficha"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
 
           {/* Badges superiores */}
-          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10 items-center">
             <span className="bg-black/70 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1">
               <span className="text-base">{recipe.flag}</span>
               <span>{recipe.countryLabel}</span>
             </span>
-            <span className="bg-[#2563eb]/90 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full border border-blue-400/30 flex items-center gap-1">
+            <span className="bg-emerald-500/95 backdrop-blur-md text-black text-xs font-black px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
+              <span className="material-symbols-outlined text-[15px]">scale</span>
+              <span>Foto Real & Receta Exacta</span>
+            </span>
+            <button
+              type="button"
+              onClick={handleCopyRecipe}
+              className="bg-black/60 hover:bg-black/90 text-white text-xs font-bold px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-sm"
+              title="Copiar receta con gramajes e instrucciones"
+            >
+              <span className="material-symbols-outlined text-[14px]">content_copy</span>
+              <span className="hidden xs:inline">Copiar</span>
+            </button>
+            <span className="bg-[#2563eb]/90 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-full border border-blue-400/30 flex items-center gap-1">
               <span className="material-symbols-outlined text-[14px]">stars</span>
               <span>+{recipe.xpReward} XP</span>
             </span>
@@ -430,7 +508,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                         {/* Cantidad exacta de la porción */}
                         <div className="flex flex-col items-end flex-shrink-0">
                           <span className="text-xs font-black text-[#adc6ff] bg-[#2563eb]/15 px-2 py-1 rounded-lg border border-[#2563eb]/30 whitespace-nowrap">
-                            {ing.quantity}
+                            {scaleQuantity(ing.quantity, portionMultiplier)}
                           </span>
                           {portionMultiplier !== 1 && (
                             <span className="text-[9px] text-[#8d90a0] mt-0.5">
@@ -445,9 +523,9 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
 
               {/* Nota de pie de ingredientes */}
               <div className="flex items-center gap-2 p-2.5 bg-[#14161a] rounded-xl border border-[#282a2f] text-[11px] text-[#8d90a0]">
-                <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">verified</span>
+                <span className="material-symbols-outlined text-[16px] text-emerald-400">verified</span>
                 <span>
-                  Cantidades calculadas para atletas de alto rendimiento con ingredientes frescos.
+                  Medidas 100% exactas en gramos y mililitros adaptadas dinámicamente a tu porción.
                 </span>
               </div>
             </div>
@@ -455,33 +533,92 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
 
           {/* TAB 2: PREPARACIÓN PASO A PASO */}
           {activeTab === 'pasos' && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">skillet</span>
-                  Instrucciones de Cocción ({recipe.instructions.length} pasos)
-                </h3>
-                <span className="text-xs font-bold text-[#adc6ff] bg-[#2563eb]/20 px-2 py-0.5 rounded border border-[#2563eb]/30">
-                  {recipe.prepTimeMinutes} min totales
-                </span>
+            <div className="space-y-3.5">
+              {/* Progreso del Cocinero */}
+              <div className="bg-[#191c20] p-3 rounded-xl border border-[#282a2f] space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">soup_kitchen</span>
+                    <span className="font-bold text-white">Progreso de Cocina</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-black text-[#adc6ff]">
+                      {completedStepsCount} de {totalSteps} pasos ({stepsProgressPercent}%)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleCopyRecipe}
+                      className="text-[11px] text-emerald-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[13px]">content_copy</span>
+                      Copiar Receta
+                    </button>
+                  </div>
+                </div>
+
+                <div className="w-full bg-[#0c0e12] h-2 rounded-full overflow-hidden">
+                  <div
+                    className="bg-[#2563eb] h-full rounded-full transition-all duration-300"
+                    style={{ width: `${stepsProgressPercent}%` }}
+                  />
+                </div>
               </div>
 
+              {completedStepsCount === totalSteps && totalSteps > 0 && (
+                <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 rounded-xl text-emerald-300 text-xs font-bold flex items-center gap-2 animate-fadeIn">
+                  <span className="material-symbols-outlined text-[18px]">restaurant</span>
+                  <span>¡Plato finalizado a la perfección! Ya puedes servir y registrar tus macros.</span>
+                </div>
+              )}
+
+              {/* Lista interactiva de Pasos */}
               <div className="space-y-2.5">
-                {recipe.instructions.map((step, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-[#191c20] p-3.5 rounded-xl border border-[#282a2f] hover:border-[#2563eb]/40 transition-all flex items-start gap-3.5"
-                  >
-                    <span className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] text-white text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md">
-                      {idx + 1}
-                    </span>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-xs sm:text-sm text-[#e0e2ed] leading-relaxed">
-                        {step}
-                      </p>
+                {recipe.instructions.map((step, idx) => {
+                  const isDone = !!completedSteps[idx];
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => toggleStep(idx)}
+                      className={`p-3.5 rounded-xl border transition-all flex items-start gap-3.5 cursor-pointer select-none ${
+                        isDone
+                          ? 'bg-[#121417] border-emerald-500/40 opacity-80'
+                          : 'bg-[#191c20] hover:bg-[#1e2127] border-[#282a2f] hover:border-[#2563eb]/40 shadow-sm'
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        className={`w-7 h-7 rounded-xl text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5 shadow-md transition-all ${
+                          isDone
+                            ? 'bg-emerald-500 text-black'
+                            : 'bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] text-white'
+                        }`}
+                      >
+                        {isDone ? (
+                          <span className="material-symbols-outlined text-[15px] font-black">done</span>
+                        ) : (
+                          idx + 1
+                        )}
+                      </button>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#adc6ff]">
+                            Paso {idx + 1}
+                          </span>
+                          <span className="text-[10px] text-[#8d90a0]">
+                            {isDone ? 'Completado' : 'Toca para marcar'}
+                          </span>
+                        </div>
+                        <p
+                          className={`text-xs sm:text-sm leading-relaxed ${
+                            isDone ? 'line-through text-[#8d90a0]' : 'text-[#e0e2ed]'
+                          }`}
+                        >
+                          {step}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

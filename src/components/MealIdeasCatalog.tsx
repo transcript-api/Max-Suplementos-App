@@ -295,10 +295,14 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-[#16181d] via-[#16181d]/20 to-black/40" />
 
                   {/* Badges superiores */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1 z-10">
+                  <div className="absolute top-2 left-2 flex items-center gap-1 z-10 flex-wrap">
                     <span className="bg-black/75 backdrop-blur-md text-white text-[9px] sm:text-[11px] font-extrabold px-1.5 sm:px-2 py-0.5 rounded-full border border-white/10 flex items-center gap-1">
                       <span>{recipe.flag}</span>
                       <span className="hidden xs:inline">{recipe.countryLabel}</span>
+                    </span>
+                    <span className="bg-emerald-500/90 text-black text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-sm flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[10px]">scale</span>
+                      <span>Receta Exacta</span>
                     </span>
                     {recipe.isCustom && (
                       <span className="bg-amber-500/95 text-black text-[8px] sm:text-[10px] font-black px-1.5 py-0.5 rounded-full">
@@ -388,7 +392,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                       </div>
                     </div>
                     <span className="text-[9px] sm:text-[10px] text-[#adc6ff] font-bold whitespace-nowrap bg-[#2563eb]/10 px-1 sm:px-1.5 py-0.5 rounded border border-[#2563eb]/20">
-                      {recipe.ingredients.length} ingr.
+                      {recipe.ingredients.length} ingr. exactos
                     </span>
                   </div>
 
@@ -400,10 +404,10 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                         e.stopPropagation();
                         setSelectedRecipe(recipe);
                       }}
-                      className="py-1.5 sm:py-2 px-1 sm:px-2 bg-[#282a2f] hover:bg-[#333539] text-[#e0e2ed] text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl transition-colors flex items-center justify-center gap-0.5 sm:gap-1 text-center"
+                      className="py-1.5 sm:py-2 px-1 sm:px-2 bg-[#282a2f] hover:bg-[#333539] text-[#e0e2ed] hover:text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl transition-colors flex items-center justify-center gap-0.5 sm:gap-1 text-center cursor-pointer border border-[#383a40]"
                     >
-                      <span className="material-symbols-outlined text-[13px] sm:text-[14px]">menu_book</span>
-                      <span>Ficha</span>
+                      <span className="material-symbols-outlined text-[13px] sm:text-[14px] text-emerald-400">menu_book</span>
+                      <span className="truncate">Ver Receta</span>
                     </button>
 
                     <button

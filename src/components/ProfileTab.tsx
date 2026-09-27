@@ -3,6 +3,9 @@ import { calculateLevelFromXP } from '../lib/gamification';
 import { LEVEL_PROTOCOLS, checkLevelCooldown, CooldownStatus } from '../lib/levelProtocols';
 import { CommitmentLevel } from '../types';
 
+// Emails habilitados para acceso al panel administrativo (verificación en servidor)
+const ADMIN_EMAIL_HINTS = ['admin@maxsuplementos.com', 'gerencia@maxsuplementos.com'];
+
 interface ProfileTabProps {
   xp: number;
   streakDays: number;
@@ -18,6 +21,7 @@ interface ProfileTabProps {
   onLogout?: () => void;
   onDeleteAccount?: () => void;
   onOpenAuth?: () => void;
+  onOpenAdmin?: () => void;
   weightKg?: number;
   formScore?: number;
   commitmentLevel?: CommitmentLevel;
@@ -25,6 +29,7 @@ interface ProfileTabProps {
   levelGraceAvailable?: boolean;
   nextLevelChangeAllowedAt?: string;
   onOpenLevelModal?: () => void;
+  dailyHistory?: Record<string, number>;
 }
 
 export const ProfileTab: React.FC<ProfileTabProps> = ({
@@ -42,6 +47,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   onLogout,
   onDeleteAccount,
   onOpenAuth,
+  onOpenAdmin,
   weightKg,
   formScore = 0,
   commitmentLevel = 'Básico',
@@ -49,7 +55,11 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   levelGraceAvailable = false,
   nextLevelChangeAllowedAt,
   onOpenLevelModal,
+  dailyHistory,
 }) => {
+  const isAdminEmail = userEmail
+    ? ADMIN_EMAIL_HINTS.includes(userEmail.toLowerCase())
+    : false;
   const [bpm, setBpm] = useState(72);
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
@@ -57,57 +67,121 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
 
   const levelInfo = calculateLevelFromXP(xp);
 
-  // Simulación de frecuencia cardíaca de wearable
+  // Simulación de frecuencia cardíaca de wearable solo en modo demostración
   useEffect(() => {
+    if (!isDemoMode) return;
     const interval = setInterval(() => {
       setBpm(Math.floor(70 + Math.sin(Date.now() / 1000) * 4));
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isDemoMode]);
 
   const handleExportCSV = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "Fecha,Peso(kg),FormDiaria(%),Proteina(g),Calorias(kcal),Agua(L)\n"
-      + "2026-10-24,72.4,84,128,1920,2.1\n"
-      + "2026-10-23,72.6,90,152,2250,3.0\n"
-      + "2026-10-22,72.8,85,148,2180,3.0\n"
-      + "2026-10-21,73.0,100,155,2300,3.2\n";
-    
-    const encodedUri = encodeURI(csvContent);
+    const today = new Date().toISOString().split('T')[0];
+    const rows = [
+      "Fecha,Atleta,NivelCompromiso,Peso(kg),FormDiaria(%),XP",
+      `${today},"${userName}","${commitmentLevel}",${weightKg || 70},${formScore},${xp}`
+    ];
+
+    if (dailyHistory && Object.keys(dailyHistory).length > 0) {
+      Object.entries(dailyHistory).forEach(([date, score]) => {
+        if (date !== today) {
+          rows.push(`${date},"${userName}","${commitmentLevel}",${weightKg || 70},${score},--`);
+        }
+      });
+    }
+
+    const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent(rows.join("\n"));
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "maxform_telemetria_santiago.csv");
+    link.setAttribute("href", csvContent);
+    const cleanName = userName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    link.setAttribute("download", `maxmind_telemetria_${cleanName}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
-    setExportMessage("¡Archivo CSV exportado exitosamente!");
+    setExportMessage("¡Archivo CSV con tus registros reales descargado!");
     setTimeout(() => setExportMessage(null), 4000);
   };
 
   const handleExportPDF = () => {
-    setExportMessage("Generando informe clínico y biomecánico en PDF...");
-    setTimeout(() => {
-      setExportMessage("¡Informe PDF descargado para tu entrenador y nutricionista!");
-      setTimeout(() => setExportMessage(null), 4000);
-    }, 1500);
+    const todayStr = new Date().toLocaleDateString('es-ES', { dateStyle: 'full' });
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      const html = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Informe MAXMIND - ${userName}</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; color: #0f172a; max-width: 800px; margin: 0 auto; }
+              .header { border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+              h1 { font-size: 22px; margin: 0; color: #0f172a; font-weight: 800; letter-spacing: -0.5px; }
+              .meta { color: #64748b; font-size: 13px; margin-top: 4px; }
+              .badge { background: #eff6ff; color: #2563eb; padding: 4px 10px; border-radius: 9999px; font-weight: bold; font-size: 12px; border: 1px solid #bfdbfe; }
+              .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+              .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+              .card h3 { margin: 0; font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px; }
+              .card p { font-size: 22px; font-weight: 800; margin: 6px 0 0; color: #0f172a; }
+              .protocol-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 12px; padding: 18px; margin-bottom: 24px; }
+              .protocol-card h3 { margin: 0 0 8px 0; font-size: 14px; font-weight: bold; }
+              .protocol-card p { font-size: 13px; line-height: 1.6; color: #334155; margin: 0; }
+              .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 16px; }
+              @media print { body { padding: 20px; } }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div>
+                <h1>MAXMIND · Informe Clínico y Telemetría</h1>
+                <p class="meta">Atleta: <strong>${userName}</strong> | Fecha: <strong>${todayStr}</strong></p>
+              </div>
+              <span class="badge">Nivel ${commitmentLevel}</span>
+            </div>
+            <div class="grid">
+              <div class="card"><h3>Form Diaria</h3><p>${formScore}%</p></div>
+              <div class="card"><h3>Racha Activa</h3><p>${streakDays} Días</p></div>
+              <div class="card"><h3>Peso Registrado</h3><p>${weightKg ? `${weightKg} kg` : '70 kg'}</p></div>
+              <div class="card"><h3>Puntaje Acumulado</h3><p>${xp} XP</p></div>
+            </div>
+            <div class="protocol-card">
+              <h3>Protocolo de Rendimiento (${commitmentLevel})</h3>
+              <p>
+                Este informe consolida las métricas de consistencia del atleta. El protocolo seleccionado exige ciclos mínimos de adaptación neuromuscular y nutricional sin alteraciones intempestivas. Válido para revisión con preparador físico o nutricionista deportivo.
+              </p>
+            </div>
+            <div class="footer">MAXMIND Telemetría Oficial · Documento generado para seguimiento clínico y deportivo</div>
+          </body>
+        </html>
+      `;
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+      setExportMessage("Ventana de impresión y guardado PDF abierta.");
+    } else {
+      setExportMessage("Por favor autoriza las ventanas emergentes para imprimir o guardar el PDF.");
+    }
+    setTimeout(() => setExportMessage(null), 4000);
   };
 
   const handleTestNotification = () => {
     if ("Notification" in window) {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
-          new Notification("MAXMIND: Meta de Hidratación", {
-            body: "¡Vas en 2.1L! Un vaso más y aseguras el 100% de tu Form Diaria.",
+          new Notification("MAXMIND: Meta de Rendimiento", {
+            body: `¡Llevas ${formScore}% de tu Form Diaria! Mantén el ritmo para sellar el 100%.`,
             icon: "/maxmind-symbol.svg"
           });
-          setNotificationStatus("Notificación de prueba enviada a tu dispositivo.");
+          setNotificationStatus("Notificación enviada a tu dispositivo.");
         } else {
-          setNotificationStatus("Simulación activa: Alerta de meta mostrada en pantalla.");
+          setNotificationStatus("Notificaciones no permitidas por el navegador.");
         }
       });
     } else {
-      setNotificationStatus("Simulación activa: Notificaciones configuradas.");
+      setNotificationStatus("Este navegador no soporta la API de notificaciones nativas.");
     }
     setTimeout(() => setNotificationStatus(null), 4000);
   };
@@ -375,10 +449,17 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">watch</span>
             <h3 className="font-headline-md text-white font-bold">Dispositivos y Sensores</h3>
           </div>
-          <span className="text-xs text-emerald-400 flex items-center gap-1 font-bold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            En vivo
-          </span>
+          {isDemoMode ? (
+            <span className="text-xs text-blue-400 flex items-center gap-1 font-bold">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              Modo Demo
+            </span>
+          ) : (
+            <span className="text-xs text-slate-400 flex items-center gap-1 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-slate-500"></span>
+              Dispositivo no vinculado
+            </span>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -386,35 +467,41 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <div>
               <span className="text-[11px] text-[#8d90a0] uppercase block font-bold">Frecuencia Cardíaca</span>
               <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-bold text-white">{bpm}</span>
+                <span className="text-xl font-bold text-white">{isDemoMode ? bpm : '--'}</span>
                 <span className="text-xs text-[#8d90a0]">BPM</span>
               </div>
             </div>
-            <span className="material-symbols-outlined text-red-400 text-[24px] animate-pulse">favorite</span>
+            <span className={`material-symbols-outlined ${isDemoMode ? 'text-red-400 animate-pulse' : 'text-slate-600'} text-[24px]`}>favorite</span>
           </div>
 
           <div className="p-3 bg-[#191c20] rounded-xl border border-[#282a2f] flex items-center justify-between">
             <div>
               <span className="text-[11px] text-[#8d90a0] uppercase block font-bold">Calorías Activas</span>
               <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-bold text-white">540</span>
+                <span className="text-xl font-bold text-white">{isDemoMode ? '540' : '--'}</span>
                 <span className="text-xs text-[#8d90a0]">kcal</span>
               </div>
             </div>
-            <span className="material-symbols-outlined text-amber-400 text-[24px]">local_fire_department</span>
+            <span className={`material-symbols-outlined ${isDemoMode ? 'text-amber-400' : 'text-slate-600'} text-[24px]`}>local_fire_department</span>
           </div>
 
           <div className="p-3 bg-[#191c20] rounded-xl border border-[#282a2f] flex items-center justify-between">
             <div>
               <span className="text-[11px] text-[#8d90a0] uppercase block font-bold">Pasos Hoy</span>
               <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-bold text-white">8.420</span>
+                <span className="text-xl font-bold text-white">{isDemoMode ? '8.420' : '--'}</span>
                 <span className="text-xs text-[#8d90a0]">pasos</span>
               </div>
             </div>
-            <span className="material-symbols-outlined text-[#b4c5ff] text-[24px]">directions_walk</span>
+            <span className={`material-symbols-outlined ${isDemoMode ? 'text-[#b4c5ff]' : 'text-slate-600'} text-[24px]`}>directions_walk</span>
           </div>
         </div>
+
+        {!isDemoMode && (
+          <p className="text-[11px] text-slate-400">
+            Sincronización con Apple Health y Google Fit en preparación para próximas versiones.
+          </p>
+        )}
       </div>
 
       {/* Exportar Reportes y Datos */}
@@ -479,7 +566,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               className="flex items-center justify-center gap-2 bg-[#151D30] hover:bg-[#1E293B] text-slate-200 p-3 rounded-xl border border-[#1E293B] text-xs font-bold transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px] text-[#3B82F6]">tune</span>
-              <span>Reconfigurar Metas (Onboarding)</span>
+              <span>Reconfigurar Metas</span>
             </button>
           )}
 
@@ -491,6 +578,18 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             >
               <span className="material-symbols-outlined text-[18px]">logout</span>
               <span>Cerrar Sesión</span>
+            </button>
+          )}
+
+          {/* Panel Administrativo — visible solo para emails de administrador */}
+          {isAdminEmail && onOpenAdmin && (
+            <button
+              type="button"
+              onClick={onOpenAdmin}
+              className="col-span-full flex items-center justify-center gap-2 bg-[#0f1929] hover:bg-[#162040] text-blue-300 p-3 rounded-xl border border-blue-900/50 hover:border-blue-700/60 text-xs font-bold transition-all active:scale-95"
+            >
+              <span className="material-symbols-outlined text-[18px] text-blue-400">admin_panel_settings</span>
+              <span>Panel Administrativo</span>
             </button>
           )}
         </div>

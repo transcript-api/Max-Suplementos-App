@@ -27,6 +27,8 @@ export interface UserAppState {
   targets?: {
     hydrationLiters: number;
     proteinGrams: number;
+    carbsGrams?: number;
+    fatsGrams?: number;
     calories: number;
   };
   biometrics?: {
@@ -120,9 +122,14 @@ export const SANTIAGO_DEMO_STATE: UserAppState = {
     },
   ],
   macros: {
-    protein: 160,
-    carbs: 220,
-    fats: 65,
+    protein: 128,
+    carbs: 140,
+    fats: 35,
+    calories: 1385,
+  },
+  targets: {
+    hydrationLiters: 3.0,
+    proteinGrams: 160,
     calories: 2150,
   },
   onboardingCompleted: true,
@@ -225,14 +232,16 @@ export function createCleanInitialUserState(userId: string, email: string, name:
     nextLevelChangeAllowedAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     tasks: INITIAL_CLEAN_TASKS,
     macros: {
-      protein: 130,
-      carbs: 180,
-      fats: 55,
-      calories: 1800,
+      protein: 0,
+      carbs: 0,
+      fats: 0,
+      calories: 0,
     },
     targets: {
       hydrationLiters: 2.5,
       proteinGrams: 130,
+      carbsGrams: 180,
+      fatsGrams: 55,
       calories: 1800,
     },
     onboardingCompleted: false,
@@ -363,10 +372,17 @@ export function initializeUserFromOnboarding(
     levelGraceAvailable: true, // Dispone de 1 oportunidad tras el onboarding para cambiarlo
     nextLevelChangeAllowedAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
     tasks: generated.dailyObjectives,
-    macros: generated.macros,
+    macros: {
+      protein: 0,
+      carbs: 0,
+      fats: 0,
+      calories: 0,
+    },
     targets: {
       hydrationLiters: generated.hydrationTargetLiters,
       proteinGrams: generated.proteinTargetGrams,
+      carbsGrams: generated.macros.carbs,
+      fatsGrams: generated.macros.fats,
       calories: generated.calorieTarget,
     },
     biometrics: {

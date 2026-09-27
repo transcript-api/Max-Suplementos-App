@@ -64,7 +64,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
       const aiMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: `Analicé "${query}". Aquí tienes el desglose nutricional estimado por Gemini:`,
+        text: `Analicé "${query}". Aquí tienes el desglose nutricional estimado por MAX AI:`,
         timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
         estimate,
       };
@@ -110,7 +110,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
         </div>
         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-          Gemini 2.5
+          MAX AI Engine
         </span>
       </div>
 
@@ -207,7 +207,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
         {loading && (
           <div className="flex items-center gap-2 text-xs dark:text-[#b4c5ff] text-blue-600 p-2">
             <span className="w-2 h-2 rounded-full bg-[#2563eb] animate-ping"></span>
-            <span>Gemini está estimando los macronutrientes...</span>
+            <span>MAX AI está calculando los macronutrientes...</span>
           </div>
         )}
       </div>

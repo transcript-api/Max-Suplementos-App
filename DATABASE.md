@@ -67,17 +67,50 @@ Este documento define el modelo relacional normalizado para PostgreSQL / Supabas
 - `redeemed_at` (TIMESTAMP WITH TIME ZONE, DEFAULT NOW())
 - **Restricción de unicidad**: `UNIQUE(user_id, coupon_code)`
 
-### `ai_conversations`
-- `id` (UUID, PK)
-- `user_id` (UUID, FK -> users.id, NOT NULL)
-- `role` (VARCHAR(10), NOT NULL) -- 'user' | 'assistant'
-- `message` (TEXT, NOT NULL)
+### `recipes_catalog`
+- `id` (VARCHAR(100), PK)
+- `name` (VARCHAR(150), NOT NULL)
+- `category` (VARCHAR(50))
+- `goal` (VARCHAR(50))
+- `protein` (NUMERIC(5,1))
+- `calories` (NUMERIC(6,1))
+- `carbs` (NUMERIC(5,1))
+- `fats` (NUMERIC(5,1))
+- `ingredients` (JSONB)
+- `instructions` (JSONB)
+- `is_custom` (BOOLEAN, DEFAULT FALSE)
+- `created_at` (TIMESTAMP WITH TIME ZONE, DEFAULT NOW())
+
+### `level_protocols`
+- `id` (VARCHAR(50), PK) -- 'Básico', 'Intermedio', 'Avanzado', 'Extremo'
+- `weekly_workouts` (VARCHAR(100))
+- `workout_duration` (VARCHAR(100))
+- `protein_ratio` (VARCHAR(100))
+- `hydration_goal` (VARCHAR(100))
+- `task_count` (INTEGER)
+- `active` (BOOLEAN, DEFAULT TRUE)
+
+### `admin_audit_logs`
+- `id` (VARCHAR(100), PK)
+- `action` (VARCHAR(100), NOT NULL)
+- `admin_user` (VARCHAR(120), NOT NULL)
+- `details` (TEXT)
 - `created_at` (TIMESTAMP WITH TIME ZONE, DEFAULT NOW())
 
 ---
 
-## 2. Reglas de Seguridad a Nivel de Fila (RLS)
+## 2. Niveles de Persistencia (Producción vs. Entorno Local)
+
+- **Persistencia de Producción (Cloud Run / Vercel / Multi-Instancia)**:
+  La base de datos autoritaria es **Supabase PostgreSQL**. Los entornos de producción (contenedores Cloud Run o lambdas Vercel) son efímeros y no deben depender del sistema de archivos local. Todas las tablas listadas arriba cuentan con Row Level Security (RLS).
+- **Almacenamiento Local de Respaldo (`.data/server_state.json`)**:
+  Es una capa de contingencia **exclusivamente para desarrollo local offline**. Permite trabajar sin conexión a Supabase, pero **NO** constituye una solución de producción para infraestructuras multi-instancia o serverless.
+
+---
+
+## 3. Reglas de Seguridad a Nivel de Fila (RLS)
 
 - Cada usuario solo puede ejecutar `SELECT`, `INSERT` o `UPDATE` sobre registros donde `auth.uid() = user_id`.
-- Las tablas `coupons` y `xp_transactions` sólo son modificables a través de funciones y roles de servicio autoritarios del backend.
+- Las tablas `coupons`, `xp_transactions`, `level_protocols` y `admin_audit_logs` sólo son modificables a través de funciones y roles de servicio autoritarios del backend (`service_role`) o administradores autenticados.
 - Ningún usuario puede consultar registros de otros atletas a excepción de tablas de ranking agregadas de solo lectura.
+

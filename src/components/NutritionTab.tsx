@@ -18,6 +18,13 @@ interface NutritionTabProps {
   }) => void;
   currentProtein: number;
   macros?: MacroNutrients;
+  targets?: {
+    hydrationLiters: number;
+    proteinGrams: number;
+    carbsGrams?: number;
+    fatsGrams?: number;
+    calories: number;
+  };
   isDark?: boolean;
 }
 
@@ -28,6 +35,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   onAddMealEntry,
   currentProtein,
   macros = { protein: currentProtein, carbs: 0, fats: 0, calories: currentProtein * 4 },
+  targets,
   isDark = true,
 }) => {
   const [activeFilter, setActiveFilter] = useState<'Más proteína' | 'Menos calorías' | 'Más rápido (<10m)'>('Más proteína');
@@ -39,10 +47,14 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   const [showMealIdeas, setShowMealIdeas] = useState(false);
   const [showAddRecipeModal, setShowAddRecipeModal] = useState(false);
 
-  const effectiveProtein = macros.protein || currentProtein;
-  const effectiveCarbs = macros.carbs || 210;
-  const effectiveFats = macros.fats || 58;
-  const effectiveCalories = macros.calories || 1920;
+  const effectiveProtein = macros.protein ?? currentProtein ?? 0;
+  const effectiveCarbs = macros.carbs ?? 0;
+  const effectiveFats = macros.fats ?? 0;
+  const effectiveCalories = macros.calories ?? (effectiveProtein * 4 + effectiveCarbs * 4 + effectiveFats * 9);
+
+  const targetProtein = targets?.proteinGrams || 150;
+  const targetCarbs = targets?.carbsGrams || 220;
+  const targetFats = targets?.fatsGrams || 65;
 
   // Cálculo de calorías por macro para la distribución real de energía
   // 1g Proteína = 4 kcal, 1g Carbos = 4 kcal, 1g Grasa = 9 kcal
@@ -59,7 +71,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         calories: proteinKcal,
         pct: Math.round((proteinKcal / totalCalcKcal) * 100),
         color: '#2563eb', // Azul MAXFORM
-        target: 150,
+        target: targetProtein,
       },
       {
         name: 'Carbohidratos',
@@ -67,7 +79,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         calories: carbsKcal,
         pct: Math.round((carbsKcal / totalCalcKcal) * 100),
         color: '#10b981', // Verde Esmeralda
-        target: 280,
+        target: targetCarbs,
       },
       {
         name: 'Grasas',
@@ -75,10 +87,10 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         calories: fatsKcal,
         pct: Math.round((fatsKcal / totalCalcKcal) * 100),
         color: '#f59e0b', // Ámbar Dorado
-        target: 75,
+        target: targetFats,
       },
     ];
-  }, [effectiveProtein, effectiveCarbs, effectiveFats]);
+  }, [effectiveProtein, effectiveCarbs, effectiveFats, targetProtein, targetCarbs, targetFats]);
 
   const removeIngredient = (ing: string) => {
     setIngredients(ingredients.filter(i => i !== ing));
@@ -118,7 +130,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
     }, 4500);
   };
 
-  const maxProtein = 150;
+  const maxProtein = targetProtein;
   const proteinPct = Math.min(100, Math.round((effectiveProtein / maxProtein) * 100));
   const missingProtein = Math.max(0, maxProtein - effectiveProtein);
 
