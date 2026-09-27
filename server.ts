@@ -282,7 +282,7 @@ async function startServer() {
   const adminSessionsStore = new Map<string, AdminSession>();
 
   // Persistencia autoritaria en disco para desarrollo local offline
-  const DATA_DIR = path.join(__dirname, '.data');
+  const DATA_DIR = path.join(currentDirname, '.data');
   const DATA_FILE = path.join(DATA_DIR, 'server_state.json');
 
   async function loadServerState() {
