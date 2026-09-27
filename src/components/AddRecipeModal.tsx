@@ -107,7 +107,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
       <div className="bg-[#16181d] border border-[#282a2f] w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
         {/* Header */}
         <div className="p-4 bg-[#1d2024] border-b border-[#282a2f] flex items-center justify-between">

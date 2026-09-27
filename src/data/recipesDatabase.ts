@@ -4,6 +4,8 @@ export interface RecipeIngredient {
   note?: string;
 }
 
+export type MealTimeType = 'desayuno' | 'almuerzo' | 'merienda' | 'cena' | 'snack_suplemento';
+
 export interface RecipeItem {
   id: string;
   name: string;
@@ -12,6 +14,7 @@ export interface RecipeItem {
   flag: string;
   category: 'almuerzo_cena' | 'desayuno_merienda' | 'post_entreno' | 'snack_rapido';
   categoryLabel: string;
+  mealTime?: MealTimeType;
   goal: 'hipertrofia' | 'definicion' | 'rendimiento' | 'rapido';
   goalLabel: string;
   protein: number; // en gramos
@@ -28,6 +31,79 @@ export interface RecipeItem {
   instructions: string[];
   nutritionTip: string;
   isCustom?: boolean;
+}
+
+/**
+ * Determina el momento del día óptimo para una receta si no está fijado explícitamente
+ */
+export function getRecipeMealTime(recipe: RecipeItem): MealTimeType {
+  if (recipe.mealTime) return recipe.mealTime;
+  const name = recipe.name.toLowerCase();
+  const desc = recipe.description.toLowerCase();
+
+  // Desayuno
+  if (
+    name.includes('panqueque') ||
+    name.includes('pancake') ||
+    name.includes('avena') ||
+    name.includes('tostad') ||
+    name.includes('tapioca') ||
+    name.includes('crepioca') ||
+    name.includes('desayuno') ||
+    name.includes('claras revueltas') ||
+    name.includes('huevo revuelto') ||
+    name.includes('smoothie bowl') ||
+    name.includes('omelette de claras')
+  ) {
+    return 'desayuno';
+  }
+
+  // Merienda
+  if (
+    name.includes('merienda') ||
+    name.includes('yogur') ||
+    name.includes('açaí') ||
+    name.includes('acai') ||
+    name.includes('tostón') ||
+    name.includes('muffin') ||
+    name.includes('mugcake') ||
+    name.includes('frutos secos')
+  ) {
+    return 'merienda';
+  }
+
+  // Snacks y Suplementación
+  if (
+    recipe.category === 'post_entreno' ||
+    recipe.category === 'snack_rapido' ||
+    name.includes('batido') ||
+    name.includes('whey') ||
+    name.includes('creatina') ||
+    name.includes('barrita') ||
+    name.includes('snack') ||
+    name.includes('proteico rápido')
+  ) {
+    return 'snack_suplemento';
+  }
+
+  // Cena (platos más ligeros o específicos nocturnos)
+  if (
+    name.includes('pescado') ||
+    name.includes('salmón') ||
+    name.includes('merluza') ||
+    name.includes('pescada') ||
+    name.includes('sopa') ||
+    name.includes('wok') ||
+    name.includes('ensalada tibia') ||
+    name.includes('revuelto') ||
+    name.includes('cena') ||
+    recipe.calories < 440
+  ) {
+    return 'cena';
+  }
+
+  // Por defecto platos contundentes son almuerzos
+  return 'almuerzo';
 }
 
 export const INITIAL_RECIPES: RecipeItem[] = [

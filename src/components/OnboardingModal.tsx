@@ -231,7 +231,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   const isStep6Valid = true;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
       <div className="relative w-full max-w-xl bg-[#0B1220] border border-[#1E293B] rounded-3xl p-5 sm:p-7 shadow-2xl text-white space-y-6 my-auto">
         {/* Encabezado con Indicador de Progreso Dinámico (1 / 6) */}
         <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">

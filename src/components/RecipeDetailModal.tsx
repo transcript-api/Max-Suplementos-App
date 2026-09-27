@@ -154,7 +154,7 @@ ${recipe.nutritionTip}`;
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn">
       {/* Toast de receta copiada */}
       {copyToast && (
         <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-[#10b981] text-black px-4 py-2.5 rounded-xl shadow-2xl border border-emerald-300 font-black text-xs sm:text-sm flex items-center gap-2 animate-bounce">
@@ -162,7 +162,6 @@ ${recipe.nutritionTip}`;
           <span>¡Receta exacta y gramajes copiados al portapapeles!</span>
         </div>
       )}
-
       <div className="bg-[#16181d] border border-[#282a2f] w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
         {/* Header con imagen del plato */}
         <div className="relative w-full h-56 sm:h-64 bg-[#212429] flex-shrink-0">

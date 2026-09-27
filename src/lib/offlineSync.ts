@@ -19,7 +19,7 @@ export interface OfflineFoodLog {
 
 export interface SyncQueueItem {
   id: string;
-  type: 'TASK_UPDATE' | 'FOOD_LOG' | 'MACROS_UPDATE' | 'STATE_FULL' | 'CHALLENGE_CLAIM';
+  type: 'TASK_UPDATE' | 'FOOD_LOG' | 'MACROS_UPDATE' | 'STATE_FULL' | 'CHALLENGE_CLAIM' | 'DAILY_HABIT_TOGGLE';
   payload: any;
   timestamp: number;
   retryCount: number;

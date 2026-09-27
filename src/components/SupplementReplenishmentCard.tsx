@@ -17,6 +17,7 @@ interface SupplementReplenishmentCardProps {
   isDemoMode?: boolean;
   userSupplements?: Array<{ name: string; serving?: string; frequency?: string }>;
   onTakeServing?: (supplementName: string) => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
 export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardProps> = ({
@@ -25,6 +26,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
   isDemoMode = false,
   userSupplements = [],
   onTakeServing,
+  onNavigateTab,
 }) => {
   const SANTIAGO_DEMO_SUPPLEMENTS: SupplementItem[] = [
     {
@@ -101,6 +103,9 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
 
   const [referralCopied, setReferralCopied] = useState(false);
   const [reminderMessage, setReminderMessage] = useState<string | null>(null);
+  const [takenToday, setTakenToday] = useState<Record<string, boolean>>({
+    creatina: true,
+  });
 
   // Código único de referido para el usuario
   const referralCode = `MAX-${userName.toUpperCase().replace(/\s+/g, '')}-777`;
@@ -115,10 +120,10 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         return sup;
       })
     );
-
     if (onTakeServing) {
       onTakeServing(name);
     }
+    setTakenToday((prev) => ({ ...prev, [id]: true }));
   };
 
   // Copiar código de referido
@@ -150,7 +155,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
             </div>
             <div>
               <h3 className="font-headline-md text-base font-bold dark:text-white text-slate-900">
-                Pastillero & Reposición Inteligente
+                Centro de Suplementación & Adherencia MAXFORM
               </h3>
               <p className="text-xs dark:text-[#8d90a0] text-slate-500">
                 Monitoreo de stock de tomas para no cortar la saturación de creatina ni la síntesis proteica.
@@ -158,9 +163,54 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
             </div>
           </div>
 
-          <span className="self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">
-            Sincronizado con MAX Suplementos
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {onNavigateTab && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onNavigateTab('suplementos')}
+                  className="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-500 dark:text-rose-400 hover:bg-rose-500/25 text-[11px] font-bold border border-rose-500/30 transition-all flex items-center gap-1"
+                  title="Buscar tiendas en Google Maps con Gemini 3.5 Flash"
+                >
+                  <span className="material-symbols-outlined text-[13px]">pin_drop</span>
+                  <span>Lojas (Google Maps)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onNavigateTab('suplementos')}
+                  className="px-2.5 py-1 rounded-full bg-[#2563eb]/20 text-[#2563eb] dark:text-[#adc6ff] hover:bg-[#2563eb]/30 text-[11px] font-bold border border-[#2563eb]/30 transition-all flex items-center gap-1"
+                >
+                  <span>Tracker V1 & Scanner</span>
+                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                </button>
+              </>
+            )}
+            <span className="px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-500 dark:text-blue-400 text-[11px] font-extrabold border border-blue-500/20">
+              Tomas hoy: {Object.values(takenToday).filter(Boolean).length} / {supplements.length}
+            </span>
+            <span className="self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">
+              MAX Suplementos
+            </span>
+          </div>
+        </div>
+
+        {/* Banner Motivacional de Adherencia */}
+        <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-transparent border border-emerald-500/20 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-xs">
+            <span className="material-symbols-outlined text-emerald-500 text-[18px]">verified</span>
+            <span className="dark:text-slate-300 text-slate-700">
+              <strong>Racha de Suplementación: 14 días al 100%.</strong> Cada scoop mantiene tus depósitos saturados para máxima fuerza y síntesis muscular.
+            </span>
+          </div>
+          <a
+            href="https://wa.me/5491100000000?text=Hola%20MAX%20Suplementos!%20Quiero%20asesoramiento%20y%20conocer%20ofertas%20para%20atletas%20MAXFORM"
+            target="_blank"
+            rel="noreferrer"
+            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold whitespace-nowrap transition-colors flex items-center gap-1 shrink-0"
+          >
+            <span className="material-symbols-outlined text-[13px]">chat</span>
+            <span>WhatsApp MAX</span>
+          </a>
         </div>
 
         {reminderMessage && (

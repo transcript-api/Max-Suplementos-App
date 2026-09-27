@@ -4,6 +4,8 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
   '/maxmind-symbol.svg',
   '/maxmind-logo.svg',
   '/maxmind-logo-dark.svg'

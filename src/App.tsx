@@ -3,19 +3,13 @@
  * Modern React + Tailwind CSS + Firebase + Gemini AI + Recharts
  */
 
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback, Suspense, lazy } from 'react';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
+import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { usePwaInstall } from './lib/usePwaInstall';
 import { DailyTasks, DailyTaskItem } from './components/DailyTasks';
-import { StatsTab } from './components/StatsTab';
-import { ProgressTab } from './components/ProgressTab';
-import { NutritionTab } from './components/NutritionTab';
-import { MaxAiTab } from './components/MaxAiTab';
-import { ChallengesTab } from './components/ChallengesTab';
-import { ProfileTab } from './components/ProfileTab';
 import { ConsistencyChallenges } from './components/ConsistencyChallenges';
-import { OnboardingModal } from './components/OnboardingModal';
-import { PremiumModal } from './components/PremiumModal';
 import { ProteinWeeklyChart } from './components/ProteinWeeklyChart';
 import { SupplementReplenishmentCard } from './components/SupplementReplenishmentCard';
 import { AnimatedCounter } from './components/AnimatedCounter';
@@ -26,7 +20,29 @@ import { MacroNutrients } from './types';
 import { reconcileAthleteData, LocalAthleteState } from './lib/reconciliation';
 import { AdminPanel } from './components/admin/AdminPanel';
 
-import { AuthModal } from './components/AuthModal';
+// Módulos pesados diferidos con React.lazy para carga ultrarrápida del bundle principal
+const StatsTab = lazy(() => import('./components/StatsTab').then(m => ({ default: m.StatsTab })));
+const NutritionTab = lazy(() => import('./components/NutritionTab').then(m => ({ default: m.NutritionTab })));
+const MaxAiTab = lazy(() => import('./components/MaxAiTab').then(m => ({ default: m.MaxAiTab })));
+const ChallengesTab = lazy(() => import('./components/ChallengesTab').then(m => ({ default: m.ChallengesTab })));
+const ProfileTab = lazy(() => import('./components/ProfileTab').then(m => ({ default: m.ProfileTab })));
+const SuplementosTab = lazy(() => import('./components/SuplementosTab').then(m => ({ default: m.SuplementosTab })));
+
+const OnboardingModal = lazy(() => import('./components/OnboardingModal').then(m => ({ default: m.OnboardingModal })));
+const PremiumModal = lazy(() => import('./components/PremiumModal').then(m => ({ default: m.PremiumModal })));
+const AudioTranscriberModal = lazy(() => import('./components/AudioTranscriberModal').then(m => ({ default: m.AudioTranscriberModal })));
+const AuthModal = lazy(() => import('./components/AuthModal').then(m => ({ default: m.AuthModal })));
+const ProtocolChangeModal = lazy(() => import('./components/ProtocolChangeModal').then(m => ({ default: m.ProtocolChangeModal })));
+
+const TabLoaderFallback = () => (
+  <div className="w-full flex-1 min-h-[50vh] flex flex-col items-center justify-center p-8 space-y-3">
+    <div className="w-10 h-10 rounded-full border-3 border-blue-500/20 border-t-blue-500 animate-spin" />
+    <span className="text-xs font-semibold tracking-wider uppercase text-slate-400 animate-pulse">
+      Cargando sección...
+    </span>
+  </div>
+);
+
 import { 
   authService, 
   AppUser, 
@@ -41,9 +57,27 @@ import {
 } from './lib/userStore';
 import { calculateLevelFromXP, calculateDailyForm, calculateStreak } from './lib/gamification';
 import { OnboardingProfileInput, generatePersonalizedObjectives } from './lib/objectiveEngine';
-import { ProtocolChangeModal } from './components/ProtocolChangeModal';
 import { LevelExclusivesCard } from './components/LevelExclusivesCard';
 import { checkLevelCooldown } from './lib/levelProtocols';
+import {
+  triggerEnergyCelebrationConfetti,
+  playCelebrationSound,
+  hasCelebratedEnergyToday,
+  markCelebratedEnergyToday,
+  resetCelebratedEnergyToday,
+} from './lib/celebration';
+import { EnergyCelebrationModal } from './components/EnergyCelebrationModal';
+import { DailyHabits } from './components/DailyHabits';
+import {
+  DailyHabitItem,
+  DailyHabitsData,
+  DEFAULT_DAILY_HABITS,
+  ensureHabitsAreCurrent,
+  forceMidnightReset,
+  calculateHabitsEnergyBoost,
+  getMillisecondsUntilMidnight,
+  getTodayLocalDateString,
+} from './lib/dailyHabits';
 
 export type CommitmentLevel = 'Básico' | 'Intermedio' | 'Avanzado' | 'Extremo';
 
@@ -100,6 +134,7 @@ interface DashboardProps {
   onNavigateTab: (tab: string, prompt?: string) => void;
   hydration: number;
   onAddWater: () => void;
+  onReduceWater?: () => void;
   xp: number;
   streakDays: number;
   protein: number;
@@ -133,6 +168,12 @@ interface DashboardProps {
   targets?: UserState['targets'];
   userSupplements?: Array<{ name: string; serving?: string; frequency?: string }>;
   onTakeSupplement?: (name: string) => void;
+  dailyHabits?: DailyHabitsData;
+  onToggleHabit?: (habitId: string) => void;
+  onAddCustomHabit?: (habit: Omit<DailyHabitItem, 'id' | 'completed' | 'completedAt'>) => void;
+  onDeleteCustomHabit?: (habitId: string) => void;
+  onForceMidnightReset?: () => void;
+  habitsEnergyBoost?: number;
 }
 
 /**
@@ -140,13 +181,13 @@ interface DashboardProps {
  * - Saludo e indicador visual dinámico de Racha
  * - Barra de Energía visual (progreso) para el cumplimiento diario con colores por nivel
  * - Componente DailyTasks con casillas de verificación
- * - Sugerencia inteligente de comida basada en proteínas faltantes con MAX AI
- * - Chat rápido MAX AI integrado
+ * - Componente DailyHabits (Hábitos diarios no nutricionales con reseteo a medianoche)
  */
 export const Dashboard: React.FC<DashboardProps> = ({
   onNavigateTab,
   hydration,
   onAddWater,
+  onReduceWater,
   xp,
   streakDays,
   protein,
@@ -174,8 +215,36 @@ export const Dashboard: React.FC<DashboardProps> = ({
   targets,
   userSupplements,
   onTakeSupplement,
+  dailyHabits,
+  onToggleHabit,
+  onAddCustomHabit,
+  onDeleteCustomHabit,
+  onForceMidnightReset,
+  habitsEnergyBoost = 0,
 }) => {
   const currentLevelConfig = LEVEL_CONFIGS[commitmentLevel] || LEVEL_CONFIGS.Avanzado;
+
+  // Estado y referencia para la celebración del 100% de energía diaria
+  const [showCelebrationModal, setShowCelebrationModal] = useState<boolean>(false);
+  const celebrationTriggeredTodayRef = useRef<boolean>(false);
+
+  // Efecto que detecta cuando el usuario alcanza el 100% de su energía diaria por primera vez en el día
+  useEffect(() => {
+    if (energyPercent >= 100) {
+      const alreadyCelebrated = hasCelebratedEnergyToday(userName);
+      if (!alreadyCelebrated && !celebrationTriggeredTodayRef.current) {
+        celebrationTriggeredTodayRef.current = true;
+        markCelebratedEnergyToday(userName);
+
+        const timer = setTimeout(() => {
+          triggerEnergyCelebrationConfetti();
+          playCelebrationSound();
+          setShowCelebrationModal(true);
+        }, 350);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [energyPercent, userName]);
 
   // Dinámica de Racha: si todas las metas diarias están completadas
   const completedTasksCount = tasks.filter((t) => t.completed).length;
@@ -190,6 +259,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="flex flex-col w-full px-4 space-y-5 max-w-[1280px] mx-auto pb-24">
+      {/* Modal de Celebración de 100% de Energía Diaria con Confeti */}
+      <EnergyCelebrationModal
+        isOpen={showCelebrationModal}
+        onClose={() => setShowCelebrationModal(false)}
+        userName={userName}
+        streakDays={displayedStreak}
+        completedTasksCount={completedTasksCount}
+        totalTasksCount={tasks.length}
+        commitmentLevel={commitmentLevel}
+      />
+
       {/* Banner de Sincronización Offline / Firestore */}
       {(!syncStatus.isOnline || syncStatus.pendingCount > 0) && (
         <div
@@ -389,19 +469,51 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 Energía Diaria
               </span>
             </div>
-            <span
-              className={`text-xs font-bold px-2.5 py-1 rounded-full border ${currentLevelConfig.badgeClass}`}
-            >
-              {energyPercent >= 100
-                ? '¡Máxima Potencia 100%!'
-                : energyPercent >= 75
-                ? 'Zona Óptima'
-                : 'En Proceso'}
-            </span>
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-xs font-bold px-2.5 py-1 rounded-full border ${currentLevelConfig.badgeClass} flex items-center gap-1.5`}
+              >
+                {energyPercent >= 100
+                  ? '⚡ ¡Máxima Potencia 100%!'
+                  : energyPercent >= 75
+                  ? 'Zona Óptima'
+                  : 'En Proceso'}
+              </span>
+              {habitsEnergyBoost > 0 && (
+                <span
+                  className="px-2.5 py-1 rounded-full text-xs font-black bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center gap-1 shadow-sm"
+                  title="Impulso sumado por tus Hábitos Diarios no nutricionales"
+                >
+                  <span>⚡</span>
+                  <span>+{habitsEnergyBoost}% Hábitos</span>
+                </span>
+              )}
+              {energyPercent >= 100 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerEnergyCelebrationConfetti();
+                    playCelebrationSound();
+                    setShowCelebrationModal(true);
+                  }}
+                  className="px-2.5 py-1 rounded-full text-xs font-black bg-gradient-to-r from-amber-400 to-yellow-300 hover:from-amber-300 hover:to-yellow-200 text-slate-950 shadow-md shadow-amber-500/20 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
+                  title="Celebrar 100% de Energía Diaria"
+                >
+                  <span>🎉</span>
+                  <span className="hidden sm:inline">Celebrar</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Barra de progreso de Energía con los colores de nivel definidos */}
-          <div className="relative w-full h-4 rounded-full overflow-hidden dark:bg-[#111318] bg-slate-100 p-0.5 border dark:border-[#282a2f] border-slate-200">
+          <div
+            className={`relative w-full h-4 rounded-full overflow-hidden dark:bg-[#111318] bg-slate-100 p-0.5 border transition-all ${
+              energyPercent >= 100
+                ? 'border-amber-400/60 shadow-[0_0_12px_rgba(251,191,36,0.35)]'
+                : 'dark:border-[#282a2f] border-slate-200'
+            }`}
+          >
             <div
               className={`h-full rounded-full transition-all duration-700 ease-out bg-gradient-to-r ${currentLevelConfig.barGradient} shadow-md`}
               style={{ width: `${Math.min(100, Math.max(5, energyPercent))}%` }}
@@ -410,9 +522,60 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs dark:text-[#8d90a0] text-slate-500 pt-1">
+          {/* Banner de Celebración de 100% de Energía Alcanzado */}
+          {energyPercent >= 100 && (
+            <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-emerald-500/15 border border-amber-500/35 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center flex-shrink-0 shadow-sm shadow-amber-500/10">
+                  <span className="text-lg">🏆</span>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white flex items-center gap-2 flex-wrap">
+                    <span>¡100% de Energía Diaria Alcanzado hoy!</span>
+                    <span className="text-[10px] px-2 py-0.5 bg-amber-500/30 text-amber-200 border border-amber-400/30 rounded-full font-black">
+                      Meta del Día Cumplida
+                    </span>
+                  </p>
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    Has completado la totalidad de tu energía diaria programada para hoy.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerEnergyCelebrationConfetti();
+                    playCelebrationSound();
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
+                >
+                  <span>🎉</span>
+                  <span>Lanzar Confeti</span>
+                </button>
+                {isDemoMode && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetCelebratedEnergyToday(userName);
+                      triggerEnergyCelebrationConfetti();
+                      playCelebrationSound();
+                      setShowCelebrationModal(true);
+                    }}
+                    className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 font-medium text-[11px] border border-white/10 active:scale-95 whitespace-nowrap cursor-pointer"
+                    title="Reiniciar registro de hoy para disparar como si fuera la primera vez del día"
+                  >
+                    Simular 1ra vez
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between text-xs dark:text-[#8d90a0] text-slate-500 pt-1 flex-wrap gap-1">
             <span>
               {completedTasksCount} de {tasks.length} metas completas + Proteína ({protein}/{targets?.proteinGrams || 150}g)
+              {habitsEnergyBoost > 0 && ` • +${habitsEnergyBoost}% Hábitos`}
             </span>
             <button
               type="button"
@@ -438,14 +601,29 @@ export const Dashboard: React.FC<DashboardProps> = ({
         formScore={energyPercent}
       />
 
-      {/* 3. Componente DailyTasks con Casillas de Verificación Interactivas */}
+      {/* 3. Componente DailyTasks con Casillas de Verificación y Opción de Deshacer */}
       <DailyTasks
         tasks={tasks}
         onToggleTask={onToggleTask}
         hydration={hydration}
         onAddWater={onAddWater}
+        onReduceWater={onReduceWater}
         isDark={isDark}
       />
+
+      {/* 3.5. Componente Daily Habits (Hábitos diarios no nutricionales con reseteo a medianoche) */}
+      {dailyHabits && onToggleHabit && onAddCustomHabit && onDeleteCustomHabit && onForceMidnightReset && (
+        <DailyHabits
+          habitsData={dailyHabits}
+          onToggleHabit={onToggleHabit}
+          onAddCustomHabit={onAddCustomHabit}
+          onDeleteCustomHabit={onDeleteCustomHabit}
+          onForceMidnightReset={onForceMidnightReset}
+          energyBoost={habitsEnergyBoost}
+          isDark={isDark}
+          isDemoMode={isDemoMode}
+        />
+      )}
 
       {/* 4. Sistema de Desafíos de Consistencia con Recompensas Animadas */}
       <ConsistencyChallenges
@@ -475,7 +653,103 @@ export const Dashboard: React.FC<DashboardProps> = ({
         isDemoMode={isDemoMode}
         userSupplements={userSupplements}
         onTakeServing={onTakeSupplement}
+        onNavigateTab={onNavigateTab}
       />
+
+      {/* 7. Panel Exclusivo: Lo que vas sumando cada día con tu esfuerzo */}
+      <section className="rounded-2xl p-5 border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 dark:text-amber-400 flex items-center justify-center">
+              <span className="material-symbols-outlined text-[22px]">military_tech</span>
+            </div>
+            <div>
+              <h2 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
+                Lo Que Vas Sumando Como Atleta
+                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                  Progreso Real
+                </span>
+              </h2>
+              <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+                Cada día que no fallas tus tomas de creatina y proteína construyes tu ventaja competitiva.
+              </p>
+            </div>
+          </div>
+
+          <span className="self-start sm:self-auto text-xs font-bold px-3 py-1 rounded-full bg-[#2563eb]/15 text-[#2563eb] dark:text-[#adc6ff] border border-[#2563eb]/30">
+            Comunidad MAX Suplementos
+          </span>
+        </div>
+
+        {/* Cuadrícula de Métricas de Progreso Acumulado */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+          <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+            <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
+              XP Total Sumado
+            </span>
+            <span className="text-lg font-black text-amber-500 dark:text-amber-400">
+              +{xp} XP
+            </span>
+            <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
+              Por consistencia diaria
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+            <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
+              Racha Activa
+            </span>
+            <span className="text-lg font-black text-emerald-500 dark:text-emerald-400">
+              {displayedStreak} Días
+            </span>
+            <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
+              Sin saltarte tomas
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+            <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
+              Hidratación de Hoy
+            </span>
+            <span className="text-lg font-black text-blue-500 dark:text-blue-400">
+              {hydration.toFixed(1)} L
+            </span>
+            <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
+              Absorción óptima
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+            <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
+              Beneficio Exclusivo
+            </span>
+            <span className="text-lg font-black text-purple-500 dark:text-purple-400">
+              15% OFF
+            </span>
+            <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
+              En MAX Suplementos
+            </span>
+          </div>
+        </div>
+
+        {/* Acceso Directo a Nutrición si el atleta desea planificar comidas */}
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-blue-950/40 via-[#161d2d] to-transparent border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="text-xs text-slate-300">
+            <p className="font-semibold text-white">¿Querés registrar comidas o explorar el recetario?</p>
+            <p className="text-[11px] text-slate-400">
+              Tenés el Catálogo con +50 platos altos en proteína y calibración de macros en la sección Nutrición.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onNavigateTab('nutricion')}
+            className="px-3.5 py-2 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap self-stretch sm:self-auto justify-center active:scale-95 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[16px]">restaurant_menu</span>
+            <span>Ir a Nutrición & Platos</span>
+          </button>
+        </div>
+      </section>
     </div>
   );
 };
@@ -483,6 +757,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
 export default function App() {
   const [currentTab, setCurrentTab] = useState<string>('inicio');
   const [aiPrompt, setAiPrompt] = useState<string | undefined>(undefined);
+
+  // Hook de Instalación PWA (Descarga directa desde el navegador)
+  const {
+    isInstallable: isPwaInstallable,
+    isInstalled: isPwaInstalled,
+    isIos,
+    showIosModal,
+    setShowIosModal,
+    triggerInstall,
+  } = usePwaInstall();
 
   // Switch de Modo Claro / Modo Oscuro
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -510,6 +794,7 @@ export default function App() {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState<boolean>(false);
   const [isProtocolModalOpen, setIsProtocolModalOpen] = useState<boolean>(false);
+  const [isAudioTranscriberOpen, setIsAudioTranscriberOpen] = useState<boolean>(false);
 
   // Modo Demo vs Modo Usuario Real (Por defecto FALSE -> Nuevo Usuario)
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => {
@@ -977,9 +1262,16 @@ export default function App() {
     const completedCount = nextTasks.filter((t) => t.completed).length;
     const nextForm = calculateDailyForm(completedCount, nextTasks.length);
 
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const nextHydrationHistory = {
+      ...(userState.hydrationHistory || {}),
+      [todayIso]: nextWater,
+    };
+
     const updated: UserState = {
       ...userState,
       hydration: nextWater,
+      hydrationHistory: nextHydrationHistory,
       tasks: nextTasks,
       formScore: nextForm,
       completedObjectives: completedCount,
@@ -989,6 +1281,7 @@ export default function App() {
 
     offlineSync.queueAction('STATE_FULL', {
       hydration: nextWater,
+      hydrationHistory: nextHydrationHistory,
       tasks: nextTasks,
       timestamp: Date.now(),
     });
@@ -1127,6 +1420,196 @@ export default function App() {
     });
   };
 
+  // Reducir agua si el usuario se equivocó (-250ml)
+  const handleReduceWater = (amount = 0.25) => {
+    const target = userState.targets?.hydrationLiters || 3.0;
+    const nextWater = Math.max(0, +(userState.hydration - amount).toFixed(2));
+    const isDone = nextWater >= target;
+    const nextTasks = userState.tasks.map((t) => {
+      if (t.id === 'agua') {
+        return {
+          ...t,
+          completed: isDone,
+          detail: `${nextWater.toFixed(1).replace('.', ',')} L registrados hoy`,
+        };
+      }
+      return t;
+    });
+    const completedCount = nextTasks.filter((t) => t.completed).length;
+    const nextForm = calculateDailyForm(completedCount, nextTasks.length);
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const nextHydrationHistory = {
+      ...(userState.hydrationHistory || {}),
+      [todayIso]: nextWater,
+    };
+
+    const updated: UserState = {
+      ...userState,
+      hydration: nextWater,
+      hydrationHistory: nextHydrationHistory,
+      tasks: nextTasks,
+      formScore: nextForm,
+      completedObjectives: completedCount,
+    };
+    setUserState(updated);
+    if (!isDemoMode && currentUser) saveUserData(updated);
+  };
+
+  // Reducir proteína si el usuario sumó de más
+  const handleReduceProtein = (amount: number) => {
+    const target = userState.targets?.proteinGrams || 150;
+    const nextProtein = Math.max(0, userState.protein - amount);
+    const nextMacros: MacroNutrients = {
+      ...userState.macros,
+      protein: nextProtein,
+      calories: Math.max(0, userState.macros.calories - amount * 4),
+    };
+    const isDone = nextProtein >= target;
+    const nextTasks = userState.tasks.map((t) => {
+      if (t.id === 'nutricion') {
+        return {
+          ...t,
+          completed: isDone,
+          detail: `${nextProtein}g de ${target}g meta alcanzada`,
+        };
+      }
+      return t;
+    });
+    const completedCount = nextTasks.filter((t) => t.completed).length;
+    const nextForm = calculateDailyForm(completedCount, nextTasks.length);
+
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const nextDailyHistory = {
+      ...(userState.dailyHistory || {}),
+      [todayIso]: nextProtein,
+    };
+
+    const updated: UserState = {
+      ...userState,
+      protein: nextProtein,
+      macros: nextMacros,
+      tasks: nextTasks,
+      formScore: nextForm,
+      completedObjectives: completedCount,
+      dailyHistory: nextDailyHistory,
+    };
+    setUserState(updated);
+    if (!isDemoMode && currentUser) saveUserData(updated);
+  };
+
+  // Deshacer / eliminar una comida registrada por error
+  const handleDeleteMealEntry = (mealId: string) => {
+    const targetMeal = (userState.foodHistory || []).find((m) => m.id === mealId);
+    const nextHistory = (userState.foodHistory || []).filter((m) => m.id !== mealId);
+
+    const target = userState.targets?.proteinGrams || 150;
+    const removedProtein = targetMeal ? targetMeal.protein : 0;
+    const removedCarbs = targetMeal ? (targetMeal.carbs || 0) : 0;
+    const removedFats = targetMeal ? (targetMeal.fats || 0) : 0;
+    const removedCalories = targetMeal ? (targetMeal.calories || 0) : 0;
+
+    const nextProtein = Math.max(0, userState.protein - removedProtein);
+    const nextMacros: MacroNutrients = {
+      protein: nextProtein,
+      carbs: Math.max(0, userState.macros.carbs - removedCarbs),
+      fats: Math.max(0, userState.macros.fats - removedFats),
+      calories: Math.max(0, userState.macros.calories - removedCalories),
+    };
+
+    const isDone = nextProtein >= target;
+    const nextTasks = userState.tasks.map((t) => {
+      if (t.id === 'nutricion') {
+        return {
+          ...t,
+          completed: isDone,
+          detail: `${nextProtein}g de ${target}g meta alcanzada`,
+        };
+      }
+      return t;
+    });
+    const completedCount = nextTasks.filter((t) => t.completed).length;
+    const nextForm = calculateDailyForm(completedCount, nextTasks.length);
+
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const nextDailyHistory = {
+      ...(userState.dailyHistory || {}),
+      [todayIso]: nextProtein,
+    };
+
+    const updated: UserState = {
+      ...userState,
+      protein: nextProtein,
+      macros: nextMacros,
+      tasks: nextTasks,
+      formScore: nextForm,
+      completedObjectives: completedCount,
+      foodHistory: nextHistory,
+      dailyHistory: nextDailyHistory,
+    };
+    setUserState(updated);
+    if (!isDemoMode && currentUser) saveUserData(updated);
+  };
+
+  // Calibrar directamente los valores totales del día si hubo errores mayores
+  const handleUpdateDirectIntake = (newProtein: number, newHydration: number) => {
+    const proteinTarget = userState.targets?.proteinGrams || 150;
+    const waterTarget = userState.targets?.hydrationLiters || 3.0;
+
+    const isProteinDone = newProtein >= proteinTarget;
+    const isWaterDone = newHydration >= waterTarget;
+
+    const nextTasks = userState.tasks.map((t) => {
+      if (t.id === 'nutricion') {
+        return {
+          ...t,
+          completed: isProteinDone,
+          detail: `${newProtein}g de ${proteinTarget}g meta alcanzada`,
+        };
+      }
+      if (t.id === 'agua') {
+        return {
+          ...t,
+          completed: isWaterDone,
+          detail: `${newHydration.toFixed(1).replace('.', ',')} L registrados hoy`,
+        };
+      }
+      return t;
+    });
+
+    const completedCount = nextTasks.filter((t) => t.completed).length;
+    const nextForm = calculateDailyForm(completedCount, nextTasks.length);
+
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const nextDailyHistory = {
+      ...(userState.dailyHistory || {}),
+      [todayIso]: newProtein,
+    };
+    const nextHydrationHistory = {
+      ...(userState.hydrationHistory || {}),
+      [todayIso]: newHydration,
+    };
+
+    const nextMacros: MacroNutrients = {
+      ...userState.macros,
+      protein: newProtein,
+      calories: Math.max(0, userState.macros.calories + (newProtein - userState.protein) * 4),
+    };
+
+    const updated: UserState = {
+      ...userState,
+      protein: newProtein,
+      hydration: newHydration,
+      macros: nextMacros,
+      tasks: nextTasks,
+      formScore: nextForm,
+      completedObjectives: completedCount,
+      dailyHistory: nextDailyHistory,
+      hydrationHistory: nextHydrationHistory,
+    };
+    setUserState(updated);
+    if (!isDemoMode && currentUser) saveUserData(updated);
+  };
+
   // Reclamar recompensa de desafío de consistencia
   const handleClaimReward = (rewardXp: number, challengeTitle: string) => {
     const nextXp = userState.xp + rewardXp;
@@ -1197,16 +1680,172 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Cálculo de Energía del Día (Progreso en %)
-  const energyPercent = useMemo(() => {
+  // Reseteo automático de medianoche para Hábitos Diarios
+  useEffect(() => {
+    // 1. Validar al montar o reanudar
+    const { habitsData, wasReset } = ensureHabitsAreCurrent(userState.dailyHabits);
+    if (wasReset) {
+      setUserState((prev) => {
+        const nextState = { ...prev, dailyHabits: habitsData };
+        if (!isDemoMode && currentUser) saveUserData(nextState);
+        return nextState;
+      });
+    }
+
+    // 2. Programar temporizador para la medianoche exacta
+    const msUntilMidnight = getMillisecondsUntilMidnight();
+    const midnightTimer = setTimeout(() => {
+      console.log('[MAXFORM] Medianoche alcanzada: reseteando Hábitos Diarios automáticamente');
+      setUserState((prev) => {
+        const currentHabits = prev.dailyHabits || {
+          lastResetDate: '',
+          habits: DEFAULT_DAILY_HABITS,
+        };
+        const resetData = forceMidnightReset(currentHabits);
+        const nextState = { ...prev, dailyHabits: resetData };
+        if (!isDemoMode && currentUser) saveUserData(nextState);
+        return nextState;
+      });
+    }, msUntilMidnight);
+
+    // 3. Intervalo de seguridad cada minuto por si el equipo se suspendió durante la medianoche
+    const safetyCheck = setInterval(() => {
+      const todayStr = getTodayLocalDateString();
+      if (userState.dailyHabits && userState.dailyHabits.lastResetDate !== todayStr) {
+        setUserState((prev) => {
+          const { habitsData } = ensureHabitsAreCurrent(prev.dailyHabits);
+          const nextState = { ...prev, dailyHabits: habitsData };
+          if (!isDemoMode && currentUser) saveUserData(nextState);
+          return nextState;
+        });
+      }
+    }, 60000);
+
+    return () => {
+      clearTimeout(midnightTimer);
+      clearInterval(safetyCheck);
+    };
+  }, [userState.dailyHabits?.lastResetDate, isDemoMode, currentUser]);
+
+  // Manejador para alternar el estado de un hábito diario
+  const handleToggleDailyHabit = (habitId: string) => {
+    const currentData = ensureHabitsAreCurrent(userState.dailyHabits).habitsData;
+    let xpDelta = 0;
+
+    const nextHabits = currentData.habits.map((habit) => {
+      if (habit.id === habitId) {
+        const nextCompleted = !habit.completed;
+        xpDelta = nextCompleted ? habit.xpReward : -habit.xpReward;
+        return {
+          ...habit,
+          completed: nextCompleted,
+          completedAt: nextCompleted
+            ? new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+            : undefined,
+        };
+      }
+      return habit;
+    });
+
+    const nextXp = Math.max(0, userState.xp + xpDelta);
+
+    const updatedData: DailyHabitsData = {
+      ...currentData,
+      habits: nextHabits,
+      totalCompletedAllTime: (currentData.totalCompletedAllTime || 0) + (xpDelta > 0 ? 1 : 0),
+    };
+
+    const updatedState: UserState = {
+      ...userState,
+      xp: nextXp,
+      dailyHabits: updatedData,
+    };
+
+    setUserState(updatedState);
+    if (!isDemoMode && currentUser) saveUserData(updatedState);
+
+    offlineSync.queueAction('DAILY_HABIT_TOGGLE', {
+      habitId,
+      timestamp: Date.now(),
+      xpDelta,
+    });
+  };
+
+  // Manejador para añadir un hábito personalizado
+  const handleAddCustomHabit = (newHabit: Omit<DailyHabitItem, 'id' | 'completed' | 'completedAt'>) => {
+    const currentData = ensureHabitsAreCurrent(userState.dailyHabits).habitsData;
+    const customItem: DailyHabitItem = {
+      ...newHabit,
+      id: `custom_habit_${Date.now()}`,
+      completed: false,
+      isCustom: true,
+    };
+
+    const updatedData: DailyHabitsData = {
+      ...currentData,
+      habits: [...currentData.habits, customItem],
+    };
+
+    const updatedState: UserState = {
+      ...userState,
+      dailyHabits: updatedData,
+    };
+
+    setUserState(updatedState);
+    if (!isDemoMode && currentUser) saveUserData(updatedState);
+  };
+
+  // Manejador para eliminar un hábito personalizado
+  const handleDeleteCustomHabit = (habitId: string) => {
+    const currentData = ensureHabitsAreCurrent(userState.dailyHabits).habitsData;
+    const updatedData: DailyHabitsData = {
+      ...currentData,
+      habits: currentData.habits.filter((h) => h.id !== habitId),
+    };
+
+    const updatedState: UserState = {
+      ...userState,
+      dailyHabits: updatedData,
+    };
+
+    setUserState(updatedState);
+    if (!isDemoMode && currentUser) saveUserData(updatedState);
+  };
+
+  // Forzar reseteo de medianoche manual para testing/demo
+  const handleForceMidnightReset = () => {
+    const currentData = ensureHabitsAreCurrent(userState.dailyHabits).habitsData;
+    const resetData = forceMidnightReset(currentData);
+
+    const updatedState: UserState = {
+      ...userState,
+      dailyHabits: resetData,
+    };
+
+    setUserState(updatedState);
+    if (!isDemoMode && currentUser) saveUserData(updatedState);
+  };
+
+  // Cálculo de Energía del Día (Progreso en %) potenciado por Hábitos Diarios
+  const { baseEnergyPercent, habitsEnergyBoost, energyPercent } = useMemo(() => {
     const completedCount = tasks.filter((t) => t.completed).length;
-    if (tasks.length === 0) return 0;
-    const tasksScore = (completedCount / tasks.length) * 80;
+    const tasksScore = tasks.length > 0 ? (completedCount / tasks.length) * 80 : 0;
     const targetProt = userState.targets?.proteinGrams || 150;
     const proteinRatio = Math.min(1, protein / (targetProt || 150));
     const proteinScore = proteinRatio * 20;
-    return Math.round(tasksScore + proteinScore);
-  }, [tasks, protein, userState.targets]);
+    const base = Math.round(tasksScore + proteinScore);
+
+    const habits = userState.dailyHabits?.habits || [];
+    const habitsBoost = calculateHabitsEnergyBoost(habits);
+
+    // Los hábitos diarios potencian de forma directa y visible el puntaje de energía del día
+    const total = Math.min(100, Math.round(base + habitsBoost));
+    return {
+      baseEnergyPercent: base,
+      habitsEnergyBoost: habitsBoost,
+      energyPercent: total,
+    };
+  }, [tasks, protein, userState.targets, userState.dailyHabits]);
 
   return (
     <div className="min-h-screen dark:bg-[#111318] bg-slate-50 dark:text-[#e2e2e8] text-slate-800 flex flex-col selection:bg-[#2563eb] selection:text-white transition-colors duration-200">
@@ -1222,6 +1861,9 @@ export default function App() {
         isDemoMode={isDemoMode}
         onToggleDemoMode={() => handleToggleDemoMode()}
         userName={userName}
+        onOpenAudioTranscriber={() => setIsAudioTranscriberOpen(true)}
+        onDownloadApp={triggerInstall}
+        isAppInstalled={isPwaInstalled}
       />
 
       {/* Contenido Principal */}
@@ -1270,6 +1912,7 @@ export default function App() {
             onNavigateTab={handleNavigateTab}
             hydration={hydration}
             onAddWater={handleAddWater}
+            onReduceWater={handleReduceWater}
             xp={xp}
             streakDays={streakDays}
             protein={protein}
@@ -1297,147 +1940,200 @@ export default function App() {
             targets={userState.targets}
             userSupplements={userState.onboardingData?.supplements}
             onTakeSupplement={handleTakeSupplement}
+            dailyHabits={ensureHabitsAreCurrent(userState.dailyHabits).habitsData}
+            onToggleHabit={handleToggleDailyHabit}
+            onAddCustomHabit={handleAddCustomHabit}
+            onDeleteCustomHabit={handleDeleteCustomHabit}
+            onForceMidnightReset={handleForceMidnightReset}
+            habitsEnergyBoost={habitsEnergyBoost}
           />
         )}
 
-        {(currentTab === 'progreso' || currentTab === 'estadisticas') && (
-          <StatsTab
-            streakDays={streakDays}
-            formScore={energyPercent}
-            xp={xp}
-            weightKg={userState.biometrics?.weightKg || 70}
-            isDark={isDark}
-            isDemoMode={isDemoMode}
-            dailyHistory={userState.dailyHistory}
-            activityDates={userState.activityDates}
-            onUpdateWeight={(newWeight) => {
-              const updatedState: UserState = {
-                ...userState,
-                biometrics: {
-                  ...userState.biometrics,
-                  weightKg: newWeight,
-                }
-              };
-              setUserState(updatedState);
-              saveUserData(updatedState);
-            }}
-          />
-        )}
+        {currentTab !== 'inicio' && (
+          <Suspense fallback={<TabLoaderFallback />}>
+            {currentTab === 'suplementos' && (
+              <SuplementosTab
+                userName={userName}
+                isDark={isDark}
+                onNavigateTab={handleNavigateTab}
+              />
+            )}
 
-        {currentTab === 'nutricion' && (
-          <NutritionTab
-            hydration={hydration}
-            onAddWater={handleAddWater}
-            onAddProtein={handleAddProtein}
-            currentProtein={protein}
-            macros={macros}
-            targets={userState.targets}
-            onAddMealEntry={handleAddMealEntry}
-          />
-        )}
+            {(currentTab === 'progreso' || currentTab === 'estadisticas') && (
+              <StatsTab
+                streakDays={streakDays}
+                formScore={energyPercent}
+                xp={xp}
+                weightKg={userState.biometrics?.weightKg || 70}
+                isDark={isDark}
+                onUpdateWeight={(newWeight) => {
+                  const updatedState: UserState = {
+                    ...userState,
+                    biometrics: {
+                      ...userState.biometrics,
+                      weightKg: newWeight,
+                    }
+                  };
+                  setUserState(updatedState);
+                  saveUserData(updatedState);
+                }}
+                currentHydration={hydration}
+                targetHydration={userState.targets?.hydrationLiters || 2.5}
+                hydrationHistory={userState.hydrationHistory}
+                onAddWater={handleAddWater}
+                currentProtein={protein}
+                targetProtein={macros.protein || 150}
+                proteinDailyHistory={userState.dailyHistory}
+                isDemoMode={isDemoMode}
+                onNavigateNutrition={() => handleNavigateTab('nutricion')}
+              />
+            )}
 
-        {currentTab === 'max-ai' && (
-          <MaxAiTab
-            initialPrompt={aiPrompt}
-            currentProtein={protein}
-            streakDays={streakDays}
-            userName={userName}
-            userId={currentUser?.uid || userState.userId || 'guest_athlete'}
-            athleteLevel={userState.level || 1}
-            weightKg={userState.biometrics?.weightKg || 70}
-            onAddMealEntry={handleAddMealEntry}
-          />
-        )}
+            {currentTab === 'nutricion' && (
+              <NutritionTab
+                hydration={hydration}
+                onAddWater={handleAddWater}
+                onReduceWater={handleReduceWater}
+                onAddProtein={handleAddProtein}
+                onReduceProtein={handleReduceProtein}
+                currentProtein={protein}
+                macros={macros}
+                onAddMealEntry={handleAddMealEntry}
+                onDeleteMealEntry={handleDeleteMealEntry}
+                onUpdateDirectIntake={handleUpdateDirectIntake}
+                foodHistory={userState.foodHistory || []}
+                isDark={isDark}
+              />
+            )}
 
-        {currentTab === 'retos' && (
-          <ChallengesTab
-            xp={xp}
-            streakDays={streakDays}
-            userName={userName}
-            isDemoMode={isDemoMode}
-          />
-        )}
+            {currentTab === 'max-ai' && (
+              <MaxAiTab
+                initialPrompt={aiPrompt}
+                currentProtein={protein}
+                streakDays={streakDays}
+                userName={userName}
+                userId={currentUser?.uid || userState.userId || 'guest_athlete'}
+                athleteLevel={userState.level || 1}
+                weightKg={userState.biometrics?.weightKg || 70}
+                onAddMealEntry={handleAddMealEntry}
+                onOpenAudioTranscriber={() => setIsAudioTranscriberOpen(true)}
+              />
+            )}
 
-        {currentTab === 'perfil' && (
-          <ProfileTab
-            xp={xp}
-            streakDays={streakDays}
-            userName={userName}
-            userEmail={currentUser?.email}
-            isDemoMode={isDemoMode}
-            isPro={userState.isPro}
-            proExpiry={userState.proExpiry}
-            onToggleDemoMode={handleToggleDemoMode}
-            onOpenOnboarding={() => setIsOnboardingOpen(true)}
-            onResetNewUser={handleResetToNewUser}
-            onOpenPremium={() => setIsPremiumModalOpen(true)}
-            onLogout={handleLogout}
-            onDeleteAccount={handleDeleteAccount}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
-            onOpenAdmin={() => handleNavigateTab('admin')}
-            weightKg={userState.biometrics?.weightKg}
-            formScore={energyPercent}
-            commitmentLevel={commitmentLevel}
-            levelSelectedAt={userState.levelSelectedAt}
-            levelGraceAvailable={userState.levelGraceAvailable}
-            nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
-            onOpenLevelModal={() => setIsProtocolModalOpen(true)}
-            dailyHistory={userState.dailyHistory}
-          />
-        )}
+            {currentTab === 'retos' && (
+              <ChallengesTab
+                xp={xp}
+                streakDays={streakDays}
+                userName={userName}
+                isDemoMode={isDemoMode}
+              />
+            )}
 
-        {currentTab === 'admin' && (
-          <AdminPanel
-            onBackToApp={() => handleNavigateTab('perfil')}
-            isDark={isDark}
-          />
+            {currentTab === 'perfil' && (
+              <ProfileTab
+                xp={xp}
+                streakDays={streakDays}
+                userName={userName}
+                userEmail={currentUser?.email}
+                isDemoMode={isDemoMode}
+                isPro={userState.isPro}
+                proExpiry={userState.proExpiry}
+                onToggleDemoMode={handleToggleDemoMode}
+                onOpenOnboarding={() => setIsOnboardingOpen(true)}
+                onResetNewUser={handleResetToNewUser}
+                onOpenPremium={() => setIsPremiumModalOpen(true)}
+                onLogout={handleLogout}
+                onDeleteAccount={handleDeleteAccount}
+                onOpenAuth={() => setIsAuthModalOpen(true)}
+                onOpenAdmin={() => handleNavigateTab('admin')}
+                weightKg={userState.biometrics?.weightKg}
+                formScore={energyPercent}
+                commitmentLevel={commitmentLevel}
+                levelSelectedAt={userState.levelSelectedAt}
+                levelGraceAvailable={userState.levelGraceAvailable}
+                nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+                onOpenLevelModal={() => setIsProtocolModalOpen(true)}
+                dailyHistory={userState.dailyHistory}
+                onDownloadApp={triggerInstall}
+                isAppInstalled={isPwaInstalled}
+              />
+            )}
+
+            {currentTab === 'admin' && (
+              <AdminPanel
+                onBackToApp={() => handleNavigateTab('perfil')}
+                isDark={isDark}
+              />
+            )}
+          </Suspense>
         )}
       </main>
 
-      {/* Modal de Autenticación y Registro Real */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        onAuthSuccess={handleAuthSuccess}
-        isDark={isDark}
-      />
+      {/* Modales diferidos con carga bajo demanda */}
+      <Suspense fallback={null}>
+        {isAuthModalOpen && (
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            onAuthSuccess={handleAuthSuccess}
+            isDark={isDark}
+          />
+        )}
 
-      {/* Modal de Onboarding Inicial / Reconfiguración */}
-      <OnboardingModal
-        isOpen={isOnboardingOpen}
-        onClose={() => setIsOnboardingOpen(false)}
-        onComplete={handleOnboardingComplete}
-        isDark={isDark}
-      />
+        {isOnboardingOpen && (
+          <OnboardingModal
+            isOpen={isOnboardingOpen}
+            onClose={() => setIsOnboardingOpen(false)}
+            onComplete={handleOnboardingComplete}
+            isDark={isDark}
+          />
+        )}
 
-      {/* Modal de Protocolo de Nivel y Cooldown de 14 Días */}
-      <ProtocolChangeModal
-        isOpen={isProtocolModalOpen}
-        onClose={() => setIsProtocolModalOpen(false)}
-        currentLevel={commitmentLevel}
-        levelSelectedAt={userState.levelSelectedAt}
-        levelGraceAvailable={userState.levelGraceAvailable}
-        nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
-        onConfirmLevelChange={handleConfirmLevelChange}
-      />
+        {isProtocolModalOpen && (
+          <ProtocolChangeModal
+            isOpen={isProtocolModalOpen}
+            onClose={() => setIsProtocolModalOpen(false)}
+            currentLevel={commitmentLevel}
+            levelSelectedAt={userState.levelSelectedAt}
+            levelGraceAvailable={userState.levelGraceAvailable}
+            nextLevelChangeAllowedAt={userState.nextLevelChangeAllowedAt}
+            onConfirmLevelChange={handleConfirmLevelChange}
+          />
+        )}
 
-      {/* Modal de Planes MAXMIND Premium */}
-      <PremiumModal
-        isOpen={isPremiumModalOpen}
-        onClose={() => setIsPremiumModalOpen(false)}
-        onUpgrade={(durationDays = 30) => {
-          setIsPremiumModalOpen(false);
-          const expiryDate = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
-          const updated: UserState = {
-            ...userState,
-            isPro: true,
-            proExpiry: expiryDate,
-          };
-          setUserState(updated);
-          if (!isDemoMode && currentUser) saveUserData(updated);
-        }}
-        isDark={isDark}
-      />
+        {isPremiumModalOpen && (
+          <PremiumModal
+            isOpen={isPremiumModalOpen}
+            onClose={() => setIsPremiumModalOpen(false)}
+            onUpgrade={(durationDays = 30) => {
+              setIsPremiumModalOpen(false);
+              const expiryDate = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+              const updated: UserState = {
+                ...userState,
+                isPro: true,
+                proExpiry: expiryDate,
+              };
+              setUserState(updated);
+              if (!isDemoMode && currentUser) saveUserData(updated);
+            }}
+            isDark={isDark}
+          />
+        )}
+
+        {isAudioTranscriberOpen && (
+          <AudioTranscriberModal
+            isOpen={isAudioTranscriberOpen}
+            onClose={() => setIsAudioTranscriberOpen(false)}
+            onSendToChat={(text) => {
+              setAiPrompt(text);
+              handleNavigateTab('max-ai');
+            }}
+            onLogMeal={(meal) => {
+              handleAddMealEntry(meal);
+            }}
+          />
+        )}
+      </Suspense>
 
       {/* Barra de Navegación Inferior Flotante */}
       <BottomNav
@@ -1446,6 +2142,17 @@ export default function App() {
           setAiPrompt(undefined);
           handleNavigateTab(tab);
         }}
+      />
+
+      {/* Prompts e Instalación Directa PWA desde Navegador */}
+      <PwaInstallPrompt
+        isInstallable={isPwaInstallable}
+        isInstalled={isPwaInstalled}
+        isIos={isIos}
+        showIosModal={showIosModal}
+        onCloseIosModal={() => setShowIosModal(false)}
+        onInstall={triggerInstall}
+        isDark={isDark}
       />
     </div>
   );
