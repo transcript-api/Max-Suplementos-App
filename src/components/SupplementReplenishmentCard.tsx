@@ -16,6 +16,7 @@ interface SupplementReplenishmentCardProps {
   isDark?: boolean;
   isDemoMode?: boolean;
   userSupplements?: Array<{ name: string; serving?: string; frequency?: string }>;
+  streakDays?: number;
   onTakeServing?: (supplementName: string) => void;
   onNavigateTab?: (tab: string) => void;
 }
@@ -25,6 +26,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
   isDark = true,
   isDemoMode = false,
   userSupplements = [],
+  streakDays = 0,
   onTakeServing,
   onNavigateTab,
 }) => {
@@ -103,9 +105,9 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
 
   const [referralCopied, setReferralCopied] = useState(false);
   const [reminderMessage, setReminderMessage] = useState<string | null>(null);
-  const [takenToday, setTakenToday] = useState<Record<string, boolean>>({
-    creatina: true,
-  });
+  const [takenToday, setTakenToday] = useState<Record<string, boolean>>(() => 
+    isDemoMode ? { creatina: true } : {}
+  );
 
   // Código único de referido para el usuario
   const referralCode = `MAX-${userName.toUpperCase().replace(/\s+/g, '')}-777`;
@@ -170,17 +172,17 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                   type="button"
                   onClick={() => onNavigateTab('suplementos')}
                   className="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-500 dark:text-rose-400 hover:bg-rose-500/25 text-[11px] font-bold border border-rose-500/30 transition-all flex items-center gap-1"
-                  title="Buscar tiendas en Google Maps con Gemini 3.5 Flash"
+                  title="Ver tiendas cercanas en el mapa"
                 >
                   <span className="material-symbols-outlined text-[13px]">pin_drop</span>
-                  <span>Lojas (Google Maps)</span>
+                  <span>Tiendas Cercanas</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onNavigateTab('suplementos')}
                   className="px-2.5 py-1 rounded-full bg-[#2563eb]/20 text-[#2563eb] dark:text-[#adc6ff] hover:bg-[#2563eb]/30 text-[11px] font-bold border border-[#2563eb]/30 transition-all flex items-center gap-1"
                 >
-                  <span>Tracker V1 & Scanner</span>
+                  <span>Tracker & Dosis</span>
                   <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                 </button>
               </>
@@ -199,11 +201,19 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
           <div className="flex items-center gap-2 text-xs">
             <span className="material-symbols-outlined text-emerald-500 text-[18px]">verified</span>
             <span className="dark:text-slate-300 text-slate-700">
-              <strong>Racha de Suplementación: 14 días al 100%.</strong> Cada scoop mantiene tus depósitos saturados para máxima fuerza y síntesis muscular.
+              {streakDays > 0 ? (
+                <>
+                  <strong>Racha de Suplementación: {streakDays} {streakDays === 1 ? 'día' : 'días'} al 100%.</strong> Cada toma mantiene tus depósitos saturados para máxima fuerza.
+                </>
+              ) : (
+                <>
+                  <strong>Constancia Diaria:</strong> Registra tus tomas para no cortar la saturación celular y potenciar tu rendimiento.
+                </>
+              )}
             </span>
           </div>
           <a
-            href="https://wa.me/5491100000000?text=Hola%20MAX%20Suplementos!%20Quiero%20asesoramiento%20y%20conocer%20ofertas%20para%20atletas%20MAXFORM"
+            href="https://wa.me/59899000000?text=Hola%20MAX%20Suplementos!%20Quiero%20asesoramiento%20y%20conocer%20ofertas%20para%20atletas%20MAXFORM"
             target="_blank"
             rel="noreferrer"
             className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold whitespace-nowrap transition-colors flex items-center gap-1 shrink-0"

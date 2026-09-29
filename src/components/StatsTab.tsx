@@ -416,7 +416,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               Telemetría Nutricional: Hidratación & Proteína
             </h2>
             <p className="text-xs dark:text-[#8d90a0] text-slate-500">
-              Visualización analítica de los últimos 7 días con Recharts: balance hídrico en Litros y síntesis proteica en Gramos.
+              Visualización analítica de los últimos 7 días: balance hídrico en Litros y síntesis proteica en Gramos.
             </p>
           </div>
 

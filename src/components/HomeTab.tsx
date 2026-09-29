@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { calculateLevelFromXP } from '../lib/gamification';
 import { ExpandableMealSuggestionCard } from './ExpandableMealSuggestionCard';
 import { ProteinWeeklyChart } from './ProteinWeeklyChart';
 import { MealSuggestion } from '../lib/gemini';
+import { getPersonalizedContent } from '../lib/personalizationEngine';
+import { CommitmentLevel } from '../types';
 
 interface HomeTabProps {
   onNavigateTab: (tab: string, prompt?: string) => void;
@@ -16,6 +18,9 @@ interface HomeTabProps {
   protein?: number;
   onAddProtein?: (amount: number) => void;
   userName?: string;
+  userGoal?: string;
+  userLevel?: CommitmentLevel;
+  userWeight?: number;
   firstDashboardSeen?: boolean;
   onDismissFirstDashboard?: () => void;
   isDemoMode?: boolean;
@@ -33,10 +38,18 @@ export const HomeTab: React.FC<HomeTabProps> = ({
   protein = 120,
   onAddProtein,
   userName = 'Atleta',
+  userGoal = 'Crear constancia',
+  userLevel = 'Intermedio',
+  userWeight = 70,
   firstDashboardSeen = true,
   onDismissFirstDashboard,
   isDemoMode = false,
 }) => {
+  // Motor de personalización
+  const personalized = useMemo(
+    () => getPersonalizedContent(userGoal, userLevel as CommitmentLevel, userName, userWeight),
+    [userGoal, userLevel, userName, userWeight]
+  );
   const [mealSuggestion, setMealSuggestion] = useState<MealSuggestion>({
     mealName: 'Bowl proteico de pollo con quinoa, palta y espinacas',
     protein: 42,
@@ -71,27 +84,27 @@ export const HomeTab: React.FC<HomeTabProps> = ({
     <div className="flex flex-col w-full px-4 space-y-4 max-w-[1280px] mx-auto pb-24">
       {/* Banner de Primera Experiencia (Solo en el primer día o hasta que se desestime) */}
       {!firstDashboardSeen && (
-        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-blue-900/80 to-indigo-950/90 border border-[#2563EB]/50 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-950 to-black border border-white/12 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#2563EB] flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md shadow-blue-500/30">
+            <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md">
               <span className="material-symbols-outlined text-[22px]">verified</span>
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <span>Todo listo.</span>
-                <span className="px-2 py-0.5 text-[10px] font-extrabold bg-blue-500/30 text-blue-300 rounded-full border border-blue-400/30">
+                <span>Todo listo. Protocolo activado.</span>
+                <span className="px-2 py-0.5 text-[10px] font-extrabold bg-white/12 text-zinc-200 rounded-full border border-white/20">
                   Plan Inicial
                 </span>
               </h3>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Tu objetivo ya está configurado. Ahora empieza tu primer día.
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Tu objetivo está configurado. Comienza tu primer día de protocolo.
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={onDismissFirstDashboard}
-            className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 whitespace-nowrap self-end sm:self-center"
+            className="px-4 py-2 rounded-xl bg-white text-black hover:bg-zinc-100 text-xs font-black transition-all shadow-md active:scale-95 whitespace-nowrap self-end sm:self-center"
           >
             Ver mis objetivos
           </button>
@@ -106,30 +119,62 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               {capitalizedDate}
             </span>
             <h1 className="font-headline-xl-mobile text-headline-xl-mobile text-[#e2e2e8] font-bold">
-              Buenos días, {userName}
+              {personalized.greeting}
             </h1>
             {isBrandNewAccount && (
-              <p className="text-xs text-blue-400 font-semibold tracking-wide">
+              <p className="text-xs dark:text-zinc-400 text-slate-500 font-semibold tracking-wide">
                 Hoy empieza tu Form.
               </p>
             )}
+            {!isBrandNewAccount && (
+              <p className="text-xs text-slate-400 mt-0.5 leading-snug max-w-[220px]">
+                {personalized.homeSubtitle}
+              </p>
+            )}
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#282a2f] text-white border border-[#333539] shadow-sm">
-            <span className="text-base select-none">🔥</span>
-            <span className="font-label-caps text-label-caps tracking-normal font-bold">
-              {streakDays} días de racha
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#282a2f] text-white border border-[#333539] shadow-sm">
+              <span className="text-base select-none">🔥</span>
+              <span className="font-label-caps text-label-caps tracking-normal font-bold">
+                {streakDays} días de racha
+              </span>
+            </div>
+            {/* Badge de modo activo */}
+            <span
+              className="text-[10px] font-extrabold px-2 py-0.5 rounded-full border whitespace-nowrap"
+              style={{
+                color: personalized.modeBadgeColor,
+                borderColor: `${personalized.modeBadgeColor}40`,
+                backgroundColor: `${personalized.modeBadgeColor}15`,
+              }}
+            >
+              {personalized.modeBadge}
             </span>
           </div>
         </div>
 
+        {/* Alerta de nivel Avanzado/Extremo */}
+        {personalized.levelAlert && (
+          <div
+            className="px-3 py-2 rounded-xl text-[11px] font-semibold leading-snug border"
+            style={{
+              color: personalized.modeBadgeColor,
+              borderColor: `${personalized.modeBadgeColor}30`,
+              backgroundColor: `${personalized.modeBadgeColor}10`,
+            }}
+          >
+            {personalized.levelAlert}
+          </div>
+        )}
+
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#2563eb]/20 text-[#b4c5ff] font-label-caps text-label-caps uppercase font-bold border border-[#2563eb]/30">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-200 font-label-caps text-label-caps uppercase font-bold border border-white/15">
             Nivel {levelInfo.levelNumber}
           </span>
           <span className="font-body-sm text-[#8d90a0]">·</span>
           <span className="font-body-sm text-[#8d90a0] font-medium">{levelInfo.levelName}</span>
           <span className="font-body-sm text-[#8d90a0]">·</span>
-          <span className="font-body-sm text-[#b4c5ff] font-bold">
+          <span className="font-body-sm text-zinc-200 font-bold">
             {xp.toLocaleString('es-ES')} XP
           </span>
         </div>
@@ -157,7 +202,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               {/* Pista exterior */}
               <circle className="stroke-[#1d2024]" cx="60" cy="60" fill="none" r="50" strokeWidth="7" />
               <circle 
-                className="stroke-[#2563eb] transition-all duration-700 ease-out" 
+                className="stroke-white/80 transition-all duration-700 ease-out" 
                 cx="60" 
                 cy="60" 
                 fill="none" 
@@ -238,7 +283,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               <span className="font-body-sm text-[#8d90a0]">45 min pesas · Empuje & Tríceps</span>
             </div>
           </div>
-          <div className="w-7 h-7 rounded-full bg-[#2563eb]/30 flex items-center justify-center text-[#b4c5ff] flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-zinc-200 flex-shrink-0">
             <span className="material-symbols-outlined text-[18px]">done</span>
           </div>
         </div>
@@ -261,13 +306,13 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               <span className="font-headline-md text-headline-md text-white font-bold">
                 128 / 150 g
               </span>
-              <span className="block font-body-sm text-[#b4c5ff] font-medium">
+              <span className="block font-body-sm text-zinc-300 font-medium">
                 Faltan 22 g
               </span>
             </div>
           </div>
           <div className="w-full bg-[#1d2024] h-2 rounded-full overflow-hidden">
-            <div className="bg-[#2563eb] h-full rounded-full transition-all duration-500" style={{ width: '85.3%' }}></div>
+            <div className="bg-white/70 h-full rounded-full transition-all duration-500" style={{ width: '85.3%' }}></div>
           </div>
         </div>
 
@@ -284,7 +329,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                     Hidratación
                   </span>
                   <span className={`px-2 py-0.5 rounded-full font-label-caps text-label-caps uppercase font-bold ${
-                    isHydrationDone ? 'bg-emerald-500/20 text-emerald-300' : 'bg-[#1d2024] text-[#8d90a0]'
+                    isHydrationDone ? 'bg-white/15 text-white' : 'bg-[#1d2024] text-[#8d90a0]'
                   }`}>
                     {isHydrationDone ? '¡Completado!' : 'En curso'}
                   </span>
@@ -304,9 +349,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
 
           <div className="w-full bg-[#1d2024] h-2 rounded-full overflow-hidden">
             <div 
-              className={`h-full rounded-full transition-all duration-500 ${
-                isHydrationDone ? 'bg-emerald-500' : 'bg-[#0566d9]'
-              }`} 
+              className="h-full rounded-full transition-all duration-500 bg-white/70" 
               style={{ width: `${hydrationPct}%` }}
             ></div>
           </div>
@@ -322,7 +365,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-body-sm text-body-sm font-bold transition-all shadow-md active:scale-95 ${
                 isHydrationDone 
                   ? 'bg-[#1d2024] text-[#8d90a0] cursor-not-allowed opacity-60' 
-                  : 'bg-[#2563eb] hover:bg-[#3b82f6] text-white'
+                  : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">add</span>
@@ -375,44 +418,84 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             <span className="font-headline-md text-headline-md text-white font-bold">
               7 h 20 min
             </span>
-            <span className="block font-body-sm text-[#b4c5ff] font-medium">
+            <span className="block font-body-sm text-zinc-300 font-medium">
               En rango óptimo
             </span>
           </div>
         </div>
       </section>
 
+      {/* Tip del Día Personalizado */}
+      <section className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#191c20] border border-[#282a2f]">
+        <div className="w-8 h-8 rounded-lg bg-white/8 flex items-center justify-center text-zinc-300 flex-shrink-0 mt-0.5">
+          <span className="material-symbols-outlined text-[18px]">lightbulb</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <span className="text-[10px] font-extrabold text-[#8d90a0] uppercase tracking-wider block mb-0.5">
+            TIP DEL DÍA · {personalized.nutritionCardLabel.toUpperCase()}
+          </span>
+          <p className="text-xs text-[#c3c6d7] leading-relaxed">{personalized.dailyTip}</p>
+          <p className="text-[11px] text-[#8d90a0] italic mt-1">{personalized.coachQuote}</p>
+        </div>
+      </section>
+
+      {/* Desafío Activo Personalizado */}
+      <section className="relative overflow-hidden rounded-xl p-4 border"
+        style={{
+          background: `linear-gradient(135deg, #191c20 60%, ${personalized.modeBadgeColor}15)`,
+          borderColor: `${personalized.modeBadgeColor}30`,
+        }}
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <span className="material-symbols-outlined text-[18px]" style={{ color: personalized.modeBadgeColor }}>emoji_events</span>
+          <span className="text-[10px] font-extrabold uppercase tracking-wider" style={{ color: personalized.modeBadgeColor }}>
+            DESAFÍO ACTIVO
+          </span>
+        </div>
+        <p className="text-sm font-bold text-white leading-snug">{personalized.challengeTitle}</p>
+        <p className="text-xs text-[#c3c6d7] mt-1 leading-relaxed">{personalized.challengeDescription}</p>
+        <button
+          type="button"
+          onClick={() => onNavigateTab('retos')}
+          className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-95"
+          style={{ background: `${personalized.modeBadgeColor}20`, color: personalized.modeBadgeColor, border: `1px solid ${personalized.modeBadgeColor}30` }}
+        >
+          <span>Ver mis retos</span>
+          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+        </button>
+      </section>
+
       {/* Tarjeta Vista Previa "MAX AI" */}
-      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#191c20] via-[#191c20] to-[#2563eb]/15 p-5 shadow-lg border border-[#282a2f]">
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#191c20] via-[#191c20] to-white/5 p-5 shadow-lg border border-white/10">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2563eb]/30 text-[#b4c5ff]">
+            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-zinc-200">
               <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
             </div>
-            <span className="font-label-caps text-label-caps uppercase text-[#b4c5ff] tracking-wider font-bold">
+            <span className="font-label-caps text-label-caps uppercase text-zinc-300 tracking-wider font-bold">
               MAX AI · COACH METABÓLICO
             </span>
           </div>
           <span className="font-body-sm text-[#8d90a0] flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse"></span>
             En vivo
           </span>
         </div>
 
-        <blockquote className="my-2 pl-3 border-l-2 border-[#2563eb] py-0.5">
+        <blockquote className="my-2 pl-3 border-l-2 border-white/30 py-0.5">
           <p className="font-body-md text-body-md text-white leading-snug italic">
-            «Te falta un objetivo para completar tu Form diaria. Una porción de yogur griego o shake te lleva a los 150 g de proteína.»
+            «{personalized.aiWelcomeMessage}»
           </p>
         </blockquote>
 
         <div className="flex flex-wrap items-center gap-2 pt-2">
           <button
             type="button"
-            onClick={() => onNavigateTab('max-ai', '¿Qué debería comer para llegar a mis 150g de proteína?')}
+            onClick={() => onNavigateTab('max-ai', `Dame un plan de ${userGoal.toLowerCase()} para mi nivel ${userLevel}`)}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1d2024] hover:bg-[#282a2f] text-white font-body-sm transition-colors active:scale-95 border border-[#282a2f]"
           >
-            <span className="material-symbols-outlined text-[16px] text-[#b4c5ff]">lunch_dining</span>
-            <span>¿Qué debería comer?</span>
+            <span className="material-symbols-outlined text-[16px] text-zinc-300">lunch_dining</span>
+            <span>Plan para {userGoal}</span>
           </button>
           
           <button
@@ -420,7 +503,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             onClick={() => onNavigateTab('nutricion')}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1d2024] hover:bg-[#282a2f] text-white font-body-sm transition-colors active:scale-95 border border-[#282a2f]"
           >
-            <span className="material-symbols-outlined text-[16px] text-[#b4c5ff]">photo_camera</span>
+            <span className="material-symbols-outlined text-[16px] text-zinc-300">photo_camera</span>
             <span>Analizar mi comida</span>
           </button>
         </div>
@@ -429,7 +512,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           <button
             type="button"
             onClick={() => onNavigateTab('max-ai')}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#2563eb] hover:bg-[#3b82f6] text-white font-headline-md font-bold transition-all active:scale-[0.99] shadow-md"
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white text-black hover:bg-zinc-100 font-headline-md font-bold transition-all active:scale-[0.99] shadow-md"
           >
             <span>Abrir MAX AI</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -473,7 +556,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             <span className="font-metric-stat text-metric-stat text-white tracking-tight font-bold">#127</span>
             <span className="font-body-md text-[#8d90a0] ml-1">de 5.284 atletas</span>
           </div>
-          <span className="font-body-sm text-[#b4c5ff] font-bold">38 XP para el Top 100</span>
+          <span className="font-body-sm text-zinc-300 font-bold">38 XP para el Top 100</span>
         </div>
 
         <div className="space-y-1.5 pt-1">
@@ -488,17 +571,17 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           </div>
 
           {/* #127 Santiago (Tú) */}
-          <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#2563eb]/20 border border-[#2563eb]/40">
+          <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/8 border border-white/18">
             <div className="flex items-center gap-2.5 min-w-0">
-              <span className="font-label-caps text-label-caps text-[#b4c5ff] font-bold w-6">#127</span>
-              <div className="w-6 h-6 rounded-full bg-[#2563eb] text-white flex items-center justify-center text-xs font-bold">TÚ</div>
+              <span className="font-label-caps text-label-caps text-zinc-200 font-bold w-6">#127</span>
+              <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-xs font-bold">TÚ</div>
               <span className="font-body-md text-white font-bold truncate">Santiago (Tú)</span>
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
-              <span className="font-body-md text-[#b4c5ff] font-bold">
+              <span className="font-body-md text-zinc-100 font-bold">
                 {xp.toLocaleString('es-ES')} XP
               </span>
-              <span className="material-symbols-outlined text-[16px] text-[#b4c5ff]">arrow_drop_up</span>
+              <span className="material-symbols-outlined text-[16px] text-zinc-300">arrow_drop_up</span>
             </div>
           </div>
         </div>
@@ -507,7 +590,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           <button
             type="button"
             onClick={() => onNavigateTab('retos')}
-            className="inline-flex items-center gap-1 font-body-sm text-[#b4c5ff] hover:underline font-bold transition-colors"
+            className="inline-flex items-center gap-1 font-body-sm text-zinc-300 hover:text-white hover:underline font-bold transition-colors"
           >
             <span>Ver ranking completo</span>
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>

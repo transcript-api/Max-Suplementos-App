@@ -37,7 +37,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
           <span className="font-label-caps text-label-caps uppercase tracking-wider font-bold dark:text-[#8d90a0] text-slate-500">
             METAS DIARIAS
           </span>
-          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold dark:bg-[#2563eb]/20 bg-blue-50 dark:text-[#b4c5ff] text-blue-600 border dark:border-[#2563eb]/30 border-blue-200">
+          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold dark:bg-white/10 bg-slate-100 dark:text-zinc-200 text-slate-700 border dark:border-white/15 border-slate-200">
             {completedCount} de {tasks.length} completadas
           </span>
         </div>
@@ -64,21 +64,21 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
               }}
               className={`flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer select-none active:scale-[0.99] ${
                 isDone
-                  ? 'dark:bg-[#191c20]/90 bg-slate-50/90 dark:border-[#2563eb]/40 border-blue-400/40 shadow-sm'
-                  : 'dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 hover:border-slate-300 dark:hover:border-[#3a3d44] shadow-sm'
+                  ? 'dark:bg-white/5 bg-slate-50/90 dark:border-white/20 border-slate-300/60 shadow-sm'
+                  : 'dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 hover:dark:border-white/15 hover:border-slate-300 shadow-sm'
               }`}
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                {/* Checkbox personalizado */}
+                {/* Checkbox monochrome premium */}
                 <div
                   className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all flex-shrink-0 border ${
                     isDone
-                      ? 'bg-[#2563eb] border-[#2563eb] text-white shadow-sm'
+                      ? 'bg-white border-white text-black shadow-[0_0_8px_rgba(255,255,255,0.3)]'
                       : 'dark:bg-[#1d2024] bg-slate-100 dark:border-[#333539] border-slate-300'
                   }`}
                 >
                   {isDone && (
-                    <span className="material-symbols-outlined text-[18px] font-bold">
+                    <span className="material-symbols-outlined text-[16px] font-black">
                       check
                     </span>
                   )}
@@ -88,7 +88,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                 <div
                   className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
                     isDone
-                      ? 'dark:bg-[#2563eb]/20 bg-blue-100 text-[#2563eb] dark:text-[#b4c5ff]'
+                      ? 'dark:bg-white/10 bg-slate-100 dark:text-white text-slate-700'
                       : 'dark:bg-[#1d2024] bg-slate-100 dark:text-[#8d90a0] text-slate-500'
                   }`}
                 >
@@ -103,7 +103,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                     <span
                       className={`font-headline-md text-sm sm:text-base font-semibold truncate ${
                         isDone
-                          ? 'dark:text-white text-slate-900 line-through opacity-90'
+                          ? 'dark:text-zinc-400 text-slate-500 line-through opacity-80'
                           : 'dark:text-white text-slate-800'
                       }`}
                     >
@@ -112,7 +112,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                     <span
                       className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
                         isDone
-                          ? 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-300'
+                          ? 'bg-white/15 text-white dark:text-zinc-100'
                           : 'dark:bg-[#1d2024] bg-slate-100 dark:text-[#8d90a0] text-slate-500'
                       }`}
                     >
@@ -139,7 +139,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                         e.stopPropagation();
                         onReduceWater();
                       }}
-                      className="px-2 py-1 rounded-lg text-xs font-bold dark:bg-rose-500/15 bg-rose-50 dark:text-rose-400 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-500/25 transition-colors flex items-center gap-0.5 border dark:border-rose-500/30 border-rose-200"
+                      className="px-2 py-1 rounded-lg text-xs font-bold dark:bg-white/5 bg-slate-100 dark:text-zinc-400 text-slate-500 hover:dark:bg-white/10 hover:bg-slate-200 transition-colors flex items-center gap-0.5 border dark:border-white/10 border-slate-200"
                       title="Restar 250ml si te equivocaste"
                     >
                       <span className="material-symbols-outlined text-[13px]">remove</span>
@@ -152,7 +152,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                       e.stopPropagation();
                       onAddWater();
                     }}
-                    className="px-2.5 py-1 rounded-lg text-xs font-bold dark:bg-[#2563eb]/20 bg-blue-50 dark:text-[#b4c5ff] text-blue-600 hover:bg-blue-100 dark:hover:bg-[#2563eb]/30 transition-colors flex items-center gap-1 border dark:border-[#2563eb]/30 border-blue-200"
+                    className="px-2.5 py-1 rounded-lg text-xs font-bold dark:bg-white/10 bg-slate-100 dark:text-white text-slate-700 hover:dark:bg-white/20 hover:bg-slate-200 transition-colors flex items-center gap-1 border dark:border-white/15 border-slate-200 shadow-sm"
                     title="Añadir 250ml de agua"
                   >
                     <span className="material-symbols-outlined text-[14px]">add</span>

@@ -82,6 +82,8 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
   const targetProtein = targets?.proteinGrams || 150;
   const targetCarbs = targets?.carbsGrams || 220;
   const targetFats = targets?.fatsGrams || 65;
+  const targetCalories = targets?.calories || (targetProtein * 4 + targetCarbs * 4 + targetFats * 9);
+  const targetHydration = targets?.hydrationLiters || 2.5;
 
   // Cálculo de calorías por macro para la distribución real de energía
   // 1g Proteína = 4 kcal, 1g Carbos = 4 kcal, 1g Grasa = 9 kcal
@@ -327,15 +329,15 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               <span className="font-metric-stat text-metric-stat text-white font-extrabold tracking-tight">
                 {effectiveCalories.toLocaleString('es-ES')}
               </span>
-              <span className="font-body-sm text-body-sm text-[#8d90a0]">/ 2.300 kcal</span>
+              <span className="font-body-sm text-body-sm text-[#8d90a0]">/ {targetCalories.toLocaleString('es-ES')} kcal</span>
             </div>
           </div>
           <div className="flex flex-col items-end">
             <span className="bg-[#2563eb]/20 text-[#b4c5ff] font-label-caps text-label-caps px-2 py-0.5 rounded-full border border-[#2563eb]/30 font-bold">
-              {Math.min(100, Math.round((effectiveCalories / 2300) * 100))}% COMPLETADO
+              {Math.min(100, Math.round((effectiveCalories / targetCalories) * 100))}% COMPLETADO
             </span>
             <span className="font-body-sm text-body-sm text-[#8d90a0] mt-1">
-              Restante: {Math.max(0, 2300 - effectiveCalories)} kcal
+              Restante: {Math.max(0, targetCalories - effectiveCalories)} kcal
             </span>
           </div>
         </div>
@@ -344,7 +346,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         <div className="w-full bg-[#0c0e12] h-2 rounded-full overflow-hidden mb-4">
           <div
             className="bg-[#2563eb] h-full rounded-full transition-all duration-500"
-            style={{ width: `${Math.min(100, (effectiveCalories / 2300) * 100)}%` }}
+            style={{ width: `${Math.min(100, (effectiveCalories / targetCalories) * 100)}%` }}
           ></div>
         </div>
 
@@ -460,7 +462,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
             <div className="flex justify-between items-baseline mb-1">
               <span className="font-headline-md text-headline-md text-white font-bold">
-                {effectiveProtein} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ 150 g</span>
+                {effectiveProtein} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ {targetProtein} g</span>
               </span>
               <span className="font-body-sm text-body-sm text-[#8d90a0] font-medium">{proteinPct}%</span>
             </div>
@@ -476,20 +478,20 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 <span className="w-2 h-2 rounded-full bg-[#10b981]"></span>
                 <span className="font-label-caps text-label-caps text-white font-bold">CARBOS</span>
               </div>
-              <span className="font-body-sm text-body-sm text-[#8d90a0]">Meta: 280 g</span>
+              <span className="font-body-sm text-body-sm text-[#8d90a0]">Meta: {targetCarbs} g</span>
             </div>
             <div className="flex justify-between items-baseline mb-1">
               <span className="font-headline-md text-headline-md text-white font-bold">
-                {effectiveCarbs} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ 280 g</span>
+                {effectiveCarbs} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ {targetCarbs} g</span>
               </span>
               <span className="font-body-sm text-body-sm text-[#8d90a0]">
-                {Math.min(100, Math.round((effectiveCarbs / 280) * 100))}%
+                {Math.min(100, Math.round((effectiveCarbs / targetCarbs) * 100))}%
               </span>
             </div>
             <div className="w-full bg-[#0c0e12] h-1.5 rounded-full overflow-hidden">
               <div
                 className="bg-[#10b981] h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(100, (effectiveCarbs / 280) * 100)}%` }}
+                style={{ width: `${Math.min(100, (effectiveCarbs / targetCarbs) * 100)}%` }}
               ></div>
             </div>
           </div>
@@ -501,20 +503,20 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 <span className="w-2 h-2 rounded-full bg-[#f59e0b]"></span>
                 <span className="font-label-caps text-label-caps text-white font-bold">GRASAS SALUDABLES</span>
               </div>
-              <span className="font-body-sm text-body-sm text-[#8d90a0]">Meta: 75 g</span>
+              <span className="font-body-sm text-body-sm text-[#8d90a0]">Meta: {targetFats} g</span>
             </div>
             <div className="flex justify-between items-baseline mb-1">
               <span className="font-headline-md text-headline-md text-white font-bold">
-                {effectiveFats} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ 75 g</span>
+                {effectiveFats} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ {targetFats} g</span>
               </span>
               <span className="font-body-sm text-body-sm text-[#8d90a0]">
-                {Math.min(100, Math.round((effectiveFats / 75) * 100))}%
+                {Math.min(100, Math.round((effectiveFats / targetFats) * 100))}%
               </span>
             </div>
             <div className="w-full bg-[#0c0e12] h-1.5 rounded-full overflow-hidden">
               <div
                 className="bg-[#f59e0b] h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(100, (effectiveFats / 75) * 100)}%` }}
+                style={{ width: `${Math.min(100, (effectiveFats / targetFats) * 100)}%` }}
               ></div>
             </div>
           </div>
@@ -536,16 +538,16 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
             <div className="flex justify-between items-baseline mb-1">
               <span className="font-headline-md text-headline-md text-white font-bold">
-                {hydration.toFixed(1).replace('.', ',')} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ 3.0 L</span>
+                {hydration.toFixed(1).replace('.', ',')} <span className="font-body-sm text-body-sm text-[#8d90a0]">/ {targetHydration.toFixed(1).replace('.', ',')} L</span>
               </span>
               <span className="font-body-sm text-body-sm text-[#8d90a0]">
-                {Math.min(100, Math.round((hydration / 3.0) * 100))}%
+                {Math.min(100, Math.round((hydration / targetHydration) * 100))}%
               </span>
             </div>
             <div className="w-full bg-[#0c0e12] h-1.5 rounded-full overflow-hidden">
               <div 
                 className="bg-[#2563eb] h-full rounded-full transition-all duration-300" 
-                style={{ width: `${Math.min(100, (hydration / 3.0) * 100)}%` }}
+                style={{ width: `${Math.min(100, (hydration / targetHydration) * 100)}%` }}
               ></div>
             </div>
           </div>
@@ -927,7 +929,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               isDark={isDark}
               defaultCategory="healthy_food"
               title="Restaurantes Fit & Comida Proteica Cercana"
-              subtitle="Lugares verificados con Google Maps en tiempo real vía Gemini 3.5 Flash"
+              subtitle="Lugares y locales fitness verificados con Google Maps en tiempo real"
             />
           </div>
         )}

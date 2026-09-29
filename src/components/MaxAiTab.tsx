@@ -145,11 +145,11 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           roleId: 'nutritionist',
           roleName: 'Nutricionista Bioquímico Pro',
           modelUsed: 'gemini-3.1-pro-preview',
-          text: `Hola ${userName}. He activado el modo de **Nutrición Compleja (gemini-3.1-pro-preview)**.\n\nEstoy preparado para analizar cálculos metabólicos avanzados (fórmulas Cunningham / Katch-McArdle según tu composición corporal), balance de nitrógeno, periodización de carbohidratos y optimización de leucina para la síntesis proteica vía mTOR. Llevas **${currentProtein}g** de proteína registrados hoy. ¿Qué cálculo o protocolo abordamos?`,
+          text: `Hola ${userName}. He activado el modo de Nutrición Avanzada.\n\nEstoy preparado para analizar cálculos metabólicos avanzados, balance calórico, periodización de carbohidratos y distribución óptima de macronutrientes. Llevas ${currentProtein}g de proteína registrados hoy. ¿Qué consulta o protocolo abordamos?`,
           timestamp: 'Ahora',
           quickReplies: [
-            'Calcular TMB y umbral de leucina mTOR',
-            'Protocolo de creatina Creapure',
+            'Calcular mi gasto calórico exacto',
+            'Protocolo de suplementación',
             'Periodización de carbohidratos',
           ],
         };
@@ -158,9 +158,9 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           id: 'welcome-fast',
           sender: 'ai',
           roleId: 'fast',
-          roleName: 'Fast Logger & Express',
+          roleName: 'Registro Rápido Express',
           modelUsed: 'gemini-3.1-flash-lite',
-          text: `¡Listo ${userName}! Modo **Fast Logger activado (gemini-3.1-flash-lite)**. Dime qué comiste o qué necesitas en 1 línea y te daré el desglose de macros y kcal en microsegundos.`,
+          text: `¡Listo ${userName}! Modo de Registro Rápido activo. Dime qué comiste y desglosaré calorías y macros al instante para tu plan.`,
           timestamp: 'Ahora',
           quickReplies: [
             '2 huevos con 1 tostada',
@@ -173,9 +173,9 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           id: 'welcome-auto',
           sender: 'ai',
           roleId: 'auto',
-          roleName: 'Auto Inteligente',
+          roleName: 'MAX Asistente Inteligente',
           modelUsed: 'gemini-3.5-flash',
-          text: `Hola ${userName}. En modo **Auto Inteligente**, derivo automáticamente tus mensajes al modelo de Gemini óptimo:\n• **gemini-3.1-flash-lite** para consultas y conteos rápidos.\n• **gemini-3.1-pro-preview** para cálculos metabólicos y bioquímicos complejos.\n• **gemini-3.5-flash** para coaching general y Google Maps Grounding.`,
+          text: `Hola ${userName}. Estoy listo para asistirte en nutrición, registro de comidas por voz o texto, recomendaciones de hábitos y búsqueda de tiendas de suplementación oficiales. ¿En qué trabajamos hoy?`,
           timestamp: 'Ahora',
           quickReplies: [
             '📍 Tiendas de suplementos cerca',
@@ -191,8 +191,8 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           roleName: 'Coach de Rendimiento',
           modelUsed: 'gemini-3.5-flash',
           text: streakDays === 0
-            ? `¡Hola ${userName}! Bienvenido a MAX AI Coach, potenciado por **gemini-3.5-flash** para tareas generales de alto rendimiento. Hoy inicias tu racha en MAXMIND. Llevas **${currentProtein}g** de proteína de tu objetivo diario. ¿En qué te asesoro para arrancar con toda la energía?`
-            : `Hola ${userName}, seguimos con paso firme. Racha activa de **${streakDays} días** y **${currentProtein}g** de proteína acumulados hoy. ¿En qué trabajamos en este momento para sellar tu Form?`,
+            ? `¡Hola ${userName}! Bienvenido a MAX AI Coach. Hoy inicias tu registro diario en MAXFORM. Llevas ${currentProtein}g de proteína acumulados hoy. ¿En qué te asesoro para arrancar con toda la energía?`
+            : `Hola ${userName}, seguimos con paso firme. Racha activa de ${streakDays} días y ${currentProtein}g de proteína acumulados hoy. ¿En qué trabajamos en este momento para sellar tu día?`,
           timestamp: 'Ahora',
           options: [
             { title: '1. Opciones altas en proteína con ingredientes simples', protein: '25-35g PROT', calories: '180-250 kcal' },
@@ -899,10 +899,10 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             </div>
             <span className="text-xs text-[#8d90a0]">
               {selectedRole === 'nutritionist'
-                ? 'Dr. MAX calculando con gemini-3.1-pro-preview...'
+                ? 'Analizando metabolismo y composición...'
                 : selectedRole === 'fast'
-                ? 'Conteo express con gemini-3.1-flash-lite...'
-                : 'MAX Coach analizando con Gemini...'}
+                ? 'Calculando desglose de comida...'
+                : 'MAX Coach analizando tu mensaje...'}
             </span>
           </div>
         )}
@@ -924,19 +924,19 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
           {/* Botón Foto */}
           <label
-            title="Analizar foto de comida con Gemini"
+            title="Analizar foto de plato o comida"
             className="p-2 text-[#8d90a0] hover:text-[#b4c5ff] hover:bg-[#282a2f] rounded-xl transition-colors cursor-pointer flex items-center justify-center shrink-0"
           >
             <span className="material-symbols-outlined text-[19px]">photo_camera</span>
             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
           </label>
 
-          {/* Botón Transcriptor Completo de Audio (gemini-3.5-transcribe) */}
+          {/* Botón Transcriptor Completo de Audio */}
           {onOpenAudioTranscriber && (
             <button
               type="button"
               onClick={onOpenAudioTranscriber}
-              title="Abrir Transcriptor de Audio (gemini-3.5-transcribe)"
+              title="Abrir transcriptor de audio"
               className="p-2 text-[#8d90a0] hover:text-purple-400 hover:bg-[#282a2f] rounded-xl transition-colors flex items-center justify-center shrink-0"
             >
               <span className="material-symbols-outlined text-[19px]">speech_to_text</span>
@@ -948,7 +948,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             type="button"
             onClick={toggleMic}
             disabled={isTranscribingVoice}
-            title={isListening ? "Detener y transcribir" : "Grabar audio con micrófono (gemini-3.5-transcribe)"}
+            title={isListening ? "Detener y transcribir" : "Grabar audio por micrófono"}
             className={`p-2 rounded-xl transition-colors flex items-center justify-center shrink-0 ${
               isListening
                 ? 'bg-red-500 text-white animate-pulse ring-2 ring-red-400/50'
@@ -994,7 +994,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           ) : isTranscribingVoice ? (
             <div className="flex-1 flex items-center gap-2 px-2 py-1.5 bg-purple-500/10 rounded-xl border border-purple-500/20 text-purple-300 text-xs">
               <div className="w-3.5 h-3.5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin shrink-0"></div>
-              <span className="font-semibold">Transcribiendo audio con gemini-3.5-transcribe...</span>
+              <span className="font-semibold">Procesando audio por voz...</span>
             </div>
           ) : (
             <input
@@ -1004,10 +1004,10 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder={
                 selectedRole === 'nutritionist'
-                  ? 'Pregunta sobre bioquímica, mTOR, TMB o macronutrientes...'
+                  ? 'Pregunta sobre metabolismo, TMB o macronutrientes...'
                   : selectedRole === 'fast'
                   ? 'Ej: 2 huevos, tostada y café con leche...'
-                  : 'Escribe o usa el micrófono para dictar con gemini-3.5-transcribe...'
+                  : 'Escribe tu mensaje o consulta al coach...'
               }
               className="flex-1 bg-transparent text-white placeholder-[#8d90a0] text-sm focus:outline-none px-2"
             />

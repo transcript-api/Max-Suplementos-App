@@ -205,7 +205,7 @@ export function forceMidnightReset(data: DailyHabitsData): DailyHabitsData {
 }
 
 /**
- * Helper para estilos visuales de categorías de hábitos
+ * Helper para estilos visuales de categorías de hábitos — Monochrome Luxury Noir
  */
 export function getCategoryBadge(category: DailyHabitItem['category']): {
   label: string;
@@ -215,28 +215,28 @@ export function getCategoryBadge(category: DailyHabitItem['category']): {
     case 'lectura':
       return {
         label: 'Lectura & Mente',
-        colorClass: 'bg-amber-500/15 text-amber-500 dark:text-amber-300 border-amber-500/30',
+        colorClass: 'bg-white/10 text-zinc-100 border-white/20',
       };
     case 'sueno':
       return {
         label: 'Sueño & Recuperación',
-        colorClass: 'bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-500/30',
+        colorClass: 'bg-zinc-700/40 text-zinc-200 border-zinc-600/50',
       };
     case 'meditacion':
       return {
         label: 'Mindfulness & Calma',
-        colorClass: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border-emerald-500/30',
+        colorClass: 'bg-zinc-600/30 text-zinc-300 border-zinc-500/40',
       };
     case 'salud':
       return {
-        label: 'Salud & Ritmo Circadiano',
-        colorClass: 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-300 border-cyan-500/30',
+        label: 'Salud & Circadiano',
+        colorClass: 'bg-white/8 text-zinc-200 border-white/15',
       };
     case 'personalizado':
     default:
       return {
         label: 'Hábito Pro',
-        colorClass: 'bg-blue-500/15 text-blue-600 dark:text-[#b4c5ff] border-blue-500/30',
+        colorClass: 'bg-zinc-800 text-zinc-100 border-zinc-700/60',
       };
   }
 }

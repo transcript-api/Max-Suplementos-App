@@ -83,15 +83,15 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
       {/* Encabezado Principal de Daily Habits */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
         <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-indigo-500 dark:text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-white/8 text-zinc-200 border border-white/12 flex items-center justify-center">
             <span className="material-symbols-outlined text-[20px]">psychology</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-label-caps text-label-caps uppercase tracking-wider font-bold dark:text-[#8d90a0] text-slate-500">
-                HÁBITOS DIARIOS · DAILY HABITS
+                HÁBITOS DIARIOS
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-purple-500/15 text-purple-600 dark:text-purple-300 border border-purple-500/30">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-white/8 text-zinc-300 border border-white/12">
                 No Nutricionales
               </span>
             </div>
@@ -101,38 +101,36 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
           </div>
         </div>
 
-        {/* Indicadores de Boost y Reseteo a Medianoche */}
+        {/* Indicadores de Boost y Reseteo */}
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           {/* Badge del Impulso de Energía */}
           <div
             className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-all flex items-center gap-1.5 ${
               energyBoost > 0
-                ? 'bg-amber-500/15 text-amber-500 dark:text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/10'
+                ? 'bg-white/12 text-zinc-100 border-white/20 shadow-sm'
                 : 'dark:bg-[#191c20] bg-slate-100 dark:text-slate-400 text-slate-500 border-slate-300 dark:border-[#282a2f]'
             }`}
             title="Aumento sumado directamente al puntaje de Energía Diaria"
           >
             <span className="text-[14px]">⚡</span>
-            <span>+{energyBoost}% Boost de Energía</span>
+            <span>+{energyBoost}% Boost</span>
           </div>
 
           {/* Badge de Reseteo a Medianoche */}
           <div
             className="px-2.5 py-1 rounded-full text-[11px] font-semibold dark:bg-[#191c20] bg-slate-100 dark:text-slate-400 text-slate-600 border dark:border-[#282a2f] border-slate-200 flex items-center gap-1"
-            title="Se reinicia automáticamente a las 00:00 cada noche"
+            title="Se reinicia automáticamente a las 00:00"
           >
-            <span className="material-symbols-outlined text-[14px] text-indigo-400">
-              schedule
-            </span>
-            <span>Reseteo en: {countdown || 'medianoche'}</span>
+            <span className="material-symbols-outlined text-[14px] dark:text-zinc-400">schedule</span>
+            <span>Reset: {countdown || 'medianoche'}</span>
           </div>
         </div>
       </div>
 
-      {/* Banner de progreso y aviso de medianoche */}
+      {/* Banner de progreso */}
       <div className="p-3 rounded-xl border dark:bg-[#191c20]/80 bg-white dark:border-[#282a2f] border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-500/20">
+          <div className="w-9 h-9 rounded-xl bg-white/10 text-white border border-white/15 flex items-center justify-center flex-shrink-0 shadow-md">
             <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
           </div>
           <div>
@@ -141,13 +139,13 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 {completedCount} de {totalCount} hábitos completados hoy
               </span>
               {completedCount === totalCount && totalCount > 0 && (
-                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-500 border border-emerald-500/30">
+                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-white/15 text-white border border-white/20">
                   ¡Imparable!
                 </span>
               )}
             </div>
             <p className="text-[11px] dark:text-slate-400 text-slate-500">
-              Cada hábito suma porcentaje directo a tu barra de energía y se reinicia a las 00:00.
+              Cada hábito suma % a tu barra de energía y se reinicia a las 00:00.
             </p>
           </div>
         </div>
@@ -156,7 +154,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
           <button
             type="button"
             onClick={() => setIsAddOpen(!isAddOpen)}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold dark:bg-[#2563eb]/20 bg-blue-50 hover:bg-blue-100 dark:hover:bg-[#2563eb]/30 dark:text-[#b4c5ff] text-blue-600 border dark:border-[#2563eb]/30 border-blue-200 flex items-center gap-1 active:scale-95 transition-all cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold dark:bg-white/8 bg-slate-100 hover:dark:bg-white/15 hover:bg-slate-200 dark:text-zinc-200 text-slate-700 border dark:border-white/12 border-slate-200 flex items-center gap-1 active:scale-95 transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">
               {isAddOpen ? 'close' : 'add'}
@@ -168,8 +166,8 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
             <button
               type="button"
               onClick={onForceMidnightReset}
-              className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-slate-500/10 hover:bg-slate-500/20 dark:text-slate-300 text-slate-600 border border-slate-300 dark:border-slate-700 active:scale-95 transition-all cursor-pointer"
-              title="Simula el paso de la medianoche reseteando las casillas a desmarcadas"
+              className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium dark:bg-white/5 bg-slate-100 hover:dark:bg-white/10 dark:text-slate-400 text-slate-600 border dark:border-white/8 border-slate-200 active:scale-95 transition-all cursor-pointer"
+              title="Simula el paso de la medianoche reseteando las casillas"
             >
               Simular 00:00
             </button>
@@ -181,21 +179,19 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
       {isAddOpen && (
         <form
           onSubmit={handleCreateCustom}
-          className="p-4 rounded-xl border border-blue-500/30 dark:bg-[#14171b] bg-blue-50/50 shadow-md space-y-3 animate-fadeIn"
+          className="p-4 rounded-xl border dark:border-white/12 border-slate-200 dark:bg-[#0f1013] bg-slate-50 shadow-md space-y-3 animate-fadeIn"
         >
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase tracking-wider dark:text-blue-300 text-blue-700 flex items-center gap-1.5">
+            <h4 className="text-xs font-bold uppercase tracking-wider dark:text-zinc-200 text-slate-800 flex items-center gap-1.5">
               <span className="material-symbols-outlined text-[16px]">add_task</span>
               Crear Nuevo Hábito No Nutricional
             </h4>
-            <span className="text-[11px] dark:text-slate-400 text-slate-500">
-              Personalizado
-            </span>
+            <span className="text-[11px] dark:text-slate-400 text-slate-500">Personalizado</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-semibold dark:text-slate-300 text-slate-700 mb-1">
+              <label className="block text-[11px] font-semibold dark:text-zinc-300 text-slate-700 mb-1">
                 Nombre del Hábito
               </label>
               <input
@@ -203,33 +199,33 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 placeholder="Ej. Ducha de contraste fría, Diario de gratitud..."
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-300 dark:text-white text-slate-800 focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
                 required
               />
             </div>
             <div>
-              <label className="block text-[11px] font-semibold dark:text-slate-300 text-slate-700 mb-1">
-                Descripción / Detalle breve
+              <label className="block text-[11px] font-semibold dark:text-zinc-300 text-slate-700 mb-1">
+                Descripción breve
               </label>
               <input
                 type="text"
                 placeholder="Ej. 3 min de agua fría para activación mitocondrial..."
                 value={newSubtitle}
                 onChange={(e) => setNewSubtitle(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-300 dark:text-white text-slate-800 focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-semibold dark:text-slate-300 text-slate-700 mb-1">
+              <label className="block text-[11px] font-semibold dark:text-zinc-300 text-slate-700 mb-1">
                 Categoría
               </label>
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value as any)}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-300 dark:text-white text-slate-800 focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
               >
                 <option value="lectura">Lectura & Enfoque</option>
                 <option value="sueno">Sueño & Descanso</option>
@@ -239,13 +235,13 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
               </select>
             </div>
             <div>
-              <label className="block text-[11px] font-semibold dark:text-slate-300 text-slate-700 mb-1">
+              <label className="block text-[11px] font-semibold dark:text-zinc-300 text-slate-700 mb-1">
                 Aporte al Puntaje de Energía
               </label>
               <select
                 value={newBoost}
                 onChange={(e) => setNewBoost(Number(e.target.value))}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-300 dark:text-white text-slate-800 focus:outline-none focus:border-blue-500"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#1d2024] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
               >
                 <option value={2}>+2% Energía</option>
                 <option value={3}>+3% Energía (Estándar)</option>
@@ -259,13 +255,13 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
             <button
               type="button"
               onClick={() => setIsAddOpen(false)}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium dark:text-slate-400 text-slate-600 hover:bg-slate-200 dark:hover:bg-white/5"
+              className="px-3 py-1.5 rounded-lg text-xs font-medium dark:text-zinc-400 text-slate-600 hover:dark:bg-white/5 hover:bg-slate-100 transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#2563eb] text-white hover:bg-blue-600 active:scale-95 shadow-sm"
+              className="px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-black hover:bg-zinc-100 active:scale-95 shadow-sm transition-all"
             >
               Guardar Hábito
             </button>
@@ -274,7 +270,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
       )}
 
       {feedbackNotice && (
-        <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs text-center font-bold animate-fadeIn">
+        <div className="p-2 rounded-lg bg-white/10 border border-white/20 text-zinc-100 text-xs text-center font-bold animate-fadeIn">
           {feedbackNotice}
         </div>
       )}
@@ -299,21 +295,21 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
               }}
               className={`flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer select-none active:scale-[0.99] group ${
                 isDone
-                  ? 'dark:bg-[#191c20]/90 bg-slate-50/90 dark:border-indigo-500/40 border-indigo-400/40 shadow-sm'
-                  : 'dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 hover:border-slate-300 dark:hover:border-[#3a3d44] shadow-sm'
+                  ? 'dark:bg-white/5 bg-slate-50/90 dark:border-white/18 border-slate-300/60 shadow-sm'
+                  : 'dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 hover:dark:border-white/12 hover:border-slate-300 shadow-sm'
               }`}
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
-                {/* Checkbox personalizado animado */}
+                {/* Checkbox monochrome premium */}
                 <div
                   className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all flex-shrink-0 border ${
                     isDone
-                      ? 'bg-gradient-to-br from-indigo-500 to-purple-600 border-indigo-500 text-white shadow-sm'
-                      : 'dark:bg-[#1d2024] bg-slate-100 dark:border-[#333539] border-slate-300 group-hover:border-indigo-400/50'
+                      ? 'bg-white border-white text-black shadow-[0_0_8px_rgba(255,255,255,0.3)]'
+                      : 'dark:bg-[#1d2024] bg-slate-100 dark:border-[#333539] border-slate-300 group-hover:dark:border-white/20'
                   }`}
                 >
                   {isDone && (
-                    <span className="material-symbols-outlined text-[18px] font-bold">
+                    <span className="material-symbols-outlined text-[16px] font-black">
                       check
                     </span>
                   )}
@@ -323,7 +319,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 <div
                   className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
                     isDone
-                      ? 'dark:bg-indigo-500/20 bg-indigo-100 text-indigo-500 dark:text-indigo-300'
+                      ? 'dark:bg-white/10 bg-slate-100 dark:text-white text-slate-700'
                       : 'dark:bg-[#1d2024] bg-slate-100 dark:text-slate-400 text-slate-500'
                   }`}
                 >
@@ -338,7 +334,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                     <span
                       className={`text-xs sm:text-sm font-bold tracking-tight truncate ${
                         isDone
-                          ? 'dark:text-slate-400 text-slate-500 line-through'
+                          ? 'dark:text-zinc-500 text-slate-400 line-through'
                           : 'dark:text-white text-slate-800'
                       }`}
                     >
@@ -353,8 +349,8 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                   <span
                     className={`text-[11px] truncate mt-0.5 ${
                       isDone
-                        ? 'dark:text-slate-500 text-slate-400'
-                        : 'dark:text-slate-400 text-slate-500'
+                        ? 'dark:text-zinc-600 text-slate-400'
+                        : 'dark:text-zinc-400 text-slate-500'
                     }`}
                   >
                     {habit.subtitle}
@@ -367,8 +363,8 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 <span
                   className={`px-2 py-1 rounded-md text-[11px] font-bold border flex items-center gap-1 ${
                     isDone
-                      ? 'bg-amber-500/20 text-amber-500 dark:text-amber-300 border-amber-500/30'
-                      : 'dark:bg-[#14171b] bg-slate-100 dark:text-slate-400 text-slate-600 border-transparent'
+                      ? 'bg-white/12 text-white border-white/20'
+                      : 'dark:bg-[#14171b] bg-slate-100 dark:text-zinc-500 text-slate-600 border-transparent'
                   }`}
                 >
                   <span>⚡</span>
@@ -378,8 +374,8 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 <span
                   className={`hidden sm:inline-flex px-2 py-1 rounded-md text-[11px] font-semibold border ${
                     isDone
-                      ? 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
-                      : 'dark:bg-[#14171b] bg-slate-100 dark:text-slate-400 text-slate-600 border-transparent'
+                      ? 'bg-white/8 text-zinc-300 border-white/12'
+                      : 'dark:bg-[#14171b] bg-slate-100 dark:text-zinc-500 text-slate-600 border-transparent'
                   }`}
                 >
                   +{habit.xpReward} XP
@@ -392,12 +388,10 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                       e.stopPropagation();
                       onDeleteCustomHabit(habit.id);
                     }}
-                    className="p-1 rounded-lg hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors ml-1"
+                    className="p-1 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-200 transition-colors ml-1"
                     title="Eliminar este hábito personalizado"
                   >
-                    <span className="material-symbols-outlined text-[16px]">
-                      delete
-                    </span>
+                    <span className="material-symbols-outlined text-[16px]">delete</span>
                   </button>
                 )}
               </div>

@@ -19,6 +19,7 @@ import { offlineSync, SyncStatus } from './lib/offlineSync';
 import { MacroNutrients } from './types';
 import { reconcileAthleteData, LocalAthleteState } from './lib/reconciliation';
 import { AdminPanel } from './components/admin/AdminPanel';
+import { getPersonalizedContent } from './lib/personalizationEngine';
 
 // Módulos pesados diferidos con React.lazy para carga ultrarrápida del bundle principal
 const StatsTab = lazy(() => import('./components/StatsTab').then(m => ({ default: m.StatsTab })));
@@ -36,8 +37,8 @@ const ProtocolChangeModal = lazy(() => import('./components/ProtocolChangeModal'
 
 const TabLoaderFallback = () => (
   <div className="w-full flex-1 min-h-[50vh] flex flex-col items-center justify-center p-8 space-y-3">
-    <div className="w-10 h-10 rounded-full border-3 border-blue-500/20 border-t-blue-500 animate-spin" />
-    <span className="text-xs font-semibold tracking-wider uppercase text-slate-400 animate-pulse">
+    <div className="w-10 h-10 rounded-full border-2 border-white/10 border-t-white/70 animate-spin" />
+    <span className="text-xs font-semibold tracking-wider uppercase text-zinc-500 animate-pulse">
       Cargando sección...
     </span>
   </div>
@@ -94,38 +95,38 @@ export interface LevelConfig {
 export const LEVEL_CONFIGS: Record<CommitmentLevel, LevelConfig> = {
   Básico: {
     name: 'Básico',
-    barGradient: 'from-emerald-500 to-teal-400',
-    barColor: '#10b981',
-    glowColor: 'shadow-emerald-500/30',
-    textColor: 'text-emerald-500 dark:text-emerald-400',
-    badgeClass: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border-emerald-500/30',
+    barGradient: 'from-zinc-600 via-zinc-500 to-zinc-400',
+    barColor: '#a1a1aa',
+    glowColor: 'shadow-zinc-500/20',
+    textColor: 'text-zinc-400 dark:text-zinc-300',
+    badgeClass: 'bg-zinc-900 text-zinc-300 border-zinc-700/60 shadow-sm',
     description: 'Enfoque de salud general: 2L de agua, registro flexible y 3 entrenos semanales.',
   },
   Intermedio: {
     name: 'Intermedio',
-    barGradient: 'from-blue-600 to-cyan-500',
-    barColor: '#3b82f6',
-    glowColor: 'shadow-blue-500/30',
-    textColor: 'text-blue-500 dark:text-[#b4c5ff]',
-    badgeClass: 'bg-blue-500/20 text-blue-600 dark:text-[#b4c5ff] border-blue-500/30',
+    barGradient: 'from-zinc-500 via-zinc-300 to-zinc-200',
+    barColor: '#d4d4d8',
+    glowColor: 'shadow-zinc-300/30',
+    textColor: 'text-zinc-300 dark:text-zinc-100',
+    badgeClass: 'bg-zinc-800 text-zinc-100 border-zinc-500/50 shadow-sm',
     description: 'Equilibrio atlético: 120g proteína, hidratación continua y 4 sesiones semanales.',
   },
   Avanzado: {
     name: 'Avanzado',
-    barGradient: 'from-indigo-600 via-purple-600 to-pink-500',
-    barColor: '#8b5cf6',
-    glowColor: 'shadow-purple-500/30',
-    textColor: 'text-purple-500 dark:text-purple-300',
-    badgeClass: 'bg-purple-500/20 text-purple-600 dark:text-purple-300 border-purple-500/30',
+    barGradient: 'from-zinc-400 via-zinc-100 to-white',
+    barColor: '#e4e4e7',
+    glowColor: 'shadow-white/30',
+    textColor: 'text-zinc-100 dark:text-white',
+    badgeClass: 'bg-zinc-100 text-zinc-950 font-black border-white shadow-md',
     description: 'Rigor atlético: 150g proteína estricta, telemetría y sobrecarga progresiva.',
   },
   Extremo: {
     name: 'Extremo',
-    barGradient: 'from-red-600 via-rose-600 to-amber-500',
-    barColor: '#ef4444',
-    glowColor: 'shadow-red-500/30',
-    textColor: 'text-red-500 dark:text-rose-400',
-    badgeClass: 'bg-red-500/20 text-red-600 dark:text-rose-300 border-red-500/30',
+    barGradient: 'from-zinc-200 via-white to-zinc-100',
+    barColor: '#ffffff',
+    glowColor: 'shadow-[0_0_20px_rgba(255,255,255,0.45)]',
+    textColor: 'text-white',
+    badgeClass: 'bg-white text-black font-black border-white shadow-[0_0_15px_rgba(255,255,255,0.35)] animate-pulse',
     description: 'Máximo rendimiento sin concesiones: macros al gramo y tolerancia cero.',
   },
 };
@@ -174,6 +175,8 @@ interface DashboardProps {
   onDeleteCustomHabit?: (habitId: string) => void;
   onForceMidnightReset?: () => void;
   habitsEnergyBoost?: number;
+  userGoal?: string;
+  userWeight?: number;
 }
 
 /**
@@ -221,8 +224,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onDeleteCustomHabit,
   onForceMidnightReset,
   habitsEnergyBoost = 0,
+  userGoal = 'Crear constancia',
+  userWeight = 70,
 }) => {
   const currentLevelConfig = LEVEL_CONFIGS[commitmentLevel] || LEVEL_CONFIGS.Avanzado;
+
+  // Motor de personalización adaptativo por Objetivo y Nivel
+  const personalized = useMemo(() => {
+    return getPersonalizedContent(userGoal, commitmentLevel, userName, userWeight);
+  }, [userGoal, commitmentLevel, userName, userWeight]);
 
   // Estado y referencia para la celebración del 100% de energía diaria
   const [showCelebrationModal, setShowCelebrationModal] = useState<boolean>(false);
@@ -273,26 +283,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Banner de Sincronización Offline / Firestore */}
       {(!syncStatus.isOnline || syncStatus.pendingCount > 0) && (
         <div
-          className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-all ${
-            !syncStatus.isOnline
-              ? 'bg-amber-500/15 border-amber-500/30 text-amber-300'
-              : 'bg-blue-500/15 border-blue-500/30 text-[#b4c5ff]'
-          }`}
+          className="p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-all dark:bg-zinc-900/80 bg-slate-50 dark:border-white/10 border-slate-200 dark:text-zinc-300 text-slate-600"
         >
           <div className="flex items-center gap-2.5">
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined text-[20px] dark:text-zinc-400">
               {!syncStatus.isOnline ? 'cloud_off' : 'cloud_sync'}
             </span>
             <div>
-              <p className="font-bold">
+              <p className="font-bold dark:text-zinc-200 text-slate-700">
                 {!syncStatus.isOnline
                   ? 'Modo Offline Activo'
                   : `${syncStatus.pendingCount} registros listos para sincronizar`}
               </p>
-              <p className="text-[11px] opacity-80">
+              <p className="text-[11px] opacity-70">
                 {!syncStatus.isOnline
-                  ? 'Todas tus tareas y comidas se guardan localmente y se sincronizarán con Firestore apenas regrese internet.'
-                  : 'Los datos locales se subirán a tu cuenta Firestore en la nube.'}
+                  ? 'Tus datos se guardan localmente y se sincronizarán en cuanto regrese la conexión.'
+                  : 'Los datos locales se subirán a tu cuenta en la nube.'}
               </p>
             </div>
           </div>
@@ -302,7 +308,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               type="button"
               onClick={onManualSync}
               disabled={syncStatus.isSyncing}
-              className="px-3 py-1.5 rounded-lg bg-[#2563eb] hover:bg-[#3b82f6] text-white font-bold text-xs flex items-center justify-center gap-1.5 self-start sm:self-auto active:scale-95 disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg dark:bg-white/10 bg-slate-200 hover:dark:bg-white/20 hover:bg-slate-300 dark:text-white text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 self-start sm:self-auto active:scale-95 disabled:opacity-50 border dark:border-white/15 border-slate-300 transition-all"
             >
               <span className={`material-symbols-outlined text-[15px] ${syncStatus.isSyncing ? 'animate-spin' : ''}`}>
                 sync
@@ -315,20 +321,20 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* Banner de Bienvenida a Nuevo Usuario (Primer día) */}
       {!firstDashboardSeen && (
-        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-blue-950/50 border border-blue-500/40 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+        <div className="w-full p-4 rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-950 to-black border border-white/12 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#2563EB] flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md shadow-blue-500/30">
+            <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md">
               <span className="material-symbols-outlined text-[22px]">verified</span>
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <span>Todo listo.</span>
-                <span className="px-2 py-0.5 text-[10px] font-extrabold bg-blue-500/30 text-blue-300 rounded-full border border-blue-400/30">
+                <span>Todo listo. Protocolo activado.</span>
+                <span className="px-2 py-0.5 text-[10px] font-extrabold bg-white/12 text-zinc-200 rounded-full border border-white/20">
                   Plan Inicial
                 </span>
               </h3>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Tu objetivo ya está configurado. Ahora empieza tu primer día.
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Tu objetivo está configurado. Comienza tu primer día de protocolo.
               </p>
             </div>
           </div>
@@ -336,7 +342,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <button
               type="button"
               onClick={onDismissFirstDashboard}
-              className="px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 whitespace-nowrap self-end sm:self-center"
+              className="px-4 py-2 rounded-xl bg-white text-black hover:bg-zinc-100 text-xs font-black transition-all shadow-md active:scale-95 whitespace-nowrap self-end sm:self-center"
             >
               Ver mis objetivos
             </button>
@@ -344,28 +350,38 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
       )}
 
-      {/* 1. Saludo Inicial e Indicador Visual Dinámico de Racha */}
+      {/* 1. Saludo Inicial e Indicador Visual Dinámico de Racha Personalizado */}
       <section className="flex flex-col gap-2 pt-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span className="font-label-caps text-label-caps dark:text-[#8d90a0] text-slate-500 uppercase tracking-wider capitalize">
-              {todayFormatted} · Telemetría Activa
-            </span>
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <span className="font-label-caps text-label-caps dark:text-[#8d90a0] text-slate-500 uppercase tracking-wider capitalize">
+                {todayFormatted} · Telemetría Activa
+              </span>
+              <span
+                className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border shadow-sm"
+                style={{
+                  backgroundColor: `${personalized.modeBadgeColor}20`,
+                  color: personalized.modeBadgeColor,
+                  borderColor: `${personalized.modeBadgeColor}40`,
+                }}
+              >
+                {personalized.modeBadge}
+              </span>
+            </div>
             <h1 className="font-headline-xl-mobile text-2xl sm:text-3xl font-bold dark:text-white text-slate-900 tracking-tight">
-              Buenos días, {userName || 'Atleta'}
+              {personalized.greeting}
             </h1>
-            {xp === 0 && streakDays === 0 && (
-              <p className="text-xs text-blue-500 dark:text-blue-400 font-semibold tracking-wide mt-0.5">
-                Hoy empieza tu Form.
-              </p>
-            )}
+            <p className="text-xs dark:text-zinc-400 text-slate-500 font-semibold tracking-wide mt-0.5">
+              {personalized.homeSubtitle}
+            </p>
           </div>
 
           {/* Indicador Visual Dinámico de Racha */}
           <div
             className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full border transition-all shadow-sm ${
               isAllTasksDone
-                ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/40 ring-2 ring-amber-500/20 animate-pulse'
+                ? 'bg-white/12 text-white border-white/25 ring-2 ring-white/15 shadow-[0_0_16px_rgba(255,255,255,0.12)]'
                 : 'dark:bg-[#191c20] bg-white dark:text-white text-slate-800 dark:border-[#282a2f] border-slate-200'
             }`}
           >
@@ -374,15 +390,30 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span className="text-xs sm:text-sm font-extrabold leading-none">
                 {displayedStreak} días de racha
               </span>
-              <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 leading-none mt-0.5 font-medium">
+              <span className="text-[10px] dark:text-zinc-400 text-slate-500 leading-none mt-0.5 font-medium">
                 {isAllTasksDone ? '¡Meta de hoy sellada!' : `${completedTasksCount}/${tasks.length} metas listas`}
               </span>
             </div>
             {isAllTasksDone && (
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+              <span className="w-2 h-2 rounded-full bg-white/70 animate-ping"></span>
             )}
           </div>
         </div>
+
+        {/* Alerta de Nivel Extremo o Avanzado si aplica */}
+        {personalized.levelAlert && (
+          <div
+            className="p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 mt-1 animate-fadeIn"
+            style={{
+              backgroundColor: `${personalized.modeBadgeColor}15`,
+              borderColor: `${personalized.modeBadgeColor}40`,
+              color: personalized.modeBadgeColor,
+            }}
+          >
+            <span className="material-symbols-outlined text-[18px]">verified_user</span>
+            <span>{personalized.levelAlert}</span>
+          </div>
+        )}
 
         {/* Nivel de Atleta y XP */}
         <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
@@ -390,14 +421,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
             Nivel {currentLevelConfig.name}
           </span>
           <span className="dark:text-[#8d90a0] text-slate-400">·</span>
-          <span className="dark:text-[#8d90a0] text-slate-600 font-medium">Atleta de Rendimiento</span>
+          <span className="dark:text-zinc-400 text-slate-600 font-medium">{userGoal}</span>
           <span className="dark:text-[#8d90a0] text-slate-400">·</span>
-          <span className="font-bold text-[#2563eb] dark:text-[#b4c5ff] inline-flex items-center">
+          <span className="font-bold dark:text-zinc-100 text-slate-800 inline-flex items-center">
             <AnimatedCounter
               value={xp}
               suffix=" XP"
               duration={850}
-              className="font-bold text-[#2563eb] dark:text-[#b4c5ff]"
+              className="font-bold dark:text-zinc-100 text-slate-800"
               deltaBadgeLabel="XP"
             />
           </span>
@@ -463,7 +494,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 duration={850}
                 className="text-3xl sm:text-4xl font-black dark:text-white text-slate-900 tracking-tight"
                 deltaBadgeLabel="%"
-                deltaBadgeClassName="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-black"
+                deltaBadgeClassName="bg-white text-black font-black"
               />
               <span className="text-xs sm:text-sm font-semibold dark:text-[#8d90a0] text-slate-500 uppercase tracking-wide">
                 Energía Diaria
@@ -481,7 +512,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </span>
               {habitsEnergyBoost > 0 && (
                 <span
-                  className="px-2.5 py-1 rounded-full text-xs font-black bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center gap-1 shadow-sm"
+                  className="px-2.5 py-1 rounded-full text-xs font-black bg-white/10 text-zinc-200 border border-white/18 flex items-center gap-1 shadow-sm"
                   title="Impulso sumado por tus Hábitos Diarios no nutricionales"
                 >
                   <span>⚡</span>
@@ -510,7 +541,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div
             className={`relative w-full h-4 rounded-full overflow-hidden dark:bg-[#111318] bg-slate-100 p-0.5 border transition-all ${
               energyPercent >= 100
-                ? 'border-amber-400/60 shadow-[0_0_12px_rgba(251,191,36,0.35)]'
+                ? 'border-white/30 shadow-[0_0_12px_rgba(255,255,255,0.2)]'
                 : 'dark:border-[#282a2f] border-slate-200'
             }`}
           >
@@ -524,19 +555,19 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {/* Banner de Celebración de 100% de Energía Alcanzado */}
           {energyPercent >= 100 && (
-            <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-emerald-500/15 border border-amber-500/35 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
+            <div className="p-3 sm:p-3.5 rounded-xl bg-gradient-to-r from-white/5 via-white/8 to-white/5 border border-white/18 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fadeIn">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center flex-shrink-0 shadow-sm shadow-amber-500/10">
+                <div className="w-8 h-8 rounded-lg bg-white/12 text-white border border-white/20 flex items-center justify-center flex-shrink-0 shadow-sm">
                   <span className="text-lg">🏆</span>
                 </div>
                 <div>
                   <p className="text-xs font-bold text-white flex items-center gap-2 flex-wrap">
                     <span>¡100% de Energía Diaria Alcanzado hoy!</span>
-                    <span className="text-[10px] px-2 py-0.5 bg-amber-500/30 text-amber-200 border border-amber-400/30 rounded-full font-black">
+                    <span className="text-[10px] px-2 py-0.5 bg-white/15 text-zinc-100 border border-white/20 rounded-full font-black">
                       Meta del Día Cumplida
                     </span>
                   </p>
-                  <p className="text-[11px] text-slate-300 mt-0.5">
+                  <p className="text-[11px] text-zinc-400 mt-0.5">
                     Has completado la totalidad de tu energía diaria programada para hoy.
                   </p>
                 </div>
@@ -548,7 +579,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     triggerEnergyCelebrationConfetti();
                     playCelebrationSound();
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
+                  className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-100 font-black text-xs flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer whitespace-nowrap transition-all"
                 >
                   <span>🎉</span>
                   <span>Lanzar Confeti</span>
@@ -562,7 +593,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       playCelebrationSound();
                       setShowCelebrationModal(true);
                     }}
-                    className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 font-medium text-[11px] border border-white/10 active:scale-95 whitespace-nowrap cursor-pointer"
+                    className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-zinc-300 font-medium text-[11px] border border-white/10 active:scale-95 whitespace-nowrap cursor-pointer"
                     title="Reiniciar registro de hoy para disparar como si fuera la primera vez del día"
                   >
                     Simular 1ra vez
@@ -580,14 +611,81 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <button
               type="button"
               onClick={() => onNavigateTab('estadisticas')}
-              className="text-xs font-bold text-[#2563eb] dark:text-[#b4c5ff] hover:underline flex items-center gap-1"
+              className="text-xs font-bold dark:text-zinc-300 text-slate-700 hover:dark:text-white hover:text-slate-900 hover:underline flex items-center gap-1 transition-colors"
             >
-              <span>Ver estadísticas de consistencia</span>
+              <span>Ver estadísticas</span>
               <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
             </button>
           </div>
         </div>
       </section>
+
+      {/* 2.4. Desafío Activo Personalizado según Objetivo y Nivel */}
+      <div className="rounded-2xl p-4 sm:p-5 border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start gap-3.5">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+            style={{ backgroundColor: `${personalized.modeBadgeColor}25`, color: personalized.modeBadgeColor }}
+          >
+            <span className="material-symbols-outlined text-[22px]">military_tech</span>
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-bold dark:text-white text-slate-900">
+                {personalized.challengeTitle}
+              </span>
+              <span
+                className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full border"
+                style={{
+                  backgroundColor: `${personalized.modeBadgeColor}15`,
+                  color: personalized.modeBadgeColor,
+                  borderColor: `${personalized.modeBadgeColor}35`,
+                }}
+              >
+                Nivel {commitmentLevel}
+              </span>
+            </div>
+            <p className="text-xs dark:text-[#8d90a0] text-slate-600">
+              {personalized.challengeDescription}
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onOpenLevelModal}
+          className="px-3.5 py-2 rounded-xl text-xs font-bold border transition-all active:scale-95 whitespace-nowrap self-start sm:self-auto hover:bg-slate-100 dark:hover:bg-slate-800"
+          style={{ borderColor: `${personalized.modeBadgeColor}50`, color: personalized.modeBadgeColor }}
+        >
+          Ajustar Protocolo
+        </button>
+      </div>
+
+      {/* 2.45. Tip del Día y Cita del Coach Personalizados */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="p-4 rounded-2xl border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-sm space-y-1.5">
+          <div className="flex items-center gap-1.5 dark:text-zinc-300 text-slate-600">
+            <span className="material-symbols-outlined text-[18px]">lightbulb</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">
+              Tip Diario · {userGoal}
+            </span>
+          </div>
+          <p className="text-xs dark:text-zinc-200 text-slate-700 leading-relaxed font-medium">
+            {personalized.dailyTip}
+          </p>
+        </div>
+
+        <div className="p-4 rounded-2xl border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-sm space-y-1.5">
+          <div className="flex items-center gap-1.5 dark:text-zinc-400 text-slate-500">
+            <span className="material-symbols-outlined text-[18px]">format_quote</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">
+              Cita del Coach
+            </span>
+          </div>
+          <p className="text-xs italic dark:text-zinc-300 text-slate-600 leading-relaxed">
+            {personalized.coachQuote}
+          </p>
+        </div>
+      </div>
 
       {/* 2.5. Card Exclusiva del Nivel de Compromiso (Exigencias, reglas de Form y estado de cooldown) */}
       <LevelExclusivesCard
@@ -652,6 +750,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         isDark={isDark}
         isDemoMode={isDemoMode}
         userSupplements={userSupplements}
+        streakDays={streakDays}
         onTakeServing={onTakeSupplement}
         onNavigateTab={onNavigateTab}
       />
@@ -660,23 +759,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <section className="rounded-2xl p-5 border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-500 dark:text-amber-400 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-white/10 text-zinc-200 border border-white/15 flex items-center justify-center">
               <span className="material-symbols-outlined text-[22px]">military_tech</span>
             </div>
             <div>
               <h2 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 flex items-center gap-2">
                 Lo Que Vas Sumando Como Atleta
-                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/15">
                   Progreso Real
                 </span>
               </h2>
               <p className="text-xs dark:text-[#8d90a0] text-slate-500">
-                Cada día que no fallas tus tomas de creatina y proteína construyes tu ventaja competitiva.
+                Cada día que no fallas tus tomas construyes tu ventaja competitiva.
               </p>
             </div>
           </div>
 
-          <span className="self-start sm:self-auto text-xs font-bold px-3 py-1 rounded-full bg-[#2563eb]/15 text-[#2563eb] dark:text-[#adc6ff] border border-[#2563eb]/30">
+          <span className="self-start sm:self-auto text-xs font-bold px-3 py-1 rounded-full bg-white/8 text-zinc-300 border border-white/12">
             Comunidad MAX Suplementos
           </span>
         </div>
@@ -687,7 +786,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
               XP Total Sumado
             </span>
-            <span className="text-lg font-black text-amber-500 dark:text-amber-400">
+            <span className="text-lg font-black dark:text-white text-slate-900">
               +{xp} XP
             </span>
             <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
@@ -699,7 +798,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
               Racha Activa
             </span>
-            <span className="text-lg font-black text-emerald-500 dark:text-emerald-400">
+            <span className="text-lg font-black dark:text-zinc-200 text-slate-800">
               {displayedStreak} Días
             </span>
             <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
@@ -711,7 +810,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
               Hidratación de Hoy
             </span>
-            <span className="text-lg font-black text-blue-500 dark:text-blue-400">
+            <span className="text-lg font-black dark:text-zinc-300 text-slate-700">
               {hydration.toFixed(1)} L
             </span>
             <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
@@ -723,7 +822,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
               Beneficio Exclusivo
             </span>
-            <span className="text-lg font-black text-purple-500 dark:text-purple-400">
+            <span className="text-lg font-black dark:text-zinc-100 text-slate-900">
               15% OFF
             </span>
             <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 block mt-0.5">
@@ -1162,6 +1261,56 @@ export default function App() {
       levelSelectedAt: now.toISOString(),
       levelGraceAvailable: false, // Consumida la oportunidad libre tras el primer cambio
       nextLevelChangeAllowedAt: nextAllowed,
+      tasks: generated.dailyObjectives,
+      macros: userState.macros,
+      targets: {
+        hydrationLiters: generated.hydrationTargetLiters,
+        proteinGrams: generated.proteinTargetGrams,
+        carbsGrams: generated.macros.carbs,
+        fatsGrams: generated.macros.fats,
+        calories: generated.calorieTarget,
+      },
+      onboardingData: updatedInput,
+      formScore,
+      completedObjectives: completedCount,
+      updatedAt: now.toISOString(),
+    };
+
+    setUserState(updated);
+    if (!isDemoMode) {
+      saveUserData(updated);
+    }
+  };
+
+  // Modificación administrativa directa del perfil de atleta (Objetivo + Nivel de Desafío)
+  const handleAdminUpdateUserProfile = (newGoal: string, newLvl: CommitmentLevel) => {
+    const input: OnboardingProfileInput = userState.onboardingData || {
+      name: userState.name || 'Atleta',
+      gender: 'Hombre',
+      primary_goal: newGoal,
+      experience_level: newLvl,
+      weight: userState.biometrics?.weightKg || 75,
+      height: userState.biometrics?.heightCm || 175,
+      age: userState.biometrics?.age || 26,
+      training_frequency: newLvl === 'Básico' ? '3 veces por semana' : newLvl === 'Intermedio' ? '4 veces por semana' : '5 veces por semana',
+      dietary_preferences: 'Equilibrada',
+      supplements: [],
+    };
+
+    const updatedInput: OnboardingProfileInput = {
+      ...input,
+      primary_goal: newGoal,
+      experience_level: newLvl,
+    };
+
+    const generated = generatePersonalizedObjectives(updatedInput);
+    const completedCount = generated.dailyObjectives.filter((t) => t.completed).length;
+    const formScore = calculateDailyForm(completedCount, generated.dailyObjectives.length);
+    const now = new Date();
+
+    const updated: UserState = {
+      ...userState,
+      commitmentLevel: newLvl,
       tasks: generated.dailyObjectives,
       macros: userState.macros,
       targets: {
@@ -1946,6 +2095,8 @@ export default function App() {
             onDeleteCustomHabit={handleDeleteCustomHabit}
             onForceMidnightReset={handleForceMidnightReset}
             habitsEnergyBoost={habitsEnergyBoost}
+            userGoal={userState.onboardingData?.primary_goal || 'Crear constancia'}
+            userWeight={userState.onboardingData?.weight || userState.biometrics?.weightKg || 70}
           />
         )}
 
@@ -1982,7 +2133,7 @@ export default function App() {
                 hydrationHistory={userState.hydrationHistory}
                 onAddWater={handleAddWater}
                 currentProtein={protein}
-                targetProtein={macros.protein || 150}
+                targetProtein={userState.targets?.proteinGrams || 150}
                 proteinDailyHistory={userState.dailyHistory}
                 isDemoMode={isDemoMode}
                 onNavigateNutrition={() => handleNavigateTab('nutricion')}
@@ -1998,6 +2149,7 @@ export default function App() {
                 onReduceProtein={handleReduceProtein}
                 currentProtein={protein}
                 macros={macros}
+                targets={userState.targets}
                 onAddMealEntry={handleAddMealEntry}
                 onDeleteMealEntry={handleDeleteMealEntry}
                 onUpdateDirectIntake={handleUpdateDirectIntake}
@@ -2061,8 +2213,15 @@ export default function App() {
 
             {currentTab === 'admin' && (
               <AdminPanel
-                onBackToApp={() => handleNavigateTab('perfil')}
+                onBackToApp={() => handleNavigateTab('inicio')}
                 isDark={isDark}
+                currentUserProfile={{
+                  name: userName,
+                  goal: userState.onboardingData?.primary_goal || 'Crear constancia',
+                  level: commitmentLevel,
+                  weightKg: userState.onboardingData?.weight || userState.biometrics?.weightKg || 70,
+                }}
+                onUpdateUserProfile={handleAdminUpdateUserProfile}
               />
             )}
           </Suspense>

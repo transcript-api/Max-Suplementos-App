@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SupplementPot, PlanType } from '../types/maxSuplementosV1';
 import { calculateRemainingStats, computeDailyIngredientsIntake, SummedIngredient } from '../lib/maxSuplementosV1Service';
 import { RegisterPotModal } from './RegisterPotModal';
@@ -9,20 +9,21 @@ import { GoogleMapsExplorer } from './GoogleMapsExplorer';
 interface SuplementosTabProps {
   userName?: string;
   isDark?: boolean;
+  isDemoMode?: boolean;
   onNavigateTab?: (tab: string) => void;
 }
 
 export const SuplementosTab: React.FC<SuplementosTabProps> = ({
   userName = 'Atleta',
   isDark = true,
+  isDemoMode = false,
   onNavigateTab,
 }) => {
-  // Plan Grátis o VIP
+  // Plan Gratuito o VIP
   const [currentPlan, setCurrentPlan] = useState<PlanType>('vip'); // Por defecto VIP activo para poder gestionar toda la rutina
-  const [activeSubTab, setActiveSubTab] = useState<'hoje' | 'vitrine' | 'historico' | 'maps'>('hoje');
+  const [activeSubTab, setActiveSubTab] = useState<'hoy' | 'suplementos' | 'composicion' | 'tiendas'>('hoy');
 
-  // Potes registrados por el cliente
-  const [pots, setPots] = useState<SupplementPot[]>([
+  const DEMO_POTS: SupplementPot[] = [
     {
       id: 'pot-creatina-max',
       name: 'Creatina Creapure 300g',
@@ -37,10 +38,10 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       barcode: '7898123456789',
       nutritionFactsPerDose: [
         { name: 'Creatina Monohidratada', amount: 5, unit: 'g' },
-        { name: 'Calorias', amount: 0, unit: 'kcal' },
+        { name: 'Calorías', amount: 0, unit: 'kcal' },
       ],
       dosesHistory: [
-        new Date().toISOString().slice(0, 10), // Tomada hoy
+        new Date().toISOString().slice(0, 10),
       ],
       warningDaysBefore: 5,
     },
@@ -58,40 +59,62 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       barcode: '7898999887766',
       nutritionFactsPerDose: [
         { name: 'Proteína', amount: 27, unit: 'g' },
-        { name: 'Carboidratos', amount: 1, unit: 'g' },
-        { name: 'Gorduras', amount: 0.5, unit: 'g' },
-        { name: 'Calorias', amount: 116, unit: 'kcal' },
+        { name: 'Carbohidratos', amount: 1, unit: 'g' },
+        { name: 'Grasas', amount: 0.5, unit: 'g' },
+        { name: 'Calorías', amount: 116, unit: 'kcal' },
         { name: 'BCAA', amount: 6.2, unit: 'g' },
       ],
       dosesHistory: [
-        new Date().toISOString().slice(0, 10), // Tomada hoy
+        new Date().toISOString().slice(0, 10),
       ],
       warningDaysBefore: 7,
     },
-    {
-      id: 'pot-pretreino-max',
-      name: 'Pré-Treino Insane Focus',
-      brand: 'MAX Suplementos',
-      category: 'pre-treino',
-      totalSize: 300,
-      sizeUnit: 'g',
-      dailyDose: 10,
-      openingDate: '2026-09-10',
-      status: 'ativo',
-      isStoreVerified: true,
-      barcode: '7891234455667',
-      nutritionFactsPerDose: [
-        { name: 'Cafeína', amount: 200, unit: 'mg' },
-        { name: 'Beta-alanina', amount: 1600, unit: 'mg' },
-        { name: 'Creatina', amount: 3, unit: 'g' },
-        { name: 'Taurina', amount: 1000, unit: 'mg' },
-        { name: 'Vitamina C', amount: 45, unit: 'mg' },
-        { name: 'Vitamina B12', amount: 2.4, unit: 'mcg' },
-      ],
-      dosesHistory: [], // Pendiente de tomar hoy
-      warningDaysBefore: 4,
-    },
-  ]);
+  ];
+
+  // Potes registrados por el cliente (aislados por usuario en localStorage)
+  const [pots, setPots] = useState<SupplementPot[]>(() => {
+    if (isDemoMode) return DEMO_POTS;
+    try {
+      const saved = localStorage.getItem('maxform_supplement_pots');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn('[SuplementosTab] Error leyendo suplementos locales:', e);
+    }
+    return [];
+  });
+
+  // Persistir cambios en localStorage para usuarios reales
+  useEffect(() => {
+    if (!isDemoMode) {
+      try {
+        localStorage.setItem('maxform_supplement_pots', JSON.stringify(pots));
+      } catch (e) {
+        console.warn('[SuplementosTab] Error guardando suplementos:', e);
+      }
+    }
+  }, [pots, isDemoMode]);
+
+  // Si cambia el modo demo, sincronizar
+  useEffect(() => {
+    if (isDemoMode) {
+      setPots(DEMO_POTS);
+    } else {
+      try {
+        const saved = localStorage.getItem('maxform_supplement_pots');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setPots(Array.isArray(parsed) ? parsed : []);
+        } else {
+          setPots([]);
+        }
+      } catch (e) {
+        setPots([]);
+      }
+    }
+  }, [isDemoMode]);
 
   // Modales
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
@@ -111,8 +134,8 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
         if (pot.id !== potId) return pot;
         const alreadyTaken = pot.dosesHistory.includes(todayIso);
         const nextHistory = alreadyTaken
-          ? pot.dosesHistory.filter((d) => d !== todayIso) // Deshacer
-          : [...pot.dosesHistory, todayIso]; // Marcar dose
+          ? pot.dosesHistory.filter((d) => d !== todayIso)
+          : [...pot.dosesHistory, todayIso];
         return {
           ...pot,
           dosesHistory: nextHistory,
@@ -121,23 +144,23 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
     );
   };
 
-  // Guardar nuevo pote desde el modal (flujo 1 o 3)
+  // Guardar nuevo suplemento desde el modal
   const handleSavePot = (newPot: SupplementPot) => {
-    // Si está en plano Grátis y ya tiene 1 pote, pedir VIP
     if (currentPlan === 'gratis' && pots.length >= 1) {
       setShowVipUpgradeModal(true);
       return;
     }
-    setPots((prev) => [newPot, ...prev]);
+    setPots((prev) => [...prev, newPot]);
+    setIsRegisterOpen(false);
   };
 
-  // Abrir pedido en WhatsApp para 1 pote o agrupado
-  const handleOpenReorder = (potList: SupplementPot[]) => {
-    setReorderPotsQueue(potList);
+  // Abrir reorden de WhatsApp
+  const handleOpenReorder = (potsToReorder: SupplementPot[]) => {
+    setReorderPotsQueue(potsToReorder);
     setIsReorderModalOpen(true);
   };
 
-  // Calcular métricas
+  // Filtrar activos y finalizados
   const activePots = pots.filter((p) => p.status === 'ativo');
   const finalizedPots = pots.filter((p) => p.status === 'finalizado');
 
@@ -171,7 +194,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
-                MAX Suplementos · Tracker
+                MAX Suplementos · Control & Reposición
               </h2>
               <button
                 type="button"
@@ -181,13 +204,13 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                     ? 'bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-300 border-amber-500/40'
                     : 'bg-slate-700/50 text-slate-300 border-slate-600'
                 }`}
-                title="Alternar entre plano Grátis e VIP"
+                title="Alternar entre plan Gratuito y VIP"
               >
-                {currentPlan === 'vip' ? '👑 VIP ATIVO' : 'Plano Grátis (1 pote)'}
+                {currentPlan === 'vip' ? '👑 VIP ACTIVO' : 'Plan Estándar'}
               </button>
             </div>
             <p className="text-xs text-[#8d90a0]">
-              Acompanha sua rotina, avisa antes do pote acabar e abre o pedido no WhatsApp da MAX.
+              Controla tus tomas diarias, calcula días restantes de stock y solicita reposición directa en WhatsApp.
             </p>
           </div>
         </div>
@@ -200,7 +223,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             className="px-3 py-2 rounded-xl bg-[#111318] hover:bg-[#20242b] border border-[#282a2f] text-xs font-bold text-[#c3c6d7] transition-all flex items-center gap-1.5"
           >
             <span className="material-symbols-outlined text-[16px] text-blue-400">clinical_notes</span>
-            <span>Resumo Nutricionista</span>
+            <span>Ficha Nutricionista</span>
           </button>
 
           <button
@@ -215,7 +238,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             className="px-3.5 py-2 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-md active:scale-95"
           >
             <span className="material-symbols-outlined text-[18px]">add_circle</span>
-            <span>Cadastrar Pote</span>
+            <span>Registrar Suplemento</span>
           </button>
         </div>
       </div>
@@ -229,7 +252,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             </div>
             <div>
               <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                <span>{urgentEndingPots.length} {urgentEndingPots.length === 1 ? 'item acaba' : 'itens acabam'} nos próximos 10 dias</span>
+                <span>{urgentEndingPots.length} {urgentEndingPots.length === 1 ? 'suplemento se termina' : 'suplementos se terminan'} en los próximos 10 días</span>
                 {currentPlan === 'vip' && (
                   <span className="text-[10px] font-extrabold bg-[#2563eb]/20 text-[#adc6ff] px-2 py-0.5 rounded-full border border-blue-500/30">
                     VIP Agrupado
@@ -237,7 +260,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 )}
               </h4>
               <p className="text-[11px] text-[#8d90a0]">
-                {urgentEndingPots.map((p) => p.name).join(', ')}. Não deixe cortar sua rotina.
+                {urgentEndingPots.map((p) => p.name).join(', ')}. No cortes tu protocolo de suplementación.
               </p>
             </div>
           </div>
@@ -245,11 +268,11 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
             <button
               type="button"
-              onClick={() => setActiveSubTab('maps')}
+              onClick={() => setActiveSubTab('tiendas')}
               className="px-3 py-2 rounded-xl bg-[#111318] hover:bg-[#20242b] border border-[#282a2f] text-xs font-bold text-[#c3c6d7] transition-all flex items-center gap-1.5 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[15px] text-rose-500">pin_drop</span>
-              <span>Lojas Próximas (Maps)</span>
+              <span>Tiendas Cercanas</span>
             </button>
             <button
               type="button"
@@ -257,293 +280,314 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap shadow-md"
             >
               <span className="material-symbols-outlined text-[16px]">shopping_bag</span>
-              <span>Pedir Tudo no WhatsApp ({urgentEndingPots.length})</span>
+              <span>Pedir Reposición en WhatsApp ({urgentEndingPots.length})</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* 3. Sub-navegação: Hoje (rotina diária) | Vitrine de Potes | Composição | Lojas Maps */}
+      {/* 3. Sub-navegación: Hoy | Mis Suplementos | Composición del Día | Tiendas Cercanas */}
       <div className="flex items-center gap-2 border-b border-[#282a2f] pb-1 overflow-x-auto scrollbar-none">
         <button
           type="button"
-          onClick={() => setActiveSubTab('hoje')}
+          onClick={() => setActiveSubTab('hoy')}
           className={`pb-2 px-3 text-xs font-bold transition-all relative whitespace-nowrap ${
-            activeSubTab === 'hoje' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
+            activeSubTab === 'hoy' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
           }`}
         >
-          <span>Hoje · Doses ({takenCountToday}/{activePots.length})</span>
-          {activeSubTab === 'hoje' && (
+          <span>Hoy · Tomas ({takenCountToday}/{activePots.length})</span>
+          {activeSubTab === 'hoy' && (
             <div className="absolute bottom-0 inset-x-0 h-0.5 bg-[#2563eb] rounded-full"></div>
           )}
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveSubTab('vitrine')}
+          onClick={() => setActiveSubTab('suplementos')}
           className={`pb-2 px-3 text-xs font-bold transition-all relative whitespace-nowrap ${
-            activeSubTab === 'vitrine' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
+            activeSubTab === 'suplementos' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
           }`}
         >
-          <span>Vitrine de Potes ({activePots.length} ativos)</span>
-          {activeSubTab === 'vitrine' && (
+          <span>Mis Suplementos ({activePots.length} activos)</span>
+          {activeSubTab === 'suplementos' && (
             <div className="absolute bottom-0 inset-x-0 h-0.5 bg-[#2563eb] rounded-full"></div>
           )}
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveSubTab('historico')}
+          onClick={() => setActiveSubTab('composicion')}
           className={`pb-2 px-3 text-xs font-bold transition-all relative whitespace-nowrap ${
-            activeSubTab === 'historico' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
+            activeSubTab === 'composicion' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
           }`}
         >
-          <span>Composição do Dia</span>
-          {activeSubTab === 'historico' && (
+          <span>Composición Diaria</span>
+          {activeSubTab === 'composicion' && (
             <div className="absolute bottom-0 inset-x-0 h-0.5 bg-[#2563eb] rounded-full"></div>
           )}
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveSubTab('maps')}
+          onClick={() => setActiveSubTab('tiendas')}
           className={`pb-2 px-3 text-xs font-bold transition-all relative flex items-center gap-1.5 whitespace-nowrap ${
-            activeSubTab === 'maps' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
+            activeSubTab === 'tiendas' ? 'text-[#2563eb] dark:text-[#adc6ff]' : 'text-[#8d90a0] hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-[15px] text-rose-500">pin_drop</span>
-          <span>Lojas & Pontos (Google Maps)</span>
-          {activeSubTab === 'maps' && (
+          <span>Tiendas Oficiales</span>
+          {activeSubTab === 'tiendas' && (
             <div className="absolute bottom-0 inset-x-0 h-0.5 bg-[#2563eb] rounded-full"></div>
           )}
         </button>
       </div>
 
-      {/* VISTA 1: HOJE (Marcar doses com um toque + Previsão de fim) */}
-      {activeSubTab === 'hoje' && (
+      {/* VISTA 1: HOY (Tomas diarias con 1 toque + Cálculo de fin) */}
+      {activeSubTab === 'hoy' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase text-[#8d90a0] tracking-wider">
-              Seus Potes de Suplemento (Ordenados por urgência de fim)
+              Tus Suplementos (Ordenados por fecha estimada de fin)
             </span>
             <span className="text-[11px] text-[#adc6ff]">
-              1 toque para marcar a dose de hoje
+              1 toque para registrar la toma de hoy
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {sortedPots.map((pot) => {
-              const stats = calculateRemainingStats(pot);
-              const tookToday = pot.dosesHistory.includes(todayIso);
+          {activePots.length === 0 ? (
+            <div className="p-8 text-center rounded-2xl border border-dashed border-[#282a2f] bg-[#16181d] space-y-3">
+              <div className="w-14 h-14 rounded-2xl bg-[#2563eb]/20 text-[#2563eb] flex items-center justify-center mx-auto">
+                <span className="material-symbols-outlined text-[32px]">medication</span>
+              </div>
+              <h3 className="text-base font-bold text-white">Sin suplementos en tu protocolo</h3>
+              <p className="text-xs text-[#8d90a0] max-w-sm mx-auto">
+                Agrega tus suplementos o escanea el envase para llevar el control diario y predecir cuándo necesitas reponer.
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsRegisterOpen(true)}
+                className="px-4 py-2 bg-[#2563eb] hover:bg-blue-600 text-white text-xs font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                <span>Registrar Suplemento</span>
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {sortedPots.map((pot) => {
+                const stats = calculateRemainingStats(pot);
+                const tookToday = pot.dosesHistory.includes(todayIso);
 
-              return (
-                <div
-                  key={pot.id}
-                  className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
-                    stats.isLowStock
-                      ? 'bg-rose-950/20 border-rose-500/40 shadow-sm'
-                      : 'bg-[#191c20] border-[#282a2f]'
-                  }`}
-                >
-                  <div className="space-y-3">
-                    {/* Linha superior: Marca, Nome e Selo de Loja */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8d90a0]">
-                            {pot.brand}
-                          </span>
-                          {pot.isStoreVerified ? (
-                            <span className="px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 text-[9px] font-extrabold flex items-center gap-0.5">
-                              <span className="material-symbols-outlined text-[10px]">verified</span>
-                              MAX
+                return (
+                  <div
+                    key={pot.id}
+                    className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
+                      stats.isLowStock
+                        ? 'bg-rose-950/20 border-rose-500/40 shadow-sm'
+                        : 'bg-[#191c20] border-[#282a2f]'
+                    }`}
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8d90a0]">
+                              {pot.brand}
                             </span>
-                          ) : (
-                            <span className="px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 text-[9px] font-bold">
-                              Não conferido
-                            </span>
-                          )}
+                            {pot.isStoreVerified ? (
+                              <span className="px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-400 text-[9px] font-extrabold flex items-center gap-0.5">
+                                <span className="material-symbols-outlined text-[10px]">verified</span>
+                                MAX
+                              </span>
+                            ) : (
+                              <span className="px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 text-[9px] font-bold">
+                                Manual
+                              </span>
+                            )}
+                          </div>
+                          <h4 className="font-extrabold text-sm text-white leading-snug mt-0.5">
+                            {pot.name}
+                          </h4>
+                          <p className="text-[11px] text-[#8d90a0]">
+                            {pot.dailyDose} {pot.sizeUnit} por toma
+                          </p>
                         </div>
-                        <h4 className="font-extrabold text-sm text-white leading-snug mt-0.5">
-                          {pot.name}
-                        </h4>
-                        <p className="text-[11px] text-[#8d90a0]">
-                          {pot.dailyDose} {pot.sizeUnit} por dose
-                        </p>
+
+                        <div className="text-right">
+                          <span className={`text-xl font-black block leading-none ${
+                            stats.isLowStock ? 'text-rose-400' : 'text-white'
+                          }`}>
+                            {stats.daysLeft}d
+                          </span>
+                          <span className="text-[10px] text-[#8d90a0] block mt-0.5">
+                            restantes
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Dias restantes destacados */}
-                      <div className="text-right">
-                        <span className={`text-xl font-black block leading-none ${
-                          stats.isLowStock ? 'text-rose-400' : 'text-white'
-                        }`}>
-                          {stats.daysLeft}d
-                        </span>
-                        <span className="text-[10px] text-[#8d90a0] block mt-0.5">
-                          restantes
+                      <div className="p-2.5 rounded-xl bg-[#111318] border border-[#282a2f] flex items-center justify-between text-xs">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] text-[#8d90a0] block">Fecha estimada de fin:</span>
+                          <span className="font-bold text-white">{stats.formattedEndDate}</span>
+                        </div>
+                        <span className="text-[11px] text-[#8d90a0]">
+                          {stats.dosesTaken}/{stats.totalDosesCapacity} tomas
                         </span>
                       </div>
                     </div>
 
-                    {/* Previsão exata calculada pelo consumo real */}
-                    <div className="p-2.5 rounded-xl bg-[#111318] border border-[#282a2f] flex items-center justify-between text-xs">
-                      <div className="space-y-0.5">
-                        <span className="text-[10px] text-[#8d90a0] block">Previsão de término:</span>
-                        <span className="font-bold text-white">{stats.formattedEndDate}</span>
-                      </div>
-                      <span className="text-[11px] text-[#8d90a0]">
-                        {stats.dosesTaken}/{stats.totalDosesCapacity} tomas
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Ações da Dose do Dia */}
-                  <div className="pt-3 mt-3 border-t border-[#282a2f] space-y-2">
-                    <button
-                      type="button"
-                      onClick={() => handleToggleDoseToday(pot.id)}
-                      className={`w-full py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 active:scale-95 ${
-                        tookToday
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
-                          : 'bg-[#2563eb] text-white hover:bg-blue-600 shadow-md'
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[16px]">
-                        {tookToday ? 'check_circle' : 'circle'}
-                      </span>
-                      <span>
-                        {tookToday ? 'Dose de hoje marcada (toque para desfazer)' : 'Marcar que tomei hoje'}
-                      </span>
-                    </button>
-
-                    {/* Botão de Reposição WhatsApp se estiver com aviso */}
-                    {stats.isLowStock && (
+                    <div className="pt-3 mt-3 border-t border-[#282a2f] space-y-2">
                       <button
                         type="button"
-                        onClick={() => handleOpenReorder([pot])}
-                        className="w-full py-1.5 px-3 rounded-xl bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                        onClick={() => handleToggleDoseToday(pot.id)}
+                        className={`w-full py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer ${
+                          tookToday
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
+                            : 'bg-[#2563eb] text-white hover:bg-blue-600 shadow-md'
+                        }`}
                       >
-                        <span className="material-symbols-outlined text-[14px]">shopping_bag</span>
-                        <span>Pedir no WhatsApp da MAX</span>
+                        <span className="material-symbols-outlined text-[16px]">
+                          {tookToday ? 'check_circle' : 'circle'}
+                        </span>
+                        <span>
+                          {tookToday ? 'Toma de hoy registrada (toca para deshacer)' : 'Marcar toma de hoy'}
+                        </span>
                       </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
 
-          {/* Convite discreto para adicionar outro suplemento no plano Grátis */}
+                      {stats.isLowStock && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenReorder([pot])}
+                          className="w-full py-1.5 px-3 rounded-xl bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">shopping_bag</span>
+                          <span>Pedir reposición en WhatsApp</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {currentPlan === 'gratis' && (
             <div className="p-4 rounded-2xl bg-[#111318] border border-dashed border-[#282a2f] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
               <div>
                 <h5 className="font-bold text-xs text-white">
-                  + Adicionar outro suplemento à rotina
+                  + Agregar otro suplemento a tu rutina
                 </h5>
                 <p className="text-[11px] text-[#8d90a0]">
-                  Whey, pré-treino e mais disponíveis no plano VIP (gratuito para quem compra na MAX).
+                  Whey, creatina, pre-entreno y vitaminas disponibles en el plan VIP.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowVipUpgradeModal(true)}
-                className="px-3 py-1.5 rounded-lg bg-[#2563eb] text-white text-xs font-bold hover:bg-blue-600 transition-all shrink-0"
+                className="px-3 py-1.5 rounded-lg bg-[#2563eb] text-white text-xs font-bold hover:bg-blue-600 transition-all shrink-0 cursor-pointer"
               >
-                Ver o que o VIP libera →
+                Ver beneficios VIP →
               </button>
             </div>
           )}
         </div>
       )}
 
-      {/* VISTA 2: VITRINE DE POTES (Ativos e Finalizados com foto/marca) */}
-      {activeSubTab === 'vitrine' && (
+      {/* VISTA 2: MIS SUPLEMENTOS (Activos y Finalizados) */}
+      {activeSubTab === 'suplementos' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase text-[#8d90a0] tracking-wider">
-              Vitrine de Potes do Cliente ({activePots.length} ativos, {finalizedPots.length} finalizados)
+              Tus Suplementos ({activePots.length} activos, {finalizedPots.length} finalizados)
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {activePots.map((pot) => {
-              const stats = calculateRemainingStats(pot);
-              return (
-                <div
-                  key={pot.id}
-                  className="bg-[#191c20] p-4 rounded-2xl border border-[#282a2f] space-y-3 flex flex-col justify-between"
-                >
-                  <div className="space-y-2">
-                    <div className="w-full h-24 rounded-xl bg-[#111318] border border-[#282a2f] flex flex-col items-center justify-center p-2 text-center">
-                      <span className="material-symbols-outlined text-[32px] text-[#2563eb]">
-                        {pot.category === 'creatina' ? 'science' : pot.category === 'proteina' ? 'nutrition' : 'bolt'}
-                      </span>
-                      <span className="text-[10px] font-bold text-white mt-1 truncate max-w-full">
-                        {pot.name}
-                      </span>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase text-[#8d90a0]">{pot.brand}</span>
-                        <span className="text-xs font-black text-white">{stats.daysLeft} dias</span>
+          {activePots.length === 0 ? (
+            <div className="p-8 text-center rounded-2xl border border-dashed border-[#282a2f] bg-[#16181d] space-y-2">
+              <span className="material-symbols-outlined text-3xl text-slate-400">medication</span>
+              <h4 className="text-sm font-bold text-white">No tienes suplementos activos</h4>
+              <p className="text-xs text-[#8d90a0]">Toca en "Registrar Suplemento" para comenzar tu protocolo.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {activePots.map((pot) => {
+                const stats = calculateRemainingStats(pot);
+                return (
+                  <div
+                    key={pot.id}
+                    className="bg-[#191c20] p-4 rounded-2xl border border-[#282a2f] space-y-3 flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <div className="w-full h-24 rounded-xl bg-[#111318] border border-[#282a2f] flex flex-col items-center justify-center p-2 text-center">
+                        <span className="material-symbols-outlined text-[32px] text-[#2563eb]">
+                          {pot.category === 'creatina' ? 'science' : pot.category === 'proteina' ? 'nutrition' : 'bolt'}
+                        </span>
+                        <span className="text-[10px] font-bold text-white mt-1 truncate max-w-full">
+                          {pot.name}
+                        </span>
                       </div>
-                      <h4 className="font-bold text-xs text-white truncate">{pot.name}</h4>
-                      <p className="text-[11px] text-[#8d90a0]">
-                        {pot.totalSize} {pot.sizeUnit} · Aberto em {pot.openingDate}
-                      </p>
+
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-bold uppercase text-[#8d90a0]">{pot.brand}</span>
+                          <span className="text-xs font-black text-white">{stats.daysLeft} días</span>
+                        </div>
+                        <h4 className="font-bold text-xs text-white truncate">{pot.name}</h4>
+                        <p className="text-[11px] text-[#8d90a0]">
+                          {pot.totalSize} {pot.sizeUnit} · Abierto el {pot.openingDate}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-[#282a2f] flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenReorder([pot])}
+                        className="flex-1 py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">chat</span>
+                        <span>Pedir Reposición</span>
+                      </button>
                     </div>
                   </div>
-
-                  <div className="pt-2 border-t border-[#282a2f] flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenReorder([pot])}
-                      className="flex-1 py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1"
-                    >
-                      <span className="material-symbols-outlined text-[14px]">chat</span>
-                      <span>Repor</span>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
-      {/* VISTA 3: COMPOSIÇÃO DO DIA (O que você tomou hoje - Fluxo 4 do PDF) */}
-      {activeSubTab === 'historico' && (
+      {/* VISTA 3: COMPOSICIÓN DIARIA */}
+      {activeSubTab === 'composicion' && (
         <div className="space-y-4">
           <div className="p-4 rounded-2xl bg-[#191c20] border border-[#282a2f] space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 className="font-bold text-base text-white flex items-center gap-2">
-                  O que você tomou hoje
+                  Lo que tomaste hoy
                   <span className="text-[11px] font-medium text-[#8d90a0]">
-                    (Soma das doses marcadas)
+                    (Suma de tomas marcadas)
                   </span>
                 </h3>
                 <p className="text-xs text-[#8d90a0]">
-                  Soma cada ingrediente declarado nos rótulos de creatina, whey e pré-treino.
+                  Suma de cada principio activo declarado en tus suplementos.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => setIsSummaryModalOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-[#2563eb] text-white text-xs font-bold hover:bg-blue-600 transition-all flex items-center gap-1.5 self-start sm:self-auto"
+                className="px-3 py-1.5 rounded-lg bg-[#2563eb] text-white text-xs font-bold hover:bg-blue-600 transition-all flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[15px]">picture_as_pdf</span>
-                <span>Gerar Resumo Nutricionista (PDF)</span>
+                <span>Ficha para Nutricionista</span>
               </button>
             </div>
 
-            {/* Lista de ingredientes somados em valores absolutos */}
             <div className="divide-y divide-[#282a2f] pt-2">
               {dailyIngredients.length === 0 ? (
                 <p className="text-xs text-[#8d90a0] py-4 text-center">
-                  Nenhuma dose marcada hoje ainda. Marque seus potes na aba "Hoje" para somar a composição.
+                  Ninguna toma registrada hoy aún. Marca tus suplementos en la pestaña "Hoy" para ver la composición acumulada.
                 </p>
               ) : (
                 dailyIngredients.map((item, idx) => (
@@ -556,11 +600,11 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-xs sm:text-sm text-white">{item.name}</span>
                         <span className="text-[10px] text-[#8d90a0]">
-                          {item.sources.length} {item.sources.length === 1 ? 'produto' : 'produtos'}
+                          {item.sources.length} {item.sources.length === 1 ? 'producto' : 'productos'}
                         </span>
                       </div>
                       <span className="text-[10px] text-[#8d90a0]">
-                        Toque para ver de onde vem cada grama
+                        Toca para ver el desglose
                       </span>
                     </div>
 
@@ -578,12 +622,11 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             </div>
           </div>
 
-          {/* Modal / Card detalhado: De onde vem cada grama (Fluxo 4 tela 40) */}
           {selectedIngredientDetail && (
             <div className="p-4 rounded-2xl bg-[#111318] border border-[#2563eb]/40 space-y-3 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold uppercase text-[#adc6ff]">Detalhamento de Ingrediente</span>
+                  <span className="text-[10px] font-bold uppercase text-[#adc6ff]">Desglose de Ingrediente</span>
                   <h4 className="font-black text-base text-white">
                     {selectedIngredientDetail.name}: {selectedIngredientDetail.totalAmount} {selectedIngredientDetail.unit}
                   </h4>
@@ -591,14 +634,14 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedIngredientDetail(null)}
-                  className="text-xs text-[#8d90a0] hover:text-white"
+                  className="text-xs text-[#8d90a0] hover:text-white cursor-pointer"
                 >
-                  Fechar
+                  Cerrar
                 </button>
               </div>
 
               <div className="space-y-1.5">
-                <span className="text-[11px] font-bold text-[#8d90a0] block">DE ONDE VEM:</span>
+                <span className="text-[11px] font-bold text-[#8d90a0] block">FUENTES:</span>
                 {selectedIngredientDetail.sources.map((src, i) => (
                   <div
                     key={i}
@@ -619,17 +662,17 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
         </div>
       )}
 
-      {/* VISTA 4: LOJAS & PONTOS PRÓXIMOS (GOOGLE MAPS GROUNDING COM GEMINI 3.5 FLASH) */}
-      {activeSubTab === 'maps' && (
+      {/* VISTA 4: TIENDAS OFICIALES */}
+      {activeSubTab === 'tiendas' && (
         <GoogleMapsExplorer
           isDark={isDark}
           defaultCategory="supplements"
-          title="Pontos de Venda MAX & Suplementação Esportiva"
-          subtitle="Busca verificada com Google Maps em tempo real via Gemini 3.5 Flash para compra ou reposição"
+          title="Tiendas MAX & Suplementación Deportiva"
+          subtitle="Puntos de venta oficiales y tiendas cercanas verificadas con Google Maps"
         />
       )}
 
-      {/* Modales integrados del sistema */}
+      {/* Modales del sistema */}
       <RegisterPotModal
         isOpen={isRegisterOpen}
         onClose={() => setIsRegisterOpen(false)}
@@ -652,14 +695,14 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
         isDark={isDark}
       />
 
-      {/* Modal Comparativo Honestamente Grátis vs VIP (PDF página 3 e 5) */}
+      {/* Modal Comparativo Estándar vs VIP */}
       {showVipUpgradeModal && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
           <div className="bg-[#191c20] text-white rounded-2xl max-w-md w-full border border-[#282a2f] shadow-2xl p-5 space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between border-b border-[#282a2f] pb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xl">👑</span>
-                <h3 className="font-black text-base">Plano Grátis vs VIP MAX</h3>
+                <h3 className="font-black text-base">Plan Estándar vs VIP MAX</h3>
               </div>
               <button
                 type="button"
@@ -671,25 +714,25 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             </div>
 
             <p className="text-xs text-[#8d90a0]">
-              O plano VIP é gratuito no mês em que você compra qualquer suplemento na MAX Suplementos. Quem compra todo mês nunca paga!
+              El plan VIP es gratuito para atletas que adquieren sus suplementos en MAX Suplementos. ¡Mantén tu fidelidad activa y disfruta todos los beneficios!
             </p>
 
             <div className="space-y-2 text-xs">
               <div className="p-2.5 rounded-xl bg-[#111318] border border-[#282a2f] flex justify-between items-center">
-                <span>Potes acompanhados</span>
-                <span className="font-bold text-white">Grátis: 1 | <strong className="text-amber-400">VIP: Ilimitados</strong></span>
+                <span>Suplementos monitoreados</span>
+                <span className="font-bold text-white">Estándar: 1 | <strong className="text-amber-400">VIP: Ilimitados</strong></span>
               </div>
               <div className="p-2.5 rounded-xl bg-[#111318] border border-[#282a2f] flex justify-between items-center">
-                <span>Previsão de fim e WhatsApp</span>
-                <span className="font-bold text-emerald-400">Sim (ambos)</span>
+                <span>Cálculo de fin y reposición</span>
+                <span className="font-bold text-emerald-400">Incluido en ambos</span>
               </div>
               <div className="p-2.5 rounded-xl bg-[#111318] border border-[#282a2f] flex justify-between items-center">
-                <span>Pedido Agrupado com 1 toque</span>
-                <span className="font-bold text-white">Grátis: Não | <strong className="text-amber-400">VIP: Sim</strong></span>
+                <span>Pedido en WhatsApp con 1 toque</span>
+                <span className="font-bold text-white">Estándar: No | <strong className="text-amber-400">VIP: Sí</strong></span>
               </div>
               <div className="p-2.5 rounded-xl bg-[#111318] border border-[#282a2f] flex justify-between items-center">
-                <span>Resumo para Nutricionista em PDF</span>
-                <span className="font-bold text-emerald-400">Sim (ambos)</span>
+                <span>Ficha para Nutricionista en PDF</span>
+                <span className="font-bold text-emerald-400">Incluido en ambos</span>
               </div>
             </div>
 
@@ -699,11 +742,11 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 onClick={() => setShowVipUpgradeModal(false)}
                 className="w-1/3 py-2 px-3 rounded-xl bg-[#282a2f] text-xs font-bold text-[#c3c6d7]"
               >
-                Fechar
+                Cerrar
               </button>
               <a
-                href={`https://wa.me/5491100000000?text=${encodeURIComponent(
-                  'Olá MAX Suplementos! Gostaria de ativar meu plano VIP no app MAX Tracker para acompanhar minha rotina completa de suplementos.'
+                href={`https://wa.me/59899000000?text=${encodeURIComponent(
+                  'Hola MAX Suplementos! Quisiera activar mi beneficio VIP en la app para monitorear mi protocolo completo de suplementos.'
                 )}`}
                 target="_blank"
                 rel="noreferrer"
@@ -714,7 +757,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 className="flex-1 py-2 px-3 rounded-xl bg-[#25d366] hover:bg-[#20ba59] text-black text-xs font-black transition-all flex items-center justify-center gap-1.5 shadow-md"
               >
                 <span className="material-symbols-outlined text-[16px]">chat</span>
-                <span>Ativar VIP pelo WhatsApp</span>
+                <span>Activar VIP por WhatsApp</span>
               </a>
             </div>
           </div>

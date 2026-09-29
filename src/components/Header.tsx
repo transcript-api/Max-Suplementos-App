@@ -66,10 +66,10 @@ export const Header: React.FC<HeaderProps> = ({
                 !syncStatus.isOnline
                   ? 'Modo Offline: Datos guardados localmente. Se sincronizarán automáticamente al reconectar.'
                   : syncStatus.isSyncing
-                  ? 'Sincronizando registros con Firestore...'
+                  ? 'Sincronizando registros en la nube...'
                   : syncStatus.pendingCount > 0
                   ? `${syncStatus.pendingCount} cambios pendientes. Toca para sincronizar.`
-                  : 'Sincronizado con Firestore en tiempo real.'
+                  : 'Datos sincronizados en tiempo real.'
               }
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
                 !syncStatus.isOnline
@@ -97,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'Sincronizando...'
                   : syncStatus.pendingCount > 0
                   ? `${syncStatus.pendingCount} pendientes`
-                  : 'Firestore Activo'}
+                  : 'Nube Sincronizada'}
               </span>
               <span className="material-symbols-outlined text-[14px]">
                 {!syncStatus.isOnline
@@ -149,8 +149,8 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenAudioTranscriber}
-              aria-label="Transcribir Audio con micrófono (gemini-3.5-transcribe)"
-              title="Transcribir Audio con micrófono (gemini-3.5-transcribe)"
+              aria-label="Transcribir audio con voz"
+              title="Transcribir audio o comidas por voz"
               className="p-2 rounded-xl dark:bg-[#191c20] bg-slate-100 dark:hover:bg-[#282a2f] hover:bg-slate-200 text-purple-500 dark:text-purple-400 border dark:border-[#282a2f] border-slate-200 transition-all flex items-center justify-center active:scale-95 group relative"
             >
               <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">
