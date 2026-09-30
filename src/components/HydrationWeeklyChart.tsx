@@ -215,7 +215,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
     if (active && payload && payload.length) {
       const data: HydrationChartItem = payload[0].payload;
       return (
-        <div className="p-3 rounded-xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-xl text-xs space-y-1.5 min-w-[200px]">
+        <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-white border dark:border-white/10 border-slate-200 shadow-xl text-xs space-y-1.5 min-w-[200px]">
           <div className="flex items-center justify-between pb-1 border-b dark:border-white/10 border-slate-200">
             <span className="font-bold dark:text-white text-slate-900">{data.fullDate}</span>
             {data.isToday && (
@@ -296,7 +296,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
   return (
     <section
       id="hydration-compliance-weekly-section"
-      className="p-4 sm:p-5 rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
+      className="p-4 sm:p-5 rounded-2xl dark:bg-[#0a0a0a] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
     >
       {/* Encabezado Principal y Selectores */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-2 border-b dark:border-white/10 border-slate-200">
@@ -328,7 +328,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
         {/* Barra de Controles: Selector 7 días / 4 semanas + Switch Litros / % */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Selector de Rango */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#06151e] p-1 rounded-xl border dark:border-white/10 border-slate-200">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#0a0a0a] p-1 rounded-xl border dark:border-white/10 border-slate-200">
             <button
               type="button"
               onClick={() => setDateRange('7days')}
@@ -358,7 +358,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
           </div>
 
           {/* Switch Litros vs % */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#06151e] p-1 rounded-xl border dark:border-white/10 border-slate-200">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#0a0a0a] p-1 rounded-xl border dark:border-white/10 border-slate-200">
             <button
               type="button"
               onClick={() => setViewMode('liters')}
@@ -388,7 +388,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
       {/* Tarjetas de Métricas de Resumen */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
         {/* Promedio Diario */}
-        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#06151e] bg-slate-50 dark:border-white/10 border-slate-200">
+        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#0a0a0a] bg-slate-50 dark:border-white/10 border-slate-200">
           <div className="flex items-center justify-between">
             <span className="text-[11px] uppercase font-bold dark:text-[#898a8c] text-slate-400">
               Promedio Diario
@@ -416,7 +416,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
         </div>
 
         {/* Días Cumplidos */}
-        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#06151e] bg-slate-50 dark:border-white/10 border-slate-200">
+        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#0a0a0a] bg-slate-50 dark:border-white/10 border-slate-200">
           <div className="flex items-center justify-between">
             <span className="text-[11px] uppercase font-bold dark:text-[#898a8c] text-slate-400">
               Días Cumplidos
@@ -437,7 +437,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
         </div>
 
         {/* Ingesta Total */}
-        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#06151e] bg-slate-50 dark:border-white/10 border-slate-200">
+        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#0a0a0a] bg-slate-50 dark:border-white/10 border-slate-200">
           <div className="flex items-center justify-between">
             <span className="text-[11px] uppercase font-bold dark:text-[#898a8c] text-slate-400">
               Volumen Total
@@ -455,7 +455,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
         </div>
 
         {/* Estado Hoy */}
-        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#06151e] bg-slate-50 dark:border-white/10 border-slate-200">
+        <div className="p-3 sm:p-3.5 rounded-xl border dark:bg-[#0a0a0a] bg-slate-50 dark:border-white/10 border-slate-200">
           <div className="flex items-center justify-between">
             <span className="text-[11px] uppercase font-bold dark:text-[#898a8c] text-slate-400">
               Hoy
@@ -510,7 +510,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke={isDark ? '#06151e' : '#d6d6d6'}
+                stroke={isDark ? '#0a0a0a' : '#d6d6d6'}
                 vertical={false}
               />
               <XAxis
@@ -518,7 +518,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
                 stroke={isDark ? '#898a8c' : '#898a8c'}
                 fontSize={12}
                 tickLine={false}
-                axisLine={{ stroke: isDark ? '#06151e' : '#d6d6d6' }}
+                axisLine={{ stroke: isDark ? '#0a0a0a' : '#d6d6d6' }}
               />
               <YAxis
                 domain={[0, yAxisMax]}
@@ -550,7 +550,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
                   r: 5,
                   fill: '#06b6d4',
                   strokeWidth: 2,
-                  stroke: isDark ? '#06151e' : '#ffffff',
+                  stroke: isDark ? '#0a0a0a' : '#ffffff',
                 }}
                 activeDot={{
                   r: 7,
@@ -589,7 +589,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
             <button
               type="button"
               onClick={onNavigateNutrition}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold dark:bg-[#06151e] bg-slate-100 dark:text-[#d6d6d6] text-slate-700 hover:text-white border dark:border-white/10 border-slate-300 transition-colors"
+              className="px-3 py-1.5 rounded-xl text-xs font-bold dark:bg-[#0a0a0a] bg-slate-100 dark:text-[#d6d6d6] text-slate-700 hover:text-white border dark:border-white/10 border-slate-300 transition-colors"
             >
               Ver Nutrición
             </button>

@@ -108,9 +108,9 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="bg-[#06151e] border border-white/10 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
+      <div className="bg-[#0a0a0a] border border-white/10 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
         {/* Header */}
-        <div className="p-4 bg-[#06151e] border-b border-white/10 flex items-center justify-between">
+        <div className="p-4 bg-[#0a0a0a] border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[20px] text-[#d6d6d6]">soup_kitchen</span>
             <h2 className="text-base font-bold text-white uppercase tracking-wider">
@@ -119,7 +119,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#06151e] hover:bg-[#545a5b] text-[#898a8c] hover:text-white flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-[#0a0a0a] hover:bg-[#545a5b] text-[#898a8c] hover:text-white flex items-center justify-center transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
@@ -138,7 +138,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
               placeholder="Ej: Colita de Cuadril con Boniato / Frango com Batata Doce"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#ffffff]"
+              className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#ffffff]"
             />
           </div>
 
@@ -154,7 +154,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                 className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
                   country === 'uruguay'
                     ? 'bg-[#ffffff]/20 border-[#ffffff] text-[#d6d6d6]'
-                    : 'bg-[#06151e] border-white/10 text-[#898a8c]'
+                    : 'bg-[#0a0a0a] border-white/10 text-[#898a8c]'
                 }`}
               >
                 <span>🇺🇾</span>
@@ -166,7 +166,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                 className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
                   country === 'brasil'
                     ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300'
-                    : 'bg-[#06151e] border-white/10 text-[#898a8c]'
+                    : 'bg-[#0a0a0a] border-white/10 text-[#898a8c]'
                 }`}
               >
                 <span>🇧🇷</span>
@@ -178,7 +178,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                 className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
                   country === 'frontera'
                     ? 'bg-amber-500/20 border-amber-500 text-amber-300'
-                    : 'bg-[#06151e] border-white/10 text-[#898a8c]'
+                    : 'bg-[#0a0a0a] border-white/10 text-[#898a8c]'
                 }`}
               >
                 <span>🌐</span>
@@ -188,7 +188,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
           </div>
 
           {/* Macros */}
-          <div className="bg-[#06151e] p-3 rounded-xl border border-white/10 space-y-3">
+          <div className="bg-[#0a0a0a] p-3 rounded-xl border border-white/10 space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-white block">
               Macronutrientes por Porción
             </span>
@@ -201,7 +201,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                   max="200"
                   value={protein}
                   onChange={(e) => setProtein(Number(e.target.value))}
-                  className="w-full bg-[#06151e] border border-[#ffffff]/40 rounded-lg p-2 text-sm text-white font-bold text-center"
+                  className="w-full bg-[#0a0a0a] border border-[#ffffff]/40 rounded-lg p-2 text-sm text-white font-bold text-center"
                 />
               </div>
               <div>
@@ -212,7 +212,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                   max="3000"
                   value={calories}
                   onChange={(e) => setCalories(Number(e.target.value))}
-                  className="w-full bg-[#06151e] border border-emerald-500/40 rounded-lg p-2 text-sm text-white font-bold text-center"
+                  className="w-full bg-[#0a0a0a] border border-emerald-500/40 rounded-lg p-2 text-sm text-white font-bold text-center"
                 />
               </div>
               <div>
@@ -223,7 +223,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                   max="400"
                   value={carbs}
                   onChange={(e) => setCarbs(Number(e.target.value))}
-                  className="w-full bg-[#06151e] border border-white/10 rounded-lg p-2 text-sm text-white font-bold text-center"
+                  className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-2 text-sm text-white font-bold text-center"
                 />
               </div>
               <div>
@@ -234,7 +234,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                   max="150"
                   value={fats}
                   onChange={(e) => setFats(Number(e.target.value))}
-                  className="w-full bg-[#06151e] border border-amber-500/40 rounded-lg p-2 text-sm text-white font-bold text-center"
+                  className="w-full bg-[#0a0a0a] border border-amber-500/40 rounded-lg p-2 text-sm text-white font-bold text-center"
                 />
               </div>
             </div>
@@ -252,7 +252,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
                 max="180"
                 value={prepTimeMinutes}
                 onChange={(e) => setPrepTimeMinutes(Number(e.target.value))}
-                className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-sm text-white text-center font-bold"
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-3 py-2 text-sm text-white text-center font-bold"
               />
             </div>
             <div>
@@ -262,7 +262,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value as any)}
-                className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-sm text-white font-bold"
+                className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-3 py-2 text-sm text-white font-bold"
               >
                 <option value="Fácil">Fácil</option>
                 <option value="Intermedio">Intermedio</option>
@@ -281,7 +281,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
               value={ingredientsText}
               onChange={(e) => setIngredientsText(e.target.value)}
               placeholder="Ej: 200g Lomo magro&#10;150g Papines al horno"
-              className="w-full bg-[#06151e] border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ffffff]"
+              className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ffffff]"
             />
           </div>
 
@@ -295,7 +295,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
               value={instructionsText}
               onChange={(e) => setInstructionsText(e.target.value)}
               placeholder="Paso 1: Dorar la carne...&#10;Paso 2: Servir con ensalada..."
-              className="w-full bg-[#06151e] border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ffffff]"
+              className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ffffff]"
             />
           </div>
 
@@ -303,7 +303,7 @@ export const AddRecipeModal: React.FC<AddRecipeModalProps> = ({
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full bg-[#06151e] hover:bg-[#545a5b] text-white font-bold py-3 rounded-xl text-center shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
+              className="w-full bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-bold py-3 rounded-xl text-center shadow-lg transition-all active:scale-98 flex items-center justify-center gap-2"
             >
               <span className="material-symbols-outlined text-[18px]">add_circle</span>
               <span>Guardar Plato en mi Catálogo (+30 XP)</span>

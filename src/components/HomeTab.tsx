@@ -1,8 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { calculateLevelFromXP } from '../lib/gamification';
-import { ExpandableMealSuggestionCard } from './ExpandableMealSuggestionCard';
 import { ProteinWeeklyChart } from './ProteinWeeklyChart';
-import { MealSuggestion } from '../lib/gemini';
 import { getPersonalizedContent } from '../lib/personalizationEngine';
 import { CommitmentLevel } from '../types';
 
@@ -50,16 +48,6 @@ export const HomeTab: React.FC<HomeTabProps> = ({
     () => getPersonalizedContent(userGoal, userLevel as CommitmentLevel, userName, userWeight),
     [userGoal, userLevel, userName, userWeight]
   );
-  const [mealSuggestion, setMealSuggestion] = useState<MealSuggestion>({
-    mealName: 'Bowl proteico de pollo con quinoa, palta y espinacas',
-    protein: 42,
-    calories: 460,
-    preparationTime: '12 min',
-    ingredientsUsed: ['Pechuga de pollo grillada (160g)', 'Quinoa cocida', 'Palta en láminas', 'Espinacas frescas'],
-    instructions: 'Dispón la base de quinoa templada con la pechuga en tiras, palta y hojas de espinaca. Adereza con gotas de oliva y limón.',
-    reason: 'Aporte de alto valor biológico con perfil completo de electrolitos para optimizar la síntesis proteica.',
-    isComplexMenu: true,
-  });
   const maxHydration = 3.0;
   const isHydrationDone = hydration >= maxHydration;
   const hydrationPct = Math.min(100, Math.round((hydration / maxHydration) * 100));
@@ -133,7 +121,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             )}
           </div>
           <div className="flex flex-col items-end gap-1.5">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#06151e] text-white border border-[#545a5b] shadow-sm">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0a0a0a] text-white border border-[#545a5b] shadow-sm">
               <span className="text-base select-none">🔥</span>
               <span className="font-label-caps text-label-caps tracking-normal font-bold">
                 {streakDays} días de racha
@@ -181,8 +169,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       </section>
 
       {/* Tarjeta Héroe: FORM DIARIA */}
-      <section className="relative overflow-hidden rounded-xl bg-[#06151e] p-5 shadow-xl border border-white/10">
-        <div className="absolute -right-16 -top-16 w-48 h-48 bg-[#ffffff]/10 rounded-full blur-3xl pointer-events-none"></div>
+      <section className="relative overflow-hidden rounded-xl bg-[#0a0a0a] p-5 shadow-xl border border-white/10">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">bolt</span>
@@ -190,7 +177,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               FORM DIARIA
             </span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#06151e] text-[#d6d6d6] font-label-caps text-label-caps border border-white/10 font-semibold">
+          <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-[#d6d6d6] font-label-caps text-label-caps border border-white/10 font-semibold">
             {formScore === 0 ? 'COMIENZA HOY' : `${formScore}% HOY`}
           </span>
         </div>
@@ -200,7 +187,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           <div className="relative w-36 h-36 flex-shrink-0 flex items-center justify-center">
             <svg aria-hidden="true" className="w-full h-full -rotate-90" viewBox="0 0 120 120">
               {/* Pista exterior */}
-              <circle className="stroke-[#06151e]" cx="60" cy="60" fill="none" r="50" strokeWidth="7" />
+              <circle className="stroke-[#0a0a0a]" cx="60" cy="60" fill="none" r="50" strokeWidth="7" />
               <circle 
                 className="stroke-white/80 transition-all duration-700 ease-out" 
                 cx="60" 
@@ -266,7 +253,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
 
         {/* Tarjeta 1: Entrenamiento */}
-        <div className="flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
+        <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-xl border border-white/10">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
               <span className="material-symbols-outlined text-[22px]">fitness_center</span>
@@ -276,7 +263,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 <span className="font-headline-md text-headline-md text-white truncate font-semibold">
                   Entrenamiento
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#06151e] text-white font-label-caps text-label-caps uppercase font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-[#0a0a0a] text-white font-label-caps text-label-caps uppercase font-bold">
                   +25 XP
                 </span>
               </div>
@@ -289,10 +276,10 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
 
         {/* Tarjeta 2: Proteína */}
-        <div className="flex flex-col p-4 bg-[#06151e] rounded-xl border border-white/10 space-y-2">
+        <div className="flex flex-col p-4 bg-[#0a0a0a] rounded-xl border border-white/10 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
                 <span className="material-symbols-outlined text-[22px]">restaurant</span>
               </div>
               <div className="flex flex-col">
@@ -311,16 +298,16 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               </span>
             </div>
           </div>
-          <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden">
+          <div className="w-full bg-[#0a0a0a] h-2 rounded-full overflow-hidden">
             <div className="bg-white/70 h-full rounded-full transition-all duration-500" style={{ width: '85.3%' }}></div>
           </div>
         </div>
 
         {/* Tarjeta 3: Hidratación (Interactiva) */}
-        <div className="flex flex-col p-4 bg-[#06151e] rounded-xl border border-white/10 space-y-2">
+        <div className="flex flex-col p-4 bg-[#0a0a0a] rounded-xl border border-white/10 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
                 <span className="material-symbols-outlined text-[22px]">water_drop</span>
               </div>
               <div className="flex flex-col">
@@ -329,7 +316,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                     Hidratación
                   </span>
                   <span className={`px-2 py-0.5 rounded-full font-label-caps text-label-caps uppercase font-bold ${
-                    isHydrationDone ? 'bg-white/15 text-white' : 'bg-[#06151e] text-[#898a8c]'
+                    isHydrationDone ? 'bg-white/15 text-white' : 'bg-[#0a0a0a] text-[#898a8c]'
                   }`}>
                     {isHydrationDone ? '¡Completado!' : 'En curso'}
                   </span>
@@ -347,7 +334,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             </div>
           </div>
 
-          <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden">
+          <div className="w-full bg-[#0a0a0a] h-2 rounded-full overflow-hidden">
             <div 
               className="h-full rounded-full transition-all duration-500 bg-white/70" 
               style={{ width: `${hydrationPct}%` }}
@@ -364,7 +351,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               disabled={isHydrationDone}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-body-sm text-body-sm font-bold transition-all shadow-md active:scale-95 ${
                 isHydrationDone 
-                  ? 'bg-[#06151e] text-[#898a8c] cursor-not-allowed opacity-60' 
+                  ? 'bg-[#0a0a0a] text-[#898a8c] cursor-not-allowed opacity-60' 
                   : 'bg-white/15 hover:bg-white/25 text-white border border-white/20'
               }`}
             >
@@ -375,7 +362,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
 
         {/* Tarjeta 4: Suplementación */}
-        <div className="flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
+        <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-xl border border-white/10">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
               <span className="material-symbols-outlined text-[22px]">medication</span>
@@ -385,7 +372,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 <span className="font-headline-md text-headline-md text-white truncate font-semibold">
                   Suplementación
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#06151e] text-white font-label-caps text-label-caps uppercase font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-[#0a0a0a] text-white font-label-caps text-label-caps uppercase font-bold">
                   +10 XP
                 </span>
               </div>
@@ -400,9 +387,9 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
 
         {/* Tarjeta 5: Sueño */}
-        <div className="flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
+        <div className="flex items-center justify-between p-4 bg-[#0a0a0a] rounded-xl border border-white/10">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
               <span className="material-symbols-outlined text-[22px]">bedtime</span>
             </div>
             <div className="flex flex-col min-w-0">
@@ -426,7 +413,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       </section>
 
       {/* Tip del Día Personalizado */}
-      <section className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#06151e] border border-white/10">
+      <section className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#0a0a0a] border border-white/10">
         <div className="w-8 h-8 rounded-lg bg-white/8 flex items-center justify-center text-zinc-300 flex-shrink-0 mt-0.5">
           <span className="material-symbols-outlined text-[18px]">lightbulb</span>
         </div>
@@ -442,7 +429,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       {/* Desafío Activo Personalizado */}
       <section className="relative overflow-hidden rounded-xl p-4 border"
         style={{
-          background: `linear-gradient(135deg, #06151e 60%, ${personalized.modeBadgeColor}15)`,
+          background: `linear-gradient(135deg, #0a0a0a 60%, ${personalized.modeBadgeColor}15)`,
           borderColor: `${personalized.modeBadgeColor}30`,
         }}
       >
@@ -466,33 +453,23 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       </section>
 
       {/* Tarjeta Vista Previa "MAX AI" */}
-      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#06151e] via-[#06151e] to-white/5 p-5 shadow-lg border border-white/10">
+      <section className="relative overflow-hidden rounded-xl bg-[#0a0a0a] p-5 shadow-lg border border-white/10">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-zinc-200">
-              <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-            </div>
-            <span className="font-label-caps text-label-caps uppercase text-zinc-300 tracking-wider font-bold">
-              MAX AI · COACH METABÓLICO
-            </span>
-          </div>
-          <span className="font-body-sm text-[#898a8c] flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse"></span>
-            En vivo
+          <span className="font-label-caps text-label-caps uppercase text-zinc-300 tracking-wider font-bold">
+            Coach Metabólico
           </span>
+          <span className="font-body-sm text-[#898a8c]">MAX AI</span>
         </div>
 
-        <blockquote className="my-2 pl-3 border-l-2 border-white/30 py-0.5">
-          <p className="font-body-md text-body-md text-white leading-snug italic">
-            «{personalized.aiWelcomeMessage}»
-          </p>
-        </blockquote>
+        <p className="font-body-md text-body-md text-white leading-snug my-2">
+          {personalized.aiWelcomeMessage}
+        </p>
 
         <div className="flex flex-wrap items-center gap-2 pt-2">
           <button
             type="button"
             onClick={() => onNavigateTab('max-ai', `Dame un plan de ${userGoal.toLowerCase()} para mi nivel ${userLevel}`)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#06151e] hover:bg-[#06151e] text-white font-body-sm transition-colors active:scale-95 border border-white/10"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0a0a0a] hover:bg-[#0a0a0a] text-white font-body-sm transition-colors active:scale-95 border border-white/10"
           >
             <span className="material-symbols-outlined text-[16px] text-zinc-300">lunch_dining</span>
             <span>Plan para {userGoal}</span>
@@ -501,7 +478,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
           <button
             type="button"
             onClick={() => onNavigateTab('nutricion')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#06151e] hover:bg-[#06151e] text-white font-body-sm transition-colors active:scale-95 border border-white/10"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0a0a0a] hover:bg-[#0a0a0a] text-white font-body-sm transition-colors active:scale-95 border border-white/10"
           >
             <span className="material-symbols-outlined text-[16px] text-zinc-300">photo_camera</span>
             <span>Analizar mi comida</span>
@@ -520,14 +497,6 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         </div>
       </section>
 
-      {/* Sugerencia de Comida Inteligente con Desglose Expandible de Micronutrientes */}
-      <ExpandableMealSuggestionCard
-        mealSuggestion={mealSuggestion}
-        onApplyMeal={(p) => (onAddProtein ? onAddProtein(p) : onNavigateTab('nutricion'))}
-        onNavigateTab={onNavigateTab}
-        isDark={true}
-      />
-
       {/* Resumen Gráfico del Cumplimiento de la Meta de Proteínas (Últimos 7 Días) */}
       <ProteinWeeklyChart
         currentProtein={protein}
@@ -538,7 +507,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       />
 
       {/* Tarjeta: RANKING GLOBAL */}
-      <section className="rounded-xl bg-[#06151e] p-5 shadow-md border border-white/10 space-y-2">
+      <section className="rounded-xl bg-[#0a0a0a] p-5 shadow-md border border-white/10 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">leaderboard</span>
@@ -546,7 +515,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               RANKING GLOBAL
             </span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#06151e] text-white font-label-caps text-label-caps border border-white/10 font-semibold">
+          <span className="px-2.5 py-0.5 rounded-full bg-[#0a0a0a] text-white font-label-caps text-label-caps border border-white/10 font-semibold">
             Liga Diamante
           </span>
         </div>
@@ -561,10 +530,10 @@ export const HomeTab: React.FC<HomeTabProps> = ({
 
         <div className="space-y-1.5 pt-1">
           {/* #126 Mateo R. */}
-          <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#06151e]/60 border border-white/10">
+          <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#0a0a0a]/60 border border-white/10">
             <div className="flex items-center gap-2.5 min-w-0">
               <span className="font-label-caps text-label-caps text-[#898a8c] w-6">#126</span>
-              <div className="w-6 h-6 rounded-full bg-[#06151e] flex items-center justify-center text-[#898a8c] text-xs font-bold">M</div>
+              <div className="w-6 h-6 rounded-full bg-[#0a0a0a] flex items-center justify-center text-[#898a8c] text-xs font-bold">M</div>
               <span className="font-body-md text-white truncate font-medium">Mateo R.</span>
             </div>
             <span className="font-body-sm text-[#898a8c] font-medium flex-shrink-0">4.872 XP</span>

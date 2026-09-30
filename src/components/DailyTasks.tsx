@@ -65,7 +65,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
               className={`flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer select-none active:scale-[0.99] ${
                 isDone
                   ? 'dark:bg-white/5 bg-slate-50/90 dark:border-white/20 border-slate-300/60 shadow-sm'
-                  : 'dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 hover:dark:border-white/15 hover:border-slate-300 shadow-sm'
+                  : 'dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 hover:dark:border-white/15 hover:border-slate-300 shadow-sm'
               }`}
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -74,7 +74,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                   className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all flex-shrink-0 border ${
                     isDone
                       ? 'bg-white border-white text-black shadow-[0_0_8px_rgba(255,255,255,0.3)]'
-                      : 'dark:bg-[#06151e] bg-slate-100 dark:border-[#545a5b] border-slate-300'
+                      : 'dark:bg-[#0a0a0a] bg-slate-100 dark:border-[#545a5b] border-slate-300'
                   }`}
                 >
                   {isDone && (
@@ -89,7 +89,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                   className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
                     isDone
                       ? 'dark:bg-white/10 bg-slate-100 dark:text-white text-slate-700'
-                      : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-500'
+                      : 'dark:bg-[#0a0a0a] bg-slate-100 dark:text-[#898a8c] text-slate-500'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[20px]">
@@ -113,7 +113,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                       className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
                         isDone
                           ? 'bg-white/15 text-white dark:text-zinc-100'
-                          : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-500'
+                          : 'dark:bg-[#0a0a0a] bg-slate-100 dark:text-[#898a8c] text-slate-500'
                       }`}
                     >
                       +{task.xpReward} XP

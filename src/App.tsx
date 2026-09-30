@@ -382,7 +382,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full border transition-all shadow-sm ${
               isAllTasksDone
                 ? 'bg-white/12 text-white border-white/25 ring-2 ring-white/15 shadow-[0_0_16px_rgba(255,255,255,0.12)]'
-                : 'dark:bg-[#06151e] bg-[#06151e] dark:text-white text-slate-800 dark:border-white/10 border-slate-200'
+                : 'dark:bg-[#0a0a0a] bg-[#0a0a0a] dark:text-white text-slate-800 dark:border-white/10 border-slate-200'
             }`}
           >
             <span className="text-xl select-none">🔥</span>
@@ -436,13 +436,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </section>
 
       {/* 2. Barra de Energía Visual (Progreso) para Cumplimiento Diario de Metas */}
-      <section className="relative overflow-hidden rounded-2xl p-5 shadow-xl border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 transition-colors">
-        {/* Resplandor ambiental de fondo */}
-        <div
-          className="absolute -right-16 -top-16 w-56 h-56 rounded-full blur-3xl pointer-events-none opacity-20"
-          style={{ backgroundColor: currentLevelConfig.barColor }}
-        ></div>
-
+      <section className="relative overflow-hidden rounded-2xl p-5 shadow-xl border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
             <span
@@ -466,7 +460,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <button
               type="button"
               onClick={onOpenLevelModal}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all dark:bg-[#06151e] bg-slate-100 hover:scale-[1.02] shadow-sm"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all dark:bg-[#0a0a0a] bg-slate-100 hover:scale-[1.02] shadow-sm"
               style={{
                 borderColor: `${currentLevelConfig.barColor}55`,
               }}
@@ -539,7 +533,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           {/* Barra de progreso de Energía con los colores de nivel definidos */}
           <div
-            className={`relative w-full h-4 rounded-full overflow-hidden dark:bg-[#06151e] bg-slate-100 p-0.5 border transition-all ${
+            className={`relative w-full h-4 rounded-full overflow-hidden dark:bg-[#0a0a0a] bg-slate-100 p-0.5 border transition-all ${
               energyPercent >= 100
                 ? 'border-white/30 shadow-[0_0_12px_rgba(255,255,255,0.2)]'
                 : 'dark:border-white/10 border-slate-200'
@@ -621,7 +615,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </section>
 
       {/* 2.4. Desafío Activo Personalizado según Objetivo y Nivel */}
-      <div className="rounded-2xl p-4 sm:p-5 border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="rounded-2xl p-4 sm:p-5 border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
@@ -662,7 +656,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* 2.45. Tip del Día y Cita del Coach Personalizados */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="p-4 rounded-2xl border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-sm space-y-1.5">
+        <div className="p-4 rounded-2xl border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 shadow-sm space-y-1.5">
           <div className="flex items-center gap-1.5 dark:text-zinc-300 text-slate-600">
             <span className="material-symbols-outlined text-[18px]">lightbulb</span>
             <span className="text-[10px] font-black uppercase tracking-wider">
@@ -674,7 +668,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-sm space-y-1.5">
+        <div className="p-4 rounded-2xl border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 shadow-sm space-y-1.5">
           <div className="flex items-center gap-1.5 dark:text-zinc-400 text-slate-500">
             <span className="material-symbols-outlined text-[18px]">format_quote</span>
             <span className="text-[10px] font-black uppercase tracking-wider">
@@ -756,7 +750,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       />
 
       {/* 7. Panel Exclusivo: Lo que vas sumando cada día con tu esfuerzo */}
-      <section className="rounded-2xl p-5 border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-md space-y-4">
+      <section className="rounded-2xl p-5 border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 shadow-md space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-white/10 text-zinc-200 border border-white/15 flex items-center justify-center">
@@ -782,7 +776,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
         {/* Cuadrícula de Métricas de Progreso Acumulado */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200">
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#898a8c] text-slate-500 block">
               XP Total Sumado
             </span>
@@ -794,7 +788,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200">
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#898a8c] text-slate-500 block">
               Racha Activa
             </span>
@@ -806,7 +800,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200">
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#898a8c] text-slate-500 block">
               Hidratación de Hoy
             </span>
@@ -818,7 +812,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200">
             <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#898a8c] text-slate-500 block">
               Beneficio Exclusivo
             </span>
@@ -829,24 +823,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
               En MAX Suplementos
             </span>
           </div>
-        </div>
-
-        {/* Acceso Directo a Nutrición si el atleta desea planificar comidas */}
-        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#06151e] via-[#06151e] to-transparent border border-white/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="text-xs text-slate-300">
-            <p className="font-semibold text-white">¿Querés registrar comidas o explorar el recetario?</p>
-            <p className="text-[11px] text-slate-400">
-              Tenés el Catálogo con +50 platos altos en proteína y calibración de macros en la sección Nutrición.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => onNavigateTab('nutricion')}
-            className="px-3.5 py-2 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap self-stretch sm:self-auto justify-center active:scale-95 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[16px]">restaurant_menu</span>
-            <span>Ir a Nutrición & Platos</span>
-          </button>
         </div>
       </section>
     </div>
@@ -2005,7 +1981,7 @@ export default function App() {
   }, [tasks, protein, userState.targets, userState.dailyHabits]);
 
   return (
-    <div className="min-h-screen dark:bg-[#06151e] bg-slate-50 dark:text-[#d6d6d6] text-slate-800 flex flex-col selection:bg-[#06151e] selection:text-white transition-colors duration-200">
+    <div className="min-h-screen dark:bg-[#0a0a0a] bg-slate-50 dark:text-[#d6d6d6] text-slate-800 flex flex-col selection:bg-[#0a0a0a] selection:text-white transition-colors duration-200">
       {/* Barra de Navegación Superior Fija con Switch de Modo Claro/Oscuro y Demo Toggle */}
       <Header
         currentTab={currentTab}
@@ -2028,9 +2004,9 @@ export default function App() {
       <main className="flex-1 w-full pt-20 flex flex-col items-center">
         {/* Banner de Reconciliación Inteligente Offline/Supabase */}
         {reconciliationNotice && (
-          <div className="mx-4 my-2.5 max-w-4xl w-[calc(100%-2rem)] p-3.5 bg-white/80 dark:bg-[#06151e]/90 border border-white/40 rounded-2xl shadow-xl backdrop-blur-md flex items-start justify-between gap-3 text-white transition-all animate-fadeIn z-30">
+          <div className="mx-4 my-2.5 max-w-4xl w-[calc(100%-2rem)] p-3.5 bg-white/80 dark:bg-[#0a0a0a]/90 border border-white/40 rounded-2xl shadow-xl backdrop-blur-md flex items-start justify-between gap-3 text-white transition-all animate-fadeIn z-30">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#06151e] flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md shadow-black/20">
+              <div className="w-8 h-8 rounded-xl bg-[#0a0a0a] flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md shadow-black/20">
                 <span className="material-symbols-outlined text-[20px]">published_with_changes</span>
               </div>
               <div className="space-y-1 text-left">

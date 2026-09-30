@@ -114,7 +114,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       </div>
 
       {/* Sub tabs */}
-      <div className="p-1 bg-[#06151e] rounded-xl flex items-center justify-between gap-1 border border-white/10">
+      <div className="p-1 bg-[#0a0a0a] rounded-xl flex items-center justify-between gap-1 border border-white/10">
         {(['retos', 'ranking', 'recompensas', 'suplementos'] as const).map((tab) => (
           <button
             key={tab}
@@ -122,7 +122,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 rounded-lg font-headline-md text-xs sm:text-sm text-center capitalize transition-all ${
               activeTab === tab
-                ? 'bg-[#06151e] text-white font-bold shadow-sm'
+                ? 'bg-[#0a0a0a] text-white font-bold shadow-sm'
                 : 'text-[#898a8c] hover:text-white font-medium'
             }`}
           >
@@ -141,7 +141,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {activeTab === 'retos' && (
         <div className="space-y-4">
           {/* Reto Principal: 30 Días Sin Romper Racha */}
-          <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 shadow-lg relative overflow-hidden">
+          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 shadow-lg relative overflow-hidden">
             <div className="flex justify-between items-start mb-2">
               <div>
                 <span className="bg-[#ffffff]/20 text-[#d6d6d6] font-label-caps text-label-caps px-2.5 py-0.5 rounded-full border border-[#ffffff]/30 font-bold uppercase">
@@ -161,7 +161,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 <span className="text-white font-bold">Día {streakDays} de 30</span>
                 <span className="text-[#d6d6d6] font-bold">{Math.round((streakDays / 30) * 100)}%</span>
               </div>
-              <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-[#0a0a0a] h-2 rounded-full overflow-hidden">
                 <div 
                   className="bg-[#ffffff] h-full rounded-full transition-all duration-500" 
                   style={{ width: `${(streakDays / 30) * 100}%` }}
@@ -177,7 +177,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
           {/* Otros retos secundarios */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex items-center justify-between">
+            <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[22px]">water_drop</span>
@@ -188,12 +188,12 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <span className="text-[11px] text-[#d6d6d6] font-semibold">5 / 7 días logrados</span>
                 </div>
               </div>
-              <span className="text-xs bg-[#06151e] text-white px-2 py-1 rounded font-bold border border-white/10">
+              <span className="text-xs bg-[#0a0a0a] text-white px-2 py-1 rounded font-bold border border-white/10">
                 +150 XP
               </span>
             </div>
 
-            <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex items-center justify-between">
+            <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[22px]">fitness_center</span>
@@ -204,14 +204,14 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <span className="text-[11px] text-[#d6d6d6] font-semibold">3 / 4 sesiones</span>
                 </div>
               </div>
-              <span className="text-xs bg-[#06151e] text-white px-2 py-1 rounded font-bold border border-white/10">
+              <span className="text-xs bg-[#0a0a0a] text-white px-2 py-1 rounded font-bold border border-white/10">
                 +200 XP
               </span>
             </div>
           </div>
 
           {/* Muro Comunitario */}
-          <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 space-y-3">
+          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-3">
             <h3 className="font-headline-md text-white font-bold">Muro de Atletas</h3>
 
             {/* Crear post rápido */}
@@ -221,11 +221,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 value={newPostText}
                 onChange={(e) => setNewPostText(e.target.value)}
                 placeholder="Comparte una victoria o tu marca de hoy..."
-                className="flex-1 bg-[#06151e] rounded-lg px-3 py-2 text-sm text-white border border-white/10 focus:outline-none focus:border-[#ffffff]"
+                className="flex-1 bg-[#0a0a0a] rounded-lg px-3 py-2 text-sm text-white border border-white/10 focus:outline-none focus:border-[#ffffff]"
               />
               <button
                 type="submit"
-                className="bg-[#06151e] hover:bg-[#545a5b] text-white px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-all"
+                className="bg-[#0a0a0a] hover:bg-[#545a5b] text-white px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-all"
               >
                 Publicar
               </button>
@@ -234,11 +234,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             {/* Lista de posts */}
             <div className="space-y-2.5 pt-1">
               {posts.map((p) => (
-                <div key={p.id} className="p-3 bg-[#06151e] rounded-xl border border-white/10 space-y-1.5">
+                <div key={p.id} className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 space-y-1.5">
                   <div className="flex justify-between items-center text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-white">{p.user}</span>
-                      <span className="px-1.5 py-0.5 rounded bg-[#06151e] text-[#d6d6d6] text-[10px]">
+                      <span className="px-1.5 py-0.5 rounded bg-[#0a0a0a] text-[#d6d6d6] text-[10px]">
                         {p.badge}
                       </span>
                     </div>
@@ -252,7 +252,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                       className={`text-xs flex items-center gap-1 px-2 py-1 rounded-full border transition-colors ${
                         p.liked 
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' 
-                          : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+                          : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
                       }`}
                     >
                       <span>🔥</span>
@@ -268,14 +268,14 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
       {/* VISTA: RANKING COMPLETO */}
       {activeTab === 'ranking' && (
-        <div className="bg-[#06151e] rounded-2xl p-5 border border-white/10 space-y-4">
+        <div className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/10 space-y-4">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
             <div>
               <span className="font-label-caps text-[#898a8c] uppercase block text-[11px] font-bold">Clasificación de Liga</span>
               <h3 className="font-headline-md text-white font-bold text-lg">Liga Diamante · Top Atletas</h3>
             </div>
             {/* Filtros Semanal / Mensual / Global */}
-            <div className="flex items-center bg-[#06151e] p-1 rounded-xl border border-white/10">
+            <div className="flex items-center bg-[#0a0a0a] p-1 rounded-xl border border-white/10">
               {(['semanal', 'mensual', 'global'] as const).map((p) => (
                 <button
                   key={p}
@@ -283,7 +283,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   onClick={() => setRankingPeriod(p)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all ${
                     rankingPeriod === p
-                      ? 'bg-[#06151e] text-white'
+                      ? 'bg-[#0a0a0a] text-white'
                       : 'text-[#898a8c] hover:text-white'
                   }`}
                 >
@@ -294,9 +294,9 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           </div>
 
           {/* Tarjeta de Proximidad Psicológica (Sección 25 del Master Prompt) */}
-          <div className="p-3.5 bg-[#06151e]/60 border border-[#ffffff]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
+          <div className="p-3.5 bg-[#0a0a0a]/60 border border-[#ffffff]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-[#06151e] text-white flex items-center justify-center font-bold flex-shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-[#0a0a0a] text-white flex items-center justify-center font-bold flex-shrink-0">
                 {isDemoMode ? '#127' : (xp > 0 ? '#1' : '-')}
               </div>
               <div>
@@ -319,7 +319,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
           <div className="space-y-2">
             {!isDemoMode && xp === 0 ? (
-              <div className="p-8 rounded-xl bg-[#06151e] border border-white/10 text-center space-y-2.5">
+              <div className="p-8 rounded-xl bg-[#0a0a0a] border border-white/10 text-center space-y-2.5">
                 <div className="w-12 h-12 rounded-full bg-[#ffffff]/20 text-[#ffffff] mx-auto flex items-center justify-center">
                   <span className="material-symbols-outlined text-[24px]">emoji_events</span>
                 </div>
@@ -345,8 +345,8 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   key={atleta.rank}
                   className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                     atleta.isYou
-                      ? 'bg-[#06151e]/80 border-[#ffffff] text-white font-bold shadow-md ring-1 ring-[#ffffff]/50'
-                      : 'bg-[#06151e] border-white/10 text-[#d6d6d6]'
+                      ? 'bg-[#0a0a0a]/80 border-[#ffffff] text-white font-bold shadow-md ring-1 ring-[#ffffff]/50'
+                      : 'bg-[#0a0a0a] border-white/10 text-[#d6d6d6]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -376,7 +376,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {/* VISTA: RECOMPENSAS Y CUPONES MAX SUPLEMENTOS */}
       {activeTab === 'recompensas' && (
         <div className="space-y-4">
-          <div className="bg-[#06151e] rounded-2xl p-5 border border-white/10 space-y-3">
+          <div className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/10 space-y-3">
             <div className="flex justify-between items-start">
               <div>
                 <span className="font-label-caps text-[#898a8c] uppercase block text-[11px] font-bold">Club Atleta MAX</span>
@@ -413,7 +413,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 return (
                   <div
                     key={reward.id}
-                    className="p-4 bg-[#06151e] border border-white/10 rounded-xl flex flex-col justify-between space-y-3 relative overflow-hidden"
+                    className="p-4 bg-[#0a0a0a] border border-white/10 rounded-xl flex flex-col justify-between space-y-3 relative overflow-hidden"
                   >
                     <div className="space-y-2">
                       <div className="flex justify-between items-start">
@@ -441,8 +441,8 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                         disabled={!canAfford}
                         className={`w-full py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                           canAfford
-                            ? 'bg-[#06151e] hover:bg-[#545a5b] text-white active:scale-95 shadow-md shadow-[#ffffff]/20'
-                            : 'bg-[#06151e] text-[#898a8c] cursor-not-allowed'
+                            ? 'bg-[#0a0a0a] hover:bg-[#545a5b] text-white active:scale-95 shadow-md shadow-[#ffffff]/20'
+                            : 'bg-[#0a0a0a] text-[#898a8c] cursor-not-allowed'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">
@@ -462,7 +462,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {/* VISTA: SUPLEMENTOS & RECOMPRA INTELIGENTE */}
       {activeTab === 'suplementos' && (
         <div className="space-y-4">
-          <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 space-y-3">
+          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-3">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">notifications_active</span>
               <h3 className="font-headline-md text-white font-bold">Alerta de Reposición Inteligente</h3>
@@ -479,7 +479,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
+              <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex justify-between items-start">
                     <span className="text-xs font-bold text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
@@ -498,14 +498,14 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <button
                     type="button"
                     onClick={() => setReordered('¡Orden de Creatina enviada con 1-Click! Llegará en 48hs.')}
-                    className="bg-[#06151e] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
+                    className="bg-[#0a0a0a] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
                   >
                     Reponer 1-Click
                   </button>
                 </div>
               </div>
 
-              <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
+              <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex justify-between items-start">
                     <span className="text-xs font-bold text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
@@ -524,7 +524,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <button
                     type="button"
                     onClick={() => setReordered('¡Orden de Whey Isolada procesada! Llegará en 48hs.')}
-                    className="bg-[#06151e] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
+                    className="bg-[#0a0a0a] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
                   >
                     Reponer 1-Click
                   </button>

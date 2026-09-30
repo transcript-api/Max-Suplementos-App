@@ -108,21 +108,21 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-[#06151e] flex flex-col overflow-hidden text-white animate-fadeIn">
+    <div className="fixed inset-0 z-40 bg-[#0a0a0a] flex flex-col overflow-hidden text-white animate-fadeIn">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-[#06151e] text-white px-4 py-2.5 rounded-xl shadow-2xl border border-white/40 font-bold text-xs sm:text-sm flex items-center gap-2 animate-bounce">
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-[#0a0a0a] text-white px-4 py-2.5 rounded-xl shadow-2xl border border-white/40 font-bold text-xs sm:text-sm flex items-center gap-2 animate-bounce">
           <span className="material-symbols-outlined text-[18px]">check_circle</span>
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Header Superior Deportivo */}
-      <div className="bg-[#06151e] border-b border-white/10 px-4 py-3.5 flex items-center justify-between flex-shrink-0">
+      <div className="bg-[#0a0a0a] border-b border-white/10 px-4 py-3.5 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-[#06151e] hover:bg-[#06151e] text-white flex items-center justify-center border border-[#545a5b] transition-all active:scale-95"
+            className="w-9 h-9 rounded-full bg-[#0a0a0a] hover:bg-[#0a0a0a] text-white flex items-center justify-center border border-[#545a5b] transition-all active:scale-95"
             aria-label="Volver a Nutrición"
           >
             <span className="material-symbols-outlined text-[20px]">arrow_back</span>
@@ -146,7 +146,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
         {/* Botón Agregar Plato Propio */}
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-gradient-to-r from-[#06151e] to-[#545a5b] hover:from-[#06151e] hover:to-[#545a5b] text-white text-xs sm:text-sm font-bold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl shadow-lg border border-white/30 transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          className="bg-gradient-to-r from-[#0a0a0a] to-[#545a5b] hover:from-[#0a0a0a] hover:to-[#545a5b] text-white text-xs sm:text-sm font-bold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl shadow-lg border border-white/30 transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
         >
           <span className="material-symbols-outlined text-[18px]">add_circle</span>
           <span>Crear Plato</span>
@@ -155,7 +155,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
       </div>
 
       {/* Controles de Búsqueda y Filtros */}
-      <div className="bg-[#06151e] border-b border-white/10 p-3 sm:p-4 space-y-3 flex-shrink-0">
+      <div className="bg-[#0a0a0a] border-b border-white/10 p-3 sm:p-4 space-y-3 flex-shrink-0">
         {/* Barra de Búsqueda */}
         <div className="relative">
           <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#898a8c] text-[20px]">
@@ -166,7 +166,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar plato (ej: chivito, picanha, feijoada, lomo, batata doce)..."
-            className="w-full bg-[#06151e] border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder-[#545a5b] focus:outline-none focus:border-[#ffffff] transition-all"
+            className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder-[#545a5b] focus:outline-none focus:border-[#ffffff] transition-all"
           />
           {searchQuery && (
             <button
@@ -199,8 +199,8 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                   onClick={() => setMealTimeFilter(mt.id as any)}
                   className={`px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#06151e] to-[#545a5b] text-white border-white/20 shadow-md scale-[1.02]'
-                      : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white hover:border-[#545a5b]'
+                      ? 'bg-gradient-to-r from-[#0a0a0a] to-[#545a5b] text-white border-white/20 shadow-md scale-[1.02]'
+                      : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white hover:border-[#545a5b]'
                   }`}
                 >
                   <span>{mt.label}</span>
@@ -219,8 +219,8 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
             onClick={() => setCountryFilter('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
               countryFilter === 'all'
-                ? 'bg-[#06151e] text-black border-white'
-                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+                ? 'bg-[#0a0a0a] text-black border-white'
+                : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
             }`}
           >
             Todos ({totalCount})
@@ -229,8 +229,8 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
             onClick={() => setCountryFilter('uruguay')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
               countryFilter === 'uruguay'
-                ? 'bg-[#06151e] text-white border-[#ffffff]'
-                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+                ? 'bg-[#0a0a0a] text-white border-[#ffffff]'
+                : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
             }`}
           >
             <span>🇺🇾 Uruguay</span>
@@ -241,7 +241,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
               countryFilter === 'brasil'
                 ? 'bg-emerald-600 text-white border-emerald-500'
-                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+                : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
             }`}
           >
             <span>🇧🇷 Brasil</span>
@@ -252,7 +252,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
               countryFilter === 'frontera'
                 ? 'bg-amber-600 text-white border-amber-500'
-                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+                : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
             }`}
           >
             <span>🌐 Frontera</span>
@@ -274,7 +274,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
               className={`px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all ${
                 quickFilter === f.id
                   ? 'bg-[#ffffff]/30 text-[#d6d6d6] border border-[#ffffff]/50'
-                  : 'bg-[#06151e] text-[#898a8c] hover:text-white border border-transparent'
+                  : 'bg-[#0a0a0a] text-[#898a8c] hover:text-white border border-transparent'
               }`}
             >
               {f.label}
@@ -308,7 +308,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
 
           {/* Estado vacío si no hay coincidencias */}
           {filteredRecipes.length === 0 && (
-            <div className="bg-[#06151e] border border-white/10 rounded-2xl p-8 text-center space-y-3 my-8">
+            <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 text-center space-y-3 my-8">
               <div className="w-12 h-12 rounded-full bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center mx-auto">
                 <span className="material-symbols-outlined text-[28px]">search_off</span>
               </div>
@@ -320,7 +320,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
               </p>
               <button
                 onClick={() => setIsAddModalOpen(true)}
-                className="inline-flex items-center gap-1.5 bg-[#06151e] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#545a5b] transition-all"
+                className="inline-flex items-center gap-1.5 bg-[#0a0a0a] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#545a5b] transition-all"
               >
                 <span className="material-symbols-outlined text-[16px]">add_circle</span>
                 Crear esta comida personalizada
@@ -334,10 +334,10 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
               <div
                 key={recipe.id}
                 onClick={() => setSelectedRecipe(recipe)}
-                className="bg-[#06151e] hover:bg-[#06151e] border border-white/10 hover:border-[#ffffff]/50 rounded-2xl overflow-hidden transition-all duration-200 flex flex-col cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 group"
+                className="bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 hover:border-[#ffffff]/50 rounded-2xl overflow-hidden transition-all duration-200 flex flex-col cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 group"
               >
                 {/* Imagen y Badges */}
-                <div className="relative w-full h-32 sm:h-44 bg-[#06151e] overflow-hidden flex-shrink-0">
+                <div className="relative w-full h-32 sm:h-44 bg-[#0a0a0a] overflow-hidden flex-shrink-0">
                   <img
                     src={recipe.image}
                     alt={recipe.name}
@@ -348,7 +348,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                         'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80';
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#06151e] via-[#06151e]/20 to-black/40" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-black/40" />
 
                   {/* Badges superiores */}
                   <div className="absolute top-2 left-2 flex items-center gap-1 z-10 flex-wrap">
@@ -398,7 +398,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                 {/* Cuerpo de la tarjeta */}
                 <div className="p-2 sm:p-3.5 flex-1 flex flex-col justify-between space-y-2 sm:space-y-3">
                   {/* Barra de Proteína Destacada */}
-                  <div className="bg-[#06151e] p-1.5 sm:p-2.5 rounded-xl border border-white/10 space-y-1 sm:space-y-1.5">
+                  <div className="bg-[#0a0a0a] p-1.5 sm:p-2.5 rounded-xl border border-white/10 space-y-1 sm:space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-[9px] sm:text-[10px] font-bold text-[#898a8c] uppercase tracking-wider flex items-center gap-0.5">
                         <span className="material-symbols-outlined text-[12px] sm:text-[14px] text-[#ffffff]">fitness_center</span>
@@ -409,7 +409,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                       </span>
                     </div>
 
-                    <div className="w-full bg-[#06151e] h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-[#0a0a0a] h-1.5 rounded-full overflow-hidden">
                       <div
                         className="bg-[#ffffff] h-full rounded-full"
                         style={{ width: `${Math.min(100, (recipe.protein / 60) * 100)}%` }}
@@ -418,7 +418,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                   </div>
 
                   {/* Desglose secundario de macros */}
-                  <div className="grid grid-cols-3 gap-0.5 sm:gap-1 text-center bg-[#06151e] py-1 sm:py-1.5 px-1 sm:px-2 rounded-lg text-[8px] sm:text-[10px]">
+                  <div className="grid grid-cols-3 gap-0.5 sm:gap-1 text-center bg-[#0a0a0a] py-1 sm:py-1.5 px-1 sm:px-2 rounded-lg text-[8px] sm:text-[10px]">
                     <div>
                       <span className="text-[#898a8c] block text-[8px] sm:text-[9px]">Calorías</span>
                       <strong className="text-emerald-400 font-bold">{recipe.calories}</strong>
@@ -434,7 +434,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                   </div>
 
                   {/* Fotos reales de alimentos según la lógica de ingredientes */}
-                  <div className="bg-[#06151e] px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-xl border border-white/10 flex items-center justify-between gap-1">
+                  <div className="bg-[#0a0a0a] px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-xl border border-white/10 flex items-center justify-between gap-1">
                     <div className="flex items-center gap-1 overflow-hidden">
                       <div className="flex -space-x-1 sm:-space-x-1.5 overflow-hidden py-0.5">
                         {recipe.ingredients.slice(0, 3).map((ing, i) => {
@@ -445,7 +445,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                               src={visual.image}
                               alt={ing.name}
                               title={`${ing.name} (${ing.quantity})`}
-                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover border border-white/10 flex-shrink-0 bg-[#06151e]"
+                              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover border border-white/10 flex-shrink-0 bg-[#0a0a0a]"
                               loading="lazy"
                               onError={(e) => {
                                 (e.target as HTMLImageElement).src =
@@ -469,7 +469,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                         e.stopPropagation();
                         setSelectedRecipe(recipe);
                       }}
-                      className="py-1.5 sm:py-2 px-1 sm:px-2 bg-[#06151e] hover:bg-[#545a5b] text-[#d6d6d6] hover:text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl transition-colors flex items-center justify-center gap-0.5 sm:gap-1 text-center cursor-pointer border border-[#545a5b]"
+                      className="py-1.5 sm:py-2 px-1 sm:px-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-[#d6d6d6] hover:text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl transition-colors flex items-center justify-center gap-0.5 sm:gap-1 text-center cursor-pointer border border-[#545a5b]"
                     >
                       <span className="material-symbols-outlined text-[13px] sm:text-[14px] text-emerald-400">menu_book</span>
                       <span className="truncate">Ver Receta</span>
@@ -478,7 +478,7 @@ export const MealIdeasCatalog: React.FC<MealIdeasCatalogProps> = ({
                     <button
                       type="button"
                       onClick={(e) => handleQuickLog(recipe, e)}
-                      className="py-1.5 sm:py-2 px-1 sm:px-2 bg-[#06151e] hover:bg-[#545a5b] text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl transition-all shadow-sm active:scale-95 flex items-center justify-center gap-0.5 sm:gap-1 text-center cursor-pointer"
+                      className="py-1.5 sm:py-2 px-1 sm:px-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-[10px] sm:text-xs font-bold rounded-lg sm:rounded-xl transition-all shadow-sm active:scale-95 flex items-center justify-center gap-0.5 sm:gap-1 text-center cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[13px] sm:text-[14px]">add</span>
                       <span>Registrar</span>

@@ -111,7 +111,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
   }, []);
 
   return (
-    <div className="bg-[#06151e] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg space-y-4">
+    <div className="bg-[#0a0a0a] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg space-y-4">
       {/* Header con insignia de Google Maps Grounding */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
         <div className="flex items-center gap-3">
@@ -142,7 +142,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-auto ${
             coordinates
               ? 'bg-[#ffffff]/20 text-[#d6d6d6] border-[#ffffff]/40'
-              : 'bg-[#06151e] text-[#d6d6d6] border-white/10 hover:bg-[#06151e]'
+              : 'bg-[#0a0a0a] text-[#d6d6d6] border-white/10 hover:bg-[#0a0a0a]'
           }`}
         >
           <span className={`material-symbols-outlined text-[16px] ${isLocating ? 'animate-spin' : 'text-rose-400'}`}>
@@ -168,8 +168,8 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'supplements'
-              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
-              : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+              ? 'bg-[#0a0a0a] text-white border-white/20 shadow-sm'
+              : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-[15px]">medication</span>
@@ -184,8 +184,8 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'gyms'
-              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
-              : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+              ? 'bg-[#0a0a0a] text-white border-white/20 shadow-sm'
+              : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-[15px]">fitness_center</span>
@@ -200,8 +200,8 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'healthy_food'
-              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
-              : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+              ? 'bg-[#0a0a0a] text-white border-white/20 shadow-sm'
+              : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-[15px]">restaurant</span>
@@ -213,8 +213,8 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           onClick={() => setCategory('custom')}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'custom'
-              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
-              : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
+              ? 'bg-[#0a0a0a] text-white border-white/20 shadow-sm'
+              : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
           <span className="material-symbols-outlined text-[15px]">search</span>
@@ -233,7 +233,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
             placeholder="Ciudad, barrio o zona (ej. Palermo, Buenos Aires, São Paulo...)"
-            className="w-full pl-9 pr-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#ffffff]"
+            className="w-full pl-9 pr-3 py-2 bg-[#0a0a0a] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#ffffff]"
           />
         </div>
 
@@ -247,7 +247,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
               value={customQuery}
               onChange={(e) => setCustomQuery(e.target.value)}
               placeholder="¿Qué lugar buscas? Ej. Creatina pura, box calistenia..."
-              className="w-full pl-9 pr-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#ffffff]"
+              className="w-full pl-9 pr-3 py-2 bg-[#0a0a0a] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#ffffff]"
             />
           </div>
         )}
@@ -256,7 +256,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           type="button"
           onClick={() => handleSearch()}
           disabled={isLoading}
-          className="px-4 py-2 bg-[#06151e] hover:bg-[#545a5b] disabled:opacity-50 text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0 active:scale-95"
+          className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] disabled:opacity-50 text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0 active:scale-95"
         >
           <span className={`material-symbols-outlined text-[16px] ${isLoading ? 'animate-spin' : ''}`}>
             {isLoading ? 'sync' : 'explore'}
@@ -279,7 +279,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
         <div className="space-y-4">
           {/* Resumen descriptivo de Gemini con Grounding */}
           {responseText && (
-            <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 text-xs text-[#d6d6d6] leading-relaxed">
+            <div className="p-3.5 rounded-xl bg-[#0a0a0a] border border-white/10 text-xs text-[#d6d6d6] leading-relaxed">
               <div className="flex items-center gap-1.5 text-white font-bold mb-1.5">
                 <span className="material-symbols-outlined text-[16px]">info</span>
                 <span>Análisis de Ubicación:</span>
@@ -304,7 +304,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
                 {places.map((place, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 hover:border-white/50 transition-all flex flex-col justify-between gap-3 group shadow-sm"
+                    className="p-3.5 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 hover:border-white/50 transition-all flex flex-col justify-between gap-3 group shadow-sm"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
@@ -316,14 +316,14 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
                             {place.title}
                           </h4>
                         </div>
-                        <span className="text-[10px] font-black text-[#898a8c] bg-[#06151e] px-1.5 py-0.5 rounded border border-white/10">
+                        <span className="text-[10px] font-black text-[#898a8c] bg-[#0a0a0a] px-1.5 py-0.5 rounded border border-white/10">
                           #{idx + 1}
                         </span>
                       </div>
 
                       {/* Reseñas / Snippets */}
                       {place.reviewSnippets && place.reviewSnippets.length > 0 && (
-                        <div className="mt-2 text-[11px] text-[#898a8c] italic bg-[#06151e]/60 p-2 rounded-lg border border-white/10 line-clamp-2">
+                        <div className="mt-2 text-[11px] text-[#898a8c] italic bg-[#0a0a0a]/60 p-2 rounded-lg border border-white/10 line-clamp-2">
                           "{place.reviewSnippets[0]}"
                         </div>
                       )}
@@ -345,7 +345,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectPlace(place)}
-                          className="px-2.5 py-1.5 rounded-lg bg-[#06151e] hover:bg-slate-700 text-xs text-white transition-all font-bold"
+                          className="px-2.5 py-1.5 rounded-lg bg-[#0a0a0a] hover:bg-slate-700 text-xs text-white transition-all font-bold"
                           title="Seleccionar lugar"
                         >
                           Usar

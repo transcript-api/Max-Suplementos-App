@@ -35,7 +35,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
               Telemetría Biomecánica
             </span>
           </div>
-          <span className="font-label-caps text-label-caps text-[#898a8c] bg-[#06151e] px-2 py-0.5 rounded-full border border-white/10">
+          <span className="font-label-caps text-label-caps text-[#898a8c] bg-[#0a0a0a] px-2 py-0.5 rounded-full border border-white/10">
             Sincronizado hoy
           </span>
         </div>
@@ -48,7 +48,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       </div>
 
       {/* Selector de Períodos */}
-      <div className="p-1 bg-[#06151e] rounded-xl flex items-center justify-between gap-1 border border-white/10">
+      <div className="p-1 bg-[#0a0a0a] rounded-xl flex items-center justify-between gap-1 border border-white/10">
         {(['Semana', 'Mes', '3 meses', 'Todo'] as const).map((item) => (
           <button
             key={item}
@@ -56,7 +56,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
             onClick={() => setPeriod(item)}
             className={`flex-1 py-2 rounded-lg font-headline-md text-body-sm text-center transition-all ${
               period === item
-                ? 'bg-[#06151e] text-white font-bold shadow-sm'
+                ? 'bg-[#0a0a0a] text-white font-bold shadow-sm'
                 : 'text-[#898a8c] hover:text-white font-medium'
             }`}
           >
@@ -68,7 +68,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       {/* Tarjetas de Métricas Clave (Grid 2x2) */}
       <div className="grid grid-cols-2 gap-3">
         {/* Peso Actual */}
-        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
+        <div className="bg-[#0a0a0a] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
             <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Peso actual</span>
             <span className="material-symbols-outlined text-[#d6d6d6] text-[18px]">monitor_weight</span>
@@ -84,7 +84,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* Form Promedio */}
-        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
+        <div className="bg-[#0a0a0a] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
             <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Form promedio</span>
             <span className="material-symbols-outlined text-[#d6d6d6] text-[18px]">bolt</span>
@@ -100,7 +100,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* Racha Activa */}
-        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
+        <div className="bg-[#0a0a0a] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
             <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Racha activa</span>
             <span className="material-symbols-outlined text-[#d6d6d6] text-[18px]">local_fire_department</span>
@@ -116,7 +116,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* XP Acumulado */}
-        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
+        <div className="bg-[#0a0a0a] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
             <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">XP acumulado</span>
             <span className="material-symbols-outlined text-[#d6d6d6] text-[18px]">stars</span>
@@ -133,7 +133,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       </div>
 
       {/* Sección TÚ VS. TÚ */}
-      <div className="bg-[#06151e] p-5 rounded-xl shadow-lg relative overflow-hidden border border-white/10">
+      <div className="bg-[#0a0a0a] p-5 rounded-xl shadow-lg relative overflow-hidden border border-white/10">
         <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">swap_calls</span>
@@ -148,7 +148,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
           Superando tu propia marca histórica sin comparaciones externas.
         </p>
 
-        <div className="my-4 flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
+        <div className="my-4 flex items-center justify-between p-4 bg-[#0a0a0a] rounded-xl border border-white/10">
           <div className="flex flex-col">
             <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Evolución neta</span>
             <span className="font-display-hero-mobile text-display-hero-mobile text-[#d6d6d6] tracking-tight font-extrabold">+12%</span>
@@ -211,13 +211,13 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       </div>
 
       {/* Gráfico de Consistencia y Form Diaria */}
-      <div className="bg-[#06151e] p-5 rounded-xl shadow-lg space-y-4 border border-white/10">
+      <div className="bg-[#0a0a0a] p-5 rounded-xl shadow-lg space-y-4 border border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Ritmo Semanal</span>
             <h2 className="font-headline-md text-headline-md text-white font-bold">Consistencia y Form Diaria</h2>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#06151e] px-2.5 py-1 rounded-full border border-white/10">
+          <div className="flex items-center gap-1.5 bg-[#0a0a0a] px-2.5 py-1 rounded-full border border-white/10">
             <span className="w-2 h-2 rounded-full bg-[#ffffff]"></span>
             <span className="font-body-sm text-body-sm text-[#898a8c]">Semana actual</span>
           </div>
@@ -238,7 +238,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
               <span className={`font-label-caps text-[10px] ${bar.isPeak ? 'text-[#d6d6d6] font-bold' : bar.isToday ? 'text-white font-bold' : 'text-[#898a8c]'}`}>
                 {bar.val}%
               </span>
-              <div className={`w-full rounded-md ${bar.isToday ? 'bg-[#06151e] ring-1 ring-[#ffffff]' : 'bg-[#545a5b]'} h-32 flex flex-col justify-end p-0.5 overflow-hidden`}>
+              <div className={`w-full rounded-md ${bar.isToday ? 'bg-[#0a0a0a] ring-1 ring-[#ffffff]' : 'bg-[#545a5b]'} h-32 flex flex-col justify-end p-0.5 overflow-hidden`}>
                 <div 
                   className={`w-full rounded-sm transition-all duration-700 ${
                     bar.isPeak ? 'bg-[#d6d6d6]' : 'bg-[#ffffff]'
@@ -271,13 +271,13 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       </div>
 
       {/* Galería Privada de Evolución Física */}
-      <div className="bg-[#06151e] p-5 rounded-xl shadow-lg space-y-4 border border-white/10">
+      <div className="bg-[#0a0a0a] p-5 rounded-xl shadow-lg space-y-4 border border-white/10">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-headline-md text-headline-md text-white font-bold">Registro visual de progreso</h2>
             <p className="font-body-sm text-body-sm text-[#898a8c]">Capturas biomecánicas estandarizadas</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#06151e] px-2.5 py-1 rounded-full text-[#898a8c] border border-white/10">
+          <div className="flex items-center gap-1.5 bg-[#0a0a0a] px-2.5 py-1 rounded-full text-[#898a8c] border border-white/10">
             <span className="material-symbols-outlined text-[14px] text-[#d6d6d6]">lock</span>
             <span className="font-label-caps text-label-caps font-bold">Privado por defecto</span>
           </div>
@@ -286,15 +286,15 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         {/* Carrusel de fotos previas + Registro nuevo */}
         <div className="grid grid-cols-2 gap-3">
           {/* Registro anterior */}
-          <div className="bg-[#06151e] rounded-xl overflow-hidden flex flex-col relative border border-white/10 group">
+          <div className="bg-[#0a0a0a] rounded-xl overflow-hidden flex flex-col relative border border-white/10 group">
             <div className="h-48 w-full relative">
               <img 
                 alt="Registro físico anterior" 
                 className="w-full h-full object-cover" 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2HDmwkOxxQD0b6f5jzNrt9ZQeIAOaqY9OGoPwPcek43uThuHmRkl5JKf6LPZQtPkIflMTHibiRmUpynlYzTdek2L4w73fMPDOlkv-0VQPpozyZVHUgy3dWubGruSRiW5x80RTJXxS2Y-dtdSAJkJdrUIpBJ1M8PYG97RF36bXUkdanLdhCiQ1Epcil6ZPzMsZpHOS3eHDMFwwqrkZP99ZVC2RgyLhIq-2eaVyBn7OTHfH2G5DCKBd2w"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#06151e] via-transparent to-transparent"></div>
-              <span className="absolute bottom-2 left-2 font-label-caps text-label-caps bg-[#06151e]/90 backdrop-blur-md text-white px-2 py-0.5 rounded border border-white/10">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+              <span className="absolute bottom-2 left-2 font-label-caps text-label-caps bg-[#0a0a0a]/90 backdrop-blur-md text-white px-2 py-0.5 rounded border border-white/10">
                 Hace 7 días
               </span>
             </div>
@@ -305,7 +305,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
           </div>
 
           {/* Tarjeta para capturar hoy */}
-          <div className="bg-[#06151e] rounded-xl overflow-hidden p-4 flex flex-col items-center justify-center text-center relative border-dashed border-2 border-[#545a5b] space-y-2">
+          <div className="bg-[#0a0a0a] rounded-xl overflow-hidden p-4 flex flex-col items-center justify-center text-center relative border-dashed border-2 border-[#545a5b] space-y-2">
             {todayPhoto ? (
               <div className="w-full h-full relative rounded-lg overflow-hidden flex flex-col items-center">
                 <img src={todayPhoto} alt="Captura hoy" className="w-full h-36 object-cover rounded-lg" />
@@ -321,7 +321,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
                 <span className="font-headline-md text-body-md text-white font-bold">Captura de hoy</span>
                 <span className="font-body-sm text-body-sm text-[#898a8c]">Alineación con guía de silueta</span>
                 
-                <label className="w-full mt-1 py-2 bg-[#06151e] hover:bg-[#545a5b] text-white rounded-lg font-headline-md text-body-sm flex items-center justify-center gap-1 active:scale-95 transition-all shadow-sm cursor-pointer">
+                <label className="w-full mt-1 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-white rounded-lg font-headline-md text-body-sm flex items-center justify-center gap-1 active:scale-95 transition-all shadow-sm cursor-pointer">
                   <span className="material-symbols-outlined text-[16px]">add</span>
                   <span>{isUploading ? 'Procesando...' : 'Registrar'}</span>
                   <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleCapturePhoto} />

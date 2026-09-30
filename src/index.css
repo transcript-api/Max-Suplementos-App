@@ -4,12 +4,12 @@
 
 @layer base {
   :root {
-    --bg-surface: #06151e;
-    --bg-surface-container-lowest: #06151e;
-    --bg-surface-container-low: #06151e;
-    --bg-surface-container: #06151e;
-    --bg-surface-container-high: #06151e;
-    --bg-surface-container-highest: #06151e;
+    --bg-surface: #0a0a0a;
+    --bg-surface-container-lowest: #0a0a0a;
+    --bg-surface-container-low: #0a0a0a;
+    --bg-surface-container: #0a0a0a;
+    --bg-surface-container-high: #0a0a0a;
+    --bg-surface-container-highest: #0a0a0a;
     --text-on-surface: #ffffff;
     --text-on-surface-variant: #d6d6d6;
     --text-outline: #898a8c;
@@ -29,12 +29,12 @@
   }
 
   html.dark, html.dark body {
-    background-color: #06151e;
+    background-color: #0a0a0a;
     color: #ffffff;
   }
 
   html:not(.dark), html:not(.dark) body {
-    background-color: #06151e;
+    background-color: #0a0a0a;
     color: #ffffff;
   }
 
@@ -70,22 +70,22 @@
 
 /* MAXFORM Custom Color Classes - Monochrome Luxury Noir */
 /* Base canvas: flat, no border (this is the page background itself) */
-.bg-surface { background-color: #06151e; }
-.bg-surface-dim { background-color: #06151e; }
-.bg-surface-bright { background-color: #06151e; }
-.bg-surface-container-lowest { background-color: #06151e; }
-.bg-surface-container-low { background-color: #06151e; }
+.bg-surface { background-color: #0a0a0a; }
+.bg-surface-dim { background-color: #0a0a0a; }
+.bg-surface-bright { background-color: #0a0a0a; }
+.bg-surface-container-lowest { background-color: #0a0a0a; }
+.bg-surface-container-low { background-color: #0a0a0a; }
 
 /* Elevated surfaces (cards/sheets): same flat fill as the canvas, so a
    graduated hairline border (white at low opacity) is what separates
    them from the background instead of a distinct shade. */
-.bg-surface-container { background-color: #06151e; border: 1px solid rgba(255, 255, 255, 0.06); }
-.bg-surface-container-high { background-color: #06151e; border: 1px solid rgba(255, 255, 255, 0.1); }
-.bg-surface-container-highest { background-color: #06151e; border: 1px solid rgba(255, 255, 255, 0.14); }
-.bg-surface-variant { background-color: #06151e; border: 1px solid rgba(255, 255, 255, 0.08); }
+.bg-surface-container { background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.06); }
+.bg-surface-container-high { background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.1); }
+.bg-surface-container-highest { background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.14); }
+.bg-surface-variant { background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.08); }
 
-.bg-primary-container { background-color: #ffffff; color: #06151e; }
-.bg-secondary-container { background-color: #06151e; border: 1px solid rgba(255, 255, 255, 0.1); }
+.bg-primary-container { background-color: #ffffff; color: #0a0a0a; }
+.bg-secondary-container { background-color: #0a0a0a; border: 1px solid rgba(255, 255, 255, 0.1); }
 .bg-tertiary-container { background-color: #545a5b; }
 
 .text-on-surface { color: #ffffff; }
@@ -95,8 +95,8 @@
 .text-tertiary { color: #898a8c; }
 .text-outline { color: #898a8c; }
 .text-outline-variant { color: #545a5b; }
-.text-on-primary { color: #06151e; }
-.text-on-primary-container { color: #06151e; }
+.text-on-primary { color: #0a0a0a; }
+.text-on-primary-container { color: #0a0a0a; }
 
 .border-outline-variant { border-color: rgba(255, 255, 255, 0.1); }
 .border-surface-variant { border-color: rgba(255, 255, 255, 0.08); }

@@ -49,7 +49,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
-      <div className="relative w-full max-w-2xl dark:bg-[#06151e] bg-white rounded-2xl border dark:border-white/10 border-slate-200 shadow-2xl overflow-hidden my-4 mb-16 sm:my-6">
+      <div className="relative w-full max-w-2xl dark:bg-[#0a0a0a] bg-white rounded-2xl border dark:border-white/10 border-slate-200 shadow-2xl overflow-hidden my-4 mb-16 sm:my-6">
         
         {/* Encabezado con degradado del nivel activo */}
         <div className="relative p-5 sm:p-6 border-b dark:border-white/10 border-slate-200">
@@ -68,7 +68,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
             <button
               onClick={onClose}
               type="button"
-              className="p-1.5 rounded-lg dark:hover:bg-[#06151e] hover:bg-slate-100 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+              className="p-1.5 rounded-lg dark:hover:bg-[#0a0a0a] hover:bg-slate-100 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
             >
               ✕
             </button>
@@ -90,7 +90,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="flex items-start gap-2.5 text-white dark:bg-white/10 bg-[#06151e] border-white/30 p-2 rounded-lg">
+                <div className="flex items-start gap-2.5 text-white dark:bg-white/10 bg-[#0a0a0a] border-white/30 p-2 rounded-lg">
                   <span className="text-base leading-none">✅</span>
                   <div>
                     <strong className="block font-bold text-[#898a8c] dark:text-white">
@@ -144,8 +144,8 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
                 }}
                 className={`p-4 rounded-xl border transition-all ${
                   isSelected
-                    ? `border-${proto.themeColor} dark:bg-[#06151e] bg-slate-50 shadow-md ring-1 ring-${proto.themeColor}/40`
-                    : 'dark:border-white/10 border-slate-200 dark:bg-[#06151e] bg-white opacity-85 hover:opacity-100'
+                    ? `border-${proto.themeColor} dark:bg-[#0a0a0a] bg-slate-50 shadow-md ring-1 ring-${proto.themeColor}/40`
+                    : 'dark:border-white/10 border-slate-200 dark:bg-[#0a0a0a] bg-white opacity-85 hover:opacity-100'
                 } ${canSelect ? 'cursor-pointer' : 'cursor-default'}`}
                 style={{
                   borderColor: isSelected ? proto.themeColor : undefined,
@@ -167,12 +167,12 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
 
                   <div className="flex items-center gap-1.5">
                     {isCurrent && (
-                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 dark:bg-[#06151e] dark:text-white text-slate-800">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 dark:bg-[#0a0a0a] dark:text-white text-slate-800">
                         Nivel Activo
                       </span>
                     )}
                     {canSelect && isSelected && !isCurrent && (
-                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[#06151e] text-white">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[#0a0a0a] text-white">
                         Seleccionado
                       </span>
                     )}
@@ -224,7 +224,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
         </div>
 
         {/* Footer y Acciones - Sticky en móvil para no perderse nunca */}
-        <div className="sticky bottom-0 z-20 p-4 sm:p-5 border-t dark:border-white/10 border-slate-200 dark:bg-[#06151e]/95 bg-slate-50/95 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+        <div className="sticky bottom-0 z-20 p-4 sm:p-5 border-t dark:border-white/10 border-slate-200 dark:bg-[#0a0a0a]/95 bg-slate-50/95 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
           <div className="text-xs dark:text-slate-400 text-slate-600 text-center sm:text-left">
             {cooldown.isAllowed ? (
               <span>
@@ -241,7 +241,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 min-h-[44px] rounded-xl text-xs font-bold dark:bg-[#06151e] bg-slate-200 dark:text-slate-300 text-slate-700 hover:bg-slate-300 dark:hover:bg-[#06151e] active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center"
+              className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 min-h-[44px] rounded-xl text-xs font-bold dark:bg-[#0a0a0a] bg-slate-200 dark:text-slate-300 text-slate-700 hover:bg-slate-300 dark:hover:bg-[#0a0a0a] active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center"
             >
               Cerrar
             </button>

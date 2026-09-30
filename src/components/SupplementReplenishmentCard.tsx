@@ -160,7 +160,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       {/* 1. Módulo de Reposición Inteligente de Suplementos */}
       <section
         id="supplement-replenishment-section"
-        className="p-5 rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
+        className="p-5 rounded-2xl dark:bg-[#0a0a0a] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-white/10 border-slate-200">
           <div className="flex items-center gap-2">
@@ -262,7 +262,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                   className={`p-4 rounded-xl border flex flex-col justify-between transition-all ${
                     isLowStock
                       ? 'dark:bg-rose-950/20 bg-rose-50/50 border-rose-500/40'
-                      : 'dark:bg-[#06151e] bg-slate-50 border-slate-200 dark:border-white/10'
+                      : 'dark:bg-[#0a0a0a] bg-slate-50 border-slate-200 dark:border-white/10'
                   }`}
                 >
                   <div className="space-y-2">
@@ -294,7 +294,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                           {sup.remainingServings} de {sup.totalServings} {sup.unit}
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-slate-200 dark:bg-[#06151e] rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-200 dark:bg-[#0a0a0a] rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-500 rounded-full ${
                             isLowStock ? 'bg-rose-500' : 'bg-[#ffffff]'
@@ -315,7 +315,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                       type="button"
                       onClick={() => handleTakeServing(sup.id, sup.name)}
                       disabled={sup.remainingServings === 0}
-                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#06151e] bg-[#06151e] hover:bg-slate-100 dark:hover:bg-[#545a5b] border dark:border-white/10 border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#0a0a0a] bg-[#0a0a0a] hover:bg-slate-100 dark:hover:bg-[#545a5b] border dark:border-white/10 border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
                     >
                       <span className="material-symbols-outlined text-[16px] text-emerald-500">check</span>
                       <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
@@ -356,7 +356,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       {/* 2. Programa de Referidos & Crecimiento Viral */}
       <section
         id="athlete-referral-section"
-        className="p-5 rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
+        className="p-5 rounded-2xl dark:bg-[#0a0a0a] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-white/10 border-slate-200">
           <div className="flex items-center gap-2">
@@ -378,7 +378,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         </div>
 
         {/* Tarjeta de Código */}
-        <div className="p-4 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-center sm:text-left space-y-0.5">
             <span className="text-[10px] uppercase font-bold text-[#898a8c] block">Tu Código Personal</span>
             <div className="text-lg sm:text-xl font-mono font-black text-[#ffffff] dark:text-[#d6d6d6] tracking-wider">
@@ -392,7 +392,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
           <button
             type="button"
             onClick={handleCopyReferral}
-            className="w-full sm:w-auto px-5 py-2.5 bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-[16px]">
               {referralCopied ? 'check' : 'content_copy'}
@@ -403,7 +403,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
 
         {/* Niveles de Recompensas por Amigos Invitados */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-[#898a8c]">Nivel 1 (1 Amigo)</span>
               <span className="text-xs">🥉</span>
@@ -414,7 +414,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
             </p>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-amber-500">Nivel 2 (3 Amigos)</span>
               <span className="text-xs">🥈</span>
@@ -425,7 +425,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
             </p>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border border-emerald-500/40 dark:bg-emerald-950/20 bg-emerald-50/50 space-y-1">
+          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border border-emerald-500/40 dark:bg-emerald-950/20 bg-emerald-50/50 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-emerald-500">Nivel 3 (5 Amigos)</span>
               <span className="text-xs">🥇</span>

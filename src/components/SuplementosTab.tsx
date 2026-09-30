@@ -186,9 +186,9 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
   return (
     <div className="space-y-6 pb-20 animate-fadeIn">
       {/* 1. Header Oficial MAX Suplementos Tracker */}
-      <div className="bg-[#06151e] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-[#0a0a0a] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#06151e] to-[#545a5b] text-white flex items-center justify-center shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0a0a0a] to-[#545a5b] text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[26px]">medication</span>
           </div>
           <div>
@@ -220,7 +220,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           <button
             type="button"
             onClick={() => setIsSummaryModalOpen(true)}
-            className="px-3 py-2 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center gap-1.5"
+            className="px-3 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center gap-1.5"
           >
             <span className="material-symbols-outlined text-[16px] text-white">clinical_notes</span>
             <span>Ficha Nutricionista</span>
@@ -235,7 +235,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 setIsRegisterOpen(true);
               }
             }}
-            className="px-3.5 py-2 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+            className="px-3.5 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-md active:scale-95"
           >
             <span className="material-symbols-outlined text-[18px]">add_circle</span>
             <span>Registrar Suplemento</span>
@@ -245,7 +245,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
 
       {/* 2. Banner VIP: Pedido Agrupado (si hay potes terminando) */}
       {urgentEndingPots.length > 0 && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#06151e] via-[#06151e] to-[#06151e] border border-white/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a] to-[#0a0a0a] border border-white/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[22px]">warning</span>
@@ -269,7 +269,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             <button
               type="button"
               onClick={() => setActiveSubTab('tiendas')}
-              className="px-3 py-2 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center gap-1.5 whitespace-nowrap"
+              className="px-3 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center gap-1.5 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[15px] text-rose-500">pin_drop</span>
               <span>Tiendas Cercanas</span>
@@ -355,7 +355,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           </div>
 
           {activePots.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-[#06151e] space-y-3">
+            <div className="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-[#0a0a0a] space-y-3">
               <div className="w-14 h-14 rounded-2xl bg-[#ffffff]/20 text-[#ffffff] flex items-center justify-center mx-auto">
                 <span className="material-symbols-outlined text-[32px]">medication</span>
               </div>
@@ -366,7 +366,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setIsRegisterOpen(true)}
-                className="px-4 py-2 bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
+                className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
               >
                 <span className="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>Registrar Suplemento</span>
@@ -384,7 +384,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                     className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
                       stats.isLowStock
                         ? 'bg-rose-950/20 border-rose-500/40 shadow-sm'
-                        : 'bg-[#06151e] border-white/10'
+                        : 'bg-[#0a0a0a] border-white/10'
                     }`}
                   >
                     <div className="space-y-3">
@@ -425,7 +425,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                         </div>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex items-center justify-between text-xs">
+                      <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-between text-xs">
                         <div className="space-y-0.5">
                           <span className="text-[10px] text-[#898a8c] block">Fecha estimada de fin:</span>
                           <span className="font-bold text-white">{stats.formattedEndDate}</span>
@@ -443,7 +443,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                         className={`w-full py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer ${
                           tookToday
                             ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
-                            : 'bg-[#06151e] text-white hover:bg-[#545a5b] shadow-md'
+                            : 'bg-[#0a0a0a] text-white hover:bg-[#545a5b] shadow-md'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">
@@ -472,7 +472,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           )}
 
           {currentPlan === 'gratis' && (
-            <div className="p-4 rounded-2xl bg-[#06151e] border border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
               <div>
                 <h5 className="font-bold text-xs text-white">
                   + Agregar otro suplemento a tu rutina
@@ -484,7 +484,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setShowVipUpgradeModal(true)}
-                className="px-3 py-1.5 rounded-lg bg-[#06151e] text-white text-xs font-bold hover:bg-[#545a5b] transition-all shrink-0 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] text-white text-xs font-bold hover:bg-[#545a5b] transition-all shrink-0 cursor-pointer"
               >
                 Ver beneficios VIP →
               </button>
@@ -503,7 +503,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           </div>
 
           {activePots.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-[#06151e] space-y-2">
+            <div className="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-[#0a0a0a] space-y-2">
               <span className="material-symbols-outlined text-3xl text-slate-400">medication</span>
               <h4 className="text-sm font-bold text-white">No tienes suplementos activos</h4>
               <p className="text-xs text-[#898a8c]">Toca en "Registrar Suplemento" para comenzar tu protocolo.</p>
@@ -515,10 +515,10 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 return (
                   <div
                     key={pot.id}
-                    className="bg-[#06151e] p-4 rounded-2xl border border-white/10 space-y-3 flex flex-col justify-between"
+                    className="bg-[#0a0a0a] p-4 rounded-2xl border border-white/10 space-y-3 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
-                      <div className="w-full h-24 rounded-xl bg-[#06151e] border border-white/10 flex flex-col items-center justify-center p-2 text-center">
+                      <div className="w-full h-24 rounded-xl bg-[#0a0a0a] border border-white/10 flex flex-col items-center justify-center p-2 text-center">
                         <span className="material-symbols-outlined text-[32px] text-[#ffffff]">
                           {pot.category === 'creatina' ? 'science' : pot.category === 'proteina' ? 'nutrition' : 'bolt'}
                         </span>
@@ -560,7 +560,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       {/* VISTA 3: COMPOSICIÓN DIARIA */}
       {activeSubTab === 'composicion' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-[#06151e] border border-white/10 space-y-3">
+          <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 className="font-bold text-base text-white flex items-center gap-2">
@@ -577,7 +577,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setIsSummaryModalOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-[#06151e] text-white text-xs font-bold hover:bg-[#545a5b] transition-all flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] text-white text-xs font-bold hover:bg-[#545a5b] transition-all flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[15px]">picture_as_pdf</span>
                 <span>Ficha para Nutricionista</span>
@@ -594,7 +594,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                   <div
                     key={idx}
                     onClick={() => setSelectedIngredientDetail(item)}
-                    className="py-2.5 flex items-center justify-between hover:bg-[#06151e] px-2 rounded-xl cursor-pointer transition-colors"
+                    className="py-2.5 flex items-center justify-between hover:bg-[#0a0a0a] px-2 rounded-xl cursor-pointer transition-colors"
                   >
                     <div>
                       <div className="flex items-center gap-2">
@@ -623,7 +623,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           </div>
 
           {selectedIngredientDetail && (
-            <div className="p-4 rounded-2xl bg-[#06151e] border border-[#ffffff]/40 space-y-3 animate-fadeIn">
+            <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#ffffff]/40 space-y-3 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-bold uppercase text-[#d6d6d6]">Desglose de Ingrediente</span>
@@ -645,7 +645,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 {selectedIngredientDetail.sources.map((src, i) => (
                   <div
                     key={i}
-                    className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex items-center justify-between"
+                    className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-between"
                   >
                     <div>
                       <span className="font-bold text-xs text-white block">{src.potName}</span>
@@ -698,7 +698,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       {/* Modal Comparativo Estándar vs VIP */}
       {showVipUpgradeModal && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#06151e] text-white rounded-2xl max-w-md w-full border border-white/10 shadow-2xl p-5 space-y-4 animate-fadeIn">
+          <div className="bg-[#0a0a0a] text-white rounded-2xl max-w-md w-full border border-white/10 shadow-2xl p-5 space-y-4 animate-fadeIn">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xl">👑</span>
@@ -718,19 +718,19 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             </p>
 
             <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
                 <span>Suplementos monitoreados</span>
                 <span className="font-bold text-white">Estándar: 1 | <strong className="text-amber-400">VIP: Ilimitados</strong></span>
               </div>
-              <div className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
                 <span>Cálculo de fin y reposición</span>
                 <span className="font-bold text-emerald-400">Incluido en ambos</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
                 <span>Pedido en WhatsApp con 1 toque</span>
                 <span className="font-bold text-white">Estándar: No | <strong className="text-amber-400">VIP: Sí</strong></span>
               </div>
-              <div className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
                 <span>Ficha para Nutricionista en PDF</span>
                 <span className="font-bold text-emerald-400">Incluido en ambos</span>
               </div>
@@ -740,7 +740,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setShowVipUpgradeModal(false)}
-                className="w-1/3 py-2 px-3 rounded-xl bg-[#06151e] text-xs font-bold text-[#d6d6d6]"
+                className="w-1/3 py-2 px-3 rounded-xl bg-[#0a0a0a] text-xs font-bold text-[#d6d6d6]"
               >
                 Cerrar
               </button>

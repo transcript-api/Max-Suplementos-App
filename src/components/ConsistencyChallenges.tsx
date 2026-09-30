@@ -140,10 +140,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
   };
 
   return (
-    <section className="rounded-2xl p-5 border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-md space-y-4 relative overflow-hidden">
-      {/* Resplandor sutil de fondo */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-[#ffffff]/10 rounded-full blur-3xl pointer-events-none"></div>
-
+    <section className="rounded-2xl p-5 border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 shadow-md space-y-4 relative overflow-hidden">
       {/* Encabezado */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
@@ -182,10 +179,10 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
               key={c.id}
               className={`rounded-xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between ${
                 isJustCompleted
-                  ? 'dark:bg-[#06151e] bg-amber-50/70 border-amber-500/50 shadow-md ring-2 ring-amber-500/20'
+                  ? 'dark:bg-[#0a0a0a] bg-amber-50/70 border-amber-500/50 shadow-md ring-2 ring-amber-500/20'
                   : c.claimed
-                  ? 'dark:bg-[#06151e] bg-slate-50 dark:border-white/10 border-slate-200 opacity-80'
-                  : 'dark:bg-[#06151e] bg-slate-50/50 dark:border-white/10 border-slate-200 hover:border-slate-300 dark:hover:border-[#545a5b]'
+                  ? 'dark:bg-[#0a0a0a] bg-slate-50 dark:border-white/10 border-slate-200 opacity-80'
+                  : 'dark:bg-[#0a0a0a] bg-slate-50/50 dark:border-white/10 border-slate-200 hover:border-slate-300 dark:hover:border-[#545a5b]'
               }`}
             >
               {/* Badge superior */}
@@ -233,7 +230,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
                   </span>
                 </div>
 
-                <div className="w-full h-2 rounded-full overflow-hidden dark:bg-[#06151e] bg-slate-200 border dark:border-white/10 border-slate-300">
+                <div className="w-full h-2 rounded-full overflow-hidden dark:bg-[#0a0a0a] bg-slate-200 border dark:border-white/10 border-slate-300">
                   <div
                     className="h-full rounded-full transition-all duration-700 ease-out"
                     style={{
@@ -278,7 +275,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
       {/* Modal / Animación de Recompensa al Completar Desafío */}
       {activeReward && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="relative max-w-sm w-full rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 p-6 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
+          <div className="relative max-w-sm w-full rounded-2xl dark:bg-[#0a0a0a] bg-white border dark:border-white/10 border-slate-200 p-6 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
             {/* Destello de fondo */}
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/30 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -300,7 +297,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
             </div>
 
             {/* Recompensa de XP */}
-            <div className="p-3.5 rounded-xl dark:bg-[#06151e] bg-amber-50 border dark:border-white/10 border-amber-200 space-y-1">
+            <div className="p-3.5 rounded-xl dark:bg-[#0a0a0a] bg-amber-50 border dark:border-white/10 border-amber-200 space-y-1">
               <span className="text-xs font-bold text-amber-600 dark:text-amber-300 block">
                 Recompensa Sumada a tu Cuenta:
               </span>
@@ -316,7 +313,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
             <button
               type="button"
               onClick={() => setActiveReward(null)}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#06151e] to-[#545a5b] text-white font-extrabold text-sm shadow-lg hover:shadow-black/30 active:scale-98 transition-all"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0a0a0a] to-[#545a5b] text-white font-extrabold text-sm shadow-lg hover:shadow-black/30 active:scale-98 transition-all"
             >
               ¡Continuar con mi Racha!
             </button>

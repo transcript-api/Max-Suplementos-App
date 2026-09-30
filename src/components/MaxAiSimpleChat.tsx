@@ -190,11 +190,11 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full rounded-2xl border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-xl overflow-hidden">
+    <div className="flex flex-col w-full rounded-2xl border dark:bg-[#0a0a0a] bg-white dark:border-white/10 border-slate-200 shadow-xl overflow-hidden">
       {/* Encabezado del Chat */}
-      <div className="p-4 border-b dark:border-white/10 border-slate-200 flex items-center justify-between dark:bg-[#06151e]/70 bg-slate-50">
+      <div className="p-4 border-b dark:border-white/10 border-slate-200 flex items-center justify-between dark:bg-[#0a0a0a]/70 bg-slate-50">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-[#06151e] text-white flex items-center justify-center shadow-md">
+          <div className="w-8 h-8 rounded-full bg-[#0a0a0a] text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
           </div>
           <div>
@@ -222,8 +222,8 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             <div
               className={`max-w-[88%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
                 msg.sender === 'user'
-                  ? 'bg-[#06151e] text-white rounded-br-none shadow-md'
-                  : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#d6d6d6] text-slate-800 rounded-bl-none border dark:border-white/10 border-slate-200'
+                  ? 'bg-[#0a0a0a] text-white rounded-br-none shadow-md'
+                  : 'dark:bg-[#0a0a0a] bg-slate-100 dark:text-[#d6d6d6] text-slate-800 rounded-bl-none border dark:border-white/10 border-slate-200'
               }`}
             >
               <p>{msg.text}</p>
@@ -232,7 +232,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
               {msg.estimate && (
                 <div className="mt-3 pt-3 border-t dark:border-white/10 border-slate-200 space-y-2">
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="dark:bg-[#06151e] bg-white p-2.5 rounded-xl border dark:border-white/10 border-slate-200">
+                    <div className="dark:bg-[#0a0a0a] bg-white p-2.5 rounded-xl border dark:border-white/10 border-slate-200">
                       <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-400 block">
                         Proteína Estimada
                       </span>
@@ -244,7 +244,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
                       </div>
                     </div>
 
-                    <div className="dark:bg-[#06151e] bg-white p-2.5 rounded-xl border dark:border-white/10 border-slate-200">
+                    <div className="dark:bg-[#0a0a0a] bg-white p-2.5 rounded-xl border dark:border-white/10 border-slate-200">
                       <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-400 block">
                         Calorías Totales
                       </span>
@@ -287,7 +287,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
                           onAddProtein(est.protein);
                         }
                       }}
-                      className="w-full mt-2 py-2.5 px-3 rounded-xl text-xs font-bold bg-[#06151e] hover:bg-[#545a5b] text-white flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98"
+                      className="w-full mt-2 py-2.5 px-3 rounded-xl text-xs font-bold bg-[#0a0a0a] hover:bg-[#545a5b] text-white flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98"
                     >
                       <span className="material-symbols-outlined text-[16px]">add_task</span>
                       <span>Registrar en Macros (+{msg.estimate.protein}g P · {msg.estimate.calories} kcal)</span>
@@ -311,13 +311,13 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
       </div>
 
       {/* Prompts Rápidos */}
-      <div className="px-4 py-2 border-t dark:border-white/10 border-slate-200 flex gap-2 overflow-x-auto no-scrollbar dark:bg-[#06151e]/40 bg-slate-50">
+      <div className="px-4 py-2 border-t dark:border-white/10 border-slate-200 flex gap-2 overflow-x-auto no-scrollbar dark:bg-[#0a0a0a]/40 bg-slate-50">
         {quickPrompts.map((prompt) => (
           <button
             key={prompt}
             type="button"
             onClick={() => handleSend(prompt)}
-            className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-300 dark:bg-[#06151e] bg-[#06151e] dark:text-[#d6d6d6] text-slate-700 hover:border-[#ffffff] hover:text-[#ffffff] transition-colors"
+            className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-300 dark:bg-[#0a0a0a] bg-[#0a0a0a] dark:text-[#d6d6d6] text-slate-700 hover:border-[#ffffff] hover:text-[#ffffff] transition-colors"
           >
             {prompt}
           </button>
@@ -330,7 +330,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
           e.preventDefault();
           handleSend();
         }}
-        className="p-3 border-t dark:border-white/10 border-slate-200 flex items-center gap-2 dark:bg-[#06151e] bg-white"
+        className="p-3 border-t dark:border-white/10 border-slate-200 flex items-center gap-2 dark:bg-[#0a0a0a] bg-white"
       >
         {/* Botón Micrófono con gemini-2.5-flash */}
         <button
@@ -343,7 +343,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
               ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400/50'
               : isTranscribing
               ? 'bg-purple-500/20 text-purple-400'
-              : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-500 hover:text-white dark:hover:bg-[#06151e]'
+              : 'dark:bg-[#0a0a0a] bg-slate-100 dark:text-[#898a8c] text-slate-500 hover:text-white dark:hover:bg-[#0a0a0a]'
           }`}
         >
           <span className="material-symbols-outlined text-[19px]">
@@ -373,7 +373,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
               <button
                 type="button"
                 onClick={cancelVoiceRecording}
-                className="px-2 py-1 bg-[#06151e] hover:bg-[#545a5b] text-[#d6d6d6] rounded-lg text-xs transition-all"
+                className="px-2 py-1 bg-[#0a0a0a] hover:bg-[#545a5b] text-[#d6d6d6] rounded-lg text-xs transition-all"
               >
                 Cancelar
               </button>
@@ -391,14 +391,14 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="Escribe o dicta por voz qué comiste (gemini-2.5-flash)..."
             disabled={loading}
-            className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#06151e] bg-slate-100 dark:border-white/10 border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#898a8c] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ffffff]"
+            className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#0a0a0a] bg-slate-100 dark:border-white/10 border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#898a8c] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ffffff]"
           />
         )}
 
         <button
           type="submit"
           disabled={loading || !inputMessage.trim() || isRecording || isTranscribing}
-          className="px-4 py-2.5 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md active:scale-95 shrink-0"
+          className="px-4 py-2.5 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md active:scale-95 shrink-0"
         >
           <span>Enviar</span>
           <span className="material-symbols-outlined text-[16px]">send</span>

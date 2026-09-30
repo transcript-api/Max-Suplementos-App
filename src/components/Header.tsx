@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40 dark:bg-[#06151e]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-white/10 border-slate-200 pt-safe transition-colors duration-200">
+    <header className="fixed top-0 inset-x-0 z-40 dark:bg-[#0a0a0a]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-white/10 border-slate-200 pt-safe transition-colors duration-200">
       <div className="h-16 px-4 max-w-[1280px] mx-auto flex items-center justify-between">
         {/* Logo & Marca MAXMIND (Sin fondo) */}
         <div className="flex items-center">
@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-white/15 text-[#898a8c] dark:text-[#d6d6d6] border-white/30 animate-pulse'
                   : syncStatus.pendingCount > 0
                   ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-500/40'
-                  : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-600 dark:border-white/10 border-slate-200'
+                  : 'dark:bg-[#0a0a0a] bg-slate-100 dark:text-[#898a8c] text-slate-600 dark:border-white/10 border-slate-200'
               }`}
             >
               <span
@@ -142,7 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
-          <span className="font-label-caps text-label-caps uppercase dark:text-[#898a8c] text-slate-500 hidden lg:inline-block dark:bg-[#06151e] bg-slate-100 px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-200">
+          <span className="font-label-caps text-label-caps uppercase dark:text-[#898a8c] text-slate-500 hidden lg:inline-block dark:bg-[#0a0a0a] bg-slate-100 px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-200">
             {getTitle()}
           </span>
 
@@ -153,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onOpenAudioTranscriber}
               aria-label="Transcribir audio con voz"
               title="Transcribir audio o comidas por voz"
-              className="p-2 rounded-xl dark:bg-[#06151e] bg-slate-100 dark:hover:bg-[#06151e] hover:bg-slate-200 text-purple-500 dark:text-purple-400 border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95 group relative"
+              className="p-2 rounded-xl dark:bg-[#0a0a0a] bg-slate-100 dark:hover:bg-[#0a0a0a] hover:bg-slate-200 text-purple-500 dark:text-purple-400 border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95 group relative"
             >
               <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">
                 speech_to_text
@@ -169,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onToggleDark}
               aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-              className="p-2 rounded-xl dark:bg-[#06151e] bg-slate-100 dark:hover:bg-[#06151e] hover:bg-slate-200 text-slate-700 dark:text-[#d6d6d6] border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95"
+              className="p-2 rounded-xl dark:bg-[#0a0a0a] bg-slate-100 dark:hover:bg-[#0a0a0a] hover:bg-slate-200 text-slate-700 dark:text-[#d6d6d6] border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95"
             >
               <span className="material-symbols-outlined text-[20px]">
                 {isDark ? 'light_mode' : 'dark_mode'}
@@ -192,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
                 src={userAvatar}
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#06151e] to-[#545a5b] flex items-center justify-center text-white text-xs font-bold ring-1 ring-white/50 shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0a0a0a] to-[#545a5b] flex items-center justify-center text-white text-xs font-bold ring-1 ring-white/50 shadow-sm">
                 {userName ? userName.charAt(0).toUpperCase() : 'A'}
               </div>
             )}

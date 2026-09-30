@@ -40,7 +40,7 @@ export const WhatsAppReorderModal: React.FC<WhatsAppReorderModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div className="bg-[#06151e] text-white rounded-2xl max-w-md w-full border border-white/10 shadow-2xl p-5 space-y-4 animate-fadeIn">
+      <div className="bg-[#0a0a0a] text-white rounded-2xl max-w-md w-full border border-white/10 shadow-2xl p-5 space-y-4 animate-fadeIn">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export const WhatsAppReorderModal: React.FC<WhatsAppReorderModalProps> = ({
             {potsToOrder.map((pot) => (
               <div
                 key={pot.id}
-                className="p-2.5 rounded-xl bg-[#06151e] border border-white/10 flex items-center justify-between gap-2"
+                className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-between gap-2"
               >
                 <div>
                   <h4 className="text-xs font-bold text-white">{pot.name}</h4>
@@ -91,12 +91,12 @@ export const WhatsAppReorderModal: React.FC<WhatsAppReorderModalProps> = ({
         </div>
 
         {/* Vista previa do WhatsApp */}
-        <div className="p-3 rounded-xl bg-[#06151e] border border-white/10 space-y-1.5">
+        <div className="p-3 rounded-xl bg-[#0a0a0a] border border-white/10 space-y-1.5">
           <div className="flex items-center gap-1.5 text-xs text-[#25d366] font-bold">
             <span className="material-symbols-outlined text-[16px]">chat</span>
             <span>Mensagem já escrita para o WhatsApp:</span>
           </div>
-          <div className="p-2 rounded-lg bg-[#06151e] text-[11px] text-[#d6d6d6] font-mono whitespace-pre-line border border-white/10 max-h-28 overflow-y-auto">
+          <div className="p-2 rounded-lg bg-[#0a0a0a] text-[11px] text-[#d6d6d6] font-mono whitespace-pre-line border border-white/10 max-h-28 overflow-y-auto">
             {messageText}
           </div>
         </div>
@@ -110,7 +110,7 @@ export const WhatsAppReorderModal: React.FC<WhatsAppReorderModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-1/3 py-2.5 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-xs font-bold text-[#d6d6d6]"
+            className="w-1/3 py-2.5 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-[#d6d6d6]"
           >
             Cancelar
           </button>

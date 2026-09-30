@@ -71,7 +71,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-[#06151e] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl text-white space-y-5 animate-fadeIn my-auto">
+      <div className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl text-white space-y-5 animate-fadeIn my-auto">
         {/* Botón cerrar */}
         <button
           type="button"
@@ -98,9 +98,9 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
         </div>
 
         {/* Beneficio exclusivo para clientes MAX y Canje de Código */}
-        <div className="p-4 bg-[#06151e]/60 border border-[#ffffff]/40 rounded-xl space-y-3">
+        <div className="p-4 bg-[#0a0a0a]/60 border border-[#ffffff]/40 rounded-xl space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center flex-shrink-0 text-white shadow-md">
+            <div className="w-10 h-10 rounded-lg bg-[#0a0a0a] flex items-center justify-center flex-shrink-0 text-white shadow-md">
               <span className="material-symbols-outlined text-[22px]">confirmation_number</span>
             </div>
             <div>
@@ -119,12 +119,12 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 placeholder="CÓDIGO DE TICKET (EJ. MAXPRO30)"
-                className="flex-1 px-3 py-2 bg-[#06151e] border border-[#ffffff]/50 rounded-xl text-xs text-white placeholder:text-[#898a8c] focus:outline-none focus:ring-1 focus:ring-[#ffffff] uppercase tracking-wider font-mono"
+                className="flex-1 px-3 py-2 bg-[#0a0a0a] border border-[#ffffff]/50 rounded-xl text-xs text-white placeholder:text-[#898a8c] focus:outline-none focus:ring-1 focus:ring-[#ffffff] uppercase tracking-wider font-mono"
               />
               <button
                 type="submit"
                 disabled={isValidatingCoupon}
-                className="px-4 py-2 bg-[#06151e] hover:bg-[#545a5b] disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap flex items-center gap-1"
+                className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap flex items-center gap-1"
               >
                 {isValidatingCoupon ? (
                   <>
@@ -157,8 +157,8 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
         </div>
 
         {/* Tabla comparativa */}
-        <div className="bg-[#06151e] border border-white/10 rounded-xl overflow-hidden">
-          <div className="grid grid-cols-6 p-2.5 bg-[#06151e] text-[11px] font-bold uppercase tracking-wider border-b border-white/10">
+        <div className="bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden">
+          <div className="grid grid-cols-6 p-2.5 bg-[#0a0a0a] text-[11px] font-bold uppercase tracking-wider border-b border-white/10">
             <span className="col-span-4 text-[#898a8c]">Funcionalidad</span>
             <span className="col-span-1 text-center text-[#898a8c]">Gratis</span>
             <span className="col-span-1 text-center text-[#ffffff]">Pro</span>
@@ -187,12 +187,12 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
 
         {/* Planes */}
         <div className="grid grid-cols-2 gap-3 pt-1">
-          <div className="p-3 bg-[#06151e] border border-white/10 rounded-xl text-center space-y-1">
+          <div className="p-3 bg-[#0a0a0a] border border-white/10 rounded-xl text-center space-y-1">
             <span className="text-[10px] text-[#898a8c] uppercase font-bold block">Mensual</span>
             <div className="text-lg font-black text-white">$9.99<span className="text-xs text-[#898a8c] font-normal">/mes</span></div>
             <span className="text-[10px] text-[#898a8c] block">Cancela cuando quieras</span>
           </div>
-          <div className="p-3 bg-[#06151e]/40 border border-[#ffffff] rounded-xl text-center space-y-1 relative overflow-hidden">
+          <div className="p-3 bg-[#0a0a0a]/40 border border-[#ffffff] rounded-xl text-center space-y-1 relative overflow-hidden">
             <span className="absolute top-1 right-2 text-[9px] font-bold text-emerald-400">AHORRA 30%</span>
             <span className="text-[10px] text-[#ffffff] uppercase font-bold block">Anual VIP</span>
             <div className="text-lg font-black text-white">$6.99<span className="text-xs text-[#898a8c] font-normal">/mes</span></div>
@@ -208,7 +208,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
               if (onUpgrade) onUpgrade();
               onClose();
             }}
-            className="w-full py-3 bg-[#06151e] hover:bg-[#545a5b] text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-[#ffffff]/25 active:scale-95 flex items-center justify-center gap-2"
+            className="w-full py-3 bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-[#ffffff]/25 active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
             <span>Activar 30 Días de Prueba Pro</span>
