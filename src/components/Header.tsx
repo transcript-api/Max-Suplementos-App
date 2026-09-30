@@ -19,6 +19,13 @@ interface HeaderProps {
   isAppInstalled?: boolean;
 }
 
+// TODO (idea futura): el badge de sincronización quedó desactivado a pedido
+// del producto — con cuentas locales/invitado o email sin confirmar, el
+// contador de "pendientes" nunca baja a cero y confunde más de lo que
+// informa. Antes de reactivarlo, la UX debería distinguir claramente
+// "sin cuenta en la nube todavía" de "hay cambios reales sin subir".
+const SHOW_SYNC_BADGE = false;
+
 export const Header: React.FC<HeaderProps> = ({
   currentTab,
   onProfileClick,
@@ -59,8 +66,8 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Indicador de sincronización Offline/Supabase, Sección y Acciones */}
         <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Badge de Sincronización Offline / Supabase */}
-          {syncStatus && (
+          {/* Badge de Sincronización Offline / Supabase (desactivado por ahora, ver TODO arriba) */}
+          {SHOW_SYNC_BADGE && syncStatus && (
             <button
               type="button"
               onClick={onManualSync}

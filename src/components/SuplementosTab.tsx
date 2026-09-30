@@ -186,14 +186,14 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
   return (
     <div className="space-y-6 pb-20 animate-fadeIn">
       {/* 1. Header Oficial MAX Suplementos Tracker */}
-      <div className="bg-[#0a0a0a] p-4 sm:p-5 rounded-2xl border border-white/10 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#0a0a0a] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-white/10 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#0a0a0a] to-[#545a5b] text-white flex items-center justify-center shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-white dark:from-[#0a0a0a] to-slate-300 dark:to-[#545a5b] text-slate-900 dark:text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[26px]">medication</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
                 MAX Suplementos · Control & Reposición
               </h2>
               <button
@@ -209,7 +209,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 {currentPlan === 'vip' ? '👑 VIP ACTIVO' : 'Plan Estándar'}
               </button>
             </div>
-            <p className="text-xs text-[#898a8c]">
+            <p className="text-xs text-slate-500 dark:text-[#898a8c]">
               Controla tus tomas diarias, calcula días restantes de stock y solicita reposición directa en WhatsApp.
             </p>
           </div>
@@ -220,9 +220,9 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           <button
             type="button"
             onClick={() => setIsSummaryModalOpen(true)}
-            className="px-3 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center gap-1.5"
+            className="px-3 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-[#d6d6d6] transition-all flex items-center gap-1.5"
           >
-            <span className="material-symbols-outlined text-[16px] text-white">clinical_notes</span>
+            <span className="material-symbols-outlined text-[16px] text-slate-900 dark:text-white">clinical_notes</span>
             <span>Ficha Nutricionista</span>
           </button>
 
@@ -235,7 +235,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 setIsRegisterOpen(true);
               }
             }}
-            className="px-3.5 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+            className="px-3.5 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white text-xs font-black transition-all flex items-center gap-1.5 shadow-md active:scale-95"
           >
             <span className="material-symbols-outlined text-[18px]">add_circle</span>
             <span>Registrar Suplemento</span>
@@ -245,21 +245,21 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
 
       {/* 2. Banner VIP: Pedido Agrupado (si hay potes terminando) */}
       {urgentEndingPots.length > 0 && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a] to-[#0a0a0a] border border-white/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-white dark:from-[#0a0a0a] via-white dark:via-[#0a0a0a] to-white dark:to-[#0a0a0a] border border-slate-300 dark:border-white/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <span className="material-symbols-outlined text-[22px]">warning</span>
             </div>
             <div>
-              <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+              <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>{urgentEndingPots.length} {urgentEndingPots.length === 1 ? 'suplemento se termina' : 'suplementos se terminan'} en los próximos 10 días</span>
                 {currentPlan === 'vip' && (
-                  <span className="text-[10px] font-extrabold bg-[#ffffff]/20 text-[#d6d6d6] px-2 py-0.5 rounded-full border border-white/30">
+                  <span className="text-[10px] font-extrabold bg-[#ffffff]/20 text-slate-700 dark:text-[#d6d6d6] px-2 py-0.5 rounded-full border border-slate-300 dark:border-white/30">
                     VIP Agrupado
                   </span>
                 )}
               </h4>
-              <p className="text-[11px] text-[#898a8c]">
+              <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">
                 {urgentEndingPots.map((p) => p.name).join(', ')}. No cortes tu protocolo de suplementación.
               </p>
             </div>
@@ -269,7 +269,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             <button
               type="button"
               onClick={() => setActiveSubTab('tiendas')}
-              className="px-3 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center gap-1.5 whitespace-nowrap"
+              className="px-3 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-[#d6d6d6] transition-all flex items-center gap-1.5 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[15px] text-rose-500">pin_drop</span>
               <span>Tiendas Cercanas</span>
@@ -277,7 +277,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
             <button
               type="button"
               onClick={() => handleOpenReorder(urgentEndingPots)}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap shadow-md"
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white text-xs font-black transition-all flex items-center gap-1.5 whitespace-nowrap shadow-md"
             >
               <span className="material-symbols-outlined text-[16px]">shopping_bag</span>
               <span>Pedir Reposición en WhatsApp ({urgentEndingPots.length})</span>
@@ -287,7 +287,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       )}
 
       {/* 3. Sub-navegación: Hoy | Mis Suplementos | Composición del Día | Tiendas Cercanas */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-1 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-1 overflow-x-auto scrollbar-none">
         <button
           type="button"
           onClick={() => setActiveSubTab('hoy')}
@@ -346,27 +346,27 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       {activeSubTab === 'hoy' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase text-[#898a8c] tracking-wider">
+            <span className="text-[11px] font-bold uppercase text-slate-500 dark:text-[#898a8c] tracking-wider">
               Tus Suplementos (Ordenados por fecha estimada de fin)
             </span>
-            <span className="text-[11px] text-[#d6d6d6]">
+            <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6]">
               1 toque para registrar la toma de hoy
             </span>
           </div>
 
           {activePots.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-[#0a0a0a] space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-[#ffffff]/20 text-[#ffffff] flex items-center justify-center mx-auto">
+            <div className="p-8 text-center rounded-2xl border border-dashed border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0a0a] space-y-3">
+              <div className="w-14 h-14 rounded-2xl bg-[#ffffff]/20 text-slate-900 dark:text-[#ffffff] flex items-center justify-center mx-auto">
                 <span className="material-symbols-outlined text-[32px]">medication</span>
               </div>
-              <h3 className="text-base font-bold text-white">Sin suplementos en tu protocolo</h3>
-              <p className="text-xs text-[#898a8c] max-w-sm mx-auto">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Sin suplementos en tu protocolo</h3>
+              <p className="text-xs text-slate-500 dark:text-[#898a8c] max-w-sm mx-auto">
                 Agrega tus suplementos o escanea el envase para llevar el control diario y predecir cuándo necesitas reponer.
               </p>
               <button
                 type="button"
                 onClick={() => setIsRegisterOpen(true)}
-                className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
+                className="px-4 py-2 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white text-xs font-bold rounded-xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95"
               >
                 <span className="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>Registrar Suplemento</span>
@@ -391,7 +391,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#898a8c]">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#898a8c]">
                               {pot.brand}
                             </span>
                             {pot.isStoreVerified ? (
@@ -405,10 +405,10 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                               </span>
                             )}
                           </div>
-                          <h4 className="font-extrabold text-sm text-white leading-snug mt-0.5">
+                          <h4 className="font-extrabold text-sm text-slate-900 dark:text-white leading-snug mt-0.5">
                             {pot.name}
                           </h4>
-                          <p className="text-[11px] text-[#898a8c]">
+                          <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">
                             {pot.dailyDose} {pot.sizeUnit} por toma
                           </p>
                         </div>
@@ -419,31 +419,31 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                           }`}>
                             {stats.daysLeft}d
                           </span>
-                          <span className="text-[10px] text-[#898a8c] block mt-0.5">
+                          <span className="text-[10px] text-slate-500 dark:text-[#898a8c] block mt-0.5">
                             restantes
                           </span>
                         </div>
                       </div>
 
-                      <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-between text-xs">
+                      <div className="p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex items-center justify-between text-xs">
                         <div className="space-y-0.5">
-                          <span className="text-[10px] text-[#898a8c] block">Fecha estimada de fin:</span>
-                          <span className="font-bold text-white">{stats.formattedEndDate}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-[#898a8c] block">Fecha estimada de fin:</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{stats.formattedEndDate}</span>
                         </div>
-                        <span className="text-[11px] text-[#898a8c]">
+                        <span className="text-[11px] text-slate-500 dark:text-[#898a8c]">
                           {stats.dosesTaken}/{stats.totalDosesCapacity} tomas
                         </span>
                       </div>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
+                    <div className="pt-3 mt-3 border-t border-slate-200 dark:border-white/10 space-y-2">
                       <button
                         type="button"
                         onClick={() => handleToggleDoseToday(pot.id)}
                         className={`w-full py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer ${
                           tookToday
                             ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
-                            : 'bg-[#0a0a0a] text-white hover:bg-[#545a5b] shadow-md'
+                            : 'bg-[#0a0a0a] text-slate-900 dark:text-white hover:bg-[#545a5b] shadow-md'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">
@@ -458,7 +458,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                         <button
                           type="button"
                           onClick={() => handleOpenReorder([pot])}
-                          className="w-full py-1.5 px-3 rounded-xl bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                          className="w-full py-1.5 px-3 rounded-xl bg-emerald-600/90 hover:bg-emerald-600 text-slate-900 dark:text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
                         >
                           <span className="material-symbols-outlined text-[14px]">shopping_bag</span>
                           <span>Pedir reposición en WhatsApp</span>
@@ -472,19 +472,19 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           )}
 
           {currentPlan === 'gratis' && (
-            <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0a0a0a] border border-dashed border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
               <div>
-                <h5 className="font-bold text-xs text-white">
+                <h5 className="font-bold text-xs text-slate-900 dark:text-white">
                   + Agregar otro suplemento a tu rutina
                 </h5>
-                <p className="text-[11px] text-[#898a8c]">
+                <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">
                   Whey, creatina, pre-entreno y vitaminas disponibles en el plan VIP.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowVipUpgradeModal(true)}
-                className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] text-white text-xs font-bold hover:bg-[#545a5b] transition-all shrink-0 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white text-xs font-bold hover:bg-[#545a5b] transition-all shrink-0 cursor-pointer"
               >
                 Ver beneficios VIP →
               </button>
@@ -497,16 +497,16 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       {activeSubTab === 'suplementos' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase text-[#898a8c] tracking-wider">
+            <span className="text-[11px] font-bold uppercase text-slate-500 dark:text-[#898a8c] tracking-wider">
               Tus Suplementos ({activePots.length} activos, {finalizedPots.length} finalizados)
             </span>
           </div>
 
           {activePots.length === 0 ? (
-            <div className="p-8 text-center rounded-2xl border border-dashed border-white/10 bg-[#0a0a0a] space-y-2">
+            <div className="p-8 text-center rounded-2xl border border-dashed border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0a0a] space-y-2">
               <span className="material-symbols-outlined text-3xl text-slate-400">medication</span>
-              <h4 className="text-sm font-bold text-white">No tienes suplementos activos</h4>
-              <p className="text-xs text-[#898a8c]">Toca en "Registrar Suplemento" para comenzar tu protocolo.</p>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">No tienes suplementos activos</h4>
+              <p className="text-xs text-slate-500 dark:text-[#898a8c]">Toca en "Registrar Suplemento" para comenzar tu protocolo.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -515,35 +515,35 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                 return (
                   <div
                     key={pot.id}
-                    className="bg-[#0a0a0a] p-4 rounded-2xl border border-white/10 space-y-3 flex flex-col justify-between"
+                    className="bg-white dark:bg-[#0a0a0a] p-4 rounded-2xl border border-slate-200 dark:border-white/10 space-y-3 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
-                      <div className="w-full h-24 rounded-xl bg-[#0a0a0a] border border-white/10 flex flex-col items-center justify-center p-2 text-center">
-                        <span className="material-symbols-outlined text-[32px] text-[#ffffff]">
+                      <div className="w-full h-24 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex flex-col items-center justify-center p-2 text-center">
+                        <span className="material-symbols-outlined text-[32px] text-slate-900 dark:text-[#ffffff]">
                           {pot.category === 'creatina' ? 'science' : pot.category === 'proteina' ? 'nutrition' : 'bolt'}
                         </span>
-                        <span className="text-[10px] font-bold text-white mt-1 truncate max-w-full">
+                        <span className="text-[10px] font-bold text-slate-900 dark:text-white mt-1 truncate max-w-full">
                           {pot.name}
                         </span>
                       </div>
 
                       <div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold uppercase text-[#898a8c]">{pot.brand}</span>
-                          <span className="text-xs font-black text-white">{stats.daysLeft} días</span>
+                          <span className="text-[10px] font-bold uppercase text-slate-500 dark:text-[#898a8c]">{pot.brand}</span>
+                          <span className="text-xs font-black text-slate-900 dark:text-white">{stats.daysLeft} días</span>
                         </div>
-                        <h4 className="font-bold text-xs text-white truncate">{pot.name}</h4>
-                        <p className="text-[11px] text-[#898a8c]">
+                        <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate">{pot.name}</h4>
+                        <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">
                           {pot.totalSize} {pot.sizeUnit} · Abierto el {pot.openingDate}
                         </p>
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-white/10 flex gap-2">
+                    <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex gap-2">
                       <button
                         type="button"
                         onClick={() => handleOpenReorder([pot])}
-                        className="flex-1 py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
+                        className="flex-1 py-1.5 px-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[14px]">chat</span>
                         <span>Pedir Reposición</span>
@@ -560,16 +560,16 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       {/* VISTA 3: COMPOSICIÓN DIARIA */}
       {activeSubTab === 'composicion' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-3">
+          <div className="p-4 rounded-2xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="font-bold text-base text-white flex items-center gap-2">
+                <h3 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
                   Lo que tomaste hoy
-                  <span className="text-[11px] font-medium text-[#898a8c]">
+                  <span className="text-[11px] font-medium text-slate-500 dark:text-[#898a8c]">
                     (Suma de tomas marcadas)
                   </span>
                 </h3>
-                <p className="text-xs text-[#898a8c]">
+                <p className="text-xs text-slate-500 dark:text-[#898a8c]">
                   Suma de cada principio activo declarado en tus suplementos.
                 </p>
               </div>
@@ -577,16 +577,16 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setIsSummaryModalOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-[#0a0a0a] text-white text-xs font-bold hover:bg-[#545a5b] transition-all flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white text-xs font-bold hover:bg-[#545a5b] transition-all flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[15px]">picture_as_pdf</span>
                 <span>Ficha para Nutricionista</span>
               </button>
             </div>
 
-            <div className="divide-y divide-white/10 pt-2">
+            <div className="divide-y divide-slate-200 dark:divide-white/10 pt-2">
               {dailyIngredients.length === 0 ? (
-                <p className="text-xs text-[#898a8c] py-4 text-center">
+                <p className="text-xs text-slate-500 dark:text-[#898a8c] py-4 text-center">
                   Ninguna toma registrada hoy aún. Marca tus suplementos en la pestaña "Hoy" para ver la composición acumulada.
                 </p>
               ) : (
@@ -594,25 +594,25 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
                   <div
                     key={idx}
                     onClick={() => setSelectedIngredientDetail(item)}
-                    className="py-2.5 flex items-center justify-between hover:bg-[#0a0a0a] px-2 rounded-xl cursor-pointer transition-colors"
+                    className="py-2.5 flex items-center justify-between hover:bg-white dark:hover:bg-[#0a0a0a] px-2 rounded-xl cursor-pointer transition-colors"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-xs sm:text-sm text-white">{item.name}</span>
-                        <span className="text-[10px] text-[#898a8c]">
+                        <span className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">{item.name}</span>
+                        <span className="text-[10px] text-slate-500 dark:text-[#898a8c]">
                           {item.sources.length} {item.sources.length === 1 ? 'producto' : 'productos'}
                         </span>
                       </div>
-                      <span className="text-[10px] text-[#898a8c]">
+                      <span className="text-[10px] text-slate-500 dark:text-[#898a8c]">
                         Toca para ver el desglose
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-black text-sm text-[#d6d6d6]">
+                      <span className="font-mono font-black text-sm text-slate-700 dark:text-[#d6d6d6]">
                         {item.totalAmount} {item.unit}
                       </span>
-                      <span className="material-symbols-outlined text-[16px] text-[#898a8c]">
+                      <span className="material-symbols-outlined text-[16px] text-slate-500 dark:text-[#898a8c]">
                         chevron_right
                       </span>
                     </div>
@@ -623,35 +623,35 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
           </div>
 
           {selectedIngredientDetail && (
-            <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#ffffff]/40 space-y-3 animate-fadeIn">
+            <div className="p-4 rounded-2xl bg-white dark:bg-[#0a0a0a] border border-[#ffffff]/40 space-y-3 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold uppercase text-[#d6d6d6]">Desglose de Ingrediente</span>
-                  <h4 className="font-black text-base text-white">
+                  <span className="text-[10px] font-bold uppercase text-slate-700 dark:text-[#d6d6d6]">Desglose de Ingrediente</span>
+                  <h4 className="font-black text-base text-slate-900 dark:text-white">
                     {selectedIngredientDetail.name}: {selectedIngredientDetail.totalAmount} {selectedIngredientDetail.unit}
                   </h4>
                 </div>
                 <button
                   type="button"
                   onClick={() => setSelectedIngredientDetail(null)}
-                  className="text-xs text-[#898a8c] hover:text-white cursor-pointer"
+                  className="text-xs text-slate-500 dark:text-[#898a8c] hover:text-slate-900 dark:hover:text-white cursor-pointer"
                 >
                   Cerrar
                 </button>
               </div>
 
               <div className="space-y-1.5">
-                <span className="text-[11px] font-bold text-[#898a8c] block">FUENTES:</span>
+                <span className="text-[11px] font-bold text-slate-500 dark:text-[#898a8c] block">FUENTES:</span>
                 {selectedIngredientDetail.sources.map((src, i) => (
                   <div
                     key={i}
-                    className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex items-center justify-between"
+                    className="p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex items-center justify-between"
                   >
                     <div>
-                      <span className="font-bold text-xs text-white block">{src.potName}</span>
-                      <span className="text-[10px] text-[#898a8c]">{src.brand}</span>
+                      <span className="font-bold text-xs text-slate-900 dark:text-white block">{src.potName}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-[#898a8c]">{src.brand}</span>
                     </div>
-                    <span className="font-mono font-black text-xs text-[#d6d6d6]">
+                    <span className="font-mono font-black text-xs text-slate-700 dark:text-[#d6d6d6]">
                       {src.amount} {src.unit}
                     </span>
                   </div>
@@ -698,8 +698,8 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
       {/* Modal Comparativo Estándar vs VIP */}
       {showVipUpgradeModal && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-[#0a0a0a] text-white rounded-2xl max-w-md w-full border border-white/10 shadow-2xl p-5 space-y-4 animate-fadeIn">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white rounded-2xl max-w-md w-full border border-slate-200 dark:border-white/10 shadow-2xl p-5 space-y-4 animate-fadeIn">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xl">👑</span>
                 <h3 className="font-black text-base">Plan Estándar vs VIP MAX</h3>
@@ -707,30 +707,30 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setShowVipUpgradeModal(false)}
-                className="text-[#898a8c] hover:text-white"
+                className="text-slate-500 dark:text-[#898a8c] hover:text-slate-900 dark:hover:text-white"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 
-            <p className="text-xs text-[#898a8c]">
+            <p className="text-xs text-slate-500 dark:text-[#898a8c]">
               El plan VIP es gratuito para atletas que adquieren sus suplementos en MAX Suplementos. ¡Mantén tu fidelidad activa y disfruta todos los beneficios!
             </p>
 
             <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex justify-between items-center">
                 <span>Suplementos monitoreados</span>
-                <span className="font-bold text-white">Estándar: 1 | <strong className="text-amber-400">VIP: Ilimitados</strong></span>
+                <span className="font-bold text-slate-900 dark:text-white">Estándar: 1 | <strong className="text-amber-400">VIP: Ilimitados</strong></span>
               </div>
-              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex justify-between items-center">
                 <span>Cálculo de fin y reposición</span>
                 <span className="font-bold text-emerald-400">Incluido en ambos</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex justify-between items-center">
                 <span>Pedido en WhatsApp con 1 toque</span>
-                <span className="font-bold text-white">Estándar: No | <strong className="text-amber-400">VIP: Sí</strong></span>
+                <span className="font-bold text-slate-900 dark:text-white">Estándar: No | <strong className="text-amber-400">VIP: Sí</strong></span>
               </div>
-              <div className="p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 flex justify-between items-center">
                 <span>Ficha para Nutricionista en PDF</span>
                 <span className="font-bold text-emerald-400">Incluido en ambos</span>
               </div>
@@ -740,7 +740,7 @@ export const SuplementosTab: React.FC<SuplementosTabProps> = ({
               <button
                 type="button"
                 onClick={() => setShowVipUpgradeModal(false)}
-                className="w-1/3 py-2 px-3 rounded-xl bg-[#0a0a0a] text-xs font-bold text-[#d6d6d6]"
+                className="w-1/3 py-2 px-3 rounded-xl bg-white dark:bg-[#0a0a0a] text-xs font-bold text-slate-700 dark:text-[#d6d6d6]"
               >
                 Cerrar
               </button>

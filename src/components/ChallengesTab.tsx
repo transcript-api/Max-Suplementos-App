@@ -104,17 +104,17 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between pt-2">
         <div>
-          <span className="font-label-caps text-label-caps text-[#ffffff] uppercase tracking-wider block font-bold">
+          <span className="font-label-caps text-label-caps text-slate-900 dark:text-[#ffffff] uppercase tracking-wider block font-bold">
             Comunidad y Gamificación
           </span>
-          <h1 className="font-headline-xl-mobile text-headline-xl-mobile text-white font-bold">
+          <h1 className="font-headline-xl-mobile text-headline-xl-mobile text-slate-900 dark:text-white font-bold">
             Retos, Liga & Recompensas
           </h1>
         </div>
       </div>
 
       {/* Sub tabs */}
-      <div className="p-1 bg-[#0a0a0a] rounded-xl flex items-center justify-between gap-1 border border-white/10">
+      <div className="p-1 bg-white dark:bg-[#0a0a0a] rounded-xl flex items-center justify-between gap-1 border border-slate-200 dark:border-white/10">
         {(['retos', 'ranking', 'recompensas', 'suplementos'] as const).map((tab) => (
           <button
             key={tab}
@@ -122,8 +122,8 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 rounded-lg font-headline-md text-xs sm:text-sm text-center capitalize transition-all ${
               activeTab === tab
-                ? 'bg-[#0a0a0a] text-white font-bold shadow-sm'
-                : 'text-[#898a8c] hover:text-white font-medium'
+                ? 'bg-[#0a0a0a] text-slate-900 dark:text-white font-bold shadow-sm'
+                : 'text-[#898a8c] hover:text-slate-900 dark:hover:text-white font-medium'
             }`}
           >
             {tab === 'retos'
@@ -141,27 +141,27 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {activeTab === 'retos' && (
         <div className="space-y-4">
           {/* Reto Principal: 30 Días Sin Romper Racha */}
-          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 shadow-lg relative overflow-hidden">
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-5 border border-slate-200 dark:border-white/10 shadow-lg relative overflow-hidden">
             <div className="flex justify-between items-start mb-2">
               <div>
-                <span className="bg-[#ffffff]/20 text-[#d6d6d6] font-label-caps text-label-caps px-2.5 py-0.5 rounded-full border border-[#ffffff]/30 font-bold uppercase">
+                <span className="bg-[#ffffff]/20 text-slate-700 dark:text-[#d6d6d6] font-label-caps text-label-caps px-2.5 py-0.5 rounded-full border border-[#ffffff]/30 font-bold uppercase">
                   Desafío Mensual
                 </span>
-                <h3 className="font-headline-md text-white font-bold mt-1">30 días de consistencia sin romper racha</h3>
+                <h3 className="font-headline-md text-slate-900 dark:text-white font-bold mt-1">30 días de consistencia sin romper racha</h3>
               </div>
               <span className="text-2xl">🏆</span>
             </div>
 
-            <p className="font-body-sm text-[#898a8c] mb-3">
+            <p className="font-body-sm text-slate-500 dark:text-[#898a8c] mb-3">
               Completa al menos el 80% de tu Form Diaria durante 30 días seguidos para desbloquear la insignia Titán y un 25% de descuento en Max Nutrition.
             </p>
 
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
-                <span className="text-white font-bold">Día {streakDays} de 30</span>
-                <span className="text-[#d6d6d6] font-bold">{Math.round((streakDays / 30) * 100)}%</span>
+                <span className="text-slate-900 dark:text-white font-bold">Día {streakDays} de 30</span>
+                <span className="text-slate-700 dark:text-[#d6d6d6] font-bold">{Math.round((streakDays / 30) * 100)}%</span>
               </div>
-              <div className="w-full bg-[#0a0a0a] h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-white dark:bg-[#0a0a0a] h-2 rounded-full overflow-hidden">
                 <div 
                   className="bg-[#ffffff] h-full rounded-full transition-all duration-500" 
                   style={{ width: `${(streakDays / 30) * 100}%` }}
@@ -169,7 +169,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-white/10 flex justify-between items-center text-xs text-[#898a8c]">
+            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-white/10 flex justify-between items-center text-xs text-slate-500 dark:text-[#898a8c]">
               <span>Recompensa: +500 XP · Cupón VIP</span>
               <span className="text-emerald-400 font-bold">En curso activo</span>
             </div>
@@ -177,42 +177,42 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
           {/* Otros retos secundarios */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex items-center justify-between">
+            <div className="bg-white dark:bg-[#0a0a0a] p-4 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-slate-700 dark:text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[22px]">water_drop</span>
                 </div>
                 <div>
-                  <h4 className="font-body-md text-white font-bold">Hidratación Maestra</h4>
-                  <p className="text-xs text-[#898a8c]">3L de agua 7 días continuos</p>
-                  <span className="text-[11px] text-[#d6d6d6] font-semibold">5 / 7 días logrados</span>
+                  <h4 className="font-body-md text-slate-900 dark:text-white font-bold">Hidratación Maestra</h4>
+                  <p className="text-xs text-slate-500 dark:text-[#898a8c]">3L de agua 7 días continuos</p>
+                  <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6] font-semibold">5 / 7 días logrados</span>
                 </div>
               </div>
-              <span className="text-xs bg-[#0a0a0a] text-white px-2 py-1 rounded font-bold border border-white/10">
+              <span className="text-xs bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white px-2 py-1 rounded font-bold border border-slate-200 dark:border-white/10">
                 +150 XP
               </span>
             </div>
 
-            <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex items-center justify-between">
+            <div className="bg-white dark:bg-[#0a0a0a] p-4 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-slate-700 dark:text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[22px]">fitness_center</span>
                 </div>
                 <div>
-                  <h4 className="font-body-md text-white font-bold">Sobrecarga Progresiva</h4>
-                  <p className="text-xs text-[#898a8c]">Registrar 4 sesiones con RPE 8+</p>
-                  <span className="text-[11px] text-[#d6d6d6] font-semibold">3 / 4 sesiones</span>
+                  <h4 className="font-body-md text-slate-900 dark:text-white font-bold">Sobrecarga Progresiva</h4>
+                  <p className="text-xs text-slate-500 dark:text-[#898a8c]">Registrar 4 sesiones con RPE 8+</p>
+                  <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6] font-semibold">3 / 4 sesiones</span>
                 </div>
               </div>
-              <span className="text-xs bg-[#0a0a0a] text-white px-2 py-1 rounded font-bold border border-white/10">
+              <span className="text-xs bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white px-2 py-1 rounded font-bold border border-slate-200 dark:border-white/10">
                 +200 XP
               </span>
             </div>
           </div>
 
           {/* Muro Comunitario */}
-          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-3">
-            <h3 className="font-headline-md text-white font-bold">Muro de Atletas</h3>
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-5 border border-slate-200 dark:border-white/10 space-y-3">
+            <h3 className="font-headline-md text-slate-900 dark:text-white font-bold">Muro de Atletas</h3>
 
             {/* Crear post rápido */}
             <form onSubmit={handleCreatePost} className="flex gap-2">
@@ -221,11 +221,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 value={newPostText}
                 onChange={(e) => setNewPostText(e.target.value)}
                 placeholder="Comparte una victoria o tu marca de hoy..."
-                className="flex-1 bg-[#0a0a0a] rounded-lg px-3 py-2 text-sm text-white border border-white/10 focus:outline-none focus:border-[#ffffff]"
+                className="flex-1 bg-white dark:bg-[#0a0a0a] rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 focus:outline-none focus:border-[#ffffff]"
               />
               <button
                 type="submit"
-                className="bg-[#0a0a0a] hover:bg-[#545a5b] text-white px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-all"
+                className="bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-all"
               >
                 Publicar
               </button>
@@ -234,17 +234,17 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             {/* Lista de posts */}
             <div className="space-y-2.5 pt-1">
               {posts.map((p) => (
-                <div key={p.id} className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 space-y-1.5">
+                <div key={p.id} className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 space-y-1.5">
                   <div className="flex justify-between items-center text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-white">{p.user}</span>
-                      <span className="px-1.5 py-0.5 rounded bg-[#0a0a0a] text-[#d6d6d6] text-[10px]">
+                      <span className="font-bold text-slate-900 dark:text-white">{p.user}</span>
+                      <span className="px-1.5 py-0.5 rounded bg-white dark:bg-[#0a0a0a] text-slate-700 dark:text-[#d6d6d6] text-[10px]">
                         {p.badge}
                       </span>
                     </div>
-                    <span className="text-[#898a8c]">{p.time}</span>
+                    <span className="text-slate-500 dark:text-[#898a8c]">{p.time}</span>
                   </div>
-                  <p className="text-sm text-[#d6d6d6]">{p.text}</p>
+                  <p className="text-sm text-slate-700 dark:text-[#d6d6d6]">{p.text}</p>
                   <div className="flex items-center gap-1 pt-1">
                     <button
                       type="button"
@@ -252,7 +252,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                       className={`text-xs flex items-center gap-1 px-2 py-1 rounded-full border transition-colors ${
                         p.liked 
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' 
-                          : 'bg-[#0a0a0a] text-[#898a8c] border-white/10 hover:text-white'
+                          : 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] border-slate-200 dark:border-white/10 hover:text-white'
                       }`}
                     >
                       <span>🔥</span>
@@ -268,14 +268,14 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
       {/* VISTA: RANKING COMPLETO */}
       {activeTab === 'ranking' && (
-        <div className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/10 space-y-4">
+        <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-5 border border-slate-200 dark:border-white/10 space-y-4">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
             <div>
-              <span className="font-label-caps text-[#898a8c] uppercase block text-[11px] font-bold">Clasificación de Liga</span>
-              <h3 className="font-headline-md text-white font-bold text-lg">Liga Diamante · Top Atletas</h3>
+              <span className="font-label-caps text-slate-500 dark:text-[#898a8c] uppercase block text-[11px] font-bold">Clasificación de Liga</span>
+              <h3 className="font-headline-md text-slate-900 dark:text-white font-bold text-lg">Liga Diamante · Top Atletas</h3>
             </div>
             {/* Filtros Semanal / Mensual / Global */}
-            <div className="flex items-center bg-[#0a0a0a] p-1 rounded-xl border border-white/10">
+            <div className="flex items-center bg-white dark:bg-[#0a0a0a] p-1 rounded-xl border border-slate-200 dark:border-white/10">
               {(['semanal', 'mensual', 'global'] as const).map((p) => (
                 <button
                   key={p}
@@ -294,37 +294,37 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           </div>
 
           {/* Tarjeta de Proximidad Psicológica (Sección 25 del Master Prompt) */}
-          <div className="p-3.5 bg-[#0a0a0a]/60 border border-[#ffffff]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
+          <div className="p-3.5 bg-slate-50 dark:bg-[#0a0a0a]/60 border border-[#ffffff]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-[#0a0a0a] text-white flex items-center justify-center font-bold flex-shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white flex items-center justify-center font-bold flex-shrink-0">
                 {isDemoMode ? '#127' : (xp > 0 ? '#1' : '-')}
               </div>
               <div>
-                <span className="text-xs font-bold text-white block">
+                <span className="text-xs font-bold text-slate-900 dark:text-white block">
                   {isDemoMode 
                     ? '¡A solo 12 XP de superar el puesto #126!' 
                     : (xp > 0 ? 'Liga Bronce · Atleta en Ascenso' : 'Todavía no tenés una posición')}
                 </span>
-                <span className="text-[11px] text-[#d6d6d6]">
+                <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6]">
                   {isDemoMode
                     ? 'Cumple una tarea diaria más hoy para adelantar a Mateo R. (4.872 XP).'
                     : (xp > 0 ? '¡Seguí sumando XP con tus tareas para subir en la Liga!' : 'Completá tus primeros objetivos para entrar al ranking.')}
                 </span>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-lg bg-[#ffffff]/20 text-[#ffffff] text-xs font-black border border-[#ffffff]/40 whitespace-nowrap">
+            <span className="px-2.5 py-1 rounded-lg bg-[#ffffff]/20 text-slate-900 dark:text-[#ffffff] text-xs font-black border border-[#ffffff]/40 whitespace-nowrap">
               {isDemoMode ? '+12 XP' : (xp > 0 ? `${xp} XP` : '0 XP')}
             </span>
           </div>
 
           <div className="space-y-2">
             {!isDemoMode && xp === 0 ? (
-              <div className="p-8 rounded-xl bg-[#0a0a0a] border border-white/10 text-center space-y-2.5">
-                <div className="w-12 h-12 rounded-full bg-[#ffffff]/20 text-[#ffffff] mx-auto flex items-center justify-center">
+              <div className="p-8 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-center space-y-2.5">
+                <div className="w-12 h-12 rounded-full bg-[#ffffff]/20 text-slate-900 dark:text-[#ffffff] mx-auto flex items-center justify-center">
                   <span className="material-symbols-outlined text-[24px]">emoji_events</span>
                 </div>
-                <h4 className="font-bold text-white text-base">Todavía no tenés una posición en el ranking</h4>
-                <p className="text-xs text-[#898a8c] max-w-sm mx-auto leading-relaxed">
+                <h4 className="font-bold text-slate-900 dark:text-white text-base">Todavía no tenés una posición en el ranking</h4>
+                <p className="text-xs text-slate-500 dark:text-[#898a8c] max-w-sm mx-auto leading-relaxed">
                   Completá tus primeros objetivos diarios (entrenamiento, proteína, hidratación) para sumar XP y clasificar oficialmente en la tabla de la Liga.
                 </p>
               </div>
@@ -345,8 +345,8 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   key={atleta.rank}
                   className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                     atleta.isYou
-                      ? 'bg-[#0a0a0a]/80 border-[#ffffff] text-white font-bold shadow-md ring-1 ring-[#ffffff]/50'
-                      : 'bg-[#0a0a0a] border-white/10 text-[#d6d6d6]'
+                      ? 'bg-[#0a0a0a]/80 border-[#ffffff] text-slate-900 dark:text-white font-bold shadow-md ring-1 ring-[#ffffff]/50'
+                      : 'bg-[#0a0a0a] border-slate-200 dark:border-white/10 text-[#d6d6d6]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -354,16 +354,16 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                       {atleta.badge || `#${atleta.rank}`}
                     </span>
                     <div>
-                      <span className="text-sm font-semibold text-white block">{atleta.name}</span>
-                      <span className="text-xs text-[#898a8c]">{atleta.level}</span>
+                      <span className="text-sm font-semibold text-slate-900 dark:text-white block">{atleta.name}</span>
+                      <span className="text-xs text-slate-500 dark:text-[#898a8c]">{atleta.level}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-bold text-[#ffffff]">{atleta.xp.toLocaleString('es-ES')} XP</span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-[#ffffff]">{atleta.xp.toLocaleString('es-ES')} XP</span>
                     {atleta.isYou ? (
                       <span className="block text-[10px] text-emerald-400 font-bold">Tu posición actual</span>
                     ) : (
-                      <span className="block text-[10px] text-[#898a8c]">{atleta.delta} hoy</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-[#898a8c]">{atleta.delta} hoy</span>
                     )}
                   </div>
                 </div>
@@ -376,18 +376,18 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {/* VISTA: RECOMPENSAS Y CUPONES MAX SUPLEMENTOS */}
       {activeTab === 'recompensas' && (
         <div className="space-y-4">
-          <div className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/10 space-y-3">
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-5 border border-slate-200 dark:border-white/10 space-y-3">
             <div className="flex justify-between items-start">
               <div>
-                <span className="font-label-caps text-[#898a8c] uppercase block text-[11px] font-bold">Club Atleta MAX</span>
-                <h3 className="font-headline-md text-white font-bold text-lg">Canje de Experiencia (XP)</h3>
+                <span className="font-label-caps text-slate-500 dark:text-[#898a8c] uppercase block text-[11px] font-bold">Club Atleta MAX</span>
+                <h3 className="font-headline-md text-slate-900 dark:text-white font-bold text-lg">Canje de Experiencia (XP)</h3>
               </div>
               <div className="px-3 py-1 bg-[#ffffff]/20 border border-[#ffffff]/40 rounded-xl text-right">
-                <span className="text-[10px] text-[#898a8c] block">Tu balance</span>
-                <span className="text-sm font-black text-[#ffffff]">{xp.toLocaleString('es-ES')} XP</span>
+                <span className="text-[10px] text-slate-500 dark:text-[#898a8c] block">Tu balance</span>
+                <span className="text-sm font-black text-slate-900 dark:text-[#ffffff]">{xp.toLocaleString('es-ES')} XP</span>
               </div>
             </div>
-            <p className="text-xs text-[#d6d6d6]">
+            <p className="text-xs text-slate-700 dark:text-[#d6d6d6]">
               Tu constancia tiene recompensa real. Canjeá tus puntos acumulados por descuentos y productos en MAX Suplementos.
             </p>
 
@@ -400,7 +400,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setClaimedReward(null)}
-                  className="text-xs text-white/70 hover:text-white"
+                  className="text-xs text-white/70 hover:text-slate-900 dark:hover:text-white"
                 >
                   ✕
                 </button>
@@ -413,11 +413,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 return (
                   <div
                     key={reward.id}
-                    className="p-4 bg-[#0a0a0a] border border-white/10 rounded-xl flex flex-col justify-between space-y-3 relative overflow-hidden"
+                    className="p-4 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl flex flex-col justify-between space-y-3 relative overflow-hidden"
                   >
                     <div className="space-y-2">
                       <div className="flex justify-between items-start">
-                        <span className="text-[10px] font-bold text-[#ffffff] bg-[#ffffff]/20 border border-[#ffffff]/30 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold text-slate-900 dark:text-[#ffffff] bg-[#ffffff]/20 border border-[#ffffff]/30 px-2 py-0.5 rounded-full">
                           {reward.badge}
                         </span>
                         <span className="text-xs font-black text-amber-400 flex items-center gap-1">
@@ -425,11 +425,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                           {reward.costXp} XP
                         </span>
                       </div>
-                      <h4 className="text-sm font-bold text-white leading-snug">{reward.title}</h4>
-                      <p className="text-xs text-[#898a8c] leading-relaxed">{reward.desc}</p>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">{reward.title}</h4>
+                      <p className="text-xs text-slate-500 dark:text-[#898a8c] leading-relaxed">{reward.desc}</p>
                     </div>
 
-                    <div className="pt-2 border-t border-white/10">
+                    <div className="pt-2 border-t border-slate-200 dark:border-white/10">
                       <button
                         type="button"
                         onClick={() => {
@@ -441,8 +441,8 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                         disabled={!canAfford}
                         className={`w-full py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                           canAfford
-                            ? 'bg-[#0a0a0a] hover:bg-[#545a5b] text-white active:scale-95 shadow-md shadow-[#ffffff]/20'
-                            : 'bg-[#0a0a0a] text-[#898a8c] cursor-not-allowed'
+                            ? 'bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white active:scale-95 shadow-md shadow-[#ffffff]/20'
+                            : 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] cursor-not-allowed'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">
@@ -462,12 +462,12 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {/* VISTA: SUPLEMENTOS & RECOMPRA INTELIGENTE */}
       {activeTab === 'suplementos' && (
         <div className="space-y-4">
-          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-3">
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-5 border border-slate-200 dark:border-white/10 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">notifications_active</span>
-              <h3 className="font-headline-md text-white font-bold">Alerta de Reposición Inteligente</h3>
+              <span className="material-symbols-outlined text-slate-700 dark:text-[#d6d6d6] text-[20px]">notifications_active</span>
+              <h3 className="font-headline-md text-slate-900 dark:text-white font-bold">Alerta de Reposición Inteligente</h3>
             </div>
-            <p className="text-sm text-[#898a8c]">
+            <p className="text-sm text-slate-500 dark:text-[#898a8c]">
               Basado en tus registros de consumo diario, te quedan aproximadamente <strong>5 días de Creatina Creapure</strong> y <strong>6 días de Whey Isolada</strong>.
             </p>
 
@@ -479,52 +479,52 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
+              <div className="bg-white dark:bg-[#0a0a0a] p-4 rounded-xl border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-bold text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
+                    <span className="text-xs font-bold text-slate-700 dark:text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
                       Consumo habitual
                     </span>
-                    <span className="text-xs text-[#898a8c]">5g diarios</span>
+                    <span className="text-xs text-slate-500 dark:text-[#898a8c]">5g diarios</span>
                   </div>
-                  <h4 className="text-white font-bold text-base mt-2">Creatina Creapure 300g</h4>
-                  <p className="text-xs text-[#898a8c]">Máxima pureza micronizada para fuerza y ATP celular.</p>
+                  <h4 className="text-slate-900 dark:text-white font-bold text-base mt-2">Creatina Creapure 300g</h4>
+                  <p className="text-xs text-slate-500 dark:text-[#898a8c]">Máxima pureza micronizada para fuerza y ATP celular.</p>
                 </div>
-                <div className="flex justify-between items-center pt-2 border-t border-white/10">
+                <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-white/10">
                   <div>
-                    <span className="text-white font-bold text-sm">$28.90</span>
+                    <span className="text-slate-900 dark:text-white font-bold text-sm">$28.90</span>
                     <span className="text-xs text-emerald-400 block">-20% Club Atleta</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => setReordered('¡Orden de Creatina enviada con 1-Click! Llegará en 48hs.')}
-                    className="bg-[#0a0a0a] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
+                    className="bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
                   >
                     Reponer 1-Click
                   </button>
                 </div>
               </div>
 
-              <div className="bg-[#0a0a0a] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
+              <div className="bg-white dark:bg-[#0a0a0a] p-4 rounded-xl border border-slate-200 dark:border-white/10 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-bold text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
+                    <span className="text-xs font-bold text-slate-700 dark:text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
                       Consumo habitual
                     </span>
-                    <span className="text-xs text-[#898a8c]">30g diarios</span>
+                    <span className="text-xs text-slate-500 dark:text-[#898a8c]">30g diarios</span>
                   </div>
-                  <h4 className="text-white font-bold text-base mt-2">100% Whey Isolate 1kg</h4>
-                  <p className="text-xs text-[#898a8c]">Sabor Chocolate Belga · 27g de proteína pura por scoop.</p>
+                  <h4 className="text-slate-900 dark:text-white font-bold text-base mt-2">100% Whey Isolate 1kg</h4>
+                  <p className="text-xs text-slate-500 dark:text-[#898a8c]">Sabor Chocolate Belga · 27g de proteína pura por scoop.</p>
                 </div>
-                <div className="flex justify-between items-center pt-2 border-t border-white/10">
+                <div className="flex justify-between items-center pt-2 border-t border-slate-200 dark:border-white/10">
                   <div>
-                    <span className="text-white font-bold text-sm">$45.50</span>
+                    <span className="text-slate-900 dark:text-white font-bold text-sm">$45.50</span>
                     <span className="text-xs text-emerald-400 block">-20% Club Atleta</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => setReordered('¡Orden de Whey Isolada procesada! Llegará en 48hs.')}
-                    className="bg-[#0a0a0a] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
+                    className="bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
                   >
                     Reponer 1-Click
                   </button>

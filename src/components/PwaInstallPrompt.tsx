@@ -54,8 +54,8 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
         <div className="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-6 sm:max-w-md z-40 animate-bounce-short">
           <div className="dark:bg-[#0a0a0a]/95 bg-white/95 backdrop-blur-xl border dark:border-white/10 border-slate-200 rounded-2xl p-4 shadow-[0_12px_32px_rgba(0,0,0,0.5)] flex items-center justify-between gap-3 text-slate-800 dark:text-white">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#0a0a0a] to-[#545a5b] flex items-center justify-center shadow-lg shadow-black/25 flex-shrink-0">
-                <span className="material-symbols-outlined text-white text-[24px]">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-white dark:from-[#0a0a0a] to-slate-300 dark:to-[#545a5b] flex items-center justify-center shadow-lg shadow-black/25 flex-shrink-0">
+                <span className="material-symbols-outlined text-slate-900 dark:text-white text-[24px]">
                   install_mobile
                 </span>
               </div>
@@ -73,7 +73,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               <button
                 type="button"
                 onClick={onInstall}
-                className="px-3.5 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-black text-xs shadow-md shadow-black/30 active:scale-95 transition-all touch-manipulation cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white font-black text-xs shadow-md shadow-black/30 active:scale-95 transition-all touch-manipulation cursor-pointer"
               >
                 Descargar
               </button>
@@ -93,7 +93,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
       {/* 2. MODAL DE INSTRUCCIONES DE DESCARGA / INSTALACIÓN (Safari iOS o Navegador General) */}
       {showIosModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-md dark:bg-[#0a0a0a] bg-[#0a0a0a] rounded-3xl border dark:border-white/10 border-slate-200 shadow-2xl p-6 sm:p-7 text-slate-900 dark:text-white space-y-5">
+          <div className="relative w-full max-w-md dark:bg-[#0a0a0a] bg-white dark:bg-[#0a0a0a] rounded-3xl border dark:border-white/10 border-slate-200 shadow-2xl p-6 sm:p-7 text-slate-900 dark:text-white space-y-5">
             {/* Botón Cerrar */}
             <button
               type="button"
@@ -105,7 +105,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
 
             {/* Encabezado con Icono */}
             <div className="flex flex-col items-center text-center space-y-2 pt-2">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#0a0a0a] to-[#545a5b] flex items-center justify-center shadow-xl shadow-black/30 p-2">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-white dark:from-[#0a0a0a] to-slate-300 dark:to-[#545a5b] flex items-center justify-center shadow-xl shadow-black/30 p-2">
                 <MaxMindLogo variant="symbol" size="sm" isDark={true} />
               </div>
               <h3 className="text-lg sm:text-xl font-black tracking-tight">
@@ -120,7 +120,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
             {isIos ? (
               <div className="space-y-3 dark:bg-[#0a0a0a] bg-slate-50 p-4 rounded-2xl border dark:border-white/10 border-slate-200 text-xs">
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/20 text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-white/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
                     1
                   </div>
                   <div>
@@ -132,19 +132,19 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/20 text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-white/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
                     2
                   </div>
                   <div>
                     Desplázate hacia abajo y selecciona <strong>"Agregar a pantalla de inicio"</strong>{' '}
-                    <span className="material-symbols-outlined text-[15px] align-middle text-white">
+                    <span className="material-symbols-outlined text-[15px] align-middle text-slate-900 dark:text-white">
                       add_box
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/20 text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-white/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
                     3
                   </div>
                   <div>
@@ -156,7 +156,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
               /* Pasos para Chrome / Android / Otros navegadores */
               <div className="space-y-3 dark:bg-[#0a0a0a] bg-slate-50 p-4 rounded-2xl border dark:border-white/10 border-slate-200 text-xs">
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/20 text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-white/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
                     1
                   </div>
                   <div>
@@ -166,7 +166,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/20 text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-white/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
                     2
                   </div>
                   <div>
@@ -176,7 +176,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/20 text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-white/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] font-bold flex items-center justify-center flex-shrink-0">
                     3
                   </div>
                   <div>
@@ -206,7 +206,7 @@ export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({
             <button
               type="button"
               onClick={onCloseIosModal}
-              className="w-full py-3 min-h-[44px] rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-extrabold text-xs shadow-lg shadow-black/30 active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3 min-h-[44px] rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white font-extrabold text-xs shadow-lg shadow-black/30 active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center gap-2"
             >
               <span>¡Entendido!</span>
             </button>

@@ -24,7 +24,7 @@ export const CHAT_ROLES: ChatRoleDefinition[] = [
     model: 'gemini-2.5-flash',
     taskType: 'Tareas Generales',
     icon: 'fitness_center',
-    badgeColor: 'text-white border-white/30',
+    badgeColor: 'text-slate-900 dark:text-white border-slate-300 dark:border-white/30',
     badgeBg: 'bg-white/10',
     description: 'Mentalidad de consistencia, racha ("Tú vs Tú"), hábitos y planificación diaria.',
     quickPrompts: [
@@ -620,7 +620,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
   return (
     <div className="flex flex-col w-full h-[calc(100vh-8.5rem)] max-w-[1280px] mx-auto px-3 sm:px-4 pb-2">
       {/* Header & Role Switcher Bar */}
-      <div className="bg-[#0a0a0a] p-3 rounded-2xl border border-white/10 mb-2.5 shadow-md flex-shrink-0">
+      <div className="bg-white dark:bg-[#0a0a0a] p-3 rounded-2xl border border-slate-200 dark:border-white/10 mb-2.5 shadow-md flex-shrink-0">
         <div className="flex items-center justify-between gap-2 mb-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold transition-colors ${activeRoleDef.badgeBg} ${activeRoleDef.badgeColor}`}>
@@ -628,13 +628,13 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-bold text-white text-sm sm:text-base truncate">MAX AI Chatbot</span>
+                <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base truncate">MAX AI Chatbot</span>
                 <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${activeRoleDef.badgeColor} ${activeRoleDef.badgeBg}`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
                   {activeRoleDef.model}
                 </span>
               </div>
-              <p className="text-[11px] text-[#898a8c] truncate">
+              <p className="text-[11px] text-slate-500 dark:text-[#898a8c] truncate">
                 {activeRoleDef.description}
               </p>
             </div>
@@ -643,19 +643,19 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           {/* Action buttons: Reset thread */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             {showClearConfirm ? (
-              <div className="flex items-center gap-1 bg-[#0a0a0a] p-1 rounded-lg border border-rose-500/40">
+              <div className="flex items-center gap-1 bg-white dark:bg-[#0a0a0a] p-1 rounded-lg border border-rose-500/40">
                 <span className="text-[11px] text-rose-400 font-semibold px-1">¿Reiniciar?</span>
                 <button
                   type="button"
                   onClick={handleClearChat}
-                  className="px-2 py-0.5 bg-rose-600 hover:bg-rose-700 text-white rounded text-[10px] font-bold"
+                  className="px-2 py-0.5 bg-rose-600 hover:bg-rose-700 text-slate-900 dark:text-white rounded text-[10px] font-bold"
                 >
                   Sí
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowClearConfirm(false)}
-                  className="px-2 py-0.5 bg-[#0a0a0a] hover:bg-[#545a5b] text-[#d6d6d6] rounded text-[10px]"
+                  className="px-2 py-0.5 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-700 dark:text-[#d6d6d6] rounded text-[10px]"
                 >
                   No
                 </button>
@@ -665,7 +665,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 type="button"
                 onClick={() => setShowClearConfirm(true)}
                 title="Nueva conversación multi-turn"
-                className="px-2.5 py-1.5 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] text-[#898a8c] hover:text-white text-xs font-semibold border border-white/10 transition-colors flex items-center gap-1"
+                className="px-2.5 py-1.5 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] hover:text-slate-900 dark:hover:text-white text-xs font-semibold border border-slate-200 dark:border-white/10 transition-colors flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-[15px]">refresh</span>
                 <span className="hidden sm:inline">Nueva charla</span>
@@ -675,7 +675,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
         </div>
 
         {/* Specialized Chatbot Role Pills (Coach / Nutrición / Fast / Auto) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-2 border-t border-white/10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-2 border-t border-slate-200 dark:border-white/10">
           {CHAT_ROLES.map((role) => {
             const isSelected = selectedRole === role.id;
             return (
@@ -685,18 +685,18 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 onClick={() => handleRoleChange(role.id)}
                 className={`flex items-center gap-2 p-2 rounded-xl text-left transition-all border ${
                   isSelected
-                    ? 'bg-[#ffffff]/15 border-[#ffffff] text-white shadow-sm ring-1 ring-[#ffffff]/40'
-                    : 'bg-[#0a0a0a]/70 border-white/10 text-[#898a8c] hover:text-white hover:bg-[#0a0a0a]'
+                    ? 'bg-[#ffffff]/15 border-[#ffffff] text-slate-900 dark:text-white shadow-sm ring-1 ring-[#ffffff]/40'
+                    : 'bg-[#0a0a0a]/70 border-slate-200 dark:border-white/10 text-slate-500 dark:text-[#898a8c] hover:text-slate-900 dark:hover:text-white hover:bg-[#0a0a0a]'
                 }`}
               >
                 <span className={`material-symbols-outlined text-[18px] ${isSelected ? 'text-[#d6d6d6]' : 'text-[#898a8c]'}`}>
                   {role.icon}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-bold leading-tight truncate text-white">
+                  <div className="text-xs font-bold leading-tight truncate text-slate-900 dark:text-white">
                     {role.shortName}
                   </div>
-                  <div className="text-[10px] leading-tight text-[#898a8c] truncate">
+                  <div className="text-[10px] leading-tight text-slate-500 dark:text-[#898a8c] truncate">
                     {role.model}
                   </div>
                 </div>
@@ -713,9 +713,9 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             key={prompt}
             type="button"
             onClick={() => handleSend(prompt)}
-            className="whitespace-nowrap px-3 py-1.5 rounded-full bg-[#0a0a0a] hover:bg-[#0a0a0a] text-slate-200 hover:text-white text-xs border border-white/10 active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
+            className="whitespace-nowrap px-3 py-1.5 rounded-full bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-200 hover:text-slate-900 dark:hover:text-white text-xs border border-slate-200 dark:border-white/10 active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
           >
-            <span className="material-symbols-outlined text-[13px] text-[#d6d6d6]">sparkles</span>
+            <span className="material-symbols-outlined text-[13px] text-slate-700 dark:text-[#d6d6d6]">sparkles</span>
             <span>{prompt}</span>
           </button>
         ))}
@@ -735,8 +735,8 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 <div
                   className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 mb-1 ${
                     isUser
-                      ? 'bg-[#0a0a0a] text-white'
-                      : 'bg-[#0a0a0a] border border-white/10 text-[#d6d6d6]'
+                      ? 'bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white border border-slate-200 dark:border-transparent'
+                      : 'bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-slate-500 dark:text-[#d6d6d6]'
                   }`}
                 >
                   {isUser ? (
@@ -752,19 +752,19 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 <div
                   className={`rounded-2xl p-3.5 shadow-sm transition-all ${
                     isUser
-                      ? 'bg-[#0a0a0a] text-white rounded-br-xs'
-                      : 'bg-[#0a0a0a] text-[#d6d6d6] rounded-bl-xs border border-white/10'
+                      ? 'bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white rounded-br-xs border border-slate-200 dark:border-transparent'
+                      : 'bg-white dark:bg-[#0a0a0a] text-slate-700 dark:text-[#d6d6d6] rounded-bl-xs border border-slate-200 dark:border-white/10'
                   }`}
                 >
                   {/* Model & Role Badge for AI messages */}
                   {!isUser && (
-                    <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-white/10">
+                    <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-200 dark:border-white/10">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-white">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white">
                           {msg.roleName || 'MAX AI'}
                         </span>
                         {msg.modelUsed && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#0a0a0a] border border-white/10 text-[#d6d6d6]">
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-[#d6d6d6]">
                             {msg.modelUsed}
                           </span>
                         )}
@@ -775,7 +775,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                         type="button"
                         onClick={() => handleCopyText(msg.id, msg.text)}
                         title="Copiar respuesta"
-                        className="text-[#898a8c] hover:text-white p-1 rounded transition-colors"
+                        className="text-slate-500 dark:text-[#898a8c] hover:text-slate-900 dark:hover:text-white p-1 rounded transition-colors"
                       >
                         <span className="material-symbols-outlined text-[14px]">
                           {copiedId === msg.id ? 'check' : 'content_copy'}
@@ -791,7 +791,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
                   {/* Google Maps Cards if present */}
                   {msg.places && msg.places.length > 0 && (
-                    <div className="space-y-2 mt-3 pt-3 border-t border-white/10">
+                    <div className="space-y-2 mt-3 pt-3 border-t border-slate-200 dark:border-white/10">
                       <div className="flex items-center gap-1.5 text-[11px] font-black text-rose-400">
                         <span className="material-symbols-outlined text-[15px]">pin_drop</span>
                         <span>Lugares Verificados en Google Maps ({msg.places.length}):</span>
@@ -801,16 +801,16 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                         {msg.places.map((place, idx) => (
                           <div
                             key={idx}
-                            className="p-2.5 bg-[#0a0a0a] rounded-xl border border-white/10 flex flex-col gap-1.5"
+                            className="p-2.5 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 flex flex-col gap-1.5"
                           >
                             <div className="flex items-start justify-between gap-2">
-                              <span className="text-white font-extrabold text-xs flex items-center gap-1">
+                              <span className="text-slate-900 dark:text-white font-extrabold text-xs flex items-center gap-1">
                                 <span className="material-symbols-outlined text-rose-500 text-[15px]">location_on</span>
                                 <span>{place.title}</span>
                               </span>
                             </div>
                             {place.reviewSnippets && place.reviewSnippets.length > 0 && (
-                              <p className="text-[11px] text-[#898a8c] italic bg-[#0a0a0a] p-1.5 rounded border border-white/10">
+                              <p className="text-[11px] text-slate-500 dark:text-[#898a8c] italic bg-white dark:bg-[#0a0a0a] p-1.5 rounded border border-slate-200 dark:border-white/10">
                                 "{place.reviewSnippets[0]}"
                               </p>
                             )}
@@ -818,7 +818,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                               href={place.uri}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="mt-1 self-start px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-white hover:text-white text-[11px] font-bold border border-white/30 transition-all flex items-center gap-1"
+                              className="mt-1 self-start px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-slate-900 dark:text-white hover:text-slate-900 dark:hover:text-white text-[11px] font-bold border border-slate-300 dark:border-white/30 transition-all flex items-center gap-1"
                             >
                               <span className="material-symbols-outlined text-[13px]">open_in_new</span>
                               <span>Abrir en Google Maps</span>
@@ -831,16 +831,16 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
                   {/* Structured Options */}
                   {msg.options && (
-                    <div className="space-y-2 mt-3 pt-2 border-t border-white/10">
+                    <div className="space-y-2 mt-3 pt-2 border-t border-slate-200 dark:border-white/10">
                       {msg.options.map((opt, idx) => (
                         <div
                           key={idx}
-                          className="p-2 bg-[#0a0a0a] rounded-lg border border-white/10 flex justify-between items-center text-xs"
+                          className="p-2 bg-white dark:bg-[#0a0a0a] rounded-lg border border-slate-200 dark:border-white/10 flex justify-between items-center text-xs"
                         >
-                          <span className="text-white font-medium">{opt.title}</span>
+                          <span className="text-slate-900 dark:text-white font-medium">{opt.title}</span>
                           <div className="text-right">
-                            <span className="text-[#d6d6d6] font-bold block">{opt.protein}</span>
-                            <span className="text-[#898a8c]">{opt.calories}</span>
+                            <span className="text-slate-700 dark:text-[#d6d6d6] font-bold block">{opt.protein}</span>
+                            <span className="text-slate-500 dark:text-[#898a8c]">{opt.calories}</span>
                           </div>
                         </div>
                       ))}
@@ -848,10 +848,10 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   )}
 
                   {/* Footer with Timestamp and Action */}
-                  <div className="flex items-center justify-between gap-2 mt-2 pt-1 border-t border-white/5">
+                  <div className="flex items-center justify-between gap-2 mt-2 pt-1 border-t border-slate-200 dark:border-white/5">
                     <span
                       className={`text-[10px] ${
-                        isUser ? 'text-white/80' : 'text-[#898a8c]'
+                        isUser ? 'text-slate-500 dark:text-white/80' : 'text-slate-500 dark:text-[#898a8c]'
                       }`}
                     >
                       {msg.timestamp}
@@ -861,7 +861,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                       <button
                         type="button"
                         onClick={() => handleAddMacroFromText(msg.text)}
-                        className="text-[10px] font-semibold text-[#d6d6d6] hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#0a0a0a] border border-white/10 transition-colors"
+                        className="text-[10px] font-semibold text-slate-700 dark:text-[#d6d6d6] hover:text-slate-900 dark:hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[12px]">add_task</span>
                         <span>Añadir a mi día</span>
@@ -879,7 +879,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                       key={i}
                       type="button"
                       onClick={() => handleSend(qr)}
-                      className="text-xs bg-[#0a0a0a] hover:bg-[#0a0a0a] text-[#d6d6d6] hover:text-white px-2.5 py-1 rounded-full border border-white/10 transition-colors"
+                      className="text-xs bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-700 dark:text-[#d6d6d6] hover:text-slate-900 dark:hover:text-white px-2.5 py-1 rounded-full border border-slate-200 dark:border-white/10 transition-colors"
                     >
                       {qr}
                     </button>
@@ -892,13 +892,13 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="flex items-center gap-2.5 p-3 bg-[#0a0a0a] rounded-2xl rounded-bl-none border border-white/10 max-w-xs text-[#d6d6d6] ml-9">
+          <div className="flex items-center gap-2.5 p-3 bg-white dark:bg-[#0a0a0a] rounded-2xl rounded-bl-none border border-slate-200 dark:border-white/10 max-w-xs text-slate-700 dark:text-[#d6d6d6] ml-9">
             <div className="flex gap-1">
               <span className="w-2 h-2 rounded-full bg-[#ffffff] animate-bounce"></span>
               <span className="w-2 h-2 rounded-full bg-[#ffffff] animate-bounce [animation-delay:0.2s]"></span>
               <span className="w-2 h-2 rounded-full bg-[#ffffff] animate-bounce [animation-delay:0.4s]"></span>
             </div>
-            <span className="text-xs text-[#898a8c]">
+            <span className="text-xs text-slate-500 dark:text-[#898a8c]">
               {selectedRole === 'nutritionist'
                 ? 'Analizando metabolismo y composición...'
                 : selectedRole === 'fast'
@@ -911,14 +911,14 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
       </div>
 
       {/* Input Bar */}
-      <div className="flex-shrink-0 pt-2 border-t border-white/10">
-        <div className="bg-[#0a0a0a] p-2 rounded-2xl border border-white/10 flex items-center gap-1.5 shadow-lg">
+      <div className="flex-shrink-0 pt-2 border-t border-slate-200 dark:border-white/10">
+        <div className="bg-white dark:bg-[#0a0a0a] p-2 rounded-2xl border border-slate-200 dark:border-white/10 flex items-center gap-1.5 shadow-lg">
           {/* Botón Lugares Google Maps */}
           <button
             type="button"
             onClick={() => handleSend('¿Dónde hay tiendas de suplementación deportiva y gimnasios cerca de mi ubicación?')}
             title="Buscar tiendas y gimnasios en Google Maps"
-            className="p-2 text-[#898a8c] hover:text-rose-400 hover:bg-[#0a0a0a] rounded-xl transition-colors flex items-center justify-center shrink-0"
+            className="p-2 text-slate-500 dark:text-[#898a8c] hover:text-rose-400 hover:bg-white dark:hover:bg-[#0a0a0a] rounded-xl transition-colors flex items-center justify-center shrink-0"
           >
             <span className="material-symbols-outlined text-[19px]">pin_drop</span>
           </button>
@@ -926,7 +926,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           {/* Botón Foto */}
           <label
             title="Analizar foto de plato o comida"
-            className="p-2 text-[#898a8c] hover:text-[#d6d6d6] hover:bg-[#0a0a0a] rounded-xl transition-colors cursor-pointer flex items-center justify-center shrink-0"
+            className="p-2 text-slate-500 dark:text-[#898a8c] hover:text-slate-700 dark:hover:text-[#d6d6d6] hover:bg-white dark:hover:bg-[#0a0a0a] rounded-xl transition-colors cursor-pointer flex items-center justify-center shrink-0"
           >
             <span className="material-symbols-outlined text-[19px]">photo_camera</span>
             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
@@ -938,7 +938,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
               type="button"
               onClick={onOpenAudioTranscriber}
               title="Abrir transcriptor de audio"
-              className="p-2 text-[#898a8c] hover:text-purple-400 hover:bg-[#0a0a0a] rounded-xl transition-colors flex items-center justify-center shrink-0"
+              className="p-2 text-slate-500 dark:text-[#898a8c] hover:text-purple-400 hover:bg-white dark:hover:bg-[#0a0a0a] rounded-xl transition-colors flex items-center justify-center shrink-0"
             >
               <span className="material-symbols-outlined text-[19px]">speech_to_text</span>
             </button>
@@ -952,10 +952,10 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             title={isListening ? "Detener y transcribir" : "Grabar audio por micrófono"}
             className={`p-2 rounded-xl transition-colors flex items-center justify-center shrink-0 ${
               isListening
-                ? 'bg-red-500 text-white animate-pulse ring-2 ring-red-400/50'
+                ? 'bg-red-500 text-slate-900 dark:text-white animate-pulse ring-2 ring-red-400/50'
                 : isTranscribingVoice
                 ? 'bg-purple-500/20 text-purple-400'
-                : 'text-[#898a8c] hover:text-[#d6d6d6] hover:bg-[#0a0a0a]'
+                : 'text-[#898a8c] hover:text-slate-700 dark:hover:text-[#d6d6d6] hover:bg-[#0a0a0a]'
             }`}
           >
             <span className="material-symbols-outlined text-[19px]">
@@ -979,14 +979,14 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 <button
                   type="button"
                   onClick={stopVoiceRecording}
-                  className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
+                  className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-slate-900 dark:text-white rounded-lg text-xs font-bold transition-all shadow-sm"
                 >
                   Transcribir
                 </button>
                 <button
                   type="button"
                   onClick={cancelVoiceRecording}
-                  className="px-2 py-1 bg-[#0a0a0a] hover:bg-[#545a5b] text-[#d6d6d6] rounded-lg text-xs transition-all"
+                  className="px-2 py-1 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-700 dark:text-[#d6d6d6] rounded-lg text-xs transition-all"
                 >
                   Cancelar
                 </button>
@@ -1010,7 +1010,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   ? 'Ej: 2 huevos, tostada y café con leche...'
                   : 'Escribe tu mensaje o consulta al coach...'
               }
-              className="flex-1 bg-transparent text-white placeholder-[#898a8c] text-sm focus:outline-none px-2"
+              className="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-[#898a8c] text-sm focus:outline-none px-2"
             />
           )}
 
@@ -1021,8 +1021,8 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             disabled={!input.trim() || isLoading || isListening || isTranscribingVoice}
             className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all shrink-0 ${
               input.trim() && !isLoading && !isListening && !isTranscribingVoice
-                ? 'bg-[#0a0a0a] hover:bg-[#545a5b] text-white shadow-md active:scale-95'
-                : 'bg-[#0a0a0a] text-[#898a8c] cursor-not-allowed opacity-50'
+                ? 'bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white shadow-md active:scale-95'
+                : 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] cursor-not-allowed opacity-50'
             }`}
           >
             <span className="material-symbols-outlined text-[18px]">arrow_upward</span>

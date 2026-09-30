@@ -30,15 +30,15 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
       {/* Tarjeta de Celebración */}
-      <div className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a] to-[#0a0a0a] border border-amber-500/40 shadow-2xl text-center space-y-5 overflow-hidden">
+      <div className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-white dark:from-[#0a0a0a] via-white dark:via-[#0a0a0a] to-white dark:to-[#0a0a0a] border border-amber-500/40 shadow-2xl text-center space-y-5 overflow-hidden">
         {/* Resplandor superior festivo */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-amber-500/25 via-[#545a5b] to-emerald-500/25 blur-3xl pointer-events-none rounded-full" />
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-amber-500/25 via-slate-300 dark:via-[#545a5b] to-emerald-500/25 blur-3xl pointer-events-none rounded-full" />
 
         {/* Botón de cierre */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 transition-colors"
           aria-label="Cerrar modal"
         >
           <span className="material-symbols-outlined text-[20px]">close</span>
@@ -59,7 +59,7 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
             <span>🎉 ¡Hito Diario Desbloqueado!</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             ¡100% de Energía Diaria!
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed px-2">
@@ -92,7 +92,7 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
               Potencia
             </span>
-            <span className="text-base font-black text-white">
+            <span className="text-base font-black text-slate-900 dark:text-white">
               100%
             </span>
             <span className="text-[9px] text-slate-400 block">Metabólica</span>
@@ -111,7 +111,7 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all border border-slate-700 active:scale-95 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs transition-all border border-slate-700 active:scale-95 cursor-pointer"
           >
             Continuar al Dashboard
           </button>

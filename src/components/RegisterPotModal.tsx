@@ -111,23 +111,23 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-[#0a0a0a] text-white rounded-2xl max-w-lg w-full border border-white/10 shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
+      <div className="bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white rounded-2xl max-w-lg w-full border border-slate-200 dark:border-white/10 shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#ffffff]/20 text-[#ffffff] dark:text-[#d6d6d6] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#ffffff]/20 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">
                 {step === 'scan' ? 'barcode_scanner' : 'medication'}
               </span>
             </div>
             <div>
-              <h3 className="font-bold text-base text-white">
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">
                 {step === 'scan' && 'Cadastrar o Pote'}
                 {step === 'found' && 'Produto Encontrado (MAX)'}
                 {step === 'ocr_review' && 'Leitura do Rótulo com IA'}
                 {step === 'manual' && 'Preencher Dados do Pote'}
               </h3>
-              <p className="text-xs text-[#898a8c]">
+              <p className="text-xs text-slate-500 dark:text-[#898a8c]">
                 {step === 'scan' && 'Escaneie o código de barras ou escolha da loja'}
                 {step === 'found' && 'Dados que a MAX já conferiu e validou'}
                 {step === 'ocr_review' && 'Ingredientes por dose lidos do rótulo (editáveis)'}
@@ -138,7 +138,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-[#898a8c] hover:text-white p-1 rounded-lg"
+            className="text-slate-500 dark:text-[#898a8c] hover:text-slate-900 dark:hover:text-white p-1 rounded-lg"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -147,15 +147,15 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
         {/* STEP 1: Escaneo o selección rápida */}
         {step === 'scan' && (
           <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-[#0a0a0a] border border-dashed border-white/10 text-center space-y-3">
-              <div className="w-16 h-16 rounded-full bg-[#ffffff]/10 text-[#ffffff] dark:text-[#d6d6d6] flex items-center justify-center mx-auto">
+            <div className="p-4 rounded-xl bg-white dark:bg-[#0a0a0a] border border-dashed border-slate-200 dark:border-white/10 text-center space-y-3">
+              <div className="w-16 h-16 rounded-full bg-[#ffffff]/10 text-slate-900 dark:text-[#ffffff] dark:text-[#d6d6d6] flex items-center justify-center mx-auto">
                 <span className={`material-symbols-outlined text-[32px] ${isScanning ? 'animate-pulse' : ''}`}>
                   barcode_scanner
                 </span>
               </div>
               <div>
-                <p className="text-xs font-bold text-white">Aponte a câmera para o código de barras</p>
-                <p className="text-[11px] text-[#898a8c]">
+                <p className="text-xs font-bold text-slate-900 dark:text-white">Aponte a câmera para o código de barras</p>
+                <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">
                   Se a MAX já tem o produto no catálogo, os dados vêm 100% preenchidos.
                 </p>
               </div>
@@ -166,7 +166,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                   type="button"
                   onClick={() => handleSimulateScan('7898123456789')}
                   disabled={isScanning}
-                  className="w-full py-2 px-3 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-bold transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 px-3 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white text-xs font-bold transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">qr_code_scanner</span>
                   <span>Escanear Creatina Creapure MAX (300g)</span>
@@ -176,7 +176,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                   type="button"
                   onClick={() => handleSimulateScan('7898999887766')}
                   disabled={isScanning}
-                  className="w-full py-2 px-3 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 px-3 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-[#d6d6d6] transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">qr_code_scanner</span>
                   <span>Escanear Whey Isolado MAX (900g)</span>
@@ -186,7 +186,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                   type="button"
                   onClick={() => handleSimulateScan('EXTERNAL_999')}
                   disabled={isScanning}
-                  className="w-full py-2 px-3 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-amber-500/30 text-xs font-bold text-amber-300 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 px-3 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] border border-amber-500/30 text-xs font-bold text-amber-300 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">document_scanner</span>
                   <span>Fotografar Tabela de Marca Externa (Leitura IA)</span>
@@ -198,7 +198,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('manual')}
-                className="text-xs font-bold text-[#d6d6d6] hover:underline"
+                className="text-xs font-bold text-slate-700 dark:text-[#d6d6d6] hover:underline"
               >
                 Ou preencher manualmente sem câmera
               </button>
@@ -218,38 +218,38 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
 
             <div className="space-y-2">
               <div>
-                <label className="text-[11px] font-bold text-[#898a8c] block">Nome do Produto:</label>
+                <label className="text-[11px] font-bold text-slate-500 dark:text-[#898a8c] block">Nome do Produto:</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#ffffff]"
+                  className="w-full bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-white outline-none focus:border-[#ffffff]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-bold text-[#898a8c] block">Marca:</label>
+                  <label className="text-[11px] font-bold text-slate-500 dark:text-[#898a8c] block">Marca:</label>
                   <input
                     type="text"
                     value={brand}
                     onChange={(e) => setBrand(e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#ffffff]"
+                    className="w-full bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-white outline-none focus:border-[#ffffff]"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-bold text-[#898a8c] block">Tamanho total:</label>
+                  <label className="text-[11px] font-bold text-slate-500 dark:text-[#898a8c] block">Tamanho total:</label>
                   <div className="flex gap-1">
                     <input
                       type="number"
                       value={totalSize}
                       onChange={(e) => setTotalSize(Number(e.target.value))}
-                      className="w-20 bg-[#0a0a0a] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white outline-none"
+                      className="w-20 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1.5 text-xs text-slate-900 dark:text-white outline-none"
                     />
                     <select
                       value={sizeUnit}
                       onChange={(e: any) => setSizeUnit(e.target.value)}
-                      className="flex-1 bg-[#0a0a0a] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white outline-none"
+                      className="flex-1 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1.5 text-xs text-slate-900 dark:text-white outline-none"
                     >
                       <option value="g">gramas (g)</option>
                       <option value="scoops">scoops</option>
@@ -262,15 +262,15 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
             </div>
 
             {/* Ingredientes por dose lidos */}
-            <div className="space-y-1.5 pt-2 border-t border-white/10">
+            <div className="space-y-1.5 pt-2 border-t border-slate-200 dark:border-white/10">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-white uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                   Ingredientes por dose (Lidos do rótulo)
                 </span>
                 <button
                   type="button"
                   onClick={handleAddNutritionFact}
-                  className="text-[11px] font-bold text-[#d6d6d6] hover:underline flex items-center gap-0.5"
+                  className="text-[11px] font-bold text-slate-700 dark:text-[#d6d6d6] hover:underline flex items-center gap-0.5"
                 >
                   <span className="material-symbols-outlined text-[14px]">add</span>
                   <span>Adicionar</span>
@@ -279,25 +279,25 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
 
               <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
                 {nutritionFacts.map((fact, idx) => (
-                  <div key={idx} className="flex items-center gap-1.5 bg-[#0a0a0a] p-1.5 rounded-lg border border-white/10">
+                  <div key={idx} className="flex items-center gap-1.5 bg-white dark:bg-[#0a0a0a] p-1.5 rounded-lg border border-slate-200 dark:border-white/10">
                     <input
                       type="text"
                       placeholder="Ingrediente (ex: Cafeína)"
                       value={fact.name}
                       onChange={(e) => handleUpdateFact(idx, 'name', e.target.value)}
-                      className="flex-1 bg-transparent text-xs text-white outline-none px-1"
+                      className="flex-1 bg-transparent text-xs text-slate-900 dark:text-white outline-none px-1"
                     />
                     <input
                       type="number"
                       placeholder="Qtd"
                       value={fact.amount}
                       onChange={(e) => handleUpdateFact(idx, 'amount', Number(e.target.value))}
-                      className="w-16 bg-[#0a0a0a] text-xs text-white border border-white/10 rounded px-1.5 py-0.5 outline-none text-right font-bold"
+                      className="w-16 bg-white dark:bg-[#0a0a0a] text-xs text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 rounded px-1.5 py-0.5 outline-none text-right font-bold"
                     />
                     <select
                       value={fact.unit}
                       onChange={(e: any) => handleUpdateFact(idx, 'unit', e.target.value)}
-                      className="bg-[#0a0a0a] text-xs text-white border border-white/10 rounded px-1 py-0.5 outline-none"
+                      className="bg-white dark:bg-[#0a0a0a] text-xs text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 rounded px-1 py-0.5 outline-none"
                     >
                       <option value="g">g</option>
                       <option value="mg">mg</option>
@@ -320,14 +320,14 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('scan')}
-                className="w-1/3 py-2 px-3 rounded-xl bg-[#0a0a0a] text-xs font-bold text-white hover:bg-[#545a5b]"
+                className="w-1/3 py-2 px-3 rounded-xl bg-white dark:bg-[#0a0a0a] text-xs font-bold text-slate-900 dark:text-white hover:bg-[#545a5b]"
               >
                 Voltar
               </button>
               <button
                 type="button"
                 onClick={() => setStep('found')}
-                className="flex-1 py-2 px-3 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-white transition-all shadow-md"
+                className="flex-1 py-2 px-3 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-slate-900 dark:text-white transition-all shadow-md"
               >
                 Avançar para Dose
               </button>
@@ -339,10 +339,10 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
         {(step === 'found' || step === 'manual') && (
           <div className="space-y-4">
             {/* Tag de confirmação da loja ou selo provisório */}
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#0a0a0a] border border-white/10">
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10">
               <div>
-                <h4 className="font-bold text-sm text-white">{name || 'Produto'}</h4>
-                <p className="text-[11px] text-[#898a8c]">{brand} · {totalSize} {sizeUnit}</p>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">{name || 'Produto'}</h4>
+                <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">{brand} · {totalSize} {sizeUnit}</p>
               </div>
               {isStoreVerified ? (
                 <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold border border-emerald-500/30 flex items-center gap-1">
@@ -357,11 +357,11 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
             </div>
 
             {/* Regra de ouro da especificação: O app nunca sugere nem preenche dose diária */}
-            <div className="space-y-3 bg-[#0a0a0a] p-3.5 rounded-xl border border-white/10">
+            <div className="space-y-3 bg-white dark:bg-[#0a0a0a] p-3.5 rounded-xl border border-slate-200 dark:border-white/10">
               <div>
-                <label className="text-xs font-bold text-white flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
                   <span>Dose diária que você toma:</span>
-                  <span className="text-[10px] text-[#898a8c]">Definida por você</span>
+                  <span className="text-[10px] text-slate-500 dark:text-[#898a8c]">Definida por você</span>
                 </label>
                 <div className="flex items-center gap-2 mt-1.5">
                   <input
@@ -369,38 +369,38 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                     min="1"
                     value={dailyDose}
                     onChange={(e) => setDailyDose(Math.max(1, Number(e.target.value)))}
-                    className="flex-1 bg-[#0a0a0a] border border-white/10 rounded-xl px-3 py-2 text-white font-bold text-sm outline-none focus:border-[#ffffff]"
+                    className="flex-1 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white font-bold text-sm outline-none focus:border-[#ffffff]"
                   />
-                  <span className="text-xs text-[#898a8c] font-bold">
+                  <span className="text-xs text-slate-500 dark:text-[#898a8c] font-bold">
                     {sizeUnit} por dia
                   </span>
                 </div>
-                <p className="text-[10px] text-[#898a8c] mt-1">
+                <p className="text-[10px] text-slate-500 dark:text-[#898a8c] mt-1">
                   Use a dose que você já toma. O app não recomenda dosagens.
                 </p>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-white block mb-1">Abriu o pote em:</label>
+                <label className="text-xs font-bold text-slate-900 dark:text-white block mb-1">Abriu o pote em:</label>
                 <input
                   type="date"
                   value={openingDate}
                   onChange={(e) => setOpeningDate(e.target.value)}
-                  className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#ffffff]"
+                  className="w-full bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-slate-900 dark:text-white text-xs outline-none focus:border-[#ffffff]"
                 />
               </div>
 
               {/* Previsão de término em tempo real */}
-              <div className="p-3 rounded-xl bg-white/10 border border-white/20 text-xs flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-white/10 border border-slate-300 dark:border-white/20 text-xs flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-bold uppercase text-[#d6d6d6] block">
+                  <span className="text-[10px] font-bold uppercase text-slate-700 dark:text-[#d6d6d6] block">
                     Previsão de término na hora:
                   </span>
-                  <span className="font-extrabold text-sm text-white">
+                  <span className="font-extrabold text-sm text-slate-900 dark:text-white">
                     {formattedEndDate} ({totalDosesEstimate} dias)
                   </span>
                 </div>
-                <span className="material-symbols-outlined text-[#ffffff] text-[22px]">calendar_month</span>
+                <span className="material-symbols-outlined text-slate-900 dark:text-[#ffffff] text-[22px]">calendar_month</span>
               </div>
             </div>
 
@@ -408,14 +408,14 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('scan')}
-                className="py-2.5 px-4 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-[#d6d6d6]"
+                className="py-2.5 px-4 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-slate-700 dark:text-[#d6d6d6]"
               >
                 Trocar Produto
               </button>
               <button
                 type="button"
                 onClick={handleSave}
-                className="flex-1 py-2.5 px-4 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-white shadow-lg transition-all flex items-center justify-center gap-1.5"
+                className="flex-1 py-2.5 px-4 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold text-slate-900 dark:text-white shadow-lg transition-all flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px]">check</span>
                 <span>Confirmar Pote</span>

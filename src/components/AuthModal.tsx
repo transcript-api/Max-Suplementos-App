@@ -68,13 +68,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 my-auto">
+      <div className="relative w-full max-w-md bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-slate-900 dark:text-white space-y-6 my-auto">
         {/* Encabezado con Logo y Marca MAXMIND */}
         <div className="flex flex-col items-center text-center space-y-2">
           <div className="mb-1">
             <MaxMindLogo variant="symbol" size="lg" isDark={true} />
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             {mode === 'register' && 'Crea tu Cuenta MAXMIND'}
             {mode === 'login' && 'Bienvenido a MAXMIND'}
             {mode === 'recovery' && 'Recuperar Contraseña'}
@@ -88,12 +88,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {/* Pestañas de Cambio de Modo */}
         {mode !== 'recovery' && (
-          <div className="p-1 bg-[#0a0a0a] rounded-xl flex items-center border border-white/10">
+          <div className="p-1 bg-white dark:bg-[#0a0a0a] rounded-xl flex items-center border border-slate-200 dark:border-white/10">
             <button
               type="button"
               onClick={() => { setMode('register'); setError(null); }}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                mode === 'register' ? 'bg-[#0a0a0a] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                mode === 'register' ? 'bg-slate-900 dark:bg-[#0a0a0a] text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Crear Cuenta
@@ -102,7 +102,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               type="button"
               onClick={() => { setMode('login'); setError(null); }}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                mode === 'login' ? 'bg-[#0a0a0a] text-white shadow-md' : 'text-slate-400 hover:text-white'
+                mode === 'login' ? 'bg-slate-900 dark:bg-[#0a0a0a] text-white shadow-md' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Iniciar Sesión
@@ -112,9 +112,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {/* Banner de Modo Sin Supabase / Local */}
         {!isSupabaseConfigured() && (
-          <div className="p-3.5 bg-white/40 border border-white/30 rounded-2xl text-xs space-y-2.5">
+          <div className="p-3.5 bg-white/40 border border-slate-300 dark:border-white/30 rounded-2xl text-xs space-y-2.5">
             <div className="flex items-start gap-2">
-              <span className="material-symbols-outlined text-white text-[18px] shrink-0 mt-0.5">info</span>
+              <span className="material-symbols-outlined text-slate-900 dark:text-white text-[18px] shrink-0 mt-0.5">info</span>
               <p className="text-slate-300 text-[11px] leading-relaxed">
                 <strong>Modo Local / Demo activo:</strong> Supabase no está configurado en las variables de entorno. Para garantizar seguridad, no se almacenan contraseñas simuladas ni reversibles.
               </p>
@@ -123,7 +123,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={handleContinueLocal}
-                className="flex-1 py-2 px-3 bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5"
+                className="flex-1 py-2 px-3 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px]">person_add</span>
                 <span>Atleta Local (Desde cero)</span>
@@ -132,7 +132,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <button
                   type="button"
                   onClick={onSwitchToDemo}
-                  className="py-2 px-3 bg-[#0a0a0a] hover:bg-[#0a0a0a] text-slate-300 font-semibold text-xs rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1.5"
+                  className="py-2 px-3 bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-300 font-semibold text-xs rounded-xl border border-slate-200 dark:border-white/10 transition-all flex items-center justify-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[16px]">play_circle</span>
                   <span>Demo Santiago</span>
@@ -160,7 +160,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => { setMode('login'); setConfirmationPendingEmail(null); }}
-              className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold rounded-xl text-white transition-colors"
+              className="px-4 py-2 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold rounded-xl text-slate-900 dark:text-white transition-colors"
             >
               Ya confirmé, iniciar sesión
             </button>
@@ -174,7 +174,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => { setMode('login'); setRecoverySuccess(false); }}
-              className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold rounded-xl text-white transition-colors"
+              className="px-4 py-2 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold rounded-xl text-slate-900 dark:text-white transition-colors"
             >
               Volver al Inicio de Sesión
             </button>
@@ -197,7 +197,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ej. Martín"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
                   />
                 </div>
               </div>
@@ -217,7 +217,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@email.com"
-                  className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
                 />
               </div>
             </div>
@@ -232,7 +232,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     <button
                       type="button"
                       onClick={() => { setMode('recovery'); setError(null); }}
-                      className="text-[11px] text-[#ffffff] hover:underline"
+                      className="text-[11px] text-slate-900 dark:text-[#ffffff] hover:underline"
                     >
                       ¿Olvidaste tu contraseña?
                     </button>
@@ -249,7 +249,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Mínimo 6 caracteres"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
                   />
                 </div>
               </div>
@@ -271,7 +271,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repite tu contraseña"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#0a0a0a] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff] transition-colors"
                   />
                 </div>
               </div>
@@ -280,10 +280,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#0a0a0a] hover:bg-[#545a5b] disabled:opacity-50 text-white font-bold rounded-xl text-sm shadow-lg shadow-black/25 transition-all flex items-center justify-center gap-2 active:scale-95"
+              className="w-full py-3 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] disabled:opacity-50 text-slate-900 dark:text-white font-bold rounded-xl text-sm shadow-lg shadow-black/25 transition-all flex items-center justify-center gap-2 active:scale-95"
             >
               {loading ? (
-                <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span className="inline-block w-4 h-4 border-2 border-slate-900 dark:border-white border-t-transparent rounded-full animate-spin"></span>
               ) : (
                 <>
                   <span>
@@ -299,12 +299,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         {/* Opciones Inferiores y Modo Demo */}
-        <div className="pt-2 border-t border-white/10 flex flex-col items-center gap-3">
+        <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex flex-col items-center gap-3">
           {mode === 'recovery' ? (
             <button
               type="button"
               onClick={() => { setMode('login'); setError(null); }}
-              className="text-xs text-slate-400 hover:text-white"
+              className="text-xs text-slate-400 hover:text-slate-900 dark:hover:text-white"
             >
               ← Volver al Inicio de Sesión
             </button>
@@ -313,10 +313,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={onSwitchToDemo}
-                className="text-xs text-slate-400 hover:text-[#ffffff] flex items-center gap-1.5 transition-colors"
+                className="text-xs text-slate-400 hover:text-slate-900 dark:hover:text-[#ffffff] flex items-center gap-1.5 transition-colors"
               >
                 <span>O probar perfil de demostración</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#0a0a0a] text-slate-300">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white dark:bg-[#0a0a0a] text-slate-300">
                   Santiago (12d racha)
                 </span>
               </button>

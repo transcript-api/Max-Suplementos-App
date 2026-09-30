@@ -239,23 +239,23 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   return (
     <div className="flex flex-col w-full px-4 space-y-5 max-w-[1280px] mx-auto pb-24">
       {/* Banner de Control: Modo Demo vs Usuario Real */}
-      <div className="bg-[#0a0a0a]/60 border border-[#ffffff]/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+      <div className="bg-slate-50 dark:bg-[#0a0a0a]/60 border border-[#ffffff]/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#0a0a0a] flex items-center justify-center flex-shrink-0 text-white shadow-md">
+          <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#0a0a0a] flex items-center justify-center flex-shrink-0 text-slate-900 dark:text-white shadow-md">
             <span className="material-symbols-outlined text-[22px]">
               {isDemoMode ? 'labs' : 'person'}
             </span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                 {isDemoMode ? 'Modo Presentación (Demo Santiago)' : 'Modo Usuario Real (Atleta)'}
               </span>
-              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${isDemoMode ? 'bg-[#0a0a0a] text-white' : 'bg-emerald-500 text-white'}`}>
+              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${isDemoMode ? 'bg-slate-900 dark:bg-[#0a0a0a] text-white' : 'bg-emerald-500 text-white'}`}>
                 {isDemoMode ? 'DEMO' : 'EN VIVO'}
               </span>
             </div>
-            <p className="text-xs text-[#d6d6d6] mt-0.5">
+            <p className="text-xs text-slate-700 dark:text-[#d6d6d6] mt-0.5">
               {isDemoMode
                 ? 'Datos cargados para presentar a Max Suplementos (4.860 XP, 12 días, Nivel 7).'
                 : 'Cuenta limpia desde cero con progreso diario real y sincronización en Supabase.'}
@@ -268,7 +268,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={() => onToggleDemoMode(!isDemoMode)}
-              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#0a0a0a] border border-white/10 text-xs font-bold text-white transition-all active:scale-95"
+              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-900 dark:text-white transition-all active:scale-95"
             >
               {isDemoMode ? 'Cambiar a Usuario Real (0 XP)' : 'Cargar Modo Demo Santiago'}
             </button>
@@ -278,7 +278,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onOpenOnboarding}
-              className="px-3 py-2 rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-bold transition-all active:scale-95 shadow-md flex items-center gap-1"
+              className="px-3 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white text-xs font-bold transition-all active:scale-95 shadow-md flex items-center gap-1"
               title="Abrir asistente de metas para configurar perfil"
             >
               <span className="material-symbols-outlined text-[16px]">tune</span>
@@ -301,7 +301,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Tarjeta de Perfil de Atleta */}
-      <div className="bg-[#0a0a0a] rounded-2xl p-6 border border-white/10 shadow-xl relative overflow-hidden">
+      <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-6 border border-slate-200 dark:border-white/10 shadow-xl relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <div className="relative group">
             {userAvatar ? (
@@ -311,7 +311,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 src={userAvatar}
               />
             ) : (
-              <div className="w-20 h-20 rounded-full ring-2 ring-[#ffffff] bg-gradient-to-tr from-[#0a0a0a] to-[#545a5b] flex items-center justify-center text-white text-2xl font-bold">
+              <div className="w-20 h-20 rounded-full ring-2 ring-[#ffffff] bg-gradient-to-tr from-white dark:from-[#0a0a0a] to-slate-300 dark:to-[#545a5b] flex items-center justify-center text-slate-900 dark:text-white text-2xl font-bold">
                 {userName ? userName.charAt(0).toUpperCase() : 'A'}
               </div>
             )}
@@ -322,7 +322,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 onClick={() => avatarInputRef.current?.click()}
                 title="Cambiar foto de perfil"
                 aria-label="Cambiar foto de perfil"
-                className="absolute bottom-0 right-0 bg-[#0a0a0a] hover:bg-[#545a5b] text-white p-1.5 rounded-full text-xs shadow-md border-2 border-[#0a0a0a] transition-colors active:scale-95"
+                className="absolute bottom-0 right-0 bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white p-1.5 rounded-full text-xs shadow-md border-2 border-slate-200 dark:border-[#0a0a0a] transition-colors active:scale-95"
               >
                 <span className="material-symbols-outlined text-[14px] block">photo_camera</span>
               </button>
@@ -344,13 +344,13 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             )}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h2 className="font-headline-lg text-white font-bold text-xl sm:text-2xl">{userName}</h2>
-                <p className="text-sm text-[#898a8c]">
+                <h2 className="font-headline-lg text-slate-900 dark:text-white font-bold text-xl sm:text-2xl">{userName}</h2>
+                <p className="text-sm text-slate-500 dark:text-[#898a8c]">
                   {isDemoMode ? 'Atleta de Rendimiento · Miembro Pro' : 'Atleta en Formación · Cuenta Personal'}
                 </p>
               </div>
               <div className="flex items-center gap-2 justify-center">
-                <span className="px-3 py-1 rounded-full bg-[#ffffff]/20 text-[#ffffff] text-xs font-bold border border-[#ffffff]/30">
+                <span className="px-3 py-1 rounded-full bg-[#ffffff]/20 text-slate-900 dark:text-[#ffffff] text-xs font-bold border border-[#ffffff]/30">
                   Nivel {levelInfo.levelNumber} · {levelInfo.levelName}
                 </span>
                 <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
@@ -359,18 +359,18 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/10 text-center">
-              <div className="bg-[#0a0a0a] p-2.5 rounded-xl border border-white/10">
-                <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Experiencia</span>
-                <span className="text-sm text-white font-bold">{xp.toLocaleString('es-ES')} XP</span>
+            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-200 dark:border-white/10 text-center">
+              <div className="bg-white dark:bg-[#0a0a0a] p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                <span className="text-[11px] text-slate-500 dark:text-[#898a8c] uppercase block font-bold">Experiencia</span>
+                <span className="text-sm text-slate-900 dark:text-white font-bold">{xp.toLocaleString('es-ES')} XP</span>
               </div>
-              <div className="bg-[#0a0a0a] p-2.5 rounded-xl border border-white/10">
-                <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Peso actual</span>
-                <span className="text-sm text-white font-bold">{weightKg ? weightKg.toFixed(1).replace('.', ',') : (isDemoMode ? '72,4' : '70,0')} kg</span>
+              <div className="bg-white dark:bg-[#0a0a0a] p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                <span className="text-[11px] text-slate-500 dark:text-[#898a8c] uppercase block font-bold">Peso actual</span>
+                <span className="text-sm text-slate-900 dark:text-white font-bold">{weightKg ? weightKg.toFixed(1).replace('.', ',') : (isDemoMode ? '72,4' : '70,0')} kg</span>
               </div>
-              <div className="bg-[#0a0a0a] p-2.5 rounded-xl border border-white/10">
-                <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Form media</span>
-                <span className="text-sm text-[#ffffff] font-bold">{formScore}%</span>
+              <div className="bg-white dark:bg-[#0a0a0a] p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                <span className="text-[11px] text-slate-500 dark:text-[#898a8c] uppercase block font-bold">Form media</span>
+                <span className="text-sm text-slate-900 dark:text-[#ffffff] font-bold">{formScore}%</span>
               </div>
             </div>
           </div>
@@ -381,8 +381,8 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       {onOpenPremium && (
         <div className={`p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg border ${
           isPro 
-            ? 'bg-gradient-to-r from-[#0F291E] to-[#0a0a0a] border-emerald-500/40'
-            : 'bg-gradient-to-r from-[#0a0a0a] to-[#0a0a0a] border-[#ffffff]/40'
+            ? 'bg-gradient-to-r from-[#0F291E] to-white dark:to-[#0a0a0a] border-emerald-500/40'
+            : 'bg-gradient-to-r from-white dark:from-[#0a0a0a] to-white dark:to-[#0a0a0a] border-[#ffffff]/40'
         }`}>
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border ${
@@ -394,14 +394,14 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h4 className="text-sm font-bold text-white">MAXMIND Pro & Beneficios MAX Suplementos</h4>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">MAXMIND Pro & Beneficios MAX Suplementos</h4>
                 {isPro && (
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase tracking-wider">
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-slate-900 dark:text-white text-[10px] font-black uppercase tracking-wider">
                     ACTIVO
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[#d6d6d6]">
+              <p className="text-xs text-slate-700 dark:text-[#d6d6d6]">
                 {isPro 
                   ? `Suscripción Pro activa hasta ${proExpiry ? new Date(proExpiry).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 días'}. IA sin límites y 20% OFF en tienda.`
                   : 'Desbloquea el análisis con IA de comidas por foto y 20% OFF en suplementación.'}
@@ -411,7 +411,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           <button
             type="button"
             onClick={onOpenPremium}
-            className={`w-full sm:w-auto px-4 py-2 text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap ${
+            className={`w-full sm:w-auto px-4 py-2 text-slate-900 dark:text-white font-bold text-xs rounded-xl transition-all shadow-md active:scale-95 whitespace-nowrap ${
               isPro
                 ? 'bg-emerald-600 hover:bg-emerald-500'
                 : 'bg-[#0a0a0a] hover:bg-[#545a5b]'
@@ -423,7 +423,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       )}
 
       {notificationStatus && (
-        <div className="p-3 bg-[#ffffff]/20 border border-[#ffffff]/40 text-[#d6d6d6] rounded-xl text-xs font-medium flex items-center gap-2">
+        <div className="p-3 bg-[#ffffff]/20 border border-[#ffffff]/40 text-slate-700 dark:text-[#d6d6d6] rounded-xl text-xs font-medium flex items-center gap-2">
           <span className="material-symbols-outlined text-[18px]">notifications</span>
           <span>{notificationStatus}</span>
         </div>
@@ -446,14 +446,14 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         );
 
         return (
-          <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-4">
+          <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-5 border border-slate-200 dark:border-white/10 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">tune</span>
-                  <h3 className="font-headline-md text-white font-bold">Protocolo de Nivel de Compromiso</h3>
+                  <span className="material-symbols-outlined text-slate-700 dark:text-[#d6d6d6] text-[20px]">tune</span>
+                  <h3 className="font-headline-md text-slate-900 dark:text-white font-bold">Protocolo de Nivel de Compromiso</h3>
                 </div>
-                <p className="text-xs text-[#898a8c] mt-1">
+                <p className="text-xs text-slate-500 dark:text-[#898a8c] mt-1">
                   Ciclos cerrados de 14 días para asegurar adaptaciones fisiológicas reales sin alternar a capricho.
                 </p>
               </div>
@@ -462,7 +462,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 <button
                   type="button"
                   onClick={onOpenLevelModal}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border self-start sm:self-auto bg-[#0a0a0a] text-white hover:scale-[1.02] shadow-sm flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border self-start sm:self-auto bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white hover:scale-[1.02] shadow-sm flex items-center gap-1.5"
                   style={{ borderColor: `${proto.themeColor}55` }}
                 >
                   {cooldown.isAllowed ? (
@@ -486,7 +486,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-black text-white">Nivel Actual: {proto.name}</span>
+                  <span className="text-sm font-black text-slate-900 dark:text-white">Nivel Actual: {proto.name}</span>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${proto.badgeClass}`}>
                     {proto.badgeTitle}
                   </span>
@@ -504,7 +504,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             </div>
 
             {/* Explicación científica del período de 14 días */}
-            <div className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 text-xs text-slate-400 space-y-1">
+            <div className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 text-xs text-slate-400 space-y-1">
               <span className="text-slate-300 font-bold block text-[11px]">
                 ⚖️ Por qué el protocolo exige 14 días:
               </span>
@@ -517,14 +517,14 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       })()}
 
       {/* Dispositivos Wearables Sincronizados */}
-      <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-4">
+      <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-5 border border-slate-200 dark:border-white/10 space-y-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">watch</span>
-            <h3 className="font-headline-md text-white font-bold">Dispositivos y Sensores</h3>
+            <span className="material-symbols-outlined text-slate-700 dark:text-[#d6d6d6] text-[20px]">watch</span>
+            <h3 className="font-headline-md text-slate-900 dark:text-white font-bold">Dispositivos y Sensores</h3>
           </div>
           {isDemoMode ? (
-            <span className="text-xs text-white flex items-center gap-1 font-bold">
+            <span className="text-xs text-slate-900 dark:text-white flex items-center gap-1 font-bold">
               <span className="w-2 h-2 rounded-full bg-[#d6d6d6] animate-pulse"></span>
               Modo Demo
             </span>
@@ -537,34 +537,34 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Frecuencia Cardíaca</span>
+              <span className="text-[11px] text-slate-500 dark:text-[#898a8c] uppercase block font-bold">Frecuencia Cardíaca</span>
               <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-bold text-white">{isDemoMode ? bpm : '--'}</span>
-                <span className="text-xs text-[#898a8c]">BPM</span>
+                <span className="text-xl font-bold text-slate-900 dark:text-white">{isDemoMode ? bpm : '--'}</span>
+                <span className="text-xs text-slate-500 dark:text-[#898a8c]">BPM</span>
               </div>
             </div>
             <span className={`material-symbols-outlined ${isDemoMode ? 'text-red-400 animate-pulse' : 'text-slate-600'} text-[24px]`}>favorite</span>
           </div>
 
-          <div className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Calorías Activas</span>
+              <span className="text-[11px] text-slate-500 dark:text-[#898a8c] uppercase block font-bold">Calorías Activas</span>
               <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-bold text-white">{isDemoMode ? '540' : '--'}</span>
-                <span className="text-xs text-[#898a8c]">kcal</span>
+                <span className="text-xl font-bold text-slate-900 dark:text-white">{isDemoMode ? '540' : '--'}</span>
+                <span className="text-xs text-slate-500 dark:text-[#898a8c]">kcal</span>
               </div>
             </div>
             <span className={`material-symbols-outlined ${isDemoMode ? 'text-amber-400' : 'text-slate-600'} text-[24px]`}>local_fire_department</span>
           </div>
 
-          <div className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Pasos Hoy</span>
+              <span className="text-[11px] text-slate-500 dark:text-[#898a8c] uppercase block font-bold">Pasos Hoy</span>
               <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-bold text-white">{isDemoMode ? '8.420' : '--'}</span>
-                <span className="text-xs text-[#898a8c]">pasos</span>
+                <span className="text-xl font-bold text-slate-900 dark:text-white">{isDemoMode ? '8.420' : '--'}</span>
+                <span className="text-xs text-slate-500 dark:text-[#898a8c]">pasos</span>
               </div>
             </div>
             <span className={`material-symbols-outlined ${isDemoMode ? 'text-[#d6d6d6]' : 'text-slate-600'} text-[24px]`}>directions_walk</span>
@@ -579,12 +579,12 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Exportar Reportes y Datos */}
-      <div className="bg-[#0a0a0a] rounded-xl p-5 border border-white/10 space-y-3">
+      <div className="bg-white dark:bg-[#0a0a0a] rounded-xl p-5 border border-slate-200 dark:border-white/10 space-y-3">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">ios_share</span>
-          <h3 className="font-headline-md text-white font-bold">Exportar Telemetría e Informes</h3>
+          <span className="material-symbols-outlined text-slate-700 dark:text-[#d6d6d6] text-[20px]">ios_share</span>
+          <h3 className="font-headline-md text-slate-900 dark:text-white font-bold">Exportar Telemetría e Informes</h3>
         </div>
-        <p className="text-xs text-[#898a8c]">
+        <p className="text-xs text-slate-500 dark:text-[#898a8c]">
           Exporta tus datos estructurados para análisis en hojas de cálculo o envía un PDF a tu preparador físico.
         </p>
 
@@ -592,18 +592,18 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           <button
             type="button"
             onClick={handleExportCSV}
-            className="flex items-center justify-center gap-2 bg-[#0a0a0a] hover:bg-[#0a0a0a] text-white p-3 rounded-xl border border-white/10 text-xs font-bold transition-colors active:scale-95"
+            className="flex items-center justify-center gap-2 bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold transition-colors active:scale-95"
           >
-            <span className="material-symbols-outlined text-[18px] text-[#d6d6d6]">table_view</span>
+            <span className="material-symbols-outlined text-[18px] text-slate-700 dark:text-[#d6d6d6]">table_view</span>
             <span>Descargar datos CSV</span>
           </button>
 
           <button
             type="button"
             onClick={handleExportPDF}
-            className="flex items-center justify-center gap-2 bg-[#0a0a0a] hover:bg-[#0a0a0a] text-white p-3 rounded-xl border border-white/10 text-xs font-bold transition-colors active:scale-95"
+            className="flex items-center justify-center gap-2 bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-900 dark:text-white p-3 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold transition-colors active:scale-95"
           >
-            <span className="material-symbols-outlined text-[18px] text-[#d6d6d6]">picture_as_pdf</span>
+            <span className="material-symbols-outlined text-[18px] text-slate-700 dark:text-[#d6d6d6]">picture_as_pdf</span>
             <span>Informe para Nutricionista (PDF)</span>
           </button>
         </div>
@@ -612,7 +612,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           <button
             type="button"
             onClick={handleTestNotification}
-            className="w-full flex items-center justify-center gap-2 bg-[#ffffff]/20 hover:bg-[#ffffff]/30 text-[#d6d6d6] p-2.5 rounded-xl border border-[#ffffff]/40 text-xs font-bold transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-[#ffffff]/20 hover:bg-[#ffffff]/30 text-slate-700 dark:text-[#d6d6d6] p-2.5 rounded-xl border border-[#ffffff]/40 text-xs font-bold transition-colors"
           >
             <span className="material-symbols-outlined text-[16px]">notifications_active</span>
             <span>Probar Notificaciones Push de Rendimiento</span>
@@ -621,14 +621,14 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Aplicación Móvil PWA e Instalación Directa */}
-      <div className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/10 space-y-3.5 shadow-xl">
+      <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-5 border border-slate-200 dark:border-white/10 space-y-3.5 shadow-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/20 text-[#ffffff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-white/20 text-slate-900 dark:text-[#ffffff] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">install_mobile</span>
             </div>
             <div>
-              <h3 className="font-bold text-sm text-white">Aplicación Móvil MAXMIND</h3>
+              <h3 className="font-bold text-sm text-slate-900 dark:text-white">Aplicación Móvil MAXMIND</h3>
               <p className="text-[11px] text-slate-400">Instálala en tu teléfono para acceso directo sin barras del navegador.</p>
             </div>
           </div>
@@ -638,15 +638,15 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               Instalada
             </span>
           ) : (
-            <span className="px-2.5 py-1 rounded-full bg-white/15 text-[#ffffff] border border-white/30 text-[10px] font-extrabold">
+            <span className="px-2.5 py-1 rounded-full bg-white/15 text-slate-900 dark:text-[#ffffff] border border-slate-300 dark:border-white/30 text-[10px] font-extrabold">
               PWA Lista
             </span>
           )}
         </div>
 
-        <div className="p-3 bg-[#0a0a0a] rounded-xl border border-white/10 text-xs text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 text-xs text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
-            <span className="font-bold text-white block">
+            <span className="font-bold text-slate-900 dark:text-white block">
               {isAppInstalled ? '✅ App ejecutándose en modo nativo' : '📲 Descarga desde el navegador'}
             </span>
             <p className="text-[11px] text-slate-400">
@@ -660,7 +660,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onDownloadApp}
-              className="px-4 py-2.5 min-h-[44px] rounded-xl bg-[#0a0a0a] hover:bg-[#545a5b] text-white font-black text-xs shadow-lg shadow-black/30 active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center gap-2 flex-shrink-0"
+              className="px-4 py-2.5 min-h-[44px] rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white font-black text-xs shadow-lg shadow-black/30 active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center gap-2 flex-shrink-0"
             >
               <span className="material-symbols-outlined text-[18px]">download_for_offline</span>
               <span>Instalar en el Teléfono</span>
@@ -670,11 +670,11 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Administración de Cuenta y Sesión */}
-      <div className="bg-[#0a0a0a] rounded-2xl p-5 border border-white/10 space-y-4 shadow-xl">
+      <div className="bg-white dark:bg-[#0a0a0a] rounded-2xl p-5 border border-slate-200 dark:border-white/10 space-y-4 shadow-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#ffffff] text-[22px]">manage_accounts</span>
-            <h3 className="font-bold text-sm text-white">Cuenta y Seguridad</h3>
+            <span className="material-symbols-outlined text-slate-900 dark:text-[#ffffff] text-[22px]">manage_accounts</span>
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white">Cuenta y Seguridad</h3>
           </div>
           <span className="text-[11px] font-bold text-slate-400">
             {userEmail || (isDemoMode ? 'santiago@maxform.app' : 'Usuario Local')}
@@ -697,9 +697,9 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onOpenOnboarding}
-              className="flex items-center justify-center gap-2 bg-[#0a0a0a] hover:bg-[#0a0a0a] text-slate-200 p-3 rounded-xl border border-white/10 text-xs font-bold transition-all active:scale-95"
+              className="flex items-center justify-center gap-2 bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-200 p-3 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined text-[18px] text-[#ffffff]">tune</span>
+              <span className="material-symbols-outlined text-[18px] text-slate-900 dark:text-[#ffffff]">tune</span>
               <span>Reconfigurar Metas</span>
             </button>
           )}
@@ -708,7 +708,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onLogout}
-              className="flex items-center justify-center gap-2 bg-[#0a0a0a] hover:bg-rose-500/20 text-rose-300 p-3 rounded-xl border border-white/10 hover:border-rose-500/40 text-xs font-bold transition-all active:scale-95"
+              className="flex items-center justify-center gap-2 bg-white dark:bg-[#0a0a0a] hover:bg-rose-500/20 text-rose-300 p-3 rounded-xl border border-slate-200 dark:border-white/10 hover:border-rose-500/40 text-xs font-bold transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px]">logout</span>
               <span>Cerrar Sesión</span>
@@ -720,16 +720,16 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onOpenAdmin}
-              className="col-span-full flex items-center justify-center gap-2 bg-[#0a0a0a] hover:bg-[#0a0a0a] text-white p-3 rounded-xl border border-white/50 hover:border-white/60 text-xs font-bold transition-all active:scale-95"
+              className="col-span-full flex items-center justify-center gap-2 bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-900 dark:text-white p-3 rounded-xl border border-white/50 hover:border-white/60 text-xs font-bold transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined text-[18px] text-white">admin_panel_settings</span>
+              <span className="material-symbols-outlined text-[18px] text-slate-900 dark:text-white">admin_panel_settings</span>
               <span>Panel Administrativo</span>
             </button>
           )}
         </div>
 
         {onDeleteAccount && !isDemoMode && (
-          <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div>
               <span className="text-xs font-semibold text-rose-400 block">Zona de Peligro</span>
               <span className="text-[11px] text-slate-500">Eliminar permanentemente los datos locales y la cuenta de este dispositivo.</span>
@@ -739,7 +739,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 <button
                   type="button"
                   onClick={onDeleteAccount}
-                  className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-slate-900 dark:text-white text-xs font-bold transition-colors"
                 >
                   Confirmar Eliminación
                 </button>
