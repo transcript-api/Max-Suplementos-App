@@ -1,12 +1,19 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 import { UserAppState } from './userStore';
 
+// athlete_states.user_id es uuid (FK a auth.users). Los identificadores locales
+// de invitado/reset ('guest_athlete', 'new_athlete', etc.) no son UUIDs reales,
+// así que nunca hay que intentar sincronizarlos contra Supabase.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const isSyncableUserId = (userId?: string | null): userId is string =>
+  Boolean(userId) && UUID_RE.test(userId as string);
+
 export class SupabaseRepository {
   /**
    * Carga el estado del atleta desde Supabase PostgreSQL
    */
   async loadAthleteState(userId: string): Promise<UserAppState | null> {
-    if (!isSupabaseConfigured() || !userId || userId.includes('demo')) {
+    if (!isSupabaseConfigured() || !isSyncableUserId(userId)) {
       return null;
     }
 
@@ -52,7 +59,7 @@ export class SupabaseRepository {
    * Guarda o actualiza el estado del atleta en Supabase PostgreSQL
    */
   async saveAthleteState(state: UserAppState): Promise<boolean> {
-    if (!isSupabaseConfigured() || !state?.userId || state.userId.includes('demo')) {
+    if (!isSupabaseConfigured() || !isSyncableUserId(state?.userId)) {
       return false;
     }
 
@@ -99,7 +106,7 @@ export class SupabaseRepository {
     calories?: number;
     micronutrients?: any;
   }): Promise<boolean> {
-    if (!isSupabaseConfigured() || !userId || userId.includes('demo')) {
+    if (!isSupabaseConfigured() || !isSyncableUserId(userId)) {
       return false;
     }
 
@@ -132,7 +139,7 @@ export class SupabaseRepository {
    * Suscribe en tiempo real a los cambios del usuario usando Supabase Realtime Channels
    */
   subscribeToAthleteChanges(userId: string, onChange: (newState: any) => void): () => void {
-    if (!isSupabaseConfigured() || !userId || userId.includes('demo')) {
+    if (!isSupabaseConfigured() || !isSyncableUserId(userId)) {
       return () => {};
     }
 
