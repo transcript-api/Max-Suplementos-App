@@ -682,6 +682,17 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {!userEmail && !isDemoMode && onOpenAuth && (
+            <button
+              type="button"
+              onClick={onOpenAuth}
+              className="col-span-full flex items-center justify-center gap-2 bg-white text-black hover:bg-zinc-200 p-3 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-md"
+            >
+              <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
+              <span>Crear cuenta o iniciar sesión (guardar en la nube)</span>
+            </button>
+          )}
+
           {onOpenOnboarding && (
             <button
               type="button"

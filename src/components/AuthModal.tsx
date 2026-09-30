@@ -26,6 +26,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [recoverySuccess, setRecoverySuccess] = useState(false);
+  const [confirmationPendingEmail, setConfirmationPendingEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
@@ -41,7 +42,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           throw new Error('Las contraseñas no coinciden.');
         }
         const user = await authService.register(email, password, name);
-        onSuccess(user);
+        if (user.emailConfirmationPending) {
+          setConfirmationPendingEmail(user.email);
+        } else {
+          onSuccess(user);
+        }
       } else if (mode === 'login') {
         const user = await authService.login(email, password);
         onSuccess(user);
@@ -145,7 +150,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {recoverySuccess ? (
+        {confirmationPendingEmail ? (
+          <div className="p-4 bg-emerald-500/15 border border-emerald-500/40 rounded-xl text-center space-y-3">
+            <span className="material-symbols-outlined text-3xl text-emerald-400">mark_email_unread</span>
+            <p className="text-xs text-emerald-200">
+              ¡Cuenta creada! Te enviamos un correo de confirmación a <strong>{confirmationPendingEmail}</strong>.
+              Confirmala para poder iniciar sesión y sincronizar tu progreso en la nube.
+            </p>
+            <button
+              type="button"
+              onClick={() => { setMode('login'); setConfirmationPendingEmail(null); }}
+              className="px-4 py-2 bg-[#0a0a0a] hover:bg-[#545a5b] text-xs font-bold rounded-xl text-white transition-colors"
+            >
+              Ya confirmé, iniciar sesión
+            </button>
+          </div>
+        ) : recoverySuccess ? (
           <div className="p-4 bg-emerald-500/15 border border-emerald-500/40 rounded-xl text-center space-y-3">
             <span className="material-symbols-outlined text-3xl text-emerald-400">mark_email_read</span>
             <p className="text-xs text-emerald-200">

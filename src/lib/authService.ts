@@ -7,6 +7,11 @@ export interface AppUser {
   createdAt: string;
   isDemo?: boolean;
   isLocalOnly?: boolean;
+  /** true cuando la cuenta se creó pero todavía no hay sesión activa
+   *  (Supabase exige confirmar el email antes de emitir el token). Mientras
+   *  esto sea true, cualquier lectura/escritura a Supabase va a fallar con
+   *  401/406 porque auth.uid() es null para el cliente. */
+  emailConfirmationPending?: boolean;
 }
 
 const ACTIVE_SESSION_KEY = 'maxform_active_session_v2';
@@ -182,14 +187,23 @@ class AuthService {
       throw new Error('No se pudo crear la cuenta de usuario.');
     }
 
+    // Si el proyecto exige confirmar el email, signUp crea el usuario pero no
+    // entrega sesión (data.session es null). No hay que tratar esto como un
+    // login real: auth.uid() seguirá siendo null hasta que confirme el email,
+    // así que cualquier sync a Supabase fallaría en silencio.
+    const emailConfirmationPending = !data.session;
+
     const newUser: AppUser = {
       uid: data.user.id,
       email: cleanEmail,
       displayName: cleanName,
       createdAt: data.user.created_at || new Date().toISOString(),
+      emailConfirmationPending,
     };
 
-    this.setCurrentUser(newUser);
+    if (!emailConfirmationPending) {
+      this.setCurrentUser(newUser);
+    }
     return newUser;
   }
 
