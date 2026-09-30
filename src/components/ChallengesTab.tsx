@@ -104,7 +104,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between pt-2">
         <div>
-          <span className="font-label-caps text-label-caps text-[#3B82F6] uppercase tracking-wider block font-bold">
+          <span className="font-label-caps text-label-caps text-[#ffffff] uppercase tracking-wider block font-bold">
             Comunidad y Gamificación
           </span>
           <h1 className="font-headline-xl-mobile text-headline-xl-mobile text-white font-bold">
@@ -122,7 +122,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 rounded-lg font-headline-md text-xs sm:text-sm text-center capitalize transition-all ${
               activeTab === tab
-                ? 'bg-[#2563EB] text-white font-bold shadow-sm'
+                ? 'bg-[#06151e] text-white font-bold shadow-sm'
                 : 'text-[#898a8c] hover:text-white font-medium'
             }`}
           >
@@ -144,7 +144,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 shadow-lg relative overflow-hidden">
             <div className="flex justify-between items-start mb-2">
               <div>
-                <span className="bg-[#2563eb]/20 text-[#b4c5ff] font-label-caps text-label-caps px-2.5 py-0.5 rounded-full border border-[#2563eb]/30 font-bold uppercase">
+                <span className="bg-[#ffffff]/20 text-[#d6d6d6] font-label-caps text-label-caps px-2.5 py-0.5 rounded-full border border-[#ffffff]/30 font-bold uppercase">
                   Desafío Mensual
                 </span>
                 <h3 className="font-headline-md text-white font-bold mt-1">30 días de consistencia sin romper racha</h3>
@@ -159,11 +159,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-white font-bold">Día {streakDays} de 30</span>
-                <span className="text-[#b4c5ff] font-bold">{Math.round((streakDays / 30) * 100)}%</span>
+                <span className="text-[#d6d6d6] font-bold">{Math.round((streakDays / 30) * 100)}%</span>
               </div>
               <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden">
                 <div 
-                  className="bg-[#2563eb] h-full rounded-full transition-all duration-500" 
+                  className="bg-[#ffffff] h-full rounded-full transition-all duration-500" 
                   style={{ width: `${(streakDays / 30) * 100}%` }}
                 ></div>
               </div>
@@ -179,13 +179,13 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#0566d9]/20 text-[#adc6ff] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[22px]">water_drop</span>
                 </div>
                 <div>
                   <h4 className="font-body-md text-white font-bold">Hidratación Maestra</h4>
                   <p className="text-xs text-[#898a8c]">3L de agua 7 días continuos</p>
-                  <span className="text-[11px] text-[#b4c5ff] font-semibold">5 / 7 días logrados</span>
+                  <span className="text-[11px] text-[#d6d6d6] font-semibold">5 / 7 días logrados</span>
                 </div>
               </div>
               <span className="text-xs bg-[#06151e] text-white px-2 py-1 rounded font-bold border border-white/10">
@@ -195,13 +195,13 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
             <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#2563eb]/20 text-[#b4c5ff] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[22px]">fitness_center</span>
                 </div>
                 <div>
                   <h4 className="font-body-md text-white font-bold">Sobrecarga Progresiva</h4>
                   <p className="text-xs text-[#898a8c]">Registrar 4 sesiones con RPE 8+</p>
-                  <span className="text-[11px] text-[#b4c5ff] font-semibold">3 / 4 sesiones</span>
+                  <span className="text-[11px] text-[#d6d6d6] font-semibold">3 / 4 sesiones</span>
                 </div>
               </div>
               <span className="text-xs bg-[#06151e] text-white px-2 py-1 rounded font-bold border border-white/10">
@@ -221,11 +221,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 value={newPostText}
                 onChange={(e) => setNewPostText(e.target.value)}
                 placeholder="Comparte una victoria o tu marca de hoy..."
-                className="flex-1 bg-[#06151e] rounded-lg px-3 py-2 text-sm text-white border border-white/10 focus:outline-none focus:border-[#2563eb]"
+                className="flex-1 bg-[#06151e] rounded-lg px-3 py-2 text-sm text-white border border-white/10 focus:outline-none focus:border-[#ffffff]"
               />
               <button
                 type="submit"
-                className="bg-[#2563eb] hover:bg-[#3b82f6] text-white px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-all"
+                className="bg-[#06151e] hover:bg-[#545a5b] text-white px-4 py-2 rounded-lg text-sm font-bold active:scale-95 transition-all"
               >
                 Publicar
               </button>
@@ -238,7 +238,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <div className="flex justify-between items-center text-xs">
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-white">{p.user}</span>
-                      <span className="px-1.5 py-0.5 rounded bg-[#06151e] text-[#b4c5ff] text-[10px]">
+                      <span className="px-1.5 py-0.5 rounded bg-[#06151e] text-[#d6d6d6] text-[10px]">
                         {p.badge}
                       </span>
                     </div>
@@ -283,7 +283,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   onClick={() => setRankingPeriod(p)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all ${
                     rankingPeriod === p
-                      ? 'bg-[#2563EB] text-white'
+                      ? 'bg-[#06151e] text-white'
                       : 'text-[#898a8c] hover:text-white'
                   }`}
                 >
@@ -294,9 +294,9 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           </div>
 
           {/* Tarjeta de Proximidad Psicológica (Sección 25 del Master Prompt) */}
-          <div className="p-3.5 bg-[#102A56]/60 border border-[#2563EB]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
+          <div className="p-3.5 bg-[#06151e]/60 border border-[#ffffff]/50 rounded-xl flex items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-[#2563EB] text-white flex items-center justify-center font-bold flex-shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-[#06151e] text-white flex items-center justify-center font-bold flex-shrink-0">
                 {isDemoMode ? '#127' : (xp > 0 ? '#1' : '-')}
               </div>
               <div>
@@ -312,7 +312,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 </span>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded-lg bg-[#2563EB]/20 text-[#3B82F6] text-xs font-black border border-[#2563EB]/40 whitespace-nowrap">
+            <span className="px-2.5 py-1 rounded-lg bg-[#ffffff]/20 text-[#ffffff] text-xs font-black border border-[#ffffff]/40 whitespace-nowrap">
               {isDemoMode ? '+12 XP' : (xp > 0 ? `${xp} XP` : '0 XP')}
             </span>
           </div>
@@ -320,7 +320,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
           <div className="space-y-2">
             {!isDemoMode && xp === 0 ? (
               <div className="p-8 rounded-xl bg-[#06151e] border border-white/10 text-center space-y-2.5">
-                <div className="w-12 h-12 rounded-full bg-[#2563EB]/20 text-[#3B82F6] mx-auto flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-[#ffffff]/20 text-[#ffffff] mx-auto flex items-center justify-center">
                   <span className="material-symbols-outlined text-[24px]">emoji_events</span>
                 </div>
                 <h4 className="font-bold text-white text-base">Todavía no tenés una posición en el ranking</h4>
@@ -345,12 +345,12 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   key={atleta.rank}
                   className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
                     atleta.isYou
-                      ? 'bg-[#102A56]/80 border-[#2563EB] text-white font-bold shadow-md ring-1 ring-[#2563EB]/50'
+                      ? 'bg-[#06151e]/80 border-[#ffffff] text-white font-bold shadow-md ring-1 ring-[#ffffff]/50'
                       : 'bg-[#06151e] border-white/10 text-[#d6d6d6]'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className={`w-8 text-xs font-bold text-center ${atleta.isYou ? 'text-[#3B82F6]' : 'text-[#898a8c]'}`}>
+                    <span className={`w-8 text-xs font-bold text-center ${atleta.isYou ? 'text-[#ffffff]' : 'text-[#898a8c]'}`}>
                       {atleta.badge || `#${atleta.rank}`}
                     </span>
                     <div>
@@ -359,7 +359,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-bold text-[#3B82F6]">{atleta.xp.toLocaleString('es-ES')} XP</span>
+                    <span className="text-sm font-bold text-[#ffffff]">{atleta.xp.toLocaleString('es-ES')} XP</span>
                     {atleta.isYou ? (
                       <span className="block text-[10px] text-emerald-400 font-bold">Tu posición actual</span>
                     ) : (
@@ -382,9 +382,9 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 <span className="font-label-caps text-[#898a8c] uppercase block text-[11px] font-bold">Club Atleta MAX</span>
                 <h3 className="font-headline-md text-white font-bold text-lg">Canje de Experiencia (XP)</h3>
               </div>
-              <div className="px-3 py-1 bg-[#2563EB]/20 border border-[#2563EB]/40 rounded-xl text-right">
+              <div className="px-3 py-1 bg-[#ffffff]/20 border border-[#ffffff]/40 rounded-xl text-right">
                 <span className="text-[10px] text-[#898a8c] block">Tu balance</span>
-                <span className="text-sm font-black text-[#3B82F6]">{xp.toLocaleString('es-ES')} XP</span>
+                <span className="text-sm font-black text-[#ffffff]">{xp.toLocaleString('es-ES')} XP</span>
               </div>
             </div>
             <p className="text-xs text-[#d6d6d6]">
@@ -417,7 +417,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   >
                     <div className="space-y-2">
                       <div className="flex justify-between items-start">
-                        <span className="text-[10px] font-bold text-[#3B82F6] bg-[#2563EB]/20 border border-[#2563EB]/30 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold text-[#ffffff] bg-[#ffffff]/20 border border-[#ffffff]/30 px-2 py-0.5 rounded-full">
                           {reward.badge}
                         </span>
                         <span className="text-xs font-black text-amber-400 flex items-center gap-1">
@@ -441,7 +441,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                         disabled={!canAfford}
                         className={`w-full py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                           canAfford
-                            ? 'bg-[#2563EB] hover:bg-[#3B82F6] text-white active:scale-95 shadow-md shadow-[#2563EB]/20'
+                            ? 'bg-[#06151e] hover:bg-[#545a5b] text-white active:scale-95 shadow-md shadow-[#ffffff]/20'
                             : 'bg-[#06151e] text-[#898a8c] cursor-not-allowed'
                         }`}
                       >
@@ -464,7 +464,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
         <div className="space-y-4">
           <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">notifications_active</span>
+              <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">notifications_active</span>
               <h3 className="font-headline-md text-white font-bold">Alerta de Reposición Inteligente</h3>
             </div>
             <p className="text-sm text-[#898a8c]">
@@ -482,7 +482,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
               <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-bold text-[#b4c5ff] bg-[#2563eb]/20 px-2 py-0.5 rounded">
+                    <span className="text-xs font-bold text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
                       Consumo habitual
                     </span>
                     <span className="text-xs text-[#898a8c]">5g diarios</span>
@@ -498,7 +498,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <button
                     type="button"
                     onClick={() => setReordered('¡Orden de Creatina enviada con 1-Click! Llegará en 48hs.')}
-                    className="bg-[#2563eb] hover:bg-[#3b82f6] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
+                    className="bg-[#06151e] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
                   >
                     Reponer 1-Click
                   </button>
@@ -508,7 +508,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
               <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 flex flex-col justify-between space-y-3">
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-bold text-[#adc6ff] bg-[#0566d9]/20 px-2 py-0.5 rounded">
+                    <span className="text-xs font-bold text-[#d6d6d6] bg-[#ffffff]/20 px-2 py-0.5 rounded">
                       Consumo habitual
                     </span>
                     <span className="text-xs text-[#898a8c]">30g diarios</span>
@@ -524,7 +524,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                   <button
                     type="button"
                     onClick={() => setReordered('¡Orden de Whey Isolada procesada! Llegará en 48hs.')}
-                    className="bg-[#2563eb] hover:bg-[#3b82f6] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
+                    className="bg-[#06151e] hover:bg-[#545a5b] text-white px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 transition-all shadow-sm"
                   >
                     Reponer 1-Click
                   </button>

@@ -40,7 +40,7 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     <span className="relative inline-flex items-center">
       <span
         className={`transition-transform duration-300 inline-block tabular-nums ${
-          isAnimating ? 'scale-105 text-[#38bdf8] drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]' : ''
+          isAnimating ? 'scale-105 text-[#ffffff] drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]' : ''
         } ${className}`}
       >
         {prefix}

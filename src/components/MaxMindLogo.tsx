@@ -40,7 +40,7 @@ export const MaxMindLogo: React.FC<MaxMindLogoProps> = ({
   };
 
   const primaryFill = isDark ? '#ffffff' : '#06151e';
-  const blueBevel = isDark ? '#3B82F6' : '#2563EB';
+  const blueBevel = isDark ? '#ffffff' : '#ffffff';
 
   if (variant === 'symbol') {
     return (
@@ -54,9 +54,9 @@ export const MaxMindLogo: React.FC<MaxMindLogoProps> = ({
       >
         <defs>
           <linearGradient id="sym-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#60A5FA" />
-            <stop offset="50%" stopColor="#2563EB" />
-            <stop offset="100%" stopColor="#1D4ED8" />
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="50%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#ffffff" />
           </linearGradient>
           <linearGradient id="sym-body-grad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor={primaryFill} />
@@ -114,9 +114,9 @@ export const MaxMindLogo: React.FC<MaxMindLogoProps> = ({
         >
           <defs>
             <linearGradient id="full-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#60A5FA" />
-              <stop offset="50%" stopColor="#2563EB" />
-              <stop offset="100%" stopColor="#1D4ED8" />
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="50%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#ffffff" />
             </linearGradient>
             <linearGradient id="full-body-grad" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor={primaryFill} />
@@ -167,9 +167,9 @@ export const MaxMindLogo: React.FC<MaxMindLogoProps> = ({
       >
         <defs>
           <linearGradient id="horiz-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#60A5FA" />
-            <stop offset="50%" stopColor="#2563EB" />
-            <stop offset="100%" stopColor="#1D4ED8" />
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="50%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#ffffff" />
           </linearGradient>
           <linearGradient id="horiz-body-grad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor={primaryFill} />
@@ -202,7 +202,7 @@ export const MaxMindLogo: React.FC<MaxMindLogoProps> = ({
           </span>
           <span style={{ color: primaryFill }}>XMIND</span>
         </div>
-        <span className="text-[8.5px] font-bold tracking-[0.28em] text-[#3B82F6] dark:text-[#60A5FA] uppercase mt-0.5">
+        <span className="text-[8.5px] font-bold tracking-[0.28em] text-[#ffffff] dark:text-[#ffffff] uppercase mt-0.5">
           Performance
         </span>
       </div>

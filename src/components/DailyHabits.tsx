@@ -199,7 +199,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 placeholder="Ej. Ducha de contraste fría, Diario de gratitud..."
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-[#06151e] border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
                 required
               />
             </div>
@@ -212,7 +212,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
                 placeholder="Ej. 3 min de agua fría para activación mitocondrial..."
                 value={newSubtitle}
                 onChange={(e) => setNewSubtitle(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-[#06151e] border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
               />
             </div>
           </div>
@@ -225,7 +225,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value as any)}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-[#06151e] border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
               >
                 <option value="lectura">Lectura & Enfoque</option>
                 <option value="sueno">Sueño & Descanso</option>
@@ -241,7 +241,7 @@ export const DailyHabits: React.FC<DailyHabitsProps> = ({
               <select
                 value={newBoost}
                 onChange={(e) => setNewBoost(Number(e.target.value))}
-                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
+                className="w-full px-3 py-2 text-xs rounded-lg dark:bg-[#06151e] bg-[#06151e] border dark:border-white/12 border-slate-300 dark:text-white text-slate-800 focus:outline-none dark:focus:border-white/30 focus:border-slate-400 transition-colors"
               >
                 <option value={2}>+2% Energía</option>
                 <option value={3}>+3% Energía (Estándar)</option>

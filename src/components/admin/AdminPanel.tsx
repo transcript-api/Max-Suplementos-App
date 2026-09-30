@@ -351,7 +351,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="email"
                 value={adminEmailInput}
                 onChange={(e) => setAdminEmailInput(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
+                className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff]"
                 placeholder="admin@maxsuplementos.com"
                 required
               />
@@ -365,7 +365,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="password"
                 value={adminKeyInput}
                 onChange={(e) => setAdminKeyInput(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
+                className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#ffffff]"
                 placeholder="••••••••••••••••"
                 required
               />
@@ -385,7 +385,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <button
                 type="submit"
                 disabled={isLoadingAuth}
-                className="w-full py-3 bg-[#2563EB] hover:bg-blue-600 disabled:opacity-50 text-white font-bold text-xs rounded-xl transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
+                className="w-full py-3 bg-[#06151e] hover:bg-[#545a5b] disabled:opacity-50 text-white font-bold text-xs rounded-xl transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
               >
                 {isLoadingAuth ? (
                   <>
@@ -435,7 +435,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           <button
             type="button"
             onClick={onBackToApp}
-            className="px-3 py-1.5 rounded-lg border border-[#2563EB]/40 bg-[#2563EB]/20 hover:bg-[#2563EB]/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1.5"
+            className="px-3 py-1.5 rounded-lg border border-[#ffffff]/40 bg-[#ffffff]/20 hover:bg-[#ffffff]/30 text-white text-xs font-bold transition-all flex items-center gap-1.5"
           >
             <span className="material-symbols-outlined text-[16px]">visibility</span>
             <span>Ver App</span>
@@ -482,7 +482,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           onClick={() => setActiveTab('status')}
           className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-2 ${
             activeTab === 'status'
-              ? 'border-[#2563EB] text-[#3B82F6]'
+              ? 'border-[#ffffff] text-[#ffffff]'
               : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
@@ -495,7 +495,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           onClick={() => setActiveTab('recipes')}
           className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-2 ${
             activeTab === 'recipes'
-              ? 'border-[#2563EB] text-[#3B82F6]'
+              ? 'border-[#ffffff] text-[#ffffff]'
               : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
@@ -508,7 +508,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           onClick={() => setActiveTab('protocols')}
           className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-2 ${
             activeTab === 'protocols'
-              ? 'border-[#2563EB] text-[#3B82F6]'
+              ? 'border-[#ffffff] text-[#ffffff]'
               : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
@@ -521,7 +521,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           onClick={() => setActiveTab('audit')}
           className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-2 ${
             activeTab === 'audit'
-              ? 'border-[#2563EB] text-[#3B82F6]'
+              ? 'border-[#ffffff] text-[#ffffff]'
               : 'border-transparent text-slate-400 hover:text-white'
           }`}
         >
@@ -533,8 +533,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       {/* Contenido Principal */}
       <main className="p-4 sm:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
         {loadingData && (
-          <div className="flex items-center gap-2 text-xs text-blue-400">
-            <span className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></span>
+          <div className="flex items-center gap-2 text-xs text-white">
+            <span className="w-3 h-3 border-2 border-white/20 border-t-transparent rounded-full animate-spin"></span>
             <span>Sincronizando estado con el servidor...</span>
           </div>
         )}
@@ -904,7 +904,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </div>
                   </div>
 
-                  <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-blue-600/30 text-blue-300 border border-blue-500/40 self-start sm:self-auto whitespace-nowrap">
+                  <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-white/30 text-white border border-white/40 self-start sm:self-auto whitespace-nowrap">
                     En Curso
                   </span>
                 </div>
@@ -924,7 +924,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-blue-400">
+                    <div className="flex items-center gap-1.5 text-white">
                       <span className="material-symbols-outlined text-[16px]">format_quote</span>
                       <span className="text-[10px] font-black uppercase tracking-wider">
                         Cita del Coach para {selectedGoal}
@@ -963,7 +963,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                                 sup.priority === 'esencial'
                                   ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
                                   : sup.priority === 'recomendado'
-                                  ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                                  ? 'bg-white/20 text-white border border-white/40'
                                   : 'bg-slate-800 text-slate-300'
                               }`}
                             >
@@ -978,7 +978,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                         <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
                           <span>Dosis: <strong className="text-white">{sup.dose}</strong></span>
-                          <span>Toma: <strong className="text-blue-300">{sup.timing}</strong></span>
+                          <span>Toma: <strong className="text-white">{sup.timing}</strong></span>
                         </div>
                       </div>
                     ))}
@@ -990,7 +990,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   {/* Métricas clave que se priorizan en el Dashboard */}
                   <div className="p-4 rounded-xl bg-[#06151e] border border-white/10 space-y-2.5">
                     <h5 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px] text-blue-400">monitoring</span>
+                      <span className="material-symbols-outlined text-[16px] text-white">monitoring</span>
                       <span>Métricas Clave Monitoreadas ({previewContent.keyMetrics.length})</span>
                     </h5>
                     <div className="grid grid-cols-2 gap-2">
@@ -1023,7 +1023,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         handleApplyToActiveUser();
                         onBackToApp();
                       }}
-                      className="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow active:scale-95 transition-all text-center"
+                      className="w-full py-2 bg-gradient-to-r from-[#06151e] to-[#545a5b] hover:from-[#06151e] hover:to-[#545a5b] text-white font-bold text-xs rounded-xl shadow active:scale-95 transition-all text-center"
                     >
                       Probar esta experiencia en la App
                     </button>
@@ -1070,7 +1070,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <button
                         type="button"
                         onClick={() => setSelectedLevel(lvl.id)}
-                        className="w-full py-1.5 rounded-lg bg-[#06151e] hover:bg-[#2563EB] text-slate-300 hover:text-white text-[10px] font-bold transition-all text-center"
+                        className="w-full py-1.5 rounded-lg bg-[#06151e] hover:bg-[#545a5b] text-slate-300 hover:text-white text-[10px] font-bold transition-all text-center"
                       >
                         Ver este nivel
                       </button>
@@ -1201,7 +1201,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setIsAddRecipeOpen(true)}
-                className="px-4 py-2 bg-[#2563EB] hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition-all shadow-lg flex items-center gap-1.5 self-start sm:self-auto"
+                className="px-4 py-2 bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl transition-all shadow-lg flex items-center gap-1.5 self-start sm:self-auto"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
                 <span>Nueva Receta</span>
@@ -1210,7 +1210,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {/* Modal para Crear Receta */}
             {isAddRecipeOpen && (
-              <div className="p-6 bg-[#06151e] border border-[#2563EB]/40 rounded-2xl space-y-4 animate-fadeIn">
+              <div className="p-6 bg-[#06151e] border border-[#ffffff]/40 rounded-2xl space-y-4 animate-fadeIn">
                 <div className="flex justify-between items-center border-b border-white/10 pb-3">
                   <h3 className="font-bold text-sm text-white">Crear Nueva Receta</h3>
                   <button
@@ -1361,7 +1361,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
 
                   <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                    <span className="font-extrabold text-[#3B82F6]">{r.protein}g Proteína</span>
+                    <span className="font-extrabold text-[#ffffff]">{r.protein}g Proteína</span>
                     <span className="text-slate-400">{r.calories} kcal</span>
                     <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">{r.difficulty}</span>
                   </div>
@@ -1386,7 +1386,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <div key={id} className="p-5 bg-[#06151e] border border-white/10 rounded-2xl space-y-4">
                   <div className="flex items-center justify-between border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-blue-500"></span>
+                      <span className="w-3 h-3 rounded-full bg-[#06151e]"></span>
                       <h3 className="font-bold text-sm text-white">Nivel {proto.name}</h3>
                     </div>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">

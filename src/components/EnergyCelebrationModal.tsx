@@ -32,7 +32,7 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
       {/* Tarjeta de Celebración */}
       <div className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#06151e] via-[#06151e] to-[#06151e] border border-amber-500/40 shadow-2xl text-center space-y-5 overflow-hidden">
         {/* Resplandor superior festivo */}
-        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-amber-500/25 via-blue-500/20 to-emerald-500/25 blur-3xl pointer-events-none rounded-full" />
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-amber-500/25 via-[#545a5b] to-emerald-500/25 blur-3xl pointer-events-none rounded-full" />
 
         {/* Botón de cierre */}
         <button
@@ -92,7 +92,7 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
               Potencia
             </span>
-            <span className="text-base font-black text-blue-400">
+            <span className="text-base font-black text-white">
               100%
             </span>
             <span className="text-[9px] text-slate-400 block">Metabólica</span>

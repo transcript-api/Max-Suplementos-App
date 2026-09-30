@@ -97,7 +97,7 @@ export const SANTIAGO_DEMO_STATE: UserAppState = {
       xpReward: 25,
       completed: true,
       icon: 'fitness_center',
-      accentColor: '#3B82F6',
+      accentColor: '#ffffff',
     },
     {
       id: 'nutricion',
@@ -260,7 +260,7 @@ export const INITIAL_CLEAN_TASKS: DailyTaskItem[] = [
     xpReward: 25,
     completed: false,
     icon: 'fitness_center',
-    accentColor: '#3B82F6',
+    accentColor: '#ffffff',
   },
   {
     id: 'nutricion',

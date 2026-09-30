@@ -382,7 +382,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-full border transition-all shadow-sm ${
               isAllTasksDone
                 ? 'bg-white/12 text-white border-white/25 ring-2 ring-white/15 shadow-[0_0_16px_rgba(255,255,255,0.12)]'
-                : 'dark:bg-[#06151e] bg-white dark:text-white text-slate-800 dark:border-white/10 border-slate-200'
+                : 'dark:bg-[#06151e] bg-[#06151e] dark:text-white text-slate-800 dark:border-white/10 border-slate-200'
             }`}
           >
             <span className="text-xl select-none">🔥</span>
@@ -832,7 +832,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* Acceso Directo a Nutrición si el atleta desea planificar comidas */}
-        <div className="p-3.5 rounded-xl bg-gradient-to-r from-blue-950/40 via-[#06151e] to-transparent border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#06151e] via-[#06151e] to-transparent border border-white/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="text-xs text-slate-300">
             <p className="font-semibold text-white">¿Querés registrar comidas o explorar el recetario?</p>
             <p className="text-[11px] text-slate-400">
@@ -842,7 +842,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <button
             type="button"
             onClick={() => onNavigateTab('nutricion')}
-            className="px-3.5 py-2 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap self-stretch sm:self-auto justify-center active:scale-95 cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5 whitespace-nowrap self-stretch sm:self-auto justify-center active:scale-95 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">restaurant_menu</span>
             <span>Ir a Nutrición & Platos</span>
@@ -2005,7 +2005,7 @@ export default function App() {
   }, [tasks, protein, userState.targets, userState.dailyHabits]);
 
   return (
-    <div className="min-h-screen dark:bg-[#06151e] bg-slate-50 dark:text-[#d6d6d6] text-slate-800 flex flex-col selection:bg-[#2563eb] selection:text-white transition-colors duration-200">
+    <div className="min-h-screen dark:bg-[#06151e] bg-slate-50 dark:text-[#d6d6d6] text-slate-800 flex flex-col selection:bg-[#06151e] selection:text-white transition-colors duration-200">
       {/* Barra de Navegación Superior Fija con Switch de Modo Claro/Oscuro y Demo Toggle */}
       <Header
         currentTab={currentTab}
@@ -2028,9 +2028,9 @@ export default function App() {
       <main className="flex-1 w-full pt-20 flex flex-col items-center">
         {/* Banner de Reconciliación Inteligente Offline/Supabase */}
         {reconciliationNotice && (
-          <div className="mx-4 my-2.5 max-w-4xl w-[calc(100%-2rem)] p-3.5 bg-blue-950/80 dark:bg-[#06151e]/90 border border-blue-500/40 rounded-2xl shadow-xl backdrop-blur-md flex items-start justify-between gap-3 text-white transition-all animate-fadeIn z-30">
+          <div className="mx-4 my-2.5 max-w-4xl w-[calc(100%-2rem)] p-3.5 bg-white/80 dark:bg-[#06151e]/90 border border-white/40 rounded-2xl shadow-xl backdrop-blur-md flex items-start justify-between gap-3 text-white transition-all animate-fadeIn z-30">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-xl bg-[#2563EB] flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md shadow-blue-500/20">
+              <div className="w-8 h-8 rounded-xl bg-[#06151e] flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-md shadow-black/20">
                 <span className="material-symbols-outlined text-[20px]">published_with_changes</span>
               </div>
               <div className="space-y-1 text-left">
@@ -2046,7 +2046,7 @@ export default function App() {
                   {reconciliationNotice.message}
                 </p>
                 {reconciliationNotice.details && reconciliationNotice.details.length > 0 && (
-                  <ul className="text-[11px] text-blue-200/80 space-y-0.5 list-disc list-inside pt-1 font-medium">
+                  <ul className="text-[11px] text-white/80 space-y-0.5 list-disc list-inside pt-1 font-medium">
                     {reconciliationNotice.details.slice(0, 3).map((detail, idx) => (
                       <li key={idx}>{detail}</li>
                     ))}

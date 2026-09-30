@@ -194,7 +194,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
       {/* Encabezado del Chat */}
       <div className="p-4 border-b dark:border-white/10 border-slate-200 flex items-center justify-between dark:bg-[#06151e]/70 bg-slate-50">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-[#2563eb] text-white flex items-center justify-center shadow-md">
+          <div className="w-8 h-8 rounded-full bg-[#06151e] text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
           </div>
           <div>
@@ -222,7 +222,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             <div
               className={`max-w-[88%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
                 msg.sender === 'user'
-                  ? 'bg-[#2563eb] text-white rounded-br-none shadow-md'
+                  ? 'bg-[#06151e] text-white rounded-br-none shadow-md'
                   : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#d6d6d6] text-slate-800 rounded-bl-none border dark:border-white/10 border-slate-200'
               }`}
             >
@@ -237,7 +237,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
                         Proteína Estimada
                       </span>
                       <div className="flex items-baseline gap-1 mt-0.5">
-                        <span className="text-lg font-bold text-[#2563eb] dark:text-[#b4c5ff]">
+                        <span className="text-lg font-bold text-[#ffffff] dark:text-[#d6d6d6]">
                           {msg.estimate.protein}
                         </span>
                         <span className="text-xs dark:text-[#898a8c] text-slate-500">gramos</span>
@@ -265,7 +265,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
                   )}
 
                   {msg.estimate.nutritionTip && (
-                    <p className="text-xs dark:text-[#adc6ff] text-blue-700 dark:bg-[#2563eb]/10 bg-blue-50 p-2 rounded-lg border dark:border-[#2563eb]/20 border-blue-200">
+                    <p className="text-xs dark:text-[#d6d6d6] text-[#898a8c] dark:bg-[#ffffff]/10 bg-white p-2 rounded-lg border dark:border-[#ffffff]/20 border-white/20">
                       💡 {msg.estimate.nutritionTip}
                     </p>
                   )}
@@ -287,7 +287,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
                           onAddProtein(est.protein);
                         }
                       }}
-                      className="w-full mt-2 py-2.5 px-3 rounded-xl text-xs font-bold bg-[#2563eb] hover:bg-[#3b82f6] text-white flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98"
+                      className="w-full mt-2 py-2.5 px-3 rounded-xl text-xs font-bold bg-[#06151e] hover:bg-[#545a5b] text-white flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-98"
                     >
                       <span className="material-symbols-outlined text-[16px]">add_task</span>
                       <span>Registrar en Macros (+{msg.estimate.protein}g P · {msg.estimate.calories} kcal)</span>
@@ -303,8 +303,8 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
         ))}
 
         {loading && (
-          <div className="flex items-center gap-2 text-xs dark:text-[#b4c5ff] text-blue-600 p-2">
-            <span className="w-2 h-2 rounded-full bg-[#2563eb] animate-ping"></span>
+          <div className="flex items-center gap-2 text-xs dark:text-[#d6d6d6] text-[#898a8c] p-2">
+            <span className="w-2 h-2 rounded-full bg-[#ffffff] animate-ping"></span>
             <span>MAX AI está calculando los macronutrientes...</span>
           </div>
         )}
@@ -317,7 +317,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             key={prompt}
             type="button"
             onClick={() => handleSend(prompt)}
-            className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-300 dark:bg-[#06151e] bg-white dark:text-[#d6d6d6] text-slate-700 hover:border-[#2563eb] hover:text-[#2563eb] transition-colors"
+            className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-300 dark:bg-[#06151e] bg-[#06151e] dark:text-[#d6d6d6] text-slate-700 hover:border-[#ffffff] hover:text-[#ffffff] transition-colors"
           >
             {prompt}
           </button>
@@ -391,14 +391,14 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             onChange={(e) => setInputMessage(e.target.value)}
             placeholder="Escribe o dicta por voz qué comiste (gemini-2.5-flash)..."
             disabled={loading}
-            className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#06151e] bg-slate-100 dark:border-white/10 border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#898a8c] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
+            className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#06151e] bg-slate-100 dark:border-white/10 border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#898a8c] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ffffff]"
           />
         )}
 
         <button
           type="submit"
           disabled={loading || !inputMessage.trim() || isRecording || isTranscribing}
-          className="px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-[#3b82f6] text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md active:scale-95 shrink-0"
+          className="px-4 py-2.5 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md active:scale-95 shrink-0"
         >
           <span>Enviar</span>
           <span className="material-symbols-outlined text-[16px]">send</span>

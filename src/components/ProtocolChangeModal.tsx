@@ -90,13 +90,13 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="flex items-start gap-2.5 text-blue-400 dark:bg-blue-500/10 bg-blue-50 border-blue-500/30 p-2 rounded-lg">
+                <div className="flex items-start gap-2.5 text-white dark:bg-white/10 bg-[#06151e] border-white/30 p-2 rounded-lg">
                   <span className="text-base leading-none">✅</span>
                   <div>
-                    <strong className="block font-bold text-blue-600 dark:text-blue-300">
+                    <strong className="block font-bold text-[#898a8c] dark:text-white">
                       Ciclo de 14 Días Completado
                     </strong>
-                    <span className="text-blue-700/90 dark:text-blue-300/80 text-[11px] sm:text-xs">
+                    <span className="text-[#898a8c]/90 dark:text-white/80 text-[11px] sm:text-xs">
                       Has cumplido el período de adaptación. Puedes elegir recalibrar tus exigencias para el próximo ciclo de 14 días o renovar tu nivel actual.
                     </span>
                   </div>
@@ -172,7 +172,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
                       </span>
                     )}
                     {canSelect && isSelected && !isCurrent && (
-                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500 text-white">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[#06151e] text-white">
                         Seleccionado
                       </span>
                     )}

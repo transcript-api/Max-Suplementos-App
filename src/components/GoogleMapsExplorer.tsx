@@ -141,7 +141,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           disabled={isLocating}
           className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-auto ${
             coordinates
-              ? 'bg-[#2563eb]/20 text-[#adc6ff] border-[#2563eb]/40'
+              ? 'bg-[#ffffff]/20 text-[#d6d6d6] border-[#ffffff]/40'
               : 'bg-[#06151e] text-[#d6d6d6] border-white/10 hover:bg-[#06151e]'
           }`}
         >
@@ -168,7 +168,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'supplements'
-              ? 'bg-[#2563eb] text-white border-blue-400 shadow-sm'
+              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
               : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
@@ -184,7 +184,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'gyms'
-              ? 'bg-[#2563eb] text-white border-blue-400 shadow-sm'
+              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
               : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
@@ -200,7 +200,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'healthy_food'
-              ? 'bg-[#2563eb] text-white border-blue-400 shadow-sm'
+              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
               : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
@@ -213,7 +213,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           onClick={() => setCategory('custom')}
           className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
             category === 'custom'
-              ? 'bg-[#2563eb] text-white border-blue-400 shadow-sm'
+              ? 'bg-[#06151e] text-white border-white/20 shadow-sm'
               : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white'
           }`}
         >
@@ -233,7 +233,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
             placeholder="Ciudad, barrio o zona (ej. Palermo, Buenos Aires, São Paulo...)"
-            className="w-full pl-9 pr-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#2563eb]"
+            className="w-full pl-9 pr-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#ffffff]"
           />
         </div>
 
@@ -247,7 +247,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
               value={customQuery}
               onChange={(e) => setCustomQuery(e.target.value)}
               placeholder="¿Qué lugar buscas? Ej. Creatina pura, box calistenia..."
-              className="w-full pl-9 pr-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#2563eb]"
+              className="w-full pl-9 pr-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-[#898a8c] focus:outline-none focus:border-[#ffffff]"
             />
           </div>
         )}
@@ -256,7 +256,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           type="button"
           onClick={() => handleSearch()}
           disabled={isLoading}
-          className="px-4 py-2 bg-[#2563eb] hover:bg-blue-600 disabled:opacity-50 text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0 active:scale-95"
+          className="px-4 py-2 bg-[#06151e] hover:bg-[#545a5b] disabled:opacity-50 text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0 active:scale-95"
         >
           <span className={`material-symbols-outlined text-[16px] ${isLoading ? 'animate-spin' : ''}`}>
             {isLoading ? 'sync' : 'explore'}
@@ -268,7 +268,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
       {/* Resultados de Búsqueda */}
       {isLoading && (
         <div className="py-8 flex flex-col items-center justify-center gap-3">
-          <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"></div>
+          <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-transparent animate-spin"></div>
           <p className="text-xs text-[#898a8c]">
             Consultando Google Maps con Gemini 3.5 Flash para obtener lugares actualizados...
           </p>
@@ -280,7 +280,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
           {/* Resumen descriptivo de Gemini con Grounding */}
           {responseText && (
             <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 text-xs text-[#d6d6d6] leading-relaxed">
-              <div className="flex items-center gap-1.5 text-blue-400 font-bold mb-1.5">
+              <div className="flex items-center gap-1.5 text-white font-bold mb-1.5">
                 <span className="material-symbols-outlined text-[16px]">info</span>
                 <span>Análisis de Ubicación:</span>
               </div>
@@ -304,7 +304,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
                 {places.map((place, idx) => (
                   <div
                     key={idx}
-                    className="p-3.5 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 hover:border-blue-500/50 transition-all flex flex-col justify-between gap-3 group shadow-sm"
+                    className="p-3.5 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 hover:border-white/50 transition-all flex flex-col justify-between gap-3 group shadow-sm"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
@@ -312,7 +312,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
                           <span className="material-symbols-outlined text-rose-500 text-[20px] shrink-0 mt-0.5">
                             location_on
                           </span>
-                          <h4 className="text-xs sm:text-sm font-extrabold text-white group-hover:text-blue-400 transition-colors line-clamp-2">
+                          <h4 className="text-xs sm:text-sm font-extrabold text-white group-hover:text-white transition-colors line-clamp-2">
                             {place.title}
                           </h4>
                         </div>
@@ -335,7 +335,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
                         href={place.uri}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 hover:text-white border border-blue-500/30 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                        className="flex-1 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white hover:text-white border border-white/30 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-[15px]">open_in_new</span>
                         <span>Ver en Google Maps</span>

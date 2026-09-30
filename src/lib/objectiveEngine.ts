@@ -129,7 +129,7 @@ export function generatePersonalizedObjectives(input: OnboardingProfileInput): G
       xpReward: DEFAULT_XP_CONFIG.training,
       completed: false,
       icon: 'fitness_center',
-      accentColor: '#3B82F6',
+      accentColor: '#ffffff',
     });
   } else if (experience_level === 'Avanzado') {
     objectives.push({
@@ -170,7 +170,7 @@ export function generatePersonalizedObjectives(input: OnboardingProfileInput): G
     xpReward: DEFAULT_XP_CONFIG.protein,
     completed: false,
     icon: 'egg_alt',
-    accentColor: experience_level === 'Extremo' ? '#EF4444' : experience_level === 'Avanzado' ? '#8B5CF6' : experience_level === 'Intermedio' ? '#3B82F6' : '#10B981',
+    accentColor: experience_level === 'Extremo' ? '#EF4444' : experience_level === 'Avanzado' ? '#8B5CF6' : experience_level === 'Intermedio' ? '#ffffff' : '#10B981',
   });
 
   // TAREA 3: HIDRATACIÓN

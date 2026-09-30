@@ -102,7 +102,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         grams: effectiveProtein,
         calories: proteinKcal,
         pct: Math.round((proteinKcal / totalCalcKcal) * 100),
-        color: '#2563eb', // Azul MAXFORM
+        color: '#ffffff',
         target: targetProtein,
       },
       {
@@ -226,7 +226,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
       {/* Dynamic Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
         <div>
-          <span className="font-label-caps text-label-caps text-[#adc6ff] tracking-wider uppercase block font-bold">
+          <span className="font-label-caps text-label-caps text-[#d6d6d6] tracking-wider uppercase block font-bold">
             Optimización Metabólica
           </span>
           <h1 className="font-headline-xl-mobile text-headline-xl-mobile text-white font-bold">
@@ -239,7 +239,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <button
             type="button"
             onClick={() => setShowAddRecipeModal(true)}
-            className="bg-gradient-to-r from-[#2563eb] to-[#3b82f6] hover:from-[#1d4ed8] hover:to-[#2563eb] text-white font-bold text-xs px-3.5 py-2 rounded-full shadow-lg border border-blue-400/30 flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+            className="bg-gradient-to-r from-[#06151e] to-[#545a5b] hover:from-[#06151e] hover:to-[#545a5b] text-white font-bold text-xs px-3.5 py-2 rounded-full shadow-lg border border-white/30 flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">add_circle</span>
             <span className="whitespace-nowrap font-black">Crear Plato</span>
@@ -252,7 +252,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               <span className="material-symbols-outlined text-[18px]">chevron_left</span>
             </button>
             <div className="flex items-center gap-1.5 px-1">
-              <span className="material-symbols-outlined text-[16px] text-[#b4c5ff]">calendar_today</span>
+              <span className="material-symbols-outlined text-[16px] text-[#d6d6d6]">calendar_today</span>
               <span className="font-label-caps text-label-caps text-white whitespace-nowrap font-bold">
                 Hoy, {new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'short' }).format(new Date())}
               </span>
@@ -276,14 +276,14 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         {/* Tarjeta 1: Catálogo de Ideas de Comida */}
         <div 
           onClick={() => setShowMealIdeas(true)}
-          className="lg:col-span-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#06151e] via-[#06151e] to-[#06151e] border border-[#2563eb]/40 p-4 sm:p-5 shadow-xl hover:border-[#2563eb] transition-all cursor-pointer group active:scale-[0.99] flex flex-col justify-between"
+          className="lg:col-span-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#06151e] via-[#06151e] to-[#06151e] border border-[#ffffff]/40 p-4 sm:p-5 shadow-xl hover:border-[#ffffff] transition-all cursor-pointer group active:scale-[0.99] flex flex-col justify-between"
         >
           {/* Glow de fondo */}
-          <div className="absolute top-0 right-0 w-48 h-48 bg-[#2563eb]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#2563eb]/20 transition-all" />
+          <div className="absolute top-0 right-0 w-48 h-48 bg-[#ffffff]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#ffffff]/20 transition-all" />
 
           <div className="relative z-10 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-[#2563eb]/30 text-[#adc6ff] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#2563eb]/40 flex items-center gap-1">
+              <span className="bg-[#ffffff]/30 text-[#d6d6d6] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#ffffff]/40 flex items-center gap-1">
                 <span className="material-symbols-outlined text-[13px]">restaurant_menu</span>
                 Catálogo de Rendimiento
               </span>
@@ -295,7 +295,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               </span>
             </div>
 
-            <h2 className="text-lg sm:text-xl font-black text-white group-hover:text-[#b4c5ff] transition-colors flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-black text-white group-hover:text-[#d6d6d6] transition-colors flex items-center gap-2">
               <span>Ideas de Comida</span>
               <span className="text-base sm:text-lg">💡</span>
             </h2>
@@ -315,7 +315,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 e.stopPropagation();
                 setShowMealIdeas(true);
               }}
-              className="bg-[#2563eb] group-hover:bg-[#3b82f6] text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer ml-auto"
+              className="bg-[#06151e] group-hover:bg-[#545a5b] text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer ml-auto"
             >
               <span>Ver Catálogo de Platos</span>
               <span className="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">
@@ -328,11 +328,11 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         {/* Tarjeta 2: Botón/Card MUY VISIBLE de Crear Plato */}
         <div
           onClick={() => setShowAddRecipeModal(true)}
-          className="lg:col-span-4 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#06151e] via-[#06151e] to-[#06151e] border-2 border-dashed border-[#2563eb]/60 hover:border-[#3b82f6] p-4 sm:p-5 shadow-xl transition-all cursor-pointer group active:scale-[0.99] flex flex-col justify-between"
+          className="lg:col-span-4 relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#06151e] via-[#06151e] to-[#06151e] border-2 border-dashed border-[#ffffff]/60 hover:border-[#ffffff] p-4 sm:p-5 shadow-xl transition-all cursor-pointer group active:scale-[0.99] flex flex-col justify-between"
         >
           <div className="space-y-2 relative z-10">
             <div className="flex items-center justify-between">
-              <span className="bg-[#2563eb]/30 text-[#adc6ff] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#2563eb]/50 flex items-center gap-1">
+              <span className="bg-[#ffffff]/30 text-[#d6d6d6] text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-[#ffffff]/50 flex items-center gap-1">
                 <span className="material-symbols-outlined text-[13px]">add_circle</span>
                 Tus Recetas
               </span>
@@ -342,11 +342,11 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
 
             <div className="flex items-center gap-2.5 pt-1">
-              <div className="w-10 h-10 rounded-xl bg-[#2563eb] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#06151e] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
                 <span className="material-symbols-outlined text-[24px]">soup_kitchen</span>
               </div>
               <div>
-                <h3 className="text-base font-black text-white group-hover:text-[#adc6ff] transition-colors leading-tight">
+                <h3 className="text-base font-black text-white group-hover:text-[#d6d6d6] transition-colors leading-tight">
                   Crear Mi Plato
                 </h3>
                 <span className="text-[11px] text-[#898a8c]">
@@ -367,7 +367,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 e.stopPropagation();
                 setShowAddRecipeModal(true);
               }}
-              className="w-full bg-gradient-to-r from-[#2563eb] to-[#3b82f6] hover:from-[#1d4ed8] hover:to-[#2563eb] text-white font-bold text-xs sm:text-sm py-2.5 px-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
+              className="w-full bg-gradient-to-r from-[#06151e] to-[#545a5b] hover:from-[#06151e] hover:to-[#545a5b] text-white font-bold text-xs sm:text-sm py-2.5 px-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-98"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
               <span>Crear Plato Ahora</span>
@@ -391,7 +391,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
           </div>
           <div className="flex flex-col items-end">
-            <span className="bg-[#2563eb]/20 text-[#b4c5ff] font-label-caps text-label-caps px-2 py-0.5 rounded-full border border-[#2563eb]/30 font-bold">
+            <span className="bg-[#ffffff]/20 text-[#d6d6d6] font-label-caps text-label-caps px-2 py-0.5 rounded-full border border-[#ffffff]/30 font-bold">
               {Math.min(100, Math.round((effectiveCalories / targetCalories) * 100))}% COMPLETADO
             </span>
             <span className="font-body-sm text-body-sm text-[#898a8c] mt-1">
@@ -403,7 +403,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         {/* Main Calorie Bar */}
         <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden mb-4">
           <div
-            className="bg-[#2563eb] h-full rounded-full transition-all duration-500"
+            className="bg-[#ffffff] h-full rounded-full transition-all duration-500"
             style={{ width: `${Math.min(100, (effectiveCalories / targetCalories) * 100)}%` }}
           ></div>
         </div>
@@ -511,10 +511,10 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <div className="bg-[#06151e] rounded-lg p-3 border border-white/10">
             <div className="flex justify-between items-center mb-1.5">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#2563eb]"></span>
+                <span className="w-2 h-2 rounded-full bg-[#ffffff]"></span>
                 <span className="font-label-caps text-label-caps text-white font-bold">PROTEÍNA</span>
               </div>
-              <span className="font-label-caps text-label-caps text-[#b4c5ff] font-bold">
+              <span className="font-label-caps text-label-caps text-[#d6d6d6] font-bold">
                 {missingProtein === 0 ? '¡Completada!' : `Faltan ${missingProtein} g`}
               </span>
             </div>
@@ -525,7 +525,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               <span className="font-body-sm text-body-sm text-[#898a8c] font-medium">{proteinPct}%</span>
             </div>
             <div className="w-full bg-[#06151e] h-1.5 rounded-full overflow-hidden">
-              <div className="bg-[#2563eb] h-full rounded-full transition-all duration-500" style={{ width: `${proteinPct}%` }}></div>
+              <div className="bg-[#ffffff] h-full rounded-full transition-all duration-500" style={{ width: `${proteinPct}%` }}></div>
             </div>
           </div>
 
@@ -583,13 +583,13 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <div className="bg-[#06151e] rounded-lg p-3 border border-white/10">
             <div className="flex justify-between items-center mb-1.5">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[14px] text-[#b4c5ff]">water_drop</span>
+                <span className="material-symbols-outlined text-[14px] text-[#d6d6d6]">water_drop</span>
                 <span className="font-label-caps text-label-caps text-white font-bold">HIDRATACIÓN</span>
               </div>
               <button 
                 type="button"
                 onClick={onAddWater}
-                className="font-label-caps text-label-caps text-[#b4c5ff] hover:underline font-bold"
+                className="font-label-caps text-label-caps text-[#d6d6d6] hover:underline font-bold"
               >
                 +250 ml
               </button>
@@ -604,7 +604,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
             <div className="w-full bg-[#06151e] h-1.5 rounded-full overflow-hidden">
               <div 
-                className="bg-[#2563eb] h-full rounded-full transition-all duration-300" 
+                className="bg-[#ffffff] h-full rounded-full transition-all duration-300" 
                 style={{ width: `${Math.min(100, (hydration / targetHydration) * 100)}%` }}
               ></div>
             </div>
@@ -641,7 +641,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               setCalibFats(effectiveFats);
               setShowCalibrateModal(true);
             }}
-            className="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#2563eb]/20 hover:bg-[#2563eb]/30 border border-[#2563eb]/40 text-[#adc6ff] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+            className="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#ffffff]/20 hover:bg-[#ffffff]/30 border border-[#ffffff]/40 text-[#d6d6d6] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[15px]">edit_calendar</span>
             <span>Calibrar Valores Exactos</span>
@@ -682,7 +682,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             <button
               type="button"
               onClick={onReduceWater}
-              className="px-2.5 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+              className="px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
               title="Restar 250ml de agua"
             >
               <span className="material-symbols-outlined text-[14px]">remove</span>
@@ -693,7 +693,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <button
             type="button"
             onClick={() => onAddProtein(25)}
-            className="px-2.5 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ml-auto"
+            className="px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95 ml-auto"
             title="Sumar 25g de proteína"
           >
             <span className="material-symbols-outlined text-[14px]">add</span>
@@ -703,7 +703,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <button
             type="button"
             onClick={onAddWater}
-            className="px-2.5 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
+            className="px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-bold transition-all flex items-center gap-1 cursor-pointer active:scale-95"
             title="Sumar 250ml de agua"
           >
             <span className="material-symbols-outlined text-[14px]">add</span>
@@ -717,7 +717,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         <div className="bg-[#06151e] rounded-xl p-4 border border-white/10 shadow-md space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#2563eb] text-[20px]">receipt_long</span>
+              <span className="material-symbols-outlined text-[#ffffff] text-[20px]">receipt_long</span>
               <h3 className="text-sm font-bold text-white">
                 Comidas Registradas Hoy ({foodHistory.length})
               </h3>
@@ -735,7 +735,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                     {item.name}
                   </h4>
                   <div className="flex items-center gap-2 text-[11px] text-[#898a8c] mt-0.5">
-                    <span className="text-[#b4c5ff] font-bold">+{item.protein}g P</span>
+                    <span className="text-[#d6d6d6] font-bold">+{item.protein}g P</span>
                     <span>·</span>
                     <span>{item.carbs}g C</span>
                     <span>·</span>
@@ -768,7 +768,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <div className="bg-[#06151e] rounded-2xl max-w-sm w-full p-5 border border-white/10 shadow-2xl space-y-4 text-white animate-fadeIn">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#2563eb]">tune</span>
+                <span className="material-symbols-outlined text-[#ffffff]">tune</span>
                 <h3 className="text-base font-bold">Corregir Totales de Hoy</h3>
               </div>
               <button
@@ -786,19 +786,19 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="font-bold text-[#adc6ff] block mb-1">Proteína total de hoy (gramos):</label>
+                <label className="font-bold text-[#d6d6d6] block mb-1">Proteína total de hoy (gramos):</label>
                 <input
                   type="number"
                   min="0"
                   max="350"
                   value={calibProtein}
                   onChange={(e) => setCalibProtein(Math.max(0, parseInt(e.target.value) || 0))}
-                  className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                  className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#ffffff] outline-none"
                 />
               </div>
 
               <div>
-                <label className="font-bold text-[#b4c5ff] block mb-1">Agua total de hoy (Litros):</label>
+                <label className="font-bold text-[#d6d6d6] block mb-1">Agua total de hoy (Litros):</label>
                 <input
                   type="number"
                   step="0.1"
@@ -806,7 +806,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                   max="10"
                   value={calibWater}
                   onChange={(e) => setCalibWater(Math.max(0, parseFloat(e.target.value) || 0))}
-                  className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                  className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#ffffff] outline-none"
                 />
               </div>
 
@@ -818,7 +818,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                     min="0"
                     value={calibCarbs}
                     onChange={(e) => setCalibCarbs(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                    className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#ffffff] outline-none"
                   />
                 </div>
                 <div>
@@ -828,7 +828,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                     min="0"
                     value={calibFats}
                     onChange={(e) => setCalibFats(Math.max(0, parseInt(e.target.value) || 0))}
-                    className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#2563eb] outline-none"
+                    className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold focus:border-[#ffffff] outline-none"
                   />
                 </div>
               </div>
@@ -850,7 +850,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                   }
                   setShowCalibrateModal(false);
                 }}
-                className="flex-1 py-2 px-3 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-xs font-bold text-white transition-colors shadow-md"
+                className="flex-1 py-2 px-3 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-xs font-bold text-white transition-colors shadow-md"
               >
                 Guardar Corrección
               </button>
@@ -873,7 +873,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             onClick={() => setCustomInputOpen(!customInputOpen)}
             className="bg-[#06151e] hover:bg-[#545a5b] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#545a5b]"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#2563eb]/20 text-[#b4c5ff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#ffffff]/20 text-[#d6d6d6] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">edit_note</span>
             </div>
             <div>
@@ -883,7 +883,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           </button>
 
           <label className={`bg-[#06151e] hover:bg-[#545a5b] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#545a5b] cursor-pointer ${isAnalyzingPhoto ? 'opacity-60 pointer-events-none' : ''}`}>
-            <div className="w-8 h-8 rounded-lg bg-[#0566d9]/30 text-[#adc6ff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#ffffff]/30 text-[#d6d6d6] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">{isAnalyzingPhoto ? 'hourglass_top' : 'photo_camera'}</span>
             </div>
             <div>
@@ -911,18 +911,18 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <button 
             type="button"
             onClick={() => setShowMealIdeas(true)}
-            className="bg-gradient-to-br from-[#06151e] to-[#06151e] hover:from-[#06151e] hover:to-[#06151e] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#2563eb]/40 group cursor-pointer"
+            className="bg-gradient-to-br from-[#06151e] to-[#06151e] hover:from-[#06151e] hover:to-[#06151e] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-sm border border-[#ffffff]/40 group cursor-pointer"
           >
             <div className="flex items-center justify-between w-full">
-              <div className="w-8 h-8 rounded-lg bg-[#2563eb] text-white flex items-center justify-center shadow-md">
+              <div className="w-8 h-8 rounded-lg bg-[#06151e] text-white flex items-center justify-center shadow-md">
                 <span className="material-symbols-outlined text-[18px]">restaurant_menu</span>
               </div>
-              <span className="text-[10px] font-extrabold bg-[#2563eb]/30 text-[#adc6ff] px-1.5 py-0.5 rounded border border-[#2563eb]/40">
+              <span className="text-[10px] font-extrabold bg-[#ffffff]/30 text-[#d6d6d6] px-1.5 py-0.5 rounded border border-[#ffffff]/40">
                 +54 Platos
               </span>
             </div>
             <div>
-              <span className="font-body-md text-body-md font-bold text-white group-hover:text-[#adc6ff] transition-colors block">
+              <span className="font-body-md text-body-md font-bold text-white group-hover:text-[#d6d6d6] transition-colors block">
                 Ideas de Comida
               </span>
               <span className="font-body-sm text-body-sm text-[#898a8c]">
@@ -935,7 +935,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <button 
             type="button"
             onClick={() => setShowAddRecipeModal(true)}
-            className="bg-gradient-to-br from-[#1e2a47] to-[#06151e] hover:from-[#273860] hover:to-[#06151e] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-lg border-2 border-[#3b82f6]/70 group cursor-pointer"
+            className="bg-gradient-to-br from-[#06151e] to-[#06151e] hover:from-[#06151e] hover:to-[#06151e] active:scale-[0.98] transition-all p-3.5 sm:p-4 rounded-xl text-left flex flex-col justify-between h-32 shadow-lg border-2 border-[#ffffff]/70 group cursor-pointer"
           >
             <div className="flex items-center justify-between w-full">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-400 text-black flex items-center justify-center shadow-md font-black">
@@ -949,7 +949,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
               <span className="font-body-md text-body-md font-black text-white group-hover:text-amber-300 transition-colors block">
                 Crear Plato
               </span>
-              <span className="font-body-sm text-body-sm text-[#adc6ff]">
+              <span className="font-body-sm text-body-sm text-[#d6d6d6]">
                 Subir receta
               </span>
             </div>
@@ -998,7 +998,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         <div className="bg-[#06151e] rounded-xl p-4 shadow-md space-y-3 border border-white/10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[18px] text-[#b4c5ff]">auto_awesome</span>
+              <span className="material-symbols-outlined text-[18px] text-[#d6d6d6]">auto_awesome</span>
               <span className="font-label-caps text-label-caps text-white uppercase font-bold">Registrar con MAX AI</span>
             </div>
             <span className="font-body-sm text-body-sm text-[#898a8c]">Análisis en tiempo real</span>
@@ -1024,7 +1024,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             type="button"
             onClick={handleAnalyzeAndLogText}
             disabled={isAnalyzingText || !inputFoodText.trim()}
-            className="w-full bg-[#2563eb] hover:bg-[#3b82f6] disabled:opacity-50 disabled:cursor-not-allowed text-white font-body-md font-bold py-2.5 rounded-lg text-center transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-[#06151e] hover:bg-[#545a5b] disabled:opacity-50 disabled:cursor-not-allowed text-white font-body-md font-bold py-2.5 rounded-lg text-center transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-[18px]">
               {isAnalyzingText ? 'hourglass_top' : 'add_task'}
@@ -1038,7 +1038,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
       <div className="bg-[#06151e] rounded-xl p-5 shadow-md space-y-4 relative overflow-hidden border border-white/10">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2563eb]/20 text-[#b4c5ff]">
+            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#ffffff]/20 text-[#d6d6d6]">
               <span className="material-symbols-outlined text-[16px]">kitchen</span>
             </div>
             <h2 className="font-headline-md text-headline-md text-white font-bold">¿Qué tengo para comer?</h2>
@@ -1055,7 +1055,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             <button 
               type="button"
               onClick={addIngredientPrompt}
-              className="font-label-caps text-label-caps text-[#b4c5ff] hover:underline flex items-center gap-1 font-bold"
+              className="font-label-caps text-label-caps text-[#d6d6d6] hover:underline flex items-center gap-1 font-bold"
             >
               <span className="material-symbols-outlined text-[14px]">add</span> Añadir ingrediente
             </button>
@@ -1091,7 +1091,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 onClick={() => setActiveFilter(filter)}
                 className={`px-3 py-1.5 rounded-full font-label-caps text-label-caps whitespace-nowrap transition-all ${
                   activeFilter === filter 
-                    ? 'bg-[#2563eb] text-white font-bold shadow-sm' 
+                    ? 'bg-[#06151e] text-white font-bold shadow-sm' 
                     : 'bg-[#06151e] text-[#898a8c] hover:text-white'
                 }`}
               >
@@ -1105,12 +1105,12 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         <div className="bg-[#06151e] rounded-xl p-4 relative space-y-3 shadow-sm border border-white/10">
           <div className="flex justify-between items-start">
             <div>
-              <span className="bg-[#0566d9]/20 text-[#adc6ff] font-label-caps text-label-caps px-2 py-0.5 rounded-full inline-block mb-1 border border-[#0566d9]/30 font-bold">
+              <span className="bg-[#ffffff]/20 text-[#d6d6d6] font-label-caps text-label-caps px-2 py-0.5 rounded-full inline-block mb-1 border border-[#ffffff]/30 font-bold">
                 Recomendación Activa
               </span>
               <h3 className="font-headline-md text-headline-md text-white font-bold">Bowl de pollo alto en proteína</h3>
             </div>
-            <span className="material-symbols-outlined text-[24px] text-[#b4c5ff]">restaurant_menu</span>
+            <span className="material-symbols-outlined text-[24px] text-[#d6d6d6]">restaurant_menu</span>
           </div>
 
           {/* Meal Highlight Visual Placeholder */}
@@ -1138,7 +1138,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             <button
               type="button"
               onClick={() => setShowRecipeModal(true)}
-              className="bg-[#2563eb] hover:bg-[#3b82f6] text-white font-body-md font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer"
+              className="bg-[#06151e] hover:bg-[#545a5b] text-white font-body-md font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 cursor-pointer"
             >
               <span>Ver receta guiada</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -1157,9 +1157,9 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <button
             type="button"
             onClick={() => setShowMealIdeas(true)}
-            className="w-full bg-[#06151e] hover:bg-[#06151e] text-[#adc6ff] hover:text-white font-body-sm font-black py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all border border-[#2563eb]/40 cursor-pointer shadow-sm"
+            className="w-full bg-[#06151e] hover:bg-[#06151e] text-[#d6d6d6] hover:text-white font-body-sm font-black py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all border border-[#ffffff]/40 cursor-pointer shadow-sm"
           >
-            <span className="material-symbols-outlined text-[18px] text-[#2563eb]">restaurant_menu</span>
+            <span className="material-symbols-outlined text-[18px] text-[#ffffff]">restaurant_menu</span>
             <span>Ver Catálogo Completo: +54 Ideas de Comida (Uruguay 🇺🇾 & Brasil 🇧🇷)</span>
           </button>
         </div>
@@ -1169,7 +1169,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="font-headline-md text-headline-md text-white font-bold">Registro Diario</h2>
-          <span className="font-label-caps text-label-caps text-[#b4c5ff] font-bold">3 / 4 Ingestas</span>
+          <span className="font-label-caps text-label-caps text-[#d6d6d6] font-bold">3 / 4 Ingestas</span>
         </div>
 
         {/* Grid de 2 columnas en móvil para las comidas del día */}
@@ -1178,7 +1178,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <div className="bg-[#06151e] hover:bg-[#06151e] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-white/10 transition-all">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#b4c5ff] flex items-center justify-center">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[16px] sm:text-[18px]">wb_twilight</span>
                 </div>
                 <span className="bg-[#06151e] text-[#898a8c] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold">
@@ -1196,7 +1196,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
 
             <div className="pt-2 mt-2 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-black text-[#b4c5ff]">32g P</span>
+              <span className="text-xs sm:text-sm font-black text-[#d6d6d6]">32g P</span>
               <span className="text-[10px] sm:text-xs text-[#898a8c] font-medium">480 kcal</span>
             </div>
           </div>
@@ -1205,7 +1205,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <div className="bg-[#06151e] hover:bg-[#06151e] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-white/10 transition-all">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#b4c5ff] flex items-center justify-center">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[16px] sm:text-[18px]">sunny</span>
                 </div>
                 <span className="bg-[#06151e] text-[#898a8c] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold">
@@ -1223,7 +1223,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
 
             <div className="pt-2 mt-2 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-black text-[#b4c5ff]">48g P</span>
+              <span className="text-xs sm:text-sm font-black text-[#d6d6d6]">48g P</span>
               <span className="text-[10px] sm:text-xs text-[#898a8c] font-medium">690 kcal</span>
             </div>
           </div>
@@ -1232,7 +1232,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
           <div className="bg-[#06151e] hover:bg-[#06151e] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-white/10 transition-all">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#b4c5ff] flex items-center justify-center">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#d6d6d6] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[16px] sm:text-[18px]">bolt</span>
                 </div>
                 <span className="bg-[#06151e] text-[#898a8c] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold">
@@ -1250,19 +1250,19 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
             </div>
 
             <div className="pt-2 mt-2 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-black text-[#b4c5ff]">30g P</span>
+              <span className="text-xs sm:text-sm font-black text-[#d6d6d6]">30g P</span>
               <span className="text-[10px] sm:text-xs text-[#898a8c] font-medium">350 kcal</span>
             </div>
           </div>
 
           {/* Cena (Pendiente) */}
-          <div className="bg-[#06151e]/70 hover:bg-[#06151e] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-dashed border-[#3b82f6]/50 transition-all">
+          <div className="bg-[#06151e]/70 hover:bg-[#06151e] rounded-xl p-3 sm:p-3.5 flex flex-col justify-between shadow-sm border border-dashed border-[#ffffff]/50 transition-all">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#06151e] text-[#898a8c] flex items-center justify-center">
                   <span className="material-symbols-outlined text-[16px] sm:text-[18px]">bedtime</span>
                 </div>
-                <span className="bg-[#2563eb]/20 text-[#b4c5ff] text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded uppercase font-extrabold">
+                <span className="bg-[#ffffff]/20 text-[#d6d6d6] text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded uppercase font-extrabold">
                   Pendiente
                 </span>
               </div>
@@ -1270,7 +1270,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 <span className="font-body-md text-xs sm:text-sm font-bold text-white block">
                   Cena
                 </span>
-                <p className="text-[11px] sm:text-xs text-[#b4c5ff] line-clamp-1 leading-snug">
+                <p className="text-[11px] sm:text-xs text-[#d6d6d6] line-clamp-1 leading-snug">
                   Sugerencia: +22g proteína
                 </p>
               </div>
@@ -1283,7 +1283,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 onClick={() =>
                   handleConfirmPredictiveEntry({ name: 'Cena sugerida', protein: 22, carbs: 0, fats: 0, calories: 22 * 4 })
                 }
-                className="bg-[#2563eb] hover:bg-[#3b82f6] text-white text-[11px] sm:text-xs px-2.5 py-1 rounded-lg transition-colors flex items-center gap-0.5 font-bold active:scale-95 cursor-pointer shadow-sm"
+                className="bg-[#06151e] hover:bg-[#545a5b] text-white text-[11px] sm:text-xs px-2.5 py-1 rounded-lg transition-colors flex items-center gap-0.5 font-bold active:scale-95 cursor-pointer shadow-sm"
               >
                 <span className="material-symbols-outlined text-[14px]">add</span>
                 <span>Cargar</span>
@@ -1298,17 +1298,17 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
         <button
           type="button"
           onClick={() => setShowMealIdeas(true)}
-          className="bg-[#06151e]/95 hover:bg-[#06151e] text-white text-xs font-bold px-3.5 py-2.5 rounded-full shadow-2xl border border-[#2563eb]/50 backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+          className="bg-[#06151e]/95 hover:bg-[#06151e] text-white text-xs font-bold px-3.5 py-2.5 rounded-full shadow-2xl border border-[#ffffff]/50 backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer"
         >
-          <span className="material-symbols-outlined text-[18px] text-[#adc6ff]">restaurant_menu</span>
+          <span className="material-symbols-outlined text-[18px] text-[#d6d6d6]">restaurant_menu</span>
           <span className="hidden sm:inline">Ideas de Comida</span>
-          <span className="bg-[#2563eb]/30 text-[#adc6ff] text-[10px] px-1.5 py-0.2 rounded-full font-black">54+</span>
+          <span className="bg-[#ffffff]/30 text-[#d6d6d6] text-[10px] px-1.5 py-0.2 rounded-full font-black">54+</span>
         </button>
 
         <button
           type="button"
           onClick={() => setShowAddRecipeModal(true)}
-          className="bg-gradient-to-r from-[#2563eb] via-[#3b82f6] to-[#2563eb] hover:scale-105 text-white text-xs font-black px-4 py-2.5 rounded-full shadow-2xl border border-blue-300/40 backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ring-2 ring-blue-500/30"
+          className="bg-gradient-to-r from-[#06151e] via-[#545a5b] to-[#545a5b] hover:scale-105 text-white text-xs font-black px-4 py-2.5 rounded-full shadow-2xl border border-white/40 backdrop-blur-md flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ring-2 ring-white/30"
         >
           <span className="material-symbols-outlined text-[20px] font-black">add_circle</span>
           <span>Crear Plato</span>
@@ -1349,7 +1349,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
 
               {/* Alimentos con Fotos Reales */}
               <div className="space-y-2 pt-1">
-                <span className="text-[11px] font-bold text-[#adc6ff] uppercase tracking-wider block">
+                <span className="text-[11px] font-bold text-[#d6d6d6] uppercase tracking-wider block">
                   Alimentos Reales del Plato:
                 </span>
                 <div className="grid grid-cols-2 gap-2">
@@ -1396,7 +1396,7 @@ export const NutritionTab: React.FC<NutritionTabProps> = ({
                 });
                 setShowRecipeModal(false);
               }}
-              className="w-full bg-[#2563eb] text-white font-bold py-3 rounded-xl shadow-lg active:scale-95"
+              className="w-full bg-[#06151e] text-white font-bold py-3 rounded-xl shadow-lg active:scale-95"
             >
               Marcar comida como consumida (+42g Prot)
             </button>

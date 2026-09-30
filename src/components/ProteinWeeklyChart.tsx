@@ -220,7 +220,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
           <div className="flex items-center justify-between pb-1 border-b dark:border-white/10 border-slate-200">
             <span className="font-bold dark:text-white text-slate-900">{data.fullDate}</span>
             {data.isToday && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#2563eb]/20 text-[#b4c5ff] font-extrabold">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#ffffff]/20 text-[#d6d6d6] font-extrabold">
                 {dateRange === '7days' ? 'HOY' : 'ACTUAL'}
               </span>
             )}
@@ -230,7 +230,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
             <span className="dark:text-[#898a8c] text-slate-500">
               {dateRange === '7days' ? 'Consumo:' : 'Promedio Diario:'}
             </span>
-            <span className="font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">
+            <span className="font-extrabold text-[#ffffff] dark:text-[#d6d6d6]">
               {data.intake} g
             </span>
           </div>
@@ -265,7 +265,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
                 data.percentage >= 100
                   ? 'text-emerald-500 dark:text-emerald-400'
                   : data.percentage >= 80
-                  ? 'text-blue-500'
+                  ? 'text-white'
                   : 'text-amber-500'
               }`}
             >
@@ -279,7 +279,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
                 data.status === 'cumplido'
                   ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
                   : data.status === 'en_progreso'
-                  ? 'bg-blue-500/15 text-[#2563eb] dark:text-[#b4c5ff]'
+                  ? 'bg-white/15 text-[#ffffff] dark:text-[#d6d6d6]'
                   : data.status === 'cercano'
                   ? 'bg-amber-500/15 text-amber-500'
                   : 'bg-rose-500/15 text-rose-500'
@@ -309,7 +309,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-2 border-b dark:border-white/10 border-slate-200">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="w-7 h-7 rounded-lg bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-[#ffffff]/20 text-[#ffffff] dark:text-[#d6d6d6] flex items-center justify-center">
               <span className="material-symbols-outlined text-[18px]">stacked_bar_chart</span>
             </div>
             <h2 className="font-headline-md text-base sm:text-lg font-bold dark:text-white text-slate-900">
@@ -341,7 +341,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               onClick={() => setDateRange('7days')}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 dateRange === '7days'
-                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  ? 'bg-[#06151e] text-white shadow-sm'
                   : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
               title="Ver los últimos 7 días detallados"
@@ -354,7 +354,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               onClick={() => setDateRange('4weeks')}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 dateRange === '4weeks'
-                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  ? 'bg-[#06151e] text-white shadow-sm'
                   : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
               title="Ver las últimas 4 semanas acumuladas"
@@ -371,7 +371,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               onClick={() => setViewMode('grams')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'grams'
-                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  ? 'bg-[#06151e] text-white shadow-sm'
                   : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
             >
@@ -382,7 +382,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               onClick={() => setViewMode('percent')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'percent'
-                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  ? 'bg-[#06151e] text-white shadow-sm'
                   : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
             >
@@ -418,7 +418,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
             {dateRange === '7days' ? 'Promedio Semanal' : 'Promedio 4 Semanas'}
           </span>
           <div className="flex items-baseline gap-1 mt-0.5">
-            <span className="text-lg sm:text-xl font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">
+            <span className="text-lg sm:text-xl font-extrabold text-[#ffffff] dark:text-[#d6d6d6]">
               {avgIntake}
             </span>
             <span className="text-xs dark:text-[#898a8c] text-slate-500">g / día</span>
@@ -463,7 +463,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
             className={`text-[10px] font-bold mt-0.5 block ${
               (dateRange === '7days' ? currentProtein >= targetProtein : avgPercentage >= 100)
                 ? 'text-emerald-500 dark:text-emerald-400'
-                : 'text-[#2563eb] dark:text-[#b4c5ff]'
+                : 'text-[#ffffff] dark:text-[#d6d6d6]'
             }`}
           >
             {dateRange === '7days'
@@ -484,7 +484,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               <span>≥100% Meta</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-[#2563eb]"></span>
+              <span className="w-2.5 h-2.5 rounded-sm bg-[#ffffff]"></span>
               <span>85-99%</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -494,8 +494,8 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="w-4 h-0.5 border-t-2 border-dashed border-[#2563eb]"></span>
-            <span className="font-bold text-[#2563eb] dark:text-[#b4c5ff]">
+            <span className="w-4 h-0.5 border-t-2 border-dashed border-[#ffffff]"></span>
+            <span className="font-bold text-[#ffffff] dark:text-[#d6d6d6]">
               Meta diaria: {viewMode === 'grams' ? `${targetProtein}g` : '100%'}
             </span>
           </div>
@@ -530,12 +530,12 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine
                 y={viewMode === 'grams' ? targetProtein : 100}
-                stroke="#2563eb"
+                stroke="#ffffff"
                 strokeDasharray="4 4"
                 strokeWidth={2}
                 label={{
                   value: viewMode === 'grams' ? `Meta ${targetProtein}g` : 'Meta 100%',
-                  fill: '#2563eb',
+                  fill: '#ffffff',
                   fontSize: 11,
                   position: 'insideTopRight',
                   offset: 5,
@@ -547,17 +547,17 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
                 animationDuration={800}
               >
                 {activeData.map((entry, index) => {
-                  let fillColor = '#2563eb';
+                  let fillColor = '#ffffff';
                   if (entry.percentage >= 100) {
                     fillColor = '#10b981'; // Verde Esmeralda si cumplió
                   } else if (entry.percentage >= 85) {
-                    fillColor = '#2563eb'; // Azul Eléctrico si estuvo muy cerca
+                    fillColor = '#ffffff'; // Azul Eléctrico si estuvo muy cerca
                   } else {
                     fillColor = '#f59e0b'; // Ámbar si faltó
                   }
 
                   if (entry.isToday) {
-                    fillColor = entry.percentage >= 100 ? '#10b981' : '#3b82f6';
+                    fillColor = entry.percentage >= 100 ? '#10b981' : '#ffffff';
                   }
 
                   return (
@@ -578,7 +578,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
       {/* Nota de Rendimiento y Acceso Rápido */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[18px] text-[#2563eb] flex-shrink-0">
+          <span className="material-symbols-outlined text-[18px] text-[#ffffff] flex-shrink-0">
             health_and_safety
           </span>
           <p className="text-xs dark:text-[#d6d6d6] text-slate-600 leading-relaxed">
@@ -598,7 +598,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
           <button
             type="button"
             onClick={onNavigateNutrition}
-            className="self-start sm:self-auto text-xs font-bold text-[#2563eb] dark:text-[#b4c5ff] hover:underline flex items-center gap-1 whitespace-nowrap cursor-pointer"
+            className="self-start sm:self-auto text-xs font-bold text-[#ffffff] dark:text-[#d6d6d6] hover:underline flex items-center gap-1 whitespace-nowrap cursor-pointer"
           >
             <span>Ver dona y desglose de macros</span>
             <span className="material-symbols-outlined text-[14px]">arrow_forward</span>

@@ -442,7 +442,7 @@ export const HydrationWeeklyChart: React.FC<HydrationWeeklyChartProps> = ({
             <span className="text-[11px] uppercase font-bold dark:text-[#898a8c] text-slate-400">
               Volumen Total
             </span>
-            <span className="text-blue-500 text-xs">🌊</span>
+            <span className="text-white text-xs">🌊</span>
           </div>
           <div className="flex items-baseline gap-1 mt-1">
             <span className="text-xl sm:text-2xl font-black text-cyan-400">

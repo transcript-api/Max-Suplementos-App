@@ -254,7 +254,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
         {/* Header con icono speech_to_text y Badge de Modelo */}
         <div className="p-4 sm:p-5 border-b border-white/10 bg-[#06151e] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#2563eb]/20 text-[#b4c5ff] border border-[#2563eb]/30 flex items-center justify-center shadow-inner">
+            <div className="w-10 h-10 rounded-2xl bg-[#ffffff]/20 text-[#d6d6d6] border border-[#ffffff]/30 flex items-center justify-center shadow-inner">
               <span className="material-symbols-outlined text-[24px]">speech_to_text</span>
             </div>
             <div>
@@ -289,8 +289,8 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
             onClick={() => setActiveTab('mic')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
               activeTab === 'mic'
-                ? 'bg-[#2563eb] text-white border-[#2563eb] shadow-md shadow-[#2563eb]/30'
-                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white hover:bg-[#06151e]'
+                ? 'bg-[#06151e] text-white border-[#ffffff] shadow-md shadow-[#ffffff]/30'
+                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white hover:bg-[#545a5b]'
             }`}
           >
             <span className="material-symbols-outlined text-[18px]">mic</span>
@@ -301,8 +301,8 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
             onClick={() => setActiveTab('upload')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
               activeTab === 'upload'
-                ? 'bg-[#2563eb] text-white border-[#2563eb] shadow-md shadow-[#2563eb]/30'
-                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white hover:bg-[#06151e]'
+                ? 'bg-[#06151e] text-white border-[#ffffff] shadow-md shadow-[#ffffff]/30'
+                : 'bg-[#06151e] text-[#898a8c] border-white/10 hover:text-white hover:bg-[#545a5b]'
             }`}
           >
             <span className="material-symbols-outlined text-[18px]">upload_file</span>
@@ -347,7 +347,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
                       ? 'bg-red-600 text-white hover:bg-red-700 ring-4 ring-red-500/40 animate-pulse'
                       : isTranscribing
                       ? 'bg-[#06151e] text-[#898a8c] cursor-not-allowed'
-                      : 'bg-gradient-to-tr from-[#2563eb] to-[#3b82f6] text-white hover:scale-105 shadow-blue-500/30'
+                      : 'bg-gradient-to-tr from-[#06151e] to-[#545a5b] text-white hover:scale-105 shadow-black/30'
                   }`}
                   title={isRecording ? 'Detener grabación' : 'Toca para grabar con micrófono'}
                 >
@@ -429,7 +429,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
           )}
 
           {activeTab === 'upload' && (
-            <div className="flex flex-col items-center justify-center p-6 bg-[#06151e] rounded-2xl border border-dashed border-white/10 hover:border-[#2563eb]/50 transition-all text-center">
+            <div className="flex flex-col items-center justify-center p-6 bg-[#06151e] rounded-2xl border border-dashed border-white/10 hover:border-[#ffffff]/50 transition-all text-center">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -437,7 +437,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
                 className="hidden"
                 onChange={handleFileUpload}
               />
-              <div className="w-12 h-12 rounded-2xl bg-[#2563eb]/10 text-[#b4c5ff] flex items-center justify-center mb-3">
+              <div className="w-12 h-12 rounded-2xl bg-[#ffffff]/10 text-[#d6d6d6] flex items-center justify-center mb-3">
                 <span className="material-symbols-outlined text-[28px]">audio_file</span>
               </div>
               <p className="text-sm font-bold text-white mb-1">
@@ -450,7 +450,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isTranscribing}
-                className="px-4 py-2 rounded-xl bg-[#2563eb] hover:bg-[#3b82f6] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[16px]">folder_open</span>
                 <span>Explorar archivos</span>
@@ -469,7 +469,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[#898a8c] font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[15px] text-[#b4c5ff]">record_voice_over</span>
+                <span className="material-symbols-outlined text-[15px] text-[#d6d6d6]">record_voice_over</span>
                 O prueba una muestra rápida de voz deportiva:
               </span>
             </div>
@@ -529,7 +529,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
                   <button
                     type="button"
                     onClick={handleSendToCoach}
-                    className="flex-1 min-w-[140px] py-2 px-3 rounded-xl bg-[#2563eb] hover:bg-[#3b82f6] text-white text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95"
+                    className="flex-1 min-w-[140px] py-2 px-3 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95"
                   >
                     <span className="material-symbols-outlined text-[16px]">chat</span>
                     <span>Enviar a MAX AI Coach</span>

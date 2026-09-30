@@ -164,7 +164,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-white/10 border-slate-200">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#ffffff]/20 text-[#ffffff] dark:text-[#d6d6d6] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">medication</span>
             </div>
             <div>
@@ -192,14 +192,14 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                 <button
                   type="button"
                   onClick={() => onNavigateTab('suplementos')}
-                  className="px-2.5 py-1 rounded-full bg-[#2563eb]/20 text-[#2563eb] dark:text-[#adc6ff] hover:bg-[#2563eb]/30 text-[11px] font-bold border border-[#2563eb]/30 transition-all flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-full bg-[#ffffff]/20 text-[#ffffff] dark:text-[#d6d6d6] hover:bg-[#ffffff]/30 text-[11px] font-bold border border-[#ffffff]/30 transition-all flex items-center gap-1"
                 >
                   <span>Tracker & Dosis</span>
                   <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                 </button>
               </>
             )}
-            <span className="px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-500 dark:text-blue-400 text-[11px] font-extrabold border border-blue-500/20">
+            <span className="px-2.5 py-1 rounded-full bg-white/15 text-white dark:text-white text-[11px] font-extrabold border border-white/20">
               Tomas hoy: {Object.values(takenToday).filter(Boolean).length} / {supplements.length}
             </span>
             <span className="self-start sm:self-auto px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">
@@ -209,7 +209,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         </div>
 
         {/* Banner Motivacional de Adherencia */}
-        <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-transparent border border-emerald-500/20 flex items-center justify-between gap-2">
+        <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500/10 via-[#545a5b] to-transparent border border-emerald-500/20 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-xs">
             <span className="material-symbols-outlined text-emerald-500 text-[18px]">verified</span>
             <span className="dark:text-slate-300 text-slate-700">
@@ -236,7 +236,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         </div>
 
         {reminderMessage && (
-          <div className="p-3 rounded-xl bg-blue-500/15 border border-blue-500/30 text-[#2563eb] dark:text-[#b4c5ff] text-xs flex items-center gap-2 animate-fadeIn">
+          <div className="p-3 rounded-xl bg-white/15 border border-white/30 text-[#ffffff] dark:text-[#d6d6d6] text-xs flex items-center gap-2 animate-fadeIn">
             <span className="material-symbols-outlined text-[18px]">notifications_active</span>
             <span>{reminderMessage}</span>
           </div>
@@ -297,7 +297,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                       <div className="w-full h-2 bg-slate-200 dark:bg-[#06151e] rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-500 rounded-full ${
-                            isLowStock ? 'bg-rose-500' : 'bg-[#2563eb]'
+                            isLowStock ? 'bg-rose-500' : 'bg-[#ffffff]'
                           }`}
                           style={{ width: `${pctRemaining}%` }}
                         ></div>
@@ -315,7 +315,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                       type="button"
                       onClick={() => handleTakeServing(sup.id, sup.name)}
                       disabled={sup.remainingServings === 0}
-                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#06151e] bg-white hover:bg-slate-100 dark:hover:bg-[#06151e] border dark:border-white/10 border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#06151e] bg-[#06151e] hover:bg-slate-100 dark:hover:bg-[#545a5b] border dark:border-white/10 border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
                     >
                       <span className="material-symbols-outlined text-[16px] text-emerald-500">check</span>
                       <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
@@ -338,7 +338,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                         <button
                           type="button"
                           onClick={() => handleToggleReminder(sup)}
-                          className="w-full py-1.5 px-2 rounded-lg border dark:border-white/10 border-slate-200 text-[11px] text-[#2563eb] dark:text-[#b4c5ff] hover:bg-[#2563eb]/10 transition-colors flex items-center justify-center gap-1.5"
+                          className="w-full py-1.5 px-2 rounded-lg border dark:border-white/10 border-slate-200 text-[11px] text-[#ffffff] dark:text-[#d6d6d6] hover:bg-[#ffffff]/10 transition-colors flex items-center justify-center gap-1.5"
                         >
                           <span className="material-symbols-outlined text-[14px]">notifications_active</span>
                           <span>Recordarme reponer</span>
@@ -381,7 +381,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         <div className="p-4 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-center sm:text-left space-y-0.5">
             <span className="text-[10px] uppercase font-bold text-[#898a8c] block">Tu Código Personal</span>
-            <div className="text-lg sm:text-xl font-mono font-black text-[#2563eb] dark:text-[#b4c5ff] tracking-wider">
+            <div className="text-lg sm:text-xl font-mono font-black text-[#ffffff] dark:text-[#d6d6d6] tracking-wider">
               {referralCode}
             </div>
             <p className="text-xs dark:text-[#d6d6d6] text-slate-600">
@@ -392,7 +392,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
           <button
             type="button"
             onClick={handleCopyReferral}
-            className="w-full sm:w-auto px-5 py-2.5 bg-[#2563eb] hover:bg-[#3b82f6] text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 py-2.5 bg-[#06151e] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-[16px]">
               {referralCopied ? 'check' : 'content_copy'}

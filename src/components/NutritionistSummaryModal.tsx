@@ -44,7 +44,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-[#adc6ff] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-white/20 text-[#d6d6d6] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">clinical_notes</span>
             </div>
             <div>
@@ -67,7 +67,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
         <div className="p-4 rounded-xl bg-white text-slate-900 border border-slate-300 space-y-3 font-sans print:m-0 print:p-0">
           <div className="flex items-center justify-between border-b border-slate-200 pb-2">
             <div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-[#2563eb] block">
+              <span className="text-[10px] uppercase font-black tracking-widest text-[#ffffff] block">
                 MAX SUPLEMENTOS · NUTRITION TRACKER
               </span>
               <h4 className="font-extrabold text-base text-slate-900">
@@ -77,7 +77,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
                 Média dos últimos {periodDays} dias ({todayIso}) · Doses registradas pelo cliente
               </p>
             </div>
-            <span className="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-extrabold text-xs">
+            <span className="px-2.5 py-1 rounded-full bg-white text-[#898a8c] font-extrabold text-xs">
               Relatório Clínico
             </span>
           </div>
@@ -143,7 +143,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
           <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 space-y-2 animate-fadeIn">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">pie_chart</span>
+                <span className="material-symbols-outlined text-[16px] text-[#d6d6d6]">pie_chart</span>
                 <span>De onde vem o total de {selectedIngredient.name}:</span>
               </span>
               <button
@@ -166,7 +166,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
                       </span>
                     )}
                   </div>
-                  <span className="font-mono font-bold text-[#adc6ff]">
+                  <span className="font-mono font-bold text-[#d6d6d6]">
                     {src.amount} {src.unit}
                   </span>
                 </div>
@@ -187,7 +187,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
           <button
             type="button"
             onClick={handlePrintOrPdf}
-            className="flex-1 py-2.5 rounded-xl bg-[#2563eb] hover:bg-blue-600 text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow-lg"
+            className="flex-1 py-2.5 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-xs font-bold text-white transition-all flex items-center justify-center gap-1.5 shadow-lg"
           >
             <span className="material-symbols-outlined text-[18px]">download</span>
             <span>Salvar em PDF / Enviar</span>

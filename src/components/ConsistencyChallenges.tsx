@@ -83,7 +83,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
       xpReward: 120,
       badge: 'Maestría Diaria',
       icon: 'verified',
-      accentColor: '#2563eb',
+      accentColor: '#ffffff',
       completed: isAllTasksDone,
       claimed: claimedList.includes('daily-consistency'),
     },
@@ -98,7 +98,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
       xpReward: 60,
       badge: 'Hidratación Pura',
       icon: 'water_drop',
-      accentColor: '#0566d9',
+      accentColor: '#ffffff',
       completed: hydration >= 3.0,
       claimed: claimedList.includes('hydration-mastery'),
     },
@@ -142,7 +142,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
   return (
     <section className="rounded-2xl p-5 border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-md space-y-4 relative overflow-hidden">
       {/* Resplandor sutil de fondo */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-[#2563eb]/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-48 h-48 bg-[#ffffff]/10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Encabezado */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -208,7 +208,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
                 </div>
 
                 <div className="flex flex-col items-end">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] border border-[#2563eb]/30">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ffffff]/20 text-[#ffffff] dark:text-[#d6d6d6] border border-[#ffffff]/30">
                     +{c.xpReward} XP
                   </span>
                 </div>
@@ -316,7 +316,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
             <button
               type="button"
               onClick={() => setActiveReward(null)}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#3b82f6] text-white font-extrabold text-sm shadow-lg hover:shadow-blue-500/30 active:scale-98 transition-all"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#06151e] to-[#545a5b] text-white font-extrabold text-sm shadow-lg hover:shadow-black/30 active:scale-98 transition-all"
             >
               ¡Continuar con mi Racha!
             </button>

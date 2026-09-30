@@ -140,8 +140,8 @@ export const StatsTab: React.FC<StatsTabProps> = ({
       <div className="flex flex-col space-y-1 pt-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2563eb] animate-pulse"></span>
-            <span className="font-label-caps text-label-caps text-[#2563eb] dark:text-[#b4c5ff] uppercase tracking-widest font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ffffff] animate-pulse"></span>
+            <span className="font-label-caps text-label-caps text-[#ffffff] dark:text-[#d6d6d6] uppercase tracking-widest font-bold">
               Telemetría y Rendimiento
             </span>
           </div>
@@ -164,7 +164,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
           onClick={() => setMetricView('semanal')}
           className={`flex-1 py-2.5 rounded-lg text-xs sm:text-sm font-bold text-center transition-all ${
             metricView === 'semanal'
-              ? 'bg-[#2563eb] text-white shadow-md'
+              ? 'bg-[#06151e] text-white shadow-md'
               : 'dark:text-[#898a8c] text-slate-600 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -175,7 +175,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
           onClick={() => setMetricView('racha')}
           className={`flex-1 py-2.5 rounded-lg text-xs sm:text-sm font-bold text-center transition-all ${
             metricView === 'racha'
-              ? 'bg-[#2563eb] text-white shadow-md'
+              ? 'bg-[#06151e] text-white shadow-md'
               : 'dark:text-[#898a8c] text-slate-600 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -190,7 +190,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
             Racha Activa
           </span>
           <div className="flex items-baseline gap-1 mt-1">
-            <span className="text-2xl font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">
+            <span className="text-2xl font-extrabold text-[#ffffff] dark:text-[#d6d6d6]">
               🔥 {streakDays}
             </span>
             <span className="text-xs dark:text-[#898a8c] text-slate-500">días</span>
@@ -210,7 +210,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
             </span>
             <span className="text-xs dark:text-[#898a8c] text-slate-500">cumplido</span>
           </div>
-          <span className="text-[11px] text-blue-500 dark:text-[#b4c5ff] font-semibold block mt-1">
+          <span className="text-[11px] text-white dark:text-[#d6d6d6] font-semibold block mt-1">
             {averageWeekly >= 80 ? 'Meta alcanzada (≥80%)' : 'En progresión (<80%)'}
           </span>
         </div>
@@ -258,8 +258,8 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1 text-[#2563eb] font-bold">
-                <span className="w-3 h-3 rounded bg-[#2563eb]"></span> % Cumplimiento
+              <span className="flex items-center gap-1 text-[#ffffff] font-bold">
+                <span className="w-3 h-3 rounded bg-[#ffffff]"></span> % Cumplimiento
               </span>
               <span className="flex items-center gap-1 dark:text-[#898a8c] text-slate-500">
                 <span className="w-3 h-0.5 bg-dashed bg-amber-500"></span> Meta 80%
@@ -317,7 +317,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
                 />
                 <Bar
                   dataKey="cumplimiento"
-                  fill="#2563eb"
+                  fill="#ffffff"
                   radius={[6, 6, 0, 0]}
                   maxBarSize={48}
                 />
@@ -346,8 +346,8 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               <AreaChart data={streakHistoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="streakGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.5} />
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#ffffff" stopOpacity={0.5} />
+                    <stop offset="95%" stopColor="#ffffff" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -379,7 +379,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
                           <p className="font-bold text-sm dark:text-white text-slate-900">
                             {data.periodo}: {data.rachaDias} días seguidos
                           </p>
-                          <p className="text-xs text-blue-500 dark:text-[#b4c5ff] mt-1">
+                          <p className="text-xs text-white dark:text-[#d6d6d6] mt-1">
                             Consistencia metabólica: {data.consistencia}%
                           </p>
                         </div>
@@ -391,7 +391,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
                 <Area
                   type="monotone"
                   dataKey="rachaDias"
-                  stroke="#2563eb"
+                  stroke="#ffffff"
                   strokeWidth={3}
                   fillOpacity={1}
                   fill="url(#streakGradient)"
@@ -427,7 +427,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               onClick={() => setNutritionChartMode('both')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 nutritionChartMode === 'both'
-                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  ? 'bg-[#06151e] text-white shadow-sm'
                   : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
             >
@@ -451,7 +451,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               onClick={() => setNutritionChartMode('protein')}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 nutritionChartMode === 'protein'
-                  ? 'bg-[#2563eb] text-white shadow-sm'
+                  ? 'bg-[#06151e] text-white shadow-sm'
                   : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
             >
@@ -521,7 +521,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
           </div>
           <button
             onClick={() => setIsEditingWeight(!isEditingWeight)}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] border border-[#2563eb]/30 hover:bg-[#2563eb]/30 transition-colors"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#ffffff]/20 text-[#ffffff] dark:text-[#d6d6d6] border border-[#ffffff]/30 hover:bg-[#ffffff]/30 transition-colors"
           >
             {isEditingWeight ? 'Cancelar' : 'Actualizar Peso'}
           </button>
@@ -534,13 +534,13 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               step="0.1"
               value={weightInput}
               onChange={(e) => setWeightInput(e.target.value)}
-              className="px-3 py-2 rounded-xl text-sm font-bold dark:bg-[#06151e] bg-slate-100 border dark:border-white/10 border-slate-300 dark:text-white text-slate-900 w-32 focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
+              className="px-3 py-2 rounded-xl text-sm font-bold dark:bg-[#06151e] bg-slate-100 border dark:border-white/10 border-slate-300 dark:text-white text-slate-900 w-32 focus:outline-none focus:ring-2 focus:ring-[#ffffff]"
               placeholder="Ej. 72.5"
             />
             <span className="text-sm font-bold dark:text-[#898a8c] text-slate-500">kg</span>
             <button
               onClick={handleSaveWeight}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#2563eb] text-white shadow hover:bg-blue-600 transition-colors"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#06151e] text-white shadow hover:bg-[#545a5b] transition-colors"
             >
               Guardar
             </button>
@@ -561,7 +561,7 @@ export const StatsTab: React.FC<StatsTabProps> = ({
       <div className="p-5 rounded-2xl border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-md">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#2563eb] dark:text-[#b4c5ff] text-[20px]">
+            <span className="material-symbols-outlined text-[#ffffff] dark:text-[#d6d6d6] text-[20px]">
               compare_arrows
             </span>
             <h3 className="font-bold text-sm sm:text-base dark:text-white text-slate-900">
@@ -590,8 +590,8 @@ export const StatsTab: React.FC<StatsTabProps> = ({
               <span className="text-[11px] text-slate-500 block">Base de comparación</span>
             </div>
             <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
-              <span className="text-[11px] font-bold text-[#2563eb] dark:text-[#b4c5ff] block uppercase">Semana Actual</span>
-              <span className="text-lg font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">{averageWeekly}% consistencia</span>
+              <span className="text-[11px] font-bold text-[#ffffff] dark:text-[#d6d6d6] block uppercase">Semana Actual</span>
+              <span className="text-lg font-extrabold text-[#ffffff] dark:text-[#d6d6d6]">{averageWeekly}% consistencia</span>
               <span className="text-[11px] text-emerald-500 font-bold block">
                 {averageWeekly >= 82 ? `+${averageWeekly - 82}% vs semana anterior` : `${averageWeekly - 82}% vs semana anterior`}
               </span>

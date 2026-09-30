@@ -182,15 +182,15 @@ export const HomeTab: React.FC<HomeTabProps> = ({
 
       {/* Tarjeta Héroe: FORM DIARIA */}
       <section className="relative overflow-hidden rounded-xl bg-[#06151e] p-5 shadow-xl border border-white/10">
-        <div className="absolute -right-16 -top-16 w-48 h-48 bg-[#2563eb]/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -right-16 -top-16 w-48 h-48 bg-[#ffffff]/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">bolt</span>
+            <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">bolt</span>
             <span className="font-label-caps text-label-caps uppercase text-[#898a8c] tracking-wider font-bold">
               FORM DIARIA
             </span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full bg-[#06151e] text-[#b4c5ff] font-label-caps text-label-caps border border-white/10 font-semibold">
+          <span className="px-2.5 py-0.5 rounded-full bg-[#06151e] text-[#d6d6d6] font-label-caps text-label-caps border border-white/10 font-semibold">
             {formScore === 0 ? 'COMIENZA HOY' : `${formScore}% HOY`}
           </span>
         </div>
@@ -230,7 +230,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               <span className="font-headline-md text-headline-md text-white font-bold">
                 {completedCount} de {totalObjectivesCount} objetivos
               </span>
-              <span className="font-body-sm text-[#b4c5ff] font-semibold">Meta 80%+</span>
+              <span className="font-body-sm text-[#d6d6d6] font-semibold">Meta 80%+</span>
             </div>
             
             <p className="font-body-sm text-[#d6d6d6] leading-relaxed">
@@ -260,7 +260,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
             <span className="font-label-caps text-label-caps uppercase text-[#898a8c] tracking-wider font-bold">
               OBJETIVOS DE HOY
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2563eb] animate-ping"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ffffff] animate-ping"></span>
           </div>
           <span className="font-body-sm text-[#898a8c]">Actualizado en tiempo real</span>
         </div>
@@ -268,7 +268,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         {/* Tarjeta 1: Entrenamiento */}
         <div className="flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-lg bg-[#2563eb]/20 flex items-center justify-center text-[#b4c5ff] flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
               <span className="material-symbols-outlined text-[22px]">fitness_center</span>
             </div>
             <div className="flex flex-col min-w-0">
@@ -276,7 +276,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 <span className="font-headline-md text-headline-md text-white truncate font-semibold">
                   Entrenamiento
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#2563eb] text-white font-label-caps text-label-caps uppercase font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-[#06151e] text-white font-label-caps text-label-caps uppercase font-bold">
                   +25 XP
                 </span>
               </div>
@@ -292,7 +292,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         <div className="flex flex-col p-4 bg-[#06151e] rounded-xl border border-white/10 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#b4c5ff] flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
                 <span className="material-symbols-outlined text-[22px]">restaurant</span>
               </div>
               <div className="flex flex-col">
@@ -320,7 +320,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         <div className="flex flex-col p-4 bg-[#06151e] rounded-xl border border-white/10 space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#adc6ff] flex-shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
                 <span className="material-symbols-outlined text-[22px]">water_drop</span>
               </div>
               <div className="flex flex-col">
@@ -341,7 +341,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               <span className="font-headline-md text-headline-md text-white font-bold">
                 {hydration.toFixed(1).replace('.', ',')} / 3,0 L
               </span>
-              <span className="block font-body-sm text-[#adc6ff] font-medium">
+              <span className="block font-body-sm text-[#d6d6d6] font-medium">
                 {hydrationPct}% completado
               </span>
             </div>
@@ -377,7 +377,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         {/* Tarjeta 4: Suplementación */}
         <div className="flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-lg bg-[#2563eb]/20 flex items-center justify-center text-[#b4c5ff] flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-[#ffffff]/20 flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
               <span className="material-symbols-outlined text-[22px]">medication</span>
             </div>
             <div className="flex flex-col min-w-0">
@@ -385,7 +385,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 <span className="font-headline-md text-headline-md text-white truncate font-semibold">
                   Suplementación
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#2563eb] text-white font-label-caps text-label-caps uppercase font-bold">
+                <span className="px-2 py-0.5 rounded-full bg-[#06151e] text-white font-label-caps text-label-caps uppercase font-bold">
                   +10 XP
                 </span>
               </div>
@@ -394,7 +394,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
               </span>
             </div>
           </div>
-          <div className="w-7 h-7 rounded-full bg-[#2563eb]/30 flex items-center justify-center text-[#b4c5ff] flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-[#ffffff]/30 flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
             <span className="material-symbols-outlined text-[18px]">done</span>
           </div>
         </div>
@@ -402,7 +402,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         {/* Tarjeta 5: Sueño */}
         <div className="flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#b4c5ff] flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-[#06151e] flex items-center justify-center text-[#d6d6d6] flex-shrink-0">
               <span className="material-symbols-outlined text-[22px]">bedtime</span>
             </div>
             <div className="flex flex-col min-w-0">
@@ -541,7 +541,7 @@ export const HomeTab: React.FC<HomeTabProps> = ({
       <section className="rounded-xl bg-[#06151e] p-5 shadow-md border border-white/10 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">leaderboard</span>
+            <span className="material-symbols-outlined text-[#d6d6d6] text-[20px]">leaderboard</span>
             <span className="font-label-caps text-label-caps uppercase text-[#898a8c] tracking-wider font-bold">
               RANKING GLOBAL
             </span>

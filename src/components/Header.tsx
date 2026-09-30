@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
                 !syncStatus.isOnline
                   ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
                   : syncStatus.isSyncing
-                  ? 'bg-blue-500/15 text-blue-600 dark:text-[#b4c5ff] border-blue-500/30 animate-pulse'
+                  ? 'bg-white/15 text-[#898a8c] dark:text-[#d6d6d6] border-white/30 animate-pulse'
                   : syncStatus.pendingCount > 0
                   ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-500/40'
                   : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-600 dark:border-white/10 border-slate-200'
@@ -88,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
                   !syncStatus.isOnline
                     ? 'bg-amber-500'
                     : syncStatus.isSyncing
-                    ? 'bg-[#2563eb] animate-ping'
+                    ? 'bg-[#ffffff] animate-ping'
                     : 'bg-emerald-500'
                 }`}
               ></span>
@@ -119,11 +119,11 @@ export const Header: React.FC<HeaderProps> = ({
               title={isDemoMode ? "Modo Demo Activo (Santiago). Clic para cambiar a Usuario Real (0 XP)." : "Modo Usuario Real Activo. Clic para cargar Modo Demo Santiago."}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider border transition-all active:scale-95 ${
                 isDemoMode
-                  ? 'bg-[#2563EB]/20 text-[#3B82F6] border-[#2563EB]/40 hover:bg-[#2563EB]/30'
+                  ? 'bg-[#ffffff]/20 text-[#ffffff] border-[#ffffff]/40 hover:bg-[#ffffff]/30'
                   : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/30'
               }`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${isDemoMode ? 'bg-[#3B82F6]' : 'bg-emerald-400'}`}></span>
+              <span className={`w-1.5 h-1.5 rounded-full ${isDemoMode ? 'bg-[#ffffff]' : 'bg-emerald-400'}`}></span>
               <span>{isDemoMode ? 'Demo' : 'Nuevo Atleta'}</span>
             </button>
           )}
@@ -135,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onDownloadApp}
               aria-label="Descargar aplicación en el teléfono"
               title="Descargar e instalar MAXMIND en tu teléfono"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-[#3b82f6] dark:text-[#93c5fd] border border-blue-500/40 font-black text-[11px] shadow-sm active:scale-95 transition-all touch-manipulation cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-[#ffffff] dark:text-[#d6d6d6] border border-white/40 font-black text-[11px] shadow-sm active:scale-95 transition-all touch-manipulation cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">install_mobile</span>
               <span className="hidden sm:inline font-extrabold">Descargar App</span>
@@ -169,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onToggleDark}
               aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-              className="p-2 rounded-xl dark:bg-[#06151e] bg-slate-100 dark:hover:bg-[#06151e] hover:bg-slate-200 text-slate-700 dark:text-[#b4c5ff] border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95"
+              className="p-2 rounded-xl dark:bg-[#06151e] bg-slate-100 dark:hover:bg-[#06151e] hover:bg-slate-200 text-slate-700 dark:text-[#d6d6d6] border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95"
             >
               <span className="material-symbols-outlined text-[20px]">
                 {isDark ? 'light_mode' : 'dark_mode'}
@@ -183,20 +183,20 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={onProfileClick}
             aria-label={`Perfil de ${userName}`}
             title={`Perfil de ${userName}`}
-            className="relative flex items-center justify-center p-0.5 rounded-full hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-[#2563eb] active:scale-95"
+            className="relative flex items-center justify-center p-0.5 rounded-full hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-[#ffffff] active:scale-95"
           >
             {userAvatar ? (
               <img
                 alt={`Perfil de ${userName}`}
-                className="w-8 h-8 rounded-full object-cover ring-1 ring-[#2563eb]/50"
+                className="w-8 h-8 rounded-full object-cover ring-1 ring-[#ffffff]/50"
                 src={userAvatar}
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-700 to-indigo-500 flex items-center justify-center text-white text-xs font-bold ring-1 ring-blue-400/50 shadow-sm">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#06151e] to-[#545a5b] flex items-center justify-center text-white text-xs font-bold ring-1 ring-white/50 shadow-sm">
                 {userName ? userName.charAt(0).toUpperCase() : 'A'}
               </div>
             )}
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#2563eb] ring-2 dark:ring-white/10 ring-white"></span>
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#ffffff] ring-2 dark:ring-white/10 ring-white"></span>
           </button>
         </div>
       </div>

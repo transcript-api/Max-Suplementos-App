@@ -30,15 +30,15 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab })
               >
                 <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${
                   isActive 
-                    ? 'bg-[#2563eb] text-white shadow-lg shadow-[#2563eb]/40' 
-                    : 'dark:bg-[#2563eb]/20 bg-blue-100 text-[#2563eb] dark:text-[#b4c5ff] group-hover:bg-[#2563eb]/30'
+                    ? 'bg-[#06151e] text-white shadow-lg shadow-[#ffffff]/40' 
+                    : 'dark:bg-[#ffffff]/20 bg-[#06151e] text-[#ffffff] dark:text-[#d6d6d6] group-hover:bg-[#ffffff]/30'
                 }`}>
                   <span className="material-symbols-outlined text-[20px]">
                     {tab.icon}
                   </span>
                 </div>
                 <span className={`font-body-sm text-[11px] leading-none mt-1 font-semibold ${
-                  isActive ? 'text-[#2563eb] dark:text-[#b4c5ff]' : 'text-slate-500 dark:text-[#b4c5ff]/80'
+                  isActive ? 'text-[#ffffff] dark:text-[#d6d6d6]' : 'text-slate-500 dark:text-[#d6d6d6]/80'
                 }`}>
                   {tab.label}
                 </span>
@@ -51,11 +51,11 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onSelectTab })
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
               className={`flex flex-col items-center justify-center flex-1 h-full transition-colors gap-1 ${
-                isActive ? 'text-[#2563eb] dark:text-[#b4c5ff] font-semibold' : 'text-slate-500 dark:text-[#d6d6d6] hover:text-slate-900 dark:hover:text-white'
+                isActive ? 'text-[#ffffff] dark:text-[#d6d6d6] font-semibold' : 'text-slate-500 dark:text-[#d6d6d6] hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <span className={`material-symbols-outlined text-[22px] ${
-                isActive ? 'text-[#2563eb] dark:text-[#b4c5ff]' : 'text-slate-400 dark:text-[#898a8c]'
+                isActive ? 'text-[#ffffff] dark:text-[#d6d6d6]' : 'text-slate-400 dark:text-[#898a8c]'
               }`}>
                 {tab.icon}
               </span>
