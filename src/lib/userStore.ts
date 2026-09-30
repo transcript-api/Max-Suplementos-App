@@ -16,6 +16,7 @@ export interface UserAppState {
   userId: string;
   name: string;
   email: string;
+  avatarUrl?: string;
   xp: number;
   level: number;
   levelName: string;

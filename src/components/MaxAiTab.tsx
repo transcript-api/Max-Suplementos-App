@@ -21,7 +21,7 @@ export const CHAT_ROLES: ChatRoleDefinition[] = [
     id: 'coach',
     name: 'Coach de Rendimiento',
     shortName: 'Coach General',
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     taskType: 'Tareas Generales',
     icon: 'fitness_center',
     badgeColor: 'text-blue-400 border-blue-500/30',
@@ -38,7 +38,7 @@ export const CHAT_ROLES: ChatRoleDefinition[] = [
     id: 'nutritionist',
     name: 'Nutricionista Bioquímico Pro',
     shortName: 'Nutrición Compleja',
-    model: 'gemini-3.1-pro-preview',
+    model: 'gemini-2.5-pro',
     taskType: 'Tareas Complejas',
     icon: 'biotech',
     badgeColor: 'text-purple-400 border-purple-500/30',
@@ -55,7 +55,7 @@ export const CHAT_ROLES: ChatRoleDefinition[] = [
     id: 'fast',
     name: 'Fast Logger & Express',
     shortName: 'Express Rápido',
-    model: 'gemini-3.1-flash-lite',
+    model: 'gemini-2.0-flash',
     taskType: 'Tareas Rápidas',
     icon: 'bolt',
     badgeColor: 'text-amber-400 border-amber-500/30',
@@ -144,7 +144,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           sender: 'ai',
           roleId: 'nutritionist',
           roleName: 'Nutricionista Bioquímico Pro',
-          modelUsed: 'gemini-3.1-pro-preview',
+          modelUsed: 'gemini-2.5-pro',
           text: `Hola ${userName}. He activado el modo de Nutrición Avanzada.\n\nEstoy preparado para analizar cálculos metabólicos avanzados, balance calórico, periodización de carbohidratos y distribución óptima de macronutrientes. Llevas ${currentProtein}g de proteína registrados hoy. ¿Qué consulta o protocolo abordamos?`,
           timestamp: 'Ahora',
           quickReplies: [
@@ -159,7 +159,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           sender: 'ai',
           roleId: 'fast',
           roleName: 'Registro Rápido Express',
-          modelUsed: 'gemini-3.1-flash-lite',
+          modelUsed: 'gemini-2.0-flash',
           text: `¡Listo ${userName}! Modo de Registro Rápido activo. Dime qué comiste y desglosaré calorías y macros al instante para tu plan.`,
           timestamp: 'Ahora',
           quickReplies: [
@@ -174,7 +174,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           sender: 'ai',
           roleId: 'auto',
           roleName: 'MAX Asistente Inteligente',
-          modelUsed: 'gemini-3.5-flash',
+          modelUsed: 'gemini-2.5-flash',
           text: `Hola ${userName}. Estoy listo para asistirte en nutrición, registro de comidas por voz o texto, recomendaciones de hábitos y búsqueda de tiendas de suplementación oficiales. ¿En qué trabajamos hoy?`,
           timestamp: 'Ahora',
           quickReplies: [
@@ -189,7 +189,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           sender: 'ai',
           roleId: 'coach',
           roleName: 'Coach de Rendimiento',
-          modelUsed: 'gemini-3.5-flash',
+          modelUsed: 'gemini-2.5-flash',
           text: streakDays === 0
             ? `¡Hola ${userName}! Bienvenido a MAX AI Coach. Hoy inicias tu registro diario en MAXFORM. Llevas ${currentProtein}g de proteína acumulados hoy. ¿En qué te asesoro para arrancar con toda la energía?`
             : `Hola ${userName}, seguimos con paso firme. Racha activa de ${streakDays} días y ${currentProtein}g de proteína acumulados hoy. ¿En qué trabajamos en este momento para sellar tu día?`,
@@ -350,11 +350,11 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
       // Determinar el modelo preferido según el rol asignado
       let preferredModel: string | undefined;
       if (selectedRole === 'nutritionist') {
-        preferredModel = 'gemini-3.1-pro-preview';
+        preferredModel = 'gemini-2.5-pro';
       } else if (selectedRole === 'fast') {
-        preferredModel = 'gemini-3.1-flash-lite';
+        preferredModel = 'gemini-2.0-flash';
       } else if (selectedRole === 'coach') {
-        preferredModel = 'gemini-3.5-flash';
+        preferredModel = 'gemini-2.5-flash';
       }
 
       const res = await fetch('/api/ai/coach', {
@@ -387,7 +387,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
         id: `ai-${Date.now()}`,
         sender: 'ai',
         text: replyText,
-        modelUsed: data.modelUsed || (preferredModel || 'gemini-3.5-flash'),
+        modelUsed: data.modelUsed || (preferredModel || 'gemini-2.5-flash'),
         roleId: data.roleId || selectedRole,
         roleName: data.roleName || activeRoleDef.name,
         timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
@@ -406,7 +406,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
       const fallbackMsg: Message = {
         id: `ai-${Date.now()}`,
         sender: 'ai',
-        modelUsed: 'gemini-3.5-flash',
+        modelUsed: 'gemini-2.5-flash',
         roleId: selectedRole,
         roleName: activeRoleDef.name,
         text: 'Para sellar tus macros de hoy te sugiero combinar 1 scoop de Whey Protein con 150ml de agua o leche descremada. Eso te aporta 24g de proteína pura con apenas 120 kcal. ¡Objetivo sellado!',
@@ -523,7 +523,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             setInput(res.text);
           }
         } catch (err) {
-          console.error('Error al transcribir con gemini-3.5-transcribe:', err);
+          console.error('Error al transcribir con gemini-2.5-flash:', err);
         } finally {
           setIsTranscribingVoice(false);
         }
@@ -577,19 +577,20 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
       reader.onloadend = async () => {
         const base64 = reader.result as string;
         try {
-          const res = await fetch('/api/ai/analyze-plate', {
+          const res = await fetch('/api/ai/analyze-food', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ imageBase64: base64 }),
           });
+          if (!res.ok) throw new Error(`analyze-food respondió ${res.status}`);
           const data = await res.json();
 
           const replyMsg: Message = {
             id: `ai-${Date.now()}`,
             sender: 'ai',
-            modelUsed: 'gemini-3.5-flash',
+            modelUsed: 'gemini-2.5-flash',
             roleName: activeRoleDef.name,
-            text: `He analizado tu plato: **${data.title || 'Plato saludable'}**.\n• Calorías: ${data.calories || 480} kcal\n• Proteína: ${data.protein || 38} g\n• Carbohidratos: ${data.carbs || 45} g\n• Grasas: ${data.fats || 12} g\n\n${data.coachTip || '¡Excelente elección de combustible limpio!'}`,
+            text: `He analizado tu plato: **${data.title || 'Plato saludable'}**.\n• Calorías: ${data.calories ?? '—'} kcal\n• Proteína: ${data.protein ?? '—'} g\n• Carbohidratos: ${data.carbs ?? '—'} g\n• Grasas: ${data.fats ?? '—'} g\n\n${data.coachTip || ''}`,
             timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
             quickReplies: ['Registrar en mi día', '¿Me alcanza para mi meta?'],
           };
@@ -600,9 +601,9 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           const fallback: Message = {
             id: `ai-${Date.now()}`,
             sender: 'ai',
-            modelUsed: 'gemini-3.5-flash',
+            modelUsed: 'gemini-2.5-flash',
             roleName: activeRoleDef.name,
-            text: 'Foto analizada con éxito: Pechuga grillada con arroz integral y verduras al vapor. Estimado: 42g Proteína, 480 kcal. ¡Perfecto para tu meta!',
+            text: 'No pude analizar esa foto ahora mismo (falló la conexión con MAX AI). Probá de nuevo en un momento, o describime la comida por texto o audio.',
             timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
           };
           const updated = [...messages, fallback];
@@ -619,7 +620,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
   return (
     <div className="flex flex-col w-full h-[calc(100vh-8.5rem)] max-w-[1280px] mx-auto px-3 sm:px-4 pb-2">
       {/* Header & Role Switcher Bar */}
-      <div className="bg-[#191c20] p-3 rounded-2xl border border-[#282a2f] mb-2.5 shadow-md flex-shrink-0">
+      <div className="bg-[#06151e] p-3 rounded-2xl border border-white/10 mb-2.5 shadow-md flex-shrink-0">
         <div className="flex items-center justify-between gap-2 mb-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold transition-colors ${activeRoleDef.badgeBg} ${activeRoleDef.badgeColor}`}>
@@ -633,7 +634,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   {activeRoleDef.model}
                 </span>
               </div>
-              <p className="text-[11px] text-[#8d90a0] truncate">
+              <p className="text-[11px] text-[#898a8c] truncate">
                 {activeRoleDef.description}
               </p>
             </div>
@@ -642,7 +643,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           {/* Action buttons: Reset thread */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             {showClearConfirm ? (
-              <div className="flex items-center gap-1 bg-[#111318] p-1 rounded-lg border border-rose-500/40">
+              <div className="flex items-center gap-1 bg-[#06151e] p-1 rounded-lg border border-rose-500/40">
                 <span className="text-[11px] text-rose-400 font-semibold px-1">¿Reiniciar?</span>
                 <button
                   type="button"
@@ -654,7 +655,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowClearConfirm(false)}
-                  className="px-2 py-0.5 bg-[#282a2f] hover:bg-[#34373d] text-[#c3c6d7] rounded text-[10px]"
+                  className="px-2 py-0.5 bg-[#06151e] hover:bg-[#545a5b] text-[#d6d6d6] rounded text-[10px]"
                 >
                   No
                 </button>
@@ -664,7 +665,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 type="button"
                 onClick={() => setShowClearConfirm(true)}
                 title="Nueva conversación multi-turn"
-                className="px-2.5 py-1.5 rounded-xl bg-[#1d2024] hover:bg-[#282a2f] text-[#8d90a0] hover:text-white text-xs font-semibold border border-[#282a2f] transition-colors flex items-center gap-1"
+                className="px-2.5 py-1.5 rounded-xl bg-[#06151e] hover:bg-[#06151e] text-[#898a8c] hover:text-white text-xs font-semibold border border-white/10 transition-colors flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-[15px]">refresh</span>
                 <span className="hidden sm:inline">Nueva charla</span>
@@ -674,7 +675,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
         </div>
 
         {/* Specialized Chatbot Role Pills (Coach / Nutrición / Fast / Auto) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-2 border-t border-[#282a2f]/80">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 pt-2 border-t border-white/10">
           {CHAT_ROLES.map((role) => {
             const isSelected = selectedRole === role.id;
             return (
@@ -685,17 +686,17 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 className={`flex items-center gap-2 p-2 rounded-xl text-left transition-all border ${
                   isSelected
                     ? 'bg-[#2563eb]/15 border-[#2563eb] text-white shadow-sm ring-1 ring-[#2563eb]/40'
-                    : 'bg-[#111318]/70 border-[#282a2f] text-[#8d90a0] hover:text-white hover:bg-[#1d2024]'
+                    : 'bg-[#06151e]/70 border-white/10 text-[#898a8c] hover:text-white hover:bg-[#06151e]'
                 }`}
               >
-                <span className={`material-symbols-outlined text-[18px] ${isSelected ? 'text-[#b4c5ff]' : 'text-[#8d90a0]'}`}>
+                <span className={`material-symbols-outlined text-[18px] ${isSelected ? 'text-[#b4c5ff]' : 'text-[#898a8c]'}`}>
                   {role.icon}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="text-xs font-bold leading-tight truncate text-white">
                     {role.shortName}
                   </div>
-                  <div className="text-[10px] leading-tight text-[#8d90a0] truncate">
+                  <div className="text-[10px] leading-tight text-[#898a8c] truncate">
                     {role.model}
                   </div>
                 </div>
@@ -712,7 +713,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             key={prompt}
             type="button"
             onClick={() => handleSend(prompt)}
-            className="whitespace-nowrap px-3 py-1.5 rounded-full bg-[#1d2024] hover:bg-[#282a2f] text-slate-200 hover:text-white text-xs border border-[#282a2f] active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
+            className="whitespace-nowrap px-3 py-1.5 rounded-full bg-[#06151e] hover:bg-[#06151e] text-slate-200 hover:text-white text-xs border border-white/10 active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
           >
             <span className="material-symbols-outlined text-[13px] text-[#b4c5ff]">sparkles</span>
             <span>{prompt}</span>
@@ -735,7 +736,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 mb-1 ${
                     isUser
                       ? 'bg-[#2563eb] text-white'
-                      : 'bg-[#1d2024] border border-[#282a2f] text-[#b4c5ff]'
+                      : 'bg-[#06151e] border border-white/10 text-[#b4c5ff]'
                   }`}
                 >
                   {isUser ? (
@@ -752,18 +753,18 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   className={`rounded-2xl p-3.5 shadow-sm transition-all ${
                     isUser
                       ? 'bg-[#2563eb] text-white rounded-br-xs'
-                      : 'bg-[#191c20] text-[#e2e2e8] rounded-bl-xs border border-[#282a2f]'
+                      : 'bg-[#06151e] text-[#d6d6d6] rounded-bl-xs border border-white/10'
                   }`}
                 >
                   {/* Model & Role Badge for AI messages */}
                   {!isUser && (
-                    <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-[#282a2f]/60">
+                    <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-white/10">
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs font-bold text-white">
                           {msg.roleName || 'MAX AI'}
                         </span>
                         {msg.modelUsed && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#111318] border border-[#282a2f] text-[#b4c5ff]">
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#06151e] border border-white/10 text-[#b4c5ff]">
                             {msg.modelUsed}
                           </span>
                         )}
@@ -774,7 +775,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                         type="button"
                         onClick={() => handleCopyText(msg.id, msg.text)}
                         title="Copiar respuesta"
-                        className="text-[#8d90a0] hover:text-white p-1 rounded transition-colors"
+                        className="text-[#898a8c] hover:text-white p-1 rounded transition-colors"
                       >
                         <span className="material-symbols-outlined text-[14px]">
                           {copiedId === msg.id ? 'check' : 'content_copy'}
@@ -790,7 +791,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
                   {/* Google Maps Cards if present */}
                   {msg.places && msg.places.length > 0 && (
-                    <div className="space-y-2 mt-3 pt-3 border-t border-[#282a2f]">
+                    <div className="space-y-2 mt-3 pt-3 border-t border-white/10">
                       <div className="flex items-center gap-1.5 text-[11px] font-black text-rose-400">
                         <span className="material-symbols-outlined text-[15px]">pin_drop</span>
                         <span>Lugares Verificados en Google Maps ({msg.places.length}):</span>
@@ -800,7 +801,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                         {msg.places.map((place, idx) => (
                           <div
                             key={idx}
-                            className="p-2.5 bg-[#111318] rounded-xl border border-[#282a2f] flex flex-col gap-1.5"
+                            className="p-2.5 bg-[#06151e] rounded-xl border border-white/10 flex flex-col gap-1.5"
                           >
                             <div className="flex items-start justify-between gap-2">
                               <span className="text-white font-extrabold text-xs flex items-center gap-1">
@@ -809,7 +810,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                               </span>
                             </div>
                             {place.reviewSnippets && place.reviewSnippets.length > 0 && (
-                              <p className="text-[11px] text-[#8d90a0] italic bg-[#191c20] p-1.5 rounded border border-[#282a2f]/50">
+                              <p className="text-[11px] text-[#898a8c] italic bg-[#06151e] p-1.5 rounded border border-white/10">
                                 "{place.reviewSnippets[0]}"
                               </p>
                             )}
@@ -830,16 +831,16 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
                   {/* Structured Options */}
                   {msg.options && (
-                    <div className="space-y-2 mt-3 pt-2 border-t border-[#282a2f]">
+                    <div className="space-y-2 mt-3 pt-2 border-t border-white/10">
                       {msg.options.map((opt, idx) => (
                         <div
                           key={idx}
-                          className="p-2 bg-[#1d2024] rounded-lg border border-[#282a2f] flex justify-between items-center text-xs"
+                          className="p-2 bg-[#06151e] rounded-lg border border-white/10 flex justify-between items-center text-xs"
                         >
                           <span className="text-white font-medium">{opt.title}</span>
                           <div className="text-right">
                             <span className="text-[#b4c5ff] font-bold block">{opt.protein}</span>
-                            <span className="text-[#8d90a0]">{opt.calories}</span>
+                            <span className="text-[#898a8c]">{opt.calories}</span>
                           </div>
                         </div>
                       ))}
@@ -850,7 +851,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   <div className="flex items-center justify-between gap-2 mt-2 pt-1 border-t border-white/5">
                     <span
                       className={`text-[10px] ${
-                        isUser ? 'text-blue-100/80' : 'text-[#8d90a0]'
+                        isUser ? 'text-blue-100/80' : 'text-[#898a8c]'
                       }`}
                     >
                       {msg.timestamp}
@@ -860,7 +861,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                       <button
                         type="button"
                         onClick={() => handleAddMacroFromText(msg.text)}
-                        className="text-[10px] font-semibold text-[#b4c5ff] hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1d2024] border border-[#282a2f] transition-colors"
+                        className="text-[10px] font-semibold text-[#b4c5ff] hover:text-white flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#06151e] border border-white/10 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[12px]">add_task</span>
                         <span>Añadir a mi día</span>
@@ -878,7 +879,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                       key={i}
                       type="button"
                       onClick={() => handleSend(qr)}
-                      className="text-xs bg-[#1d2024] hover:bg-[#282a2f] text-[#b4c5ff] hover:text-white px-2.5 py-1 rounded-full border border-[#282a2f] transition-colors"
+                      className="text-xs bg-[#06151e] hover:bg-[#06151e] text-[#b4c5ff] hover:text-white px-2.5 py-1 rounded-full border border-white/10 transition-colors"
                     >
                       {qr}
                     </button>
@@ -891,13 +892,13 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="flex items-center gap-2.5 p-3 bg-[#191c20] rounded-2xl rounded-bl-none border border-[#282a2f] max-w-xs text-[#b4c5ff] ml-9">
+          <div className="flex items-center gap-2.5 p-3 bg-[#06151e] rounded-2xl rounded-bl-none border border-white/10 max-w-xs text-[#b4c5ff] ml-9">
             <div className="flex gap-1">
               <span className="w-2 h-2 rounded-full bg-[#2563eb] animate-bounce"></span>
               <span className="w-2 h-2 rounded-full bg-[#2563eb] animate-bounce [animation-delay:0.2s]"></span>
               <span className="w-2 h-2 rounded-full bg-[#2563eb] animate-bounce [animation-delay:0.4s]"></span>
             </div>
-            <span className="text-xs text-[#8d90a0]">
+            <span className="text-xs text-[#898a8c]">
               {selectedRole === 'nutritionist'
                 ? 'Analizando metabolismo y composición...'
                 : selectedRole === 'fast'
@@ -910,14 +911,14 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
       </div>
 
       {/* Input Bar */}
-      <div className="flex-shrink-0 pt-2 border-t border-[#282a2f]">
-        <div className="bg-[#191c20] p-2 rounded-2xl border border-[#282a2f] flex items-center gap-1.5 shadow-lg">
+      <div className="flex-shrink-0 pt-2 border-t border-white/10">
+        <div className="bg-[#06151e] p-2 rounded-2xl border border-white/10 flex items-center gap-1.5 shadow-lg">
           {/* Botón Lugares Google Maps */}
           <button
             type="button"
             onClick={() => handleSend('¿Dónde hay tiendas de suplementación deportiva y gimnasios cerca de mi ubicación?')}
             title="Buscar tiendas y gimnasios en Google Maps"
-            className="p-2 text-[#8d90a0] hover:text-rose-400 hover:bg-[#282a2f] rounded-xl transition-colors flex items-center justify-center shrink-0"
+            className="p-2 text-[#898a8c] hover:text-rose-400 hover:bg-[#06151e] rounded-xl transition-colors flex items-center justify-center shrink-0"
           >
             <span className="material-symbols-outlined text-[19px]">pin_drop</span>
           </button>
@@ -925,7 +926,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
           {/* Botón Foto */}
           <label
             title="Analizar foto de plato o comida"
-            className="p-2 text-[#8d90a0] hover:text-[#b4c5ff] hover:bg-[#282a2f] rounded-xl transition-colors cursor-pointer flex items-center justify-center shrink-0"
+            className="p-2 text-[#898a8c] hover:text-[#b4c5ff] hover:bg-[#06151e] rounded-xl transition-colors cursor-pointer flex items-center justify-center shrink-0"
           >
             <span className="material-symbols-outlined text-[19px]">photo_camera</span>
             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
@@ -937,7 +938,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
               type="button"
               onClick={onOpenAudioTranscriber}
               title="Abrir transcriptor de audio"
-              className="p-2 text-[#8d90a0] hover:text-purple-400 hover:bg-[#282a2f] rounded-xl transition-colors flex items-center justify-center shrink-0"
+              className="p-2 text-[#898a8c] hover:text-purple-400 hover:bg-[#06151e] rounded-xl transition-colors flex items-center justify-center shrink-0"
             >
               <span className="material-symbols-outlined text-[19px]">speech_to_text</span>
             </button>
@@ -954,7 +955,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 ? 'bg-red-500 text-white animate-pulse ring-2 ring-red-400/50'
                 : isTranscribingVoice
                 ? 'bg-purple-500/20 text-purple-400'
-                : 'text-[#8d90a0] hover:text-[#b4c5ff] hover:bg-[#282a2f]'
+                : 'text-[#898a8c] hover:text-[#b4c5ff] hover:bg-[#06151e]'
             }`}
           >
             <span className="material-symbols-outlined text-[19px]">
@@ -985,7 +986,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 <button
                   type="button"
                   onClick={cancelVoiceRecording}
-                  className="px-2 py-1 bg-[#282a2f] hover:bg-[#34373d] text-[#c3c6d7] rounded-lg text-xs transition-all"
+                  className="px-2 py-1 bg-[#06151e] hover:bg-[#545a5b] text-[#d6d6d6] rounded-lg text-xs transition-all"
                 >
                   Cancelar
                 </button>
@@ -1009,7 +1010,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                   ? 'Ej: 2 huevos, tostada y café con leche...'
                   : 'Escribe tu mensaje o consulta al coach...'
               }
-              className="flex-1 bg-transparent text-white placeholder-[#8d90a0] text-sm focus:outline-none px-2"
+              className="flex-1 bg-transparent text-white placeholder-[#898a8c] text-sm focus:outline-none px-2"
             />
           )}
 
@@ -1021,7 +1022,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all shrink-0 ${
               input.trim() && !isLoading && !isListening && !isTranscribingVoice
                 ? 'bg-[#2563eb] hover:bg-[#3b82f6] text-white shadow-md active:scale-95'
-                : 'bg-[#282a2f] text-[#8d90a0] cursor-not-allowed opacity-50'
+                : 'bg-[#06151e] text-[#898a8c] cursor-not-allowed opacity-50'
             }`}
           >
             <span className="material-symbols-outlined text-[18px]">arrow_upward</span>

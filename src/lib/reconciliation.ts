@@ -3,7 +3,7 @@
  * Módulo Avanzado de Reconciliación y Resolución de Conflictos Offline/Online
  * 
  * Previene sobrescrituras accidentales combinando los cambios locales pendientes
- * con el último snapshot de Firestore mediante fusión semántica por campos.
+ * con el último snapshot de Supabase mediante fusión semántica por campos.
  */
 
 import { DailyTaskItem } from '../components/DailyTasks';
@@ -42,7 +42,7 @@ export interface ReconciliationResult {
 }
 
 /**
- * Reconcilia el estado local con los datos remotos de Firestore y la cola offline.
+ * Reconcilia el estado local con los datos remotos de Supabase y la cola offline.
  * 
  * Reglas de Reconciliación:
  * 1. Tareas (Metas): Unión de completaciones (si se completó local o remotamente, queda completada).
@@ -65,7 +65,7 @@ export function reconcileAthleteData(
     return {
       merged: { ...local },
       hadConflicts: false,
-      resolutions: ['Sin datos previos en Firestore. Se inicializará la cuenta con el estado local.'],
+      resolutions: ['Sin datos previos en Supabase. Se inicializará la cuenta con el estado local.'],
       summary: 'Estado local listo para sincronizar por primera vez.',
     };
   }

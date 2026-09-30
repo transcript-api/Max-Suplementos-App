@@ -140,7 +140,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
   };
 
   return (
-    <section className="rounded-2xl p-5 border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-md space-y-4 relative overflow-hidden">
+    <section className="rounded-2xl p-5 border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-md space-y-4 relative overflow-hidden">
       {/* Resplandor sutil de fondo */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-[#2563eb]/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -157,13 +157,13 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
                 LIGA ACTIVA
               </span>
             </h2>
-            <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+            <p className="text-xs dark:text-[#898a8c] text-slate-500">
               Retos calibrados que se actualizan al cumplir tus tareas y registrar tu nutrición diaria.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 self-start sm:self-auto text-xs font-semibold dark:text-[#8d90a0] text-slate-500">
+        <div className="flex items-center gap-1.5 self-start sm:self-auto text-xs font-semibold dark:text-[#898a8c] text-slate-500">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>
             {challenges.filter((c) => c.completed).length} de {challenges.length} completados hoy
@@ -182,10 +182,10 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
               key={c.id}
               className={`rounded-xl p-4 border transition-all relative overflow-hidden flex flex-col justify-between ${
                 isJustCompleted
-                  ? 'dark:bg-[#1f232b] bg-amber-50/70 border-amber-500/50 shadow-md ring-2 ring-amber-500/20'
+                  ? 'dark:bg-[#06151e] bg-amber-50/70 border-amber-500/50 shadow-md ring-2 ring-amber-500/20'
                   : c.claimed
-                  ? 'dark:bg-[#16181d] bg-slate-50 dark:border-[#282a2f] border-slate-200 opacity-80'
-                  : 'dark:bg-[#1d2024] bg-slate-50/50 dark:border-[#282a2f] border-slate-200 hover:border-slate-300 dark:hover:border-[#383a40]'
+                  ? 'dark:bg-[#06151e] bg-slate-50 dark:border-white/10 border-slate-200 opacity-80'
+                  : 'dark:bg-[#06151e] bg-slate-50/50 dark:border-white/10 border-slate-200 hover:border-slate-300 dark:hover:border-[#545a5b]'
               }`}
             >
               {/* Badge superior */}
@@ -198,7 +198,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
                     <span className="material-symbols-outlined text-[18px]">{c.icon}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#8d90a0] text-slate-500 block">
+                    <span className="text-[10px] font-bold uppercase tracking-wider dark:text-[#898a8c] text-slate-500 block">
                       {c.category}
                     </span>
                     <h3 className="font-headline-md text-xs sm:text-sm font-bold dark:text-white text-slate-900 leading-tight">
@@ -215,7 +215,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
               </div>
 
               {/* Descripción breve */}
-              <p className="text-[11px] dark:text-[#c3c6d7] text-slate-600 mb-3 leading-relaxed">
+              <p className="text-[11px] dark:text-[#d6d6d6] text-slate-600 mb-3 leading-relaxed">
                 {c.description}
               </p>
 
@@ -233,7 +233,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
                   </span>
                 </div>
 
-                <div className="w-full h-2 rounded-full overflow-hidden dark:bg-[#111318] bg-slate-200 border dark:border-[#282a2f] border-slate-300">
+                <div className="w-full h-2 rounded-full overflow-hidden dark:bg-[#06151e] bg-slate-200 border dark:border-white/10 border-slate-300">
                   <div
                     className="h-full rounded-full transition-all duration-700 ease-out"
                     style={{
@@ -245,8 +245,8 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
               </div>
 
               {/* Botón de Reclamar o Estado */}
-              <div className="mt-3 pt-2.5 border-t dark:border-[#282a2f] border-slate-200/80 flex items-center justify-between text-xs">
-                <span className="text-[11px] dark:text-[#8d90a0] text-slate-500 flex items-center gap-1 font-medium">
+              <div className="mt-3 pt-2.5 border-t dark:border-white/10 border-slate-200/80 flex items-center justify-between text-xs">
+                <span className="text-[11px] dark:text-[#898a8c] text-slate-500 flex items-center gap-1 font-medium">
                   <span className="text-[13px]">🎖️</span> {c.badge}
                 </span>
 
@@ -265,7 +265,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
                     <span>Reclamado</span>
                   </span>
                 ) : (
-                  <span className="text-[11px] dark:text-[#8d90a0] text-slate-400 italic">
+                  <span className="text-[11px] dark:text-[#898a8c] text-slate-400 italic">
                     En progreso
                   </span>
                 )}
@@ -278,7 +278,7 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
       {/* Modal / Animación de Recompensa al Completar Desafío */}
       {activeReward && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="relative max-w-sm w-full rounded-2xl dark:bg-[#191c20] bg-white border dark:border-[#282a2f] border-slate-200 p-6 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
+          <div className="relative max-w-sm w-full rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 p-6 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
             {/* Destello de fondo */}
             <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-40 h-40 bg-amber-500/30 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -294,13 +294,13 @@ export const ConsistencyChallenges: React.FC<ConsistencyChallengesProps> = ({
               <h3 className="text-xl font-black dark:text-white text-slate-900">
                 {activeReward.title}
               </h3>
-              <p className="text-xs dark:text-[#8d90a0] text-slate-600 pt-1">
+              <p className="text-xs dark:text-[#898a8c] text-slate-600 pt-1">
                 {activeReward.description}
               </p>
             </div>
 
             {/* Recompensa de XP */}
-            <div className="p-3.5 rounded-xl dark:bg-[#111318] bg-amber-50 border dark:border-[#282a2f] border-amber-200 space-y-1">
+            <div className="p-3.5 rounded-xl dark:bg-[#06151e] bg-amber-50 border dark:border-white/10 border-amber-200 space-y-1">
               <span className="text-xs font-bold text-amber-600 dark:text-amber-300 block">
                 Recompensa Sumada a tu Cuenta:
               </span>

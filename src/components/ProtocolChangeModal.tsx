@@ -49,10 +49,10 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start sm:items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain animate-fadeIn">
-      <div className="relative w-full max-w-2xl dark:bg-[#12141a] bg-white rounded-2xl border dark:border-[#282a2f] border-slate-200 shadow-2xl overflow-hidden my-4 mb-16 sm:my-6">
+      <div className="relative w-full max-w-2xl dark:bg-[#06151e] bg-white rounded-2xl border dark:border-white/10 border-slate-200 shadow-2xl overflow-hidden my-4 mb-16 sm:my-6">
         
         {/* Encabezado con degradado del nivel activo */}
-        <div className="relative p-5 sm:p-6 border-b dark:border-[#23252a] border-slate-200">
+        <div className="relative p-5 sm:p-6 border-b dark:border-white/10 border-slate-200">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
@@ -68,7 +68,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
             <button
               onClick={onClose}
               type="button"
-              className="p-1.5 rounded-lg dark:hover:bg-[#1d2027] hover:bg-slate-100 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+              className="p-1.5 rounded-lg dark:hover:bg-[#06151e] hover:bg-slate-100 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
             >
               ✕
             </button>
@@ -144,8 +144,8 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
                 }}
                 className={`p-4 rounded-xl border transition-all ${
                   isSelected
-                    ? `border-${proto.themeColor} dark:bg-[#181a22] bg-slate-50 shadow-md ring-1 ring-${proto.themeColor}/40`
-                    : 'dark:border-[#282a2f] border-slate-200 dark:bg-[#14161c] bg-white opacity-85 hover:opacity-100'
+                    ? `border-${proto.themeColor} dark:bg-[#06151e] bg-slate-50 shadow-md ring-1 ring-${proto.themeColor}/40`
+                    : 'dark:border-white/10 border-slate-200 dark:bg-[#06151e] bg-white opacity-85 hover:opacity-100'
                 } ${canSelect ? 'cursor-pointer' : 'cursor-default'}`}
                 style={{
                   borderColor: isSelected ? proto.themeColor : undefined,
@@ -167,7 +167,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
 
                   <div className="flex items-center gap-1.5">
                     {isCurrent && (
-                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 dark:bg-[#282a2f] dark:text-white text-slate-800">
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 dark:bg-[#06151e] dark:text-white text-slate-800">
                         Nivel Activo
                       </span>
                     )}
@@ -184,7 +184,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
                 </p>
 
                 {/* Grilla de exigencias específicas */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-2 border-t dark:border-[#22242b] border-slate-200/80">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-2 border-t dark:border-white/10 border-slate-200/80">
                   <div className="flex items-center gap-1.5">
                     <span className="text-slate-400">🏋️‍♂️ Entreno:</span>
                     <strong className="dark:text-slate-200 text-slate-800">
@@ -224,7 +224,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
         </div>
 
         {/* Footer y Acciones - Sticky en móvil para no perderse nunca */}
-        <div className="sticky bottom-0 z-20 p-4 sm:p-5 border-t dark:border-[#23252a] border-slate-200 dark:bg-[#0f1116]/95 bg-slate-50/95 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+        <div className="sticky bottom-0 z-20 p-4 sm:p-5 border-t dark:border-white/10 border-slate-200 dark:bg-[#06151e]/95 bg-slate-50/95 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
           <div className="text-xs dark:text-slate-400 text-slate-600 text-center sm:text-left">
             {cooldown.isAllowed ? (
               <span>
@@ -241,7 +241,7 @@ export const ProtocolChangeModal: React.FC<ProtocolChangeModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 min-h-[44px] rounded-xl text-xs font-bold dark:bg-[#1d2027] bg-slate-200 dark:text-slate-300 text-slate-700 hover:bg-slate-300 dark:hover:bg-[#282c36] active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center"
+              className="flex-1 sm:flex-none px-4 py-3 sm:py-2.5 min-h-[44px] rounded-xl text-xs font-bold dark:bg-[#06151e] bg-slate-200 dark:text-slate-300 text-slate-700 hover:bg-slate-300 dark:hover:bg-[#06151e] active:scale-95 transition-all touch-manipulation cursor-pointer flex items-center justify-center"
             >
               Cerrar
             </button>

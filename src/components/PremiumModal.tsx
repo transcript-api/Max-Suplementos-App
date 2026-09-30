@@ -71,12 +71,12 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-[#0B1220] border border-[#1E293B] rounded-2xl p-6 sm:p-8 shadow-2xl text-white space-y-5 animate-fadeIn my-auto">
+      <div className="relative w-full max-w-lg bg-[#06151e] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl text-white space-y-5 animate-fadeIn my-auto">
         {/* Botón cerrar */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#64748B] hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-[#898a8c] hover:text-white transition-colors"
         >
           <span className="material-symbols-outlined text-[24px]">close</span>
         </button>
@@ -92,7 +92,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
             Llevá tu progreso al siguiente nivel
           </h2>
-          <p className="text-xs text-[#CBD5E1] max-w-sm mx-auto">
+          <p className="text-xs text-[#d6d6d6] max-w-sm mx-auto">
             Desbloquea el análisis de alimentos por foto, coach IA ilimitado y descuentos exclusivos en MAX Suplementos.
           </p>
         </div>
@@ -105,7 +105,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
             </div>
             <div>
               <h4 className="text-xs font-bold text-white">¿Compraste en MAX Suplementos?</h4>
-              <p className="text-[11px] text-[#CBD5E1]">
+              <p className="text-[11px] text-[#d6d6d6]">
                 Ingresá el código de tu ticket o promoción (ej. <strong>MAXPRO30</strong>, <strong>TICKET-8849</strong>) para activar tu mes Pro.
               </p>
             </div>
@@ -119,7 +119,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                 placeholder="CÓDIGO DE TICKET (EJ. MAXPRO30)"
-                className="flex-1 px-3 py-2 bg-[#0B1220] border border-[#2563EB]/50 rounded-xl text-xs text-white placeholder:text-[#64748B] focus:outline-none focus:ring-1 focus:ring-[#2563EB] uppercase tracking-wider font-mono"
+                className="flex-1 px-3 py-2 bg-[#06151e] border border-[#2563EB]/50 rounded-xl text-xs text-white placeholder:text-[#898a8c] focus:outline-none focus:ring-1 focus:ring-[#2563EB] uppercase tracking-wider font-mono"
               />
               <button
                 type="submit"
@@ -157,16 +157,16 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
         </div>
 
         {/* Tabla comparativa */}
-        <div className="bg-[#101A2B] border border-[#1E293B] rounded-xl overflow-hidden">
-          <div className="grid grid-cols-6 p-2.5 bg-[#07090D] text-[11px] font-bold uppercase tracking-wider border-b border-[#1E293B]">
-            <span className="col-span-4 text-[#64748B]">Funcionalidad</span>
-            <span className="col-span-1 text-center text-[#64748B]">Gratis</span>
+        <div className="bg-[#06151e] border border-white/10 rounded-xl overflow-hidden">
+          <div className="grid grid-cols-6 p-2.5 bg-[#06151e] text-[11px] font-bold uppercase tracking-wider border-b border-white/10">
+            <span className="col-span-4 text-[#898a8c]">Funcionalidad</span>
+            <span className="col-span-1 text-center text-[#898a8c]">Gratis</span>
             <span className="col-span-1 text-center text-[#3B82F6]">Pro</span>
           </div>
-          <div className="divide-y divide-[#1E293B] max-h-60 overflow-y-auto">
+          <div className="divide-y divide-white/10 max-h-60 overflow-y-auto">
             {features.map((f, i) => (
               <div key={i} className="grid grid-cols-6 p-2.5 text-xs items-center">
-                <span className={`col-span-4 font-medium ${f.highlight ? 'text-white font-semibold flex items-center gap-1' : 'text-[#CBD5E1]'}`}>
+                <span className={`col-span-4 font-medium ${f.highlight ? 'text-white font-semibold flex items-center gap-1' : 'text-[#d6d6d6]'}`}>
                   {f.highlight && <span className="text-[#3B82F6] text-[10px]">★</span>}
                   {f.name}
                 </span>
@@ -174,7 +174,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
                   {f.free ? (
                     <span className="text-emerald-400 font-bold">✓</span>
                   ) : (
-                    <span className="text-[#64748B]">—</span>
+                    <span className="text-[#898a8c]">—</span>
                   )}
                 </span>
                 <span className="col-span-1 text-center">
@@ -187,15 +187,15 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
 
         {/* Planes */}
         <div className="grid grid-cols-2 gap-3 pt-1">
-          <div className="p-3 bg-[#101A2B] border border-[#1E293B] rounded-xl text-center space-y-1">
-            <span className="text-[10px] text-[#64748B] uppercase font-bold block">Mensual</span>
-            <div className="text-lg font-black text-white">$9.99<span className="text-xs text-[#64748B] font-normal">/mes</span></div>
-            <span className="text-[10px] text-[#64748B] block">Cancela cuando quieras</span>
+          <div className="p-3 bg-[#06151e] border border-white/10 rounded-xl text-center space-y-1">
+            <span className="text-[10px] text-[#898a8c] uppercase font-bold block">Mensual</span>
+            <div className="text-lg font-black text-white">$9.99<span className="text-xs text-[#898a8c] font-normal">/mes</span></div>
+            <span className="text-[10px] text-[#898a8c] block">Cancela cuando quieras</span>
           </div>
           <div className="p-3 bg-[#102A56]/40 border border-[#2563EB] rounded-xl text-center space-y-1 relative overflow-hidden">
             <span className="absolute top-1 right-2 text-[9px] font-bold text-emerald-400">AHORRA 30%</span>
             <span className="text-[10px] text-[#3B82F6] uppercase font-bold block">Anual VIP</span>
-            <div className="text-lg font-black text-white">$6.99<span className="text-xs text-[#64748B] font-normal">/mes</span></div>
+            <div className="text-lg font-black text-white">$6.99<span className="text-xs text-[#898a8c] font-normal">/mes</span></div>
             <span className="text-[10px] text-emerald-400 block">+ Pack Shaker de regalo</span>
           </div>
         </div>
@@ -216,7 +216,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-2 text-xs font-semibold text-[#64748B] hover:text-white transition-colors"
+            className="w-full py-2 text-xs font-semibold text-[#898a8c] hover:text-white transition-colors"
           >
             Continuar con el plan Gratuito
           </button>

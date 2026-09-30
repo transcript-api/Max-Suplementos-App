@@ -55,16 +55,16 @@ async function startServer() {
     }
 
     const ai = getAI();
-    const preferred = params.preferredModel || 'gemini-3.5-flash';
+    const preferred = params.preferredModel || 'gemini-2.5-flash';
     
     // Configuración de modelos con fallback según el modelo solicitado
     let modelsToTry: string[] = [];
-    if (preferred === 'gemini-3.1-pro-preview') {
-      modelsToTry = ['gemini-3.1-pro-preview', 'gemini-3.5-flash', 'gemini-3.1-flash-lite'];
-    } else if (preferred === 'gemini-3.1-flash-lite') {
-      modelsToTry = ['gemini-3.1-flash-lite', 'gemini-3.5-flash', 'gemini-flash-latest'];
+    if (preferred === 'gemini-2.5-pro') {
+      modelsToTry = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+    } else if (preferred === 'gemini-2.0-flash') {
+      modelsToTry = ['gemini-2.0-flash', 'gemini-2.5-flash'];
     } else {
-      modelsToTry = [preferred, 'gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+      modelsToTry = [preferred, 'gemini-2.5-flash', 'gemini-2.0-flash'];
     }
 
     // Deduplicar lista de modelos
@@ -936,9 +936,9 @@ Genera una sugerencia estructurada en formato JSON estricto:
   });
 
   // Funciones de Roles y Modelos de Gemini para Chat Multi-Turn:
-  // - gemini-3.1-pro-preview para tareas complejas
-  // - gemini-3.5-flash para tareas generales
-  // - gemini-3.1-flash-lite para tareas que deben suceder rápido
+  // - gemini-2.5-pro para tareas complejas (bioquímica, cálculo metabólico avanzado)
+  // - gemini-2.5-flash para tareas generales (coach, nutrición)
+  // - gemini-2.0-flash para respuestas ultra rápidas (fast logger)
   function getChatRoleConfig(
     requestedRole: string | undefined,
     preferredModel: string | undefined,
@@ -962,7 +962,7 @@ Genera una sugerencia estructurada en formato JSON estricto:
       return {
         roleId: 'nutritionist',
         roleName: 'Nutricionista Metabólico Pro',
-        model: preferredModel || 'gemini-3.1-pro-preview',
+        model: preferredModel || 'gemini-2.5-pro',
         temperature: 0.3,
         systemInstruction: `Eres el Dr. MAX, Bioquímico Nutricional y Especialista en Fisiología Metabólica de MAXMIND.
 Tu función principal son las tareas de alta complejidad científica, bioquímica y metabólica:
@@ -980,7 +980,7 @@ ${baseContextStr}`
       return {
         roleId: 'fast',
         roleName: 'Fast Logger & Asistente Express',
-        model: preferredModel || 'gemini-3.1-flash-lite',
+        model: preferredModel || 'gemini-2.0-flash',
         temperature: 0.2,
         systemInstruction: `Eres el Asistente Express Ultra-Rápido de MAXFORM.
 Tu función principal son las tareas que deben completarse con máxima velocidad:
@@ -996,7 +996,7 @@ ${baseContextStr}`
       return {
         roleId: 'coach',
         roleName: 'Coach de Rendimiento',
-        model: preferredModel || 'gemini-3.5-flash',
+        model: preferredModel || 'gemini-2.5-flash',
         temperature: 0.6,
         systemInstruction: `Eres MAX AI Coach, el entrenador de rendimiento y adherencia atlética de MAXFORM.
 Tu función principal son las tareas generales del atleta:
@@ -1016,7 +1016,7 @@ ${baseContextStr}`
       return {
         roleId: 'nutritionist',
         roleName: 'Nutricionista Metabólico Pro',
-        model: preferredModel || 'gemini-3.1-pro-preview',
+        model: preferredModel || 'gemini-2.5-pro',
         temperature: 0.3,
         systemInstruction: `Eres el Dr. MAX, Bioquímico Nutricional de MAXMIND. Aborda esta tarea de alta complejidad con rigor científico, fórmulas exactas y justificación fisiológica.\n${baseContextStr}`
       };
@@ -1026,7 +1026,7 @@ ${baseContextStr}`
       return {
         roleId: 'fast',
         roleName: 'Fast Logger & Asistente Express',
-        model: preferredModel || 'gemini-3.1-flash-lite',
+        model: preferredModel || 'gemini-2.0-flash',
         temperature: 0.2,
         systemInstruction: `Eres el Asistente Express de MAXFORM. Responde ultra-rápido, directo y en viñetas concisas con datos de macros precisos.\n${baseContextStr}`
       };
@@ -1035,7 +1035,7 @@ ${baseContextStr}`
     return {
       roleId: 'coach',
       roleName: 'Coach de Rendimiento',
-      model: preferredModel || 'gemini-3.5-flash',
+      model: preferredModel || 'gemini-2.5-flash',
       temperature: 0.6,
       systemInstruction: `Eres MAX AI Coach, el entrenador de rendimiento de MAXFORM para tareas generales de hábitos, constancia y nutrición del atleta.\n${baseContextStr}`
     };
@@ -1067,9 +1067,9 @@ ${baseContextStr}`
   });
 
   // API AI Coach Multi-Turn con Gemini y selección de modelo por rol
-  // - gemini-3.1-pro-preview para tareas complejas
-  // - gemini-3.5-flash para tareas generales
-  // - gemini-3.1-flash-lite para tareas rápidas
+  // - gemini-2.5-pro para tareas complejas
+  // - gemini-2.5-flash para tareas generales
+  // - gemini-2.0-flash para tareas rápidas
   app.post("/api/ai/coach", async (req, res) => {
     try {
       const {
@@ -1114,7 +1114,7 @@ El atleta ${athleteName} te pregunta sobre lugares físicos, tiendas de suplemen
 Responde en español de forma cercana, motivadora y concisa. Resalta los lugares encontrados verificados en Google Maps.`;
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           contents: prompt,
           config: config,
         });
@@ -1149,7 +1149,7 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
           reply,
           places,
           isMapsGrounded: true,
-          modelUsed: "gemini-3.5-flash",
+          modelUsed: "gemini-2.5-flash",
           roleId: 'maps',
           roleName: 'Localizador Google Maps',
           timestamp: new Date().toISOString(),
@@ -1230,7 +1230,7 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
 
       res.json({
         reply: `¡Hola ${name}! Llevas ${currProt}g de proteína acumulados hoy (te faltan ${missing}g para sellar tu meta). Te recomiendo opciones directas y accesibles:\n1. Yogur griego natural (200g) o 1 scoop de proteína (25-30g PROT)\n2. Omelette de 3 claras y 1 huevo entero con queso magro (24g PROT)\n3. Pechuga de pollo grillada o lata de atún al natural (30-35g PROT)\n¿Tenés alguno de estos a mano ahora?`,
-        modelUsed: "gemini-3.5-flash",
+        modelUsed: "gemini-2.5-flash",
         roleId: "coach",
         roleName: "Coach de Rendimiento",
         timestamp: new Date().toISOString(),
@@ -1238,7 +1238,7 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
     }
   });
 
-  // API Google Maps Grounding dedicada con gemini-3.5-flash
+  // API Google Maps Grounding dedicada con gemini-2.5-flash
   app.post("/api/maps/places", async (req, res) => {
     try {
       const { query, latitude, longitude, category } = req.body;
@@ -1279,7 +1279,7 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
       // Regla de Gemini API con googleMaps:
       // NO configurar responseMimeType ni responseSchema
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         contents: promptQuery,
         config: config,
       });
@@ -1319,7 +1319,7 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
           webSearchQueries: groundingMetadata?.webSearchQueries,
           searchEntryPoint: groundingMetadata?.searchEntryPoint,
         },
-        modelUsed: "gemini-3.5-flash",
+        modelUsed: "gemini-2.5-flash",
       });
     } catch (err: any) {
       console.error("Error en Google Maps Grounding:", err);
@@ -1345,13 +1345,13 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
             reviewSnippets: ["Instalaciones completas y punto de hidratación/snacks proteicos."]
           }
         ],
-        modelUsed: "gemini-3.5-flash-fallback",
+        modelUsed: "gemini-2.5-flash-fallback",
         note: "Fallback seguro activo"
       });
     }
   });
 
-  // API Transcripción de Audio con modelo especializado gemini-3.5-transcribe
+  // API Transcripción de Audio con gemini-2.5-flash (soporta audio inline nativo)
   app.post("/api/ai/transcribe", async (req, res) => {
     try {
       const { audioBase64, mimeType, prompt } = req.body;
@@ -1398,7 +1398,7 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
       };
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-transcribe",
+        model: "gemini-2.5-flash",
         contents: {
           parts: [
             audioPart,
@@ -1412,18 +1412,18 @@ Responde en español de forma cercana, motivadora y concisa. Resalta los lugares
       return res.json({
         success: true,
         text: transcribedText,
-        modelUsed: "gemini-3.5-transcribe",
+        modelUsed: "gemini-2.5-flash",
         mimeType: targetMime,
         timestamp: new Date().toISOString(),
       });
     } catch (err: any) {
-      console.error("Error transcribiendo audio con gemini-3.5-transcribe:", err);
+      console.error("Error transcribiendo audio con gemini-2.5-flash:", err);
 
       // Si ocurre un error de cuota o similar, devolver respuesta estructurada
       return res.status(200).json({
         success: true,
         text: "Registro de voz recibido: 200g pechuga de pollo grillada con arroz integral y 38g de proteína.",
-        modelUsed: "gemini-3.5-transcribe",
+        modelUsed: "gemini-2.5-flash",
         fallback: true,
         errorNote: err?.message || "Transcripción con asistencia de respaldo",
         timestamp: new Date().toISOString(),
@@ -1477,21 +1477,9 @@ Devuelve un JSON estrictamente válido con la estructura:
 
       const parsed = JSON.parse(response.text || "{}");
       res.json(parsed);
-    } catch {
-      // Fallback predictivo sin volcado de errores
-      res.json({
-        title: "Pechuga grillada con arroz y huevos camperos",
-        calories: 520,
-        protein: 42,
-        carbs: 45,
-        fats: 14,
-        breakdown: [
-          { item: "Pechuga de pollo grillada", amount: "180g", protein: 41, calories: 230 },
-          { item: "Arroz integral cocido", amount: "150g", protein: 4, calories: 170 },
-          { item: "2 Huevos camperos enteros", amount: "100g", protein: 13, calories: 140 }
-        ],
-        coachTip: "Excelente balance para tu ventana anabólica post-entreno."
-      });
+    } catch (err) {
+      console.error('[analyze-food] Error al analizar con Gemini:', err);
+      res.status(502).json({ error: 'No se pudo analizar la comida. Intentá de nuevo.' });
     }
   });
 
@@ -1683,16 +1671,9 @@ Como nutricionista deportivo de MAXFORM, analiza lo que comió y devuelve un JSO
 
       const parsed = JSON.parse(response.text || "{}");
       res.json(parsed);
-    } catch {
-      res.json({
-        foodSummary: req.body.text || "2 huevos revueltos con pan tostado",
-        protein: 18,
-        calories: 290,
-        carbs: 22,
-        fats: 14,
-        confidence: "Estimado",
-        nutritionTip: "Buen balance de proteínas de alta biodisponibilidad y carbohidratos complejos."
-      });
+    } catch (err) {
+      console.error('[simple-food-estimate] Error al estimar con Gemini:', err);
+      res.status(502).json({ error: 'No se pudo estimar la comida. Intentá de nuevo.' });
     }
   });
 

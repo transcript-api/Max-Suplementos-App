@@ -34,14 +34,14 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
     <section className="flex flex-col space-y-3 w-full">
       <div className="flex items-center justify-between pb-1">
         <div className="flex items-center gap-2">
-          <span className="font-label-caps text-label-caps uppercase tracking-wider font-bold dark:text-[#8d90a0] text-slate-500">
+          <span className="font-label-caps text-label-caps uppercase tracking-wider font-bold dark:text-[#898a8c] text-slate-500">
             METAS DIARIAS
           </span>
           <span className="px-2 py-0.5 rounded-full text-[11px] font-bold dark:bg-white/10 bg-slate-100 dark:text-zinc-200 text-slate-700 border dark:border-white/15 border-slate-200">
             {completedCount} de {tasks.length} completadas
           </span>
         </div>
-        <span className="text-xs dark:text-[#8d90a0] text-slate-400">
+        <span className="text-xs dark:text-[#898a8c] text-slate-400">
           Toca para marcar
         </span>
       </div>
@@ -65,7 +65,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
               className={`flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer select-none active:scale-[0.99] ${
                 isDone
                   ? 'dark:bg-white/5 bg-slate-50/90 dark:border-white/20 border-slate-300/60 shadow-sm'
-                  : 'dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 hover:dark:border-white/15 hover:border-slate-300 shadow-sm'
+                  : 'dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 hover:dark:border-white/15 hover:border-slate-300 shadow-sm'
               }`}
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -74,7 +74,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                   className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all flex-shrink-0 border ${
                     isDone
                       ? 'bg-white border-white text-black shadow-[0_0_8px_rgba(255,255,255,0.3)]'
-                      : 'dark:bg-[#1d2024] bg-slate-100 dark:border-[#333539] border-slate-300'
+                      : 'dark:bg-[#06151e] bg-slate-100 dark:border-[#545a5b] border-slate-300'
                   }`}
                 >
                   {isDone && (
@@ -89,7 +89,7 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                   className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
                     isDone
                       ? 'dark:bg-white/10 bg-slate-100 dark:text-white text-slate-700'
-                      : 'dark:bg-[#1d2024] bg-slate-100 dark:text-[#8d90a0] text-slate-500'
+                      : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-500'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[20px]">
@@ -113,14 +113,14 @@ export const DailyTasks: React.FC<DailyTasksProps> = ({
                       className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase ${
                         isDone
                           ? 'bg-white/15 text-white dark:text-zinc-100'
-                          : 'dark:bg-[#1d2024] bg-slate-100 dark:text-[#8d90a0] text-slate-500'
+                          : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-500'
                       }`}
                     >
                       +{task.xpReward} XP
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-0.5 text-xs">
-                    <span className="dark:text-[#8d90a0] text-slate-500 truncate">
+                    <span className="dark:text-[#898a8c] text-slate-500 truncate">
                       {task.id === 'agua'
                         ? `${hydration.toFixed(1).replace('.', ',')} / 3,0 L · ${task.subtitle}`
                         : task.subtitle}

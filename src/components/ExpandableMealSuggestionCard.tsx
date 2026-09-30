@@ -168,10 +168,10 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
   return (
     <div
       id="meal-suggestion-card"
-      className="p-4 sm:p-5 rounded-2xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200 space-y-4 shadow-sm transition-all"
+      className="p-4 sm:p-5 rounded-2xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-4 shadow-sm transition-all"
     >
       {/* Encabezado y badges de la tarjeta */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b dark:border-[#282a2f] border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b dark:border-white/10 border-slate-200">
         <div className="space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[10px] uppercase font-bold text-[#2563eb] dark:text-[#b4c5ff] tracking-wider px-2 py-0.5 rounded-full bg-[#2563eb]/15 border border-[#2563eb]/25">
@@ -193,11 +193,11 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
             <span className="material-symbols-outlined text-[15px]">fitness_center</span>
             +{mealSuggestion.protein}g Proteína
           </span>
-          <span className="px-2.5 py-1 rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-200 text-xs font-bold dark:text-white text-slate-800 flex items-center gap-1">
+          <span className="px-2.5 py-1 rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 text-xs font-bold dark:text-white text-slate-800 flex items-center gap-1">
             <span className="material-symbols-outlined text-[15px] text-amber-500">local_fire_department</span>
             {mealSuggestion.calories} kcal
           </span>
-          <span className="px-2.5 py-1 rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-200 text-xs font-medium dark:text-[#8d90a0] text-slate-500 flex items-center gap-1">
+          <span className="px-2.5 py-1 rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 text-xs font-medium dark:text-[#898a8c] text-slate-500 flex items-center gap-1">
             <span className="material-symbols-outlined text-[15px] text-[#2563eb]">schedule</span>
             {mealSuggestion.preparationTime}
           </span>
@@ -207,14 +207,14 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
       {/* Ingredientes utilizados */}
       {mealSuggestion.ingredientsUsed && mealSuggestion.ingredientsUsed.length > 0 && (
         <div className="space-y-1.5">
-          <span className="text-[11px] font-bold uppercase dark:text-[#8d90a0] text-slate-500 block">
+          <span className="text-[11px] font-bold uppercase dark:text-[#898a8c] text-slate-500 block">
             Ingredientes integrados en el menú:
           </span>
           <div className="flex flex-wrap gap-1.5">
             {mealSuggestion.ingredientsUsed.map((ing, i) => (
               <span
                 key={i}
-                className="text-xs px-2.5 py-0.5 rounded-full dark:bg-[#191c20] bg-white dark:text-slate-200 text-slate-700 border dark:border-[#282a2f] border-slate-200 font-medium"
+                className="text-xs px-2.5 py-0.5 rounded-full dark:bg-[#06151e] bg-white dark:text-slate-200 text-slate-700 border dark:border-white/10 border-slate-200 font-medium"
               >
                 🥗 {ing}
               </span>
@@ -225,17 +225,17 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
 
       {/* Instrucciones de preparación rápida */}
       <div className="space-y-1">
-        <span className="text-[11px] font-bold uppercase dark:text-[#8d90a0] text-slate-500 block">
+        <span className="text-[11px] font-bold uppercase dark:text-[#898a8c] text-slate-500 block">
           Preparación Rápida:
         </span>
-        <p className="text-xs dark:text-[#c3c6d7] text-slate-600 leading-relaxed bg-white/5 dark:bg-[#191c20]/60 p-3 rounded-xl border dark:border-[#282a2f] border-slate-200">
+        <p className="text-xs dark:text-[#d6d6d6] text-slate-600 leading-relaxed bg-white/5 dark:bg-[#06151e]/60 p-3 rounded-xl border dark:border-white/10 border-slate-200">
           {mealSuggestion.instructions}
         </p>
       </div>
 
       {/* Razón técnica / biológica */}
       {mealSuggestion.reason && (
-        <p className="text-[11px] dark:text-[#8d90a0] text-slate-500 italic flex items-center gap-1.5">
+        <p className="text-[11px] dark:text-[#898a8c] text-slate-500 italic flex items-center gap-1.5">
           <span className="material-symbols-outlined text-[16px] text-[#2563eb]">psychology</span>
           «{mealSuggestion.reason}»
         </p>
@@ -249,8 +249,8 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
           onClick={() => setIsExpanded(!isExpanded)}
           className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-between transition-all border ${
             isExpanded
-              ? 'dark:bg-[#1d2024] bg-slate-100 dark:border-[#2563eb]/50 border-blue-400 text-[#2563eb] dark:text-[#b4c5ff] shadow-sm'
-              : 'dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 text-slate-700 dark:text-slate-200 hover:border-[#2563eb]/40 hover:dark:bg-[#1d2024]'
+              ? 'dark:bg-[#06151e] bg-slate-100 dark:border-[#2563eb]/50 border-blue-400 text-[#2563eb] dark:text-[#b4c5ff] shadow-sm'
+              : 'dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 text-slate-700 dark:text-slate-200 hover:border-[#2563eb]/40 hover:dark:bg-[#06151e]'
           }`}
           aria-expanded={isExpanded}
           aria-controls="micronutrient-details-panel"
@@ -286,10 +286,10 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
       {isExpanded && (
         <div
           id="micronutrient-details-panel"
-          className="p-4 rounded-xl dark:bg-[#191c20] bg-white border dark:border-[#282a2f] border-slate-200 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300"
+          className="p-4 rounded-xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300"
         >
           {/* Tarjeta de Resumen: Densidad Nutricional & Biodisponibilidad */}
-          <div className="p-3.5 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="p-3.5 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[18px] text-emerald-400">verified</span>
@@ -300,20 +300,20 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
                   {micronutrients.densityScore} / 100
                 </span>
               </div>
-              <p className="text-[11px] dark:text-[#8d90a0] text-slate-500 leading-relaxed max-w-xl">
+              <p className="text-[11px] dark:text-[#898a8c] text-slate-500 leading-relaxed max-w-xl">
                 {micronutrients.bioavailabilityNote}
               </p>
             </div>
 
             <div className="flex items-center gap-2 self-start sm:self-auto">
-              <div className="text-center px-3 py-1.5 rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-[#8d90a0] block">Leucina</span>
+              <div className="text-center px-3 py-1.5 rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200">
+                <span className="text-[10px] uppercase font-bold text-[#898a8c] block">Leucina</span>
                 <span className="text-xs font-black text-[#2563eb] dark:text-[#b4c5ff]">
                   {micronutrients.aminoAcids[0]?.amount || '3.2 g'}
                 </span>
               </div>
-              <div className="text-center px-3 py-1.5 rounded-lg dark:bg-[#1d2024] bg-white border dark:border-[#282a2f] border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-[#8d90a0] block">Absorción</span>
+              <div className="text-center px-3 py-1.5 rounded-lg dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200">
+                <span className="text-[10px] uppercase font-bold text-[#898a8c] block">Absorción</span>
                 <span className="text-xs font-black text-emerald-500">Óptima</span>
               </div>
             </div>
@@ -321,7 +321,7 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
 
           {/* Filtros de Categoría */}
           <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
-            <span className="text-[11px] font-bold uppercase dark:text-[#8d90a0] text-slate-500">
+            <span className="text-[11px] font-bold uppercase dark:text-[#898a8c] text-slate-500">
               Desglose detallado por categoría:
             </span>
 
@@ -341,7 +341,7 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                     activeNutrientFilter === f.id
                       ? 'bg-[#2563eb] text-white shadow-sm'
-                      : 'dark:bg-[#111318] bg-slate-100 text-slate-600 dark:text-slate-400 hover:text-white'
+                      : 'dark:bg-[#06151e] bg-slate-100 text-slate-600 dark:text-slate-400 hover:text-white'
                   }`}
                 >
                   {f.label}
@@ -370,14 +370,14 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
               return (
                 <div
                   key={idx}
-                  className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200 flex flex-col justify-between space-y-2 hover:border-[#2563eb]/40 transition-colors"
+                  className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col justify-between space-y-2 hover:border-[#2563eb]/40 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <span className="text-xs font-bold dark:text-white text-slate-900 block">
                         {item.name}
                       </span>
-                      <span className="text-[10px] dark:text-[#8d90a0] text-slate-500 line-clamp-1">
+                      <span className="text-[10px] dark:text-[#898a8c] text-slate-500 line-clamp-1">
                         {item.role}
                       </span>
                     </div>
@@ -393,7 +393,7 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
                   </div>
 
                   {/* Barra de progreso de aporte del micronutriente */}
-                  <div className="w-full bg-[#0c0e12] h-1.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-[#06151e] h-1.5 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${barColor}`}
                       style={{ width: `${Math.min(100, item.dailyValuePct)}%` }}
@@ -404,7 +404,7 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
             })}
           </div>
 
-          <div className="text-[10px] dark:text-[#8d90a0] text-slate-500 pt-1 flex items-center justify-between">
+          <div className="text-[10px] dark:text-[#898a8c] text-slate-500 pt-1 flex items-center justify-between">
             <span>* % CDR = Cantidad Diaria Recomendada de referencia para atletas de alto rendimiento</span>
             <span className="font-semibold text-[#2563eb] dark:text-[#b4c5ff]">Biodisponibilidad 100% calculada</span>
           </div>
@@ -427,7 +427,7 @@ export const ExpandableMealSuggestionCard: React.FC<ExpandableMealSuggestionCard
           id="btn-nav-nutrition"
           type="button"
           onClick={() => onNavigateTab('nutricion')}
-          className="py-2.5 px-4 rounded-xl dark:bg-[#1d2024] bg-white hover:bg-slate-100 dark:hover:bg-[#282a2f] dark:text-white text-slate-800 border dark:border-[#282a2f] border-slate-200 font-bold text-xs transition-colors"
+          className="py-2.5 px-4 rounded-xl dark:bg-[#06151e] bg-white hover:bg-slate-100 dark:hover:bg-[#06151e] dark:text-white text-slate-800 border dark:border-white/10 border-slate-200 font-bold text-xs transition-colors"
         >
           Ver en Nutrición
         </button>

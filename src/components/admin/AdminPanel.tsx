@@ -329,8 +329,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   // Si no está autenticado en el servidor, mostrar pantalla de acceso restringido
   if (!adminToken) {
     return (
-      <div className="min-h-screen bg-[#07090D] flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-[#0F141C] border border-[#1E2530] rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-white">
+      <div className="min-h-screen bg-[#06151e] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-[#06151e] border border-white/10 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-white">
           <div className="flex flex-col items-center text-center space-y-2">
             <MaxMindLogo variant="symbol" size="md" isDark={true} />
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-rose-500/20 text-rose-400 border border-rose-500/40">
@@ -351,7 +351,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="email"
                 value={adminEmailInput}
                 onChange={(e) => setAdminEmailInput(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
+                className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
                 placeholder="admin@maxsuplementos.com"
                 required
               />
@@ -365,7 +365,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="password"
                 value={adminKeyInput}
                 onChange={(e) => setAdminKeyInput(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
+                className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
                 placeholder="••••••••••••••••"
                 required
               />
@@ -415,9 +415,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#07090D] text-white flex flex-col">
+    <div className="min-h-screen bg-[#06151e] text-white flex flex-col">
       {/* Barra superior de administración */}
-      <header className="border-b border-[#1E2530] bg-[#0B0F17]/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+      <header className="border-b border-white/10 bg-[#06151e]/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <MaxMindLogo variant="symbol" size="sm" isDark={true} />
           <div>
@@ -701,7 +701,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   {/* Resumen del perfil actualmente enfocado */}
                   <div className="p-3 rounded-xl bg-zinc-950 border border-zinc-800 text-xs flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_6px_#fff]"></span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]"></span>
                       <span className="font-bold text-white">{previewContent.modeBadge}</span>
                     </div>
                     <span className="text-[11px] text-zinc-400">
@@ -881,7 +881,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 )}
 
                 {/* Tarjeta del Desafío Activo */}
-                <div className="p-4 rounded-xl bg-[#101622] border border-[#232A36] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="p-4 rounded-xl bg-[#06151e] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-start gap-3">
                     <div
                       className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 shadow"
@@ -911,7 +911,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                 {/* Tarjeta de Tip del Día & Cita del Coach */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-xl bg-[#0E131C] border border-[#1E2530] space-y-1.5">
+                  <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 space-y-1.5">
                     <div className="flex items-center gap-1.5 text-amber-400">
                       <span className="material-symbols-outlined text-[16px]">lightbulb</span>
                       <span className="text-[10px] font-black uppercase tracking-wider">
@@ -923,7 +923,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-[#0E131C] border border-[#1E2530] space-y-1.5">
+                  <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 space-y-1.5">
                     <div className="flex items-center gap-1.5 text-blue-400">
                       <span className="material-symbols-outlined text-[16px]">format_quote</span>
                       <span className="text-[10px] font-black uppercase tracking-wider">
@@ -950,7 +950,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     {previewContent.recommendedSupplements.map((sup, idx) => (
                       <div
                         key={idx}
-                        className="p-3.5 rounded-xl bg-[#0E131C] border border-[#1E2530] flex flex-col justify-between space-y-2"
+                        className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 flex flex-col justify-between space-y-2"
                       >
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
@@ -976,7 +976,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           </p>
                         </div>
 
-                        <div className="pt-2 border-t border-[#1E2530] flex items-center justify-between text-[10px] text-slate-400">
+                        <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-slate-400">
                           <span>Dosis: <strong className="text-white">{sup.dose}</strong></span>
                           <span>Toma: <strong className="text-blue-300">{sup.timing}</strong></span>
                         </div>
@@ -988,14 +988,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 {/* Métricas Clave y Coach IA */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                   {/* Métricas clave que se priorizan en el Dashboard */}
-                  <div className="p-4 rounded-xl bg-[#0E131C] border border-[#1E2530] space-y-2.5">
+                  <div className="p-4 rounded-xl bg-[#06151e] border border-white/10 space-y-2.5">
                     <h5 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                       <span className="material-symbols-outlined text-[16px] text-blue-400">monitoring</span>
                       <span>Métricas Clave Monitoreadas ({previewContent.keyMetrics.length})</span>
                     </h5>
                     <div className="grid grid-cols-2 gap-2">
                       {previewContent.keyMetrics.map((met) => (
-                        <div key={met.id} className="p-2.5 rounded-lg bg-[#07090D] border border-[#1E2530]">
+                        <div key={met.id} className="p-2.5 rounded-lg bg-[#06151e] border border-white/10">
                           <span className="text-[10px] text-slate-400 block">{met.label}</span>
                           <span className="text-xs font-bold text-white">{met.description}</span>
                         </div>
@@ -1004,7 +1004,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
 
                   {/* Mensaje Inicial de MAX AI */}
-                  <div className="p-4 rounded-xl bg-[#0E131C] border border-[#1E2530] space-y-2.5 flex flex-col justify-between">
+                  <div className="p-4 rounded-xl bg-[#06151e] border border-white/10 space-y-2.5 flex flex-col justify-between">
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-[18px] text-purple-400">smart_toy</span>
@@ -1012,7 +1012,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           Bienvenida del Coach MAX AI
                         </h5>
                       </div>
-                      <p className="text-xs text-slate-300 italic bg-[#07090D] p-3 rounded-lg border border-[#1E2530] leading-relaxed">
+                      <p className="text-xs text-slate-300 italic bg-[#06151e] p-3 rounded-lg border border-white/10 leading-relaxed">
                         "{previewContent.aiWelcomeMessage}"
                       </p>
                     </div>
@@ -1045,7 +1045,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   return (
                     <div
                       key={lvl.id}
-                      className="p-4 rounded-xl bg-[#0F141C] border border-[#1E2530] flex flex-col justify-between space-y-3"
+                      className="p-4 rounded-xl bg-[#06151e] border border-white/10 flex flex-col justify-between space-y-3"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
@@ -1070,7 +1070,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <button
                         type="button"
                         onClick={() => setSelectedLevel(lvl.id)}
-                        className="w-full py-1.5 rounded-lg bg-[#1E2530] hover:bg-[#2563EB] text-slate-300 hover:text-white text-[10px] font-bold transition-all text-center"
+                        className="w-full py-1.5 rounded-lg bg-[#06151e] hover:bg-[#2563EB] text-slate-300 hover:text-white text-[10px] font-bold transition-all text-center"
                       >
                         Ver este nivel
                       </button>
@@ -1128,7 +1128,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 Object.entries(serverStatus.integrations).map(([key, item]: [string, IntegrationStatus]) => (
                   <div
                     key={key}
-                    className="p-5 bg-[#0F141C] border border-[#1E2530] rounded-2xl space-y-3 relative overflow-hidden"
+                    className="p-5 bg-[#06151e] border border-white/10 rounded-2xl space-y-3 relative overflow-hidden"
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -1146,7 +1146,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <span className="text-[11px] text-slate-400 font-mono mt-0.5 block">{item.mode}</span>
                     </div>
 
-                    <div className="pt-2 border-t border-[#1E2530] flex items-center justify-between text-[11px]">
+                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
                       <span className="text-slate-500">Variables de Entorno</span>
                       <span className={item.configured ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
                         {item.configured ? 'Configurada' : 'No provista'}
@@ -1158,24 +1158,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {/* Métricas del Sistema */}
             {serverStatus && (
-              <div className="p-6 bg-[#0F141C] border border-[#1E2530] rounded-2xl space-y-4">
+              <div className="p-6 bg-[#06151e] border border-white/10 rounded-2xl space-y-4">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
                   Telemetría del Servidor
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="p-4 bg-[#07090D] rounded-xl border border-[#1E2530]">
+                  <div className="p-4 bg-[#06151e] rounded-xl border border-white/10">
                     <span className="text-[11px] text-slate-500 block uppercase font-bold">Atletas con XP</span>
                     <span className="text-2xl font-black text-white">{serverStatus.metrics.activeUsers}</span>
                   </div>
-                  <div className="p-4 bg-[#07090D] rounded-xl border border-[#1E2530]">
+                  <div className="p-4 bg-[#06151e] rounded-xl border border-white/10">
                     <span className="text-[11px] text-slate-500 block uppercase font-bold">Comidas Registradas</span>
                     <span className="text-2xl font-black text-white">{serverStatus.metrics.totalFoodLogs}</span>
                   </div>
-                  <div className="p-4 bg-[#07090D] rounded-xl border border-[#1E2530]">
+                  <div className="p-4 bg-[#06151e] rounded-xl border border-white/10">
                     <span className="text-[11px] text-slate-500 block uppercase font-bold">Tomas de Suplemento</span>
                     <span className="text-2xl font-black text-white">{serverStatus.metrics.totalSupplementLogs}</span>
                   </div>
-                  <div className="p-4 bg-[#07090D] rounded-xl border border-[#1E2530]">
+                  <div className="p-4 bg-[#06151e] rounded-xl border border-white/10">
                     <span className="text-[11px] text-slate-500 block uppercase font-bold">Uptime del Proceso</span>
                     <span className="text-2xl font-black text-emerald-400">
                       {Math.floor(serverStatus.metrics.uptimeSeconds / 60)} min
@@ -1210,8 +1210,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {/* Modal para Crear Receta */}
             {isAddRecipeOpen && (
-              <div className="p-6 bg-[#0F141C] border border-[#2563EB]/40 rounded-2xl space-y-4 animate-fadeIn">
-                <div className="flex justify-between items-center border-b border-[#1E2530] pb-3">
+              <div className="p-6 bg-[#06151e] border border-[#2563EB]/40 rounded-2xl space-y-4 animate-fadeIn">
+                <div className="flex justify-between items-center border-b border-white/10 pb-3">
                   <h3 className="font-bold text-sm text-white">Crear Nueva Receta</h3>
                   <button
                     type="button"
@@ -1230,7 +1230,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       value={newRecipe.name}
                       onChange={(e) => setNewRecipe({ ...newRecipe, name: e.target.value })}
                       placeholder="Ej: Omelette Alto en Proteína con Lomo"
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                       required
                     />
                   </div>
@@ -1240,7 +1240,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <select
                       value={newRecipe.category}
                       onChange={(e) => setNewRecipe({ ...newRecipe, category: e.target.value as any })}
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                     >
                       <option value="almuerzo_cena">Almuerzo / Cena</option>
                       <option value="desayuno_merienda">Desayuno / Merienda</option>
@@ -1255,7 +1255,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="number"
                       value={newRecipe.protein}
                       onChange={(e) => setNewRecipe({ ...newRecipe, protein: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                       required
                     />
                   </div>
@@ -1266,7 +1266,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="number"
                       value={newRecipe.carbs}
                       onChange={(e) => setNewRecipe({ ...newRecipe, carbs: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                       required
                     />
                   </div>
@@ -1277,7 +1277,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="number"
                       value={newRecipe.fats}
                       onChange={(e) => setNewRecipe({ ...newRecipe, fats: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                       required
                     />
                   </div>
@@ -1288,7 +1288,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="number"
                       value={newRecipe.calories}
                       onChange={(e) => setNewRecipe({ ...newRecipe, calories: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                       required
                     />
                   </div>
@@ -1299,7 +1299,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="number"
                       value={newRecipe.prepTimeMinutes}
                       onChange={(e) => setNewRecipe({ ...newRecipe, prepTimeMinutes: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                       required
                     />
                   </div>
@@ -1311,7 +1311,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       value={newRecipe.ingredient1}
                       onChange={(e) => setNewRecipe({ ...newRecipe, ingredient1: e.target.value })}
                       placeholder="Ej: 200g Pechuga de pollo"
-                      className="w-full px-3 py-2 bg-[#07090D] border border-[#232A36] rounded-xl text-xs text-white"
+                      className="w-full px-3 py-2 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white"
                     />
                   </div>
 
@@ -1339,7 +1339,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               {recipes.map((r) => (
                 <div
                   key={r.id}
-                  className="p-4 bg-[#0F141C] border border-[#1E2530] rounded-xl flex flex-col justify-between space-y-3"
+                  className="p-4 bg-[#06151e] border border-white/10 rounded-xl flex flex-col justify-between space-y-3"
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
@@ -1360,7 +1360,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <p className="text-[11px] text-slate-400 line-clamp-2">{r.description || 'Receta de alto rendimiento nutricional.'}</p>
                   </div>
 
-                  <div className="pt-2 border-t border-[#1E2530] flex items-center justify-between text-xs">
+                  <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
                     <span className="font-extrabold text-[#3B82F6]">{r.protein}g Proteína</span>
                     <span className="text-slate-400">{r.calories} kcal</span>
                     <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">{r.difficulty}</span>
@@ -1383,8 +1383,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(protocols).map(([id, proto]: [string, LevelProtocolItem]) => (
-                <div key={id} className="p-5 bg-[#0F141C] border border-[#1E2530] rounded-2xl space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#1E2530] pb-3">
+                <div key={id} className="p-5 bg-[#06151e] border border-white/10 rounded-2xl space-y-4">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
                       <span className="w-3 h-3 rounded-full bg-blue-500"></span>
                       <h3 className="font-bold text-sm text-white">Nivel {proto.name}</h3>
@@ -1403,7 +1403,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         type="text"
                         defaultValue={proto.weeklyWorkouts}
                         onBlur={(e) => handleUpdateProtocol(id, { weeklyWorkouts: e.target.value })}
-                        className="w-full px-3 py-1.5 bg-[#07090D] border border-[#232A36] rounded-lg text-xs text-white"
+                        className="w-full px-3 py-1.5 bg-[#06151e] border border-white/10 rounded-lg text-xs text-white"
                       />
                     </div>
 
@@ -1415,7 +1415,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         type="text"
                         defaultValue={proto.workoutDuration}
                         onBlur={(e) => handleUpdateProtocol(id, { workoutDuration: e.target.value })}
-                        className="w-full px-3 py-1.5 bg-[#07090D] border border-[#232A36] rounded-lg text-xs text-white"
+                        className="w-full px-3 py-1.5 bg-[#06151e] border border-white/10 rounded-lg text-xs text-white"
                       />
                     </div>
 
@@ -1428,7 +1428,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           type="text"
                           defaultValue={proto.proteinRatio}
                           onBlur={(e) => handleUpdateProtocol(id, { proteinRatio: e.target.value })}
-                          className="w-full px-3 py-1.5 bg-[#07090D] border border-[#232A36] rounded-lg text-xs text-white"
+                          className="w-full px-3 py-1.5 bg-[#06151e] border border-white/10 rounded-lg text-xs text-white"
                         />
                       </div>
                       <div>
@@ -1439,7 +1439,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           type="text"
                           defaultValue={proto.hydrationGoal}
                           onBlur={(e) => handleUpdateProtocol(id, { hydrationGoal: e.target.value })}
-                          className="w-full px-3 py-1.5 bg-[#07090D] border border-[#232A36] rounded-lg text-xs text-white"
+                          className="w-full px-3 py-1.5 bg-[#06151e] border border-white/10 rounded-lg text-xs text-white"
                         />
                       </div>
                     </div>
@@ -1460,7 +1460,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </p>
             </div>
 
-            <div className="bg-[#0F141C] border border-[#1E2530] rounded-2xl overflow-hidden divide-y divide-[#1E2530]">
+            <div className="bg-[#06151e] border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/10">
               {auditLogs.length === 0 ? (
                 <div className="p-8 text-center text-xs text-slate-500">Sin eventos de auditoría registrados.</div>
               ) : (

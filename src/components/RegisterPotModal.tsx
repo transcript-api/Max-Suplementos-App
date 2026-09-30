@@ -111,9 +111,9 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-[#191c20] text-white rounded-2xl max-w-lg w-full border border-[#282a2f] shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
+      <div className="bg-[#06151e] text-white rounded-2xl max-w-lg w-full border border-white/10 shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#282a2f] pb-3">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">
@@ -127,7 +127,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                 {step === 'ocr_review' && 'Leitura do Rótulo com IA'}
                 {step === 'manual' && 'Preencher Dados do Pote'}
               </h3>
-              <p className="text-xs text-[#8d90a0]">
+              <p className="text-xs text-[#898a8c]">
                 {step === 'scan' && 'Escaneie o código de barras ou escolha da loja'}
                 {step === 'found' && 'Dados que a MAX já conferiu e validou'}
                 {step === 'ocr_review' && 'Ingredientes por dose lidos do rótulo (editáveis)'}
@@ -138,7 +138,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-[#8d90a0] hover:text-white p-1 rounded-lg"
+            className="text-[#898a8c] hover:text-white p-1 rounded-lg"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -147,7 +147,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
         {/* STEP 1: Escaneo o selección rápida */}
         {step === 'scan' && (
           <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-[#111318] border border-dashed border-[#282a2f] text-center space-y-3">
+            <div className="p-4 rounded-xl bg-[#06151e] border border-dashed border-white/10 text-center space-y-3">
               <div className="w-16 h-16 rounded-full bg-[#2563eb]/10 text-[#2563eb] dark:text-[#adc6ff] flex items-center justify-center mx-auto">
                 <span className={`material-symbols-outlined text-[32px] ${isScanning ? 'animate-pulse' : ''}`}>
                   barcode_scanner
@@ -155,7 +155,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
               </div>
               <div>
                 <p className="text-xs font-bold text-white">Aponte a câmera para o código de barras</p>
-                <p className="text-[11px] text-[#8d90a0]">
+                <p className="text-[11px] text-[#898a8c]">
                   Se a MAX já tem o produto no catálogo, os dados vêm 100% preenchidos.
                 </p>
               </div>
@@ -176,7 +176,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                   type="button"
                   onClick={() => handleSimulateScan('7898999887766')}
                   disabled={isScanning}
-                  className="w-full py-2 px-3 rounded-xl bg-[#1d2024] hover:bg-[#282a2f] border border-[#282a2f] text-xs font-bold text-[#c3c6d7] transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 px-3 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 text-xs font-bold text-[#d6d6d6] transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">qr_code_scanner</span>
                   <span>Escanear Whey Isolado MAX (900g)</span>
@@ -186,7 +186,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                   type="button"
                   onClick={() => handleSimulateScan('EXTERNAL_999')}
                   disabled={isScanning}
-                  className="w-full py-2 px-3 rounded-xl bg-[#1d2024] hover:bg-[#282a2f] border border-amber-500/30 text-xs font-bold text-amber-300 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-2 px-3 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-amber-500/30 text-xs font-bold text-amber-300 transition-all flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[16px]">document_scanner</span>
                   <span>Fotografar Tabela de Marca Externa (Leitura IA)</span>
@@ -218,38 +218,38 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
 
             <div className="space-y-2">
               <div>
-                <label className="text-[11px] font-bold text-[#8d90a0] block">Nome do Produto:</label>
+                <label className="text-[11px] font-bold text-[#898a8c] block">Nome do Produto:</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-[#111318] border border-[#282a2f] rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2563eb]"
+                  className="w-full bg-[#06151e] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2563eb]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-bold text-[#8d90a0] block">Marca:</label>
+                  <label className="text-[11px] font-bold text-[#898a8c] block">Marca:</label>
                   <input
                     type="text"
                     value={brand}
                     onChange={(e) => setBrand(e.target.value)}
-                    className="w-full bg-[#111318] border border-[#282a2f] rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2563eb]"
+                    className="w-full bg-[#06151e] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2563eb]"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-bold text-[#8d90a0] block">Tamanho total:</label>
+                  <label className="text-[11px] font-bold text-[#898a8c] block">Tamanho total:</label>
                   <div className="flex gap-1">
                     <input
                       type="number"
                       value={totalSize}
                       onChange={(e) => setTotalSize(Number(e.target.value))}
-                      className="w-20 bg-[#111318] border border-[#282a2f] rounded-lg px-2 py-1.5 text-xs text-white outline-none"
+                      className="w-20 bg-[#06151e] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white outline-none"
                     />
                     <select
                       value={sizeUnit}
                       onChange={(e: any) => setSizeUnit(e.target.value)}
-                      className="flex-1 bg-[#111318] border border-[#282a2f] rounded-lg px-2 py-1.5 text-xs text-white outline-none"
+                      className="flex-1 bg-[#06151e] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white outline-none"
                     >
                       <option value="g">gramas (g)</option>
                       <option value="scoops">scoops</option>
@@ -262,7 +262,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
             </div>
 
             {/* Ingredientes por dose lidos */}
-            <div className="space-y-1.5 pt-2 border-t border-[#282a2f]">
+            <div className="space-y-1.5 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold text-white uppercase tracking-wider">
                   Ingredientes por dose (Lidos do rótulo)
@@ -279,7 +279,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
 
               <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1">
                 {nutritionFacts.map((fact, idx) => (
-                  <div key={idx} className="flex items-center gap-1.5 bg-[#111318] p-1.5 rounded-lg border border-[#282a2f]">
+                  <div key={idx} className="flex items-center gap-1.5 bg-[#06151e] p-1.5 rounded-lg border border-white/10">
                     <input
                       type="text"
                       placeholder="Ingrediente (ex: Cafeína)"
@@ -292,12 +292,12 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                       placeholder="Qtd"
                       value={fact.amount}
                       onChange={(e) => handleUpdateFact(idx, 'amount', Number(e.target.value))}
-                      className="w-16 bg-[#191c20] text-xs text-white border border-[#282a2f] rounded px-1.5 py-0.5 outline-none text-right font-bold"
+                      className="w-16 bg-[#06151e] text-xs text-white border border-white/10 rounded px-1.5 py-0.5 outline-none text-right font-bold"
                     />
                     <select
                       value={fact.unit}
                       onChange={(e: any) => handleUpdateFact(idx, 'unit', e.target.value)}
-                      className="bg-[#191c20] text-xs text-white border border-[#282a2f] rounded px-1 py-0.5 outline-none"
+                      className="bg-[#06151e] text-xs text-white border border-white/10 rounded px-1 py-0.5 outline-none"
                     >
                       <option value="g">g</option>
                       <option value="mg">mg</option>
@@ -320,7 +320,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('scan')}
-                className="w-1/3 py-2 px-3 rounded-xl bg-[#282a2f] text-xs font-bold text-white hover:bg-[#35373d]"
+                className="w-1/3 py-2 px-3 rounded-xl bg-[#06151e] text-xs font-bold text-white hover:bg-[#545a5b]"
               >
                 Voltar
               </button>
@@ -339,10 +339,10 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
         {(step === 'found' || step === 'manual') && (
           <div className="space-y-4">
             {/* Tag de confirmação da loja ou selo provisório */}
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#111318] border border-[#282a2f]">
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#06151e] border border-white/10">
               <div>
                 <h4 className="font-bold text-sm text-white">{name || 'Produto'}</h4>
-                <p className="text-[11px] text-[#8d90a0]">{brand} · {totalSize} {sizeUnit}</p>
+                <p className="text-[11px] text-[#898a8c]">{brand} · {totalSize} {sizeUnit}</p>
               </div>
               {isStoreVerified ? (
                 <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold border border-emerald-500/30 flex items-center gap-1">
@@ -357,11 +357,11 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
             </div>
 
             {/* Regra de ouro da especificação: O app nunca sugere nem preenche dose diária */}
-            <div className="space-y-3 bg-[#111318] p-3.5 rounded-xl border border-[#282a2f]">
+            <div className="space-y-3 bg-[#06151e] p-3.5 rounded-xl border border-white/10">
               <div>
                 <label className="text-xs font-bold text-white flex items-center justify-between">
                   <span>Dose diária que você toma:</span>
-                  <span className="text-[10px] text-[#8d90a0]">Definida por você</span>
+                  <span className="text-[10px] text-[#898a8c]">Definida por você</span>
                 </label>
                 <div className="flex items-center gap-2 mt-1.5">
                   <input
@@ -369,13 +369,13 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                     min="1"
                     value={dailyDose}
                     onChange={(e) => setDailyDose(Math.max(1, Number(e.target.value)))}
-                    className="flex-1 bg-[#191c20] border border-[#282a2f] rounded-xl px-3 py-2 text-white font-bold text-sm outline-none focus:border-[#2563eb]"
+                    className="flex-1 bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white font-bold text-sm outline-none focus:border-[#2563eb]"
                   />
-                  <span className="text-xs text-[#8d90a0] font-bold">
+                  <span className="text-xs text-[#898a8c] font-bold">
                     {sizeUnit} por dia
                   </span>
                 </div>
-                <p className="text-[10px] text-[#8d90a0] mt-1">
+                <p className="text-[10px] text-[#898a8c] mt-1">
                   Use a dose que você já toma. O app não recomenda dosagens.
                 </p>
               </div>
@@ -386,7 +386,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
                   type="date"
                   value={openingDate}
                   onChange={(e) => setOpeningDate(e.target.value)}
-                  className="w-full bg-[#191c20] border border-[#282a2f] rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#2563eb]"
+                  className="w-full bg-[#06151e] border border-white/10 rounded-xl px-3 py-2 text-white text-xs outline-none focus:border-[#2563eb]"
                 />
               </div>
 
@@ -408,7 +408,7 @@ export const RegisterPotModal: React.FC<RegisterPotModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('scan')}
-                className="py-2.5 px-4 rounded-xl bg-[#282a2f] hover:bg-[#35373d] text-xs font-bold text-[#c3c6d7]"
+                className="py-2.5 px-4 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-xs font-bold text-[#d6d6d6]"
               >
                 Trocar Produto
               </button>

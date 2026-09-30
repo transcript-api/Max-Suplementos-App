@@ -162,9 +162,9 @@ ${recipe.nutritionTip}`;
           <span>¡Receta exacta y gramajes copiados al portapapeles!</span>
         </div>
       )}
-      <div className="bg-[#16181d] border border-[#282a2f] w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
+      <div className="bg-[#06151e] border border-white/10 w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative my-auto max-h-[92vh] flex flex-col text-white">
         {/* Header con imagen del plato */}
-        <div className="relative w-full h-56 sm:h-64 bg-[#212429] flex-shrink-0">
+        <div className="relative w-full h-56 sm:h-64 bg-[#06151e] flex-shrink-0">
           <img
             src={recipe.image}
             alt={recipe.name}
@@ -175,7 +175,7 @@ ${recipe.nutritionTip}`;
                 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80';
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#16181d] via-[#16181d]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06151e] via-[#06151e]/50 to-transparent" />
 
           {/* Botón cerrar */}
           <button
@@ -225,14 +225,14 @@ ${recipe.nutritionTip}`;
         {/* Contenido scrolleable */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-5 custom-scrollbar">
           {/* Descripción cultural y fitness */}
-          <p className="text-sm text-[#c3c6d7] leading-relaxed">
+          <p className="text-sm text-[#d6d6d6] leading-relaxed">
             {recipe.description}
           </p>
 
           {/* Selector de porciones interactivo */}
-          <div className="bg-[#1d2024] p-3.5 rounded-xl border border-[#282a2f] space-y-2">
+          <div className="bg-[#06151e] p-3.5 rounded-xl border border-white/10 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#8d90a0] uppercase tracking-wider flex items-center gap-1">
+              <span className="text-xs font-bold text-[#898a8c] uppercase tracking-wider flex items-center gap-1">
                 <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">scale</span>
                 Ajustar Porción
               </span>
@@ -255,7 +255,7 @@ ${recipe.nutritionTip}`;
                   className={`py-1.5 px-1 text-xs font-bold rounded-lg transition-all text-center ${
                     portionMultiplier === p.value
                       ? 'bg-[#2563eb] text-white shadow-md'
-                      : 'bg-[#282a2f] text-[#8d90a0] hover:text-white hover:bg-[#333539]'
+                      : 'bg-[#06151e] text-[#898a8c] hover:text-white hover:bg-[#545a5b]'
                   }`}
                 >
                   {p.label}
@@ -266,7 +266,7 @@ ${recipe.nutritionTip}`;
 
           {/* Panel de Macros recalculados */}
           <div className="grid grid-cols-4 gap-2">
-            <div className="bg-[#191c20] p-3 rounded-xl border border-[#2563eb]/40 text-center">
+            <div className="bg-[#06151e] p-3 rounded-xl border border-[#2563eb]/40 text-center">
               <span className="text-[10px] font-bold text-[#adc6ff] uppercase tracking-wider block">
                 Proteína
               </span>
@@ -278,19 +278,19 @@ ${recipe.nutritionTip}`;
               </span>
             </div>
 
-            <div className="bg-[#191c20] p-3 rounded-xl border border-emerald-500/30 text-center">
+            <div className="bg-[#06151e] p-3 rounded-xl border border-emerald-500/30 text-center">
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">
                 Calorías
               </span>
               <span className="text-xl sm:text-2xl font-black text-white block mt-0.5">
                 {currentCalories}
               </span>
-              <span className="text-[10px] text-[#8d90a0] font-semibold block">
+              <span className="text-[10px] text-[#898a8c] font-semibold block">
                 Energía
               </span>
             </div>
 
-            <div className="bg-[#191c20] p-3 rounded-xl border border-emerald-500/20 text-center">
+            <div className="bg-[#06151e] p-3 rounded-xl border border-emerald-500/20 text-center">
               <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">
                 Carbos
               </span>
@@ -302,7 +302,7 @@ ${recipe.nutritionTip}`;
               </span>
             </div>
 
-            <div className="bg-[#191c20] p-3 rounded-xl border border-amber-500/20 text-center">
+            <div className="bg-[#06151e] p-3 rounded-xl border border-amber-500/20 text-center">
               <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
                 Grasas
               </span>
@@ -316,17 +316,17 @@ ${recipe.nutritionTip}`;
           </div>
 
           {/* Datos rápidos: Tiempo y Dificultad */}
-          <div className="flex items-center justify-around py-2 px-3 bg-[#1d2024] rounded-xl border border-[#282a2f] text-xs text-[#8d90a0]">
+          <div className="flex items-center justify-around py-2 px-3 bg-[#06151e] rounded-xl border border-white/10 text-xs text-[#898a8c]">
             <span className="flex items-center gap-1 font-medium">
               <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">timer</span>
               Tiempo: <strong className="text-white">{recipe.prepTimeMinutes} min</strong>
             </span>
-            <span className="w-px h-4 bg-[#333539]" />
+            <span className="w-px h-4 bg-[#545a5b]" />
             <span className="flex items-center gap-1 font-medium">
               <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">speed</span>
               Dificultad: <strong className="text-white">{recipe.difficulty}</strong>
             </span>
-            <span className="w-px h-4 bg-[#333539]" />
+            <span className="w-px h-4 bg-[#545a5b]" />
             <span className="flex items-center gap-1 font-medium">
               <span className="material-symbols-outlined text-[16px] text-emerald-400">check_circle</span>
               Fitness Auténtico
@@ -334,14 +334,14 @@ ${recipe.nutritionTip}`;
           </div>
 
           {/* Selector de Pestañas Principal */}
-          <div className="flex bg-[#191c20] p-1 rounded-xl border border-[#282a2f] gap-1">
+          <div className="flex bg-[#06151e] p-1 rounded-xl border border-white/10 gap-1">
             <button
               type="button"
               onClick={() => setActiveTab('ingredientes')}
               className={`flex-1 py-2 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                 activeTab === 'ingredientes'
                   ? 'bg-[#2563eb] text-white shadow-md'
-                  : 'text-[#8d90a0] hover:text-white'
+                  : 'text-[#898a8c] hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">shopping_basket</span>
@@ -353,7 +353,7 @@ ${recipe.nutritionTip}`;
               className={`flex-1 py-2 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                 activeTab === 'pasos'
                   ? 'bg-[#2563eb] text-white shadow-md'
-                  : 'text-[#8d90a0] hover:text-white'
+                  : 'text-[#898a8c] hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">skillet</span>
@@ -365,7 +365,7 @@ ${recipe.nutritionTip}`;
               className={`flex-1 py-2 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                 activeTab === 'macros'
                   ? 'bg-[#2563eb] text-white shadow-md'
-                  : 'text-[#8d90a0] hover:text-white'
+                  : 'text-[#898a8c] hover:text-white'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">insights</span>
@@ -377,7 +377,7 @@ ${recipe.nutritionTip}`;
           {activeTab === 'ingredientes' && (
             <div className="space-y-3.5">
               {/* Barra de Progreso y Gamificación de Ingredientes */}
-              <div className="bg-[#191c20] p-3 rounded-xl border border-[#282a2f] space-y-2">
+              <div className="bg-[#06151e] p-3 rounded-xl border border-white/10 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-[16px] text-emerald-400">inventory_2</span>
@@ -397,7 +397,7 @@ ${recipe.nutritionTip}`;
                   </div>
                 </div>
 
-                <div className="w-full bg-[#0c0e12] h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden">
                   <div
                     className="bg-emerald-500 h-full rounded-full transition-all duration-300"
                     style={{ width: `${progressPercent}%` }}
@@ -422,7 +422,7 @@ ${recipe.nutritionTip}`;
                     className={`px-2.5 py-1 rounded-lg font-bold whitespace-nowrap transition-all ${
                       ingredientCategoryFilter === tab.id
                         ? 'bg-[#2563eb]/30 text-[#adc6ff] border border-[#2563eb]/50'
-                        : 'bg-[#14161a] text-[#8d90a0] hover:text-white border border-[#282a2f]'
+                        : 'bg-[#06151e] text-[#898a8c] hover:text-white border border-white/10'
                     }`}
                   >
                     {tab.label}
@@ -450,8 +450,8 @@ ${recipe.nutritionTip}`;
                         onClick={() => toggleIngredient(originalIndex)}
                         className={`rounded-xl border p-2.5 sm:p-3 flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 select-none ${
                           isChecked
-                            ? 'bg-[#121417] border-emerald-500/30 opacity-75'
-                            : 'bg-[#191c20] hover:bg-[#1f2228] border-[#282a2f] hover:border-[#2563eb]/40 shadow-sm'
+                            ? 'bg-[#06151e] border-emerald-500/30 opacity-75'
+                            : 'bg-[#06151e] hover:bg-[#06151e] border-white/10 hover:border-[#2563eb]/40 shadow-sm'
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -460,7 +460,7 @@ ${recipe.nutritionTip}`;
                             className={`w-5 h-5 rounded-full flex items-center justify-center border transition-all flex-shrink-0 ${
                               isChecked
                                 ? 'bg-emerald-500 border-emerald-500 text-black'
-                                : 'border-[#424750] bg-[#16181d]'
+                                : 'border-[#545a5b] bg-[#06151e]'
                             }`}
                           >
                             {isChecked && (
@@ -469,7 +469,7 @@ ${recipe.nutritionTip}`;
                           </div>
 
                           {/* Foto real del ingrediente */}
-                          <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-[#333539] bg-[#212429] relative shadow-inner">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-[#545a5b] bg-[#06151e] relative shadow-inner">
                             <img
                               src={visual.image}
                               alt={ing.name}
@@ -496,7 +496,7 @@ ${recipe.nutritionTip}`;
                             </div>
                             <h4
                               className={`text-xs sm:text-sm font-bold truncate leading-tight ${
-                                isChecked ? 'line-through text-[#8d90a0]' : 'text-white'
+                                isChecked ? 'line-through text-[#898a8c]' : 'text-white'
                               }`}
                             >
                               {ing.name}
@@ -510,7 +510,7 @@ ${recipe.nutritionTip}`;
                             {scaleQuantity(ing.quantity, portionMultiplier)}
                           </span>
                           {portionMultiplier !== 1 && (
-                            <span className="text-[9px] text-[#8d90a0] mt-0.5">
+                            <span className="text-[9px] text-[#898a8c] mt-0.5">
                               x{portionMultiplier} porción
                             </span>
                           )}
@@ -521,7 +521,7 @@ ${recipe.nutritionTip}`;
               </div>
 
               {/* Nota de pie de ingredientes */}
-              <div className="flex items-center gap-2 p-2.5 bg-[#14161a] rounded-xl border border-[#282a2f] text-[11px] text-[#8d90a0]">
+              <div className="flex items-center gap-2 p-2.5 bg-[#06151e] rounded-xl border border-white/10 text-[11px] text-[#898a8c]">
                 <span className="material-symbols-outlined text-[16px] text-emerald-400">verified</span>
                 <span>
                   Medidas 100% exactas en gramos y mililitros adaptadas dinámicamente a tu porción.
@@ -534,7 +534,7 @@ ${recipe.nutritionTip}`;
           {activeTab === 'pasos' && (
             <div className="space-y-3.5">
               {/* Progreso del Cocinero */}
-              <div className="bg-[#191c20] p-3 rounded-xl border border-[#282a2f] space-y-2">
+              <div className="bg-[#06151e] p-3 rounded-xl border border-white/10 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">soup_kitchen</span>
@@ -555,7 +555,7 @@ ${recipe.nutritionTip}`;
                   </div>
                 </div>
 
-                <div className="w-full bg-[#0c0e12] h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-[#06151e] h-2 rounded-full overflow-hidden">
                   <div
                     className="bg-[#2563eb] h-full rounded-full transition-all duration-300"
                     style={{ width: `${stepsProgressPercent}%` }}
@@ -580,8 +580,8 @@ ${recipe.nutritionTip}`;
                       onClick={() => toggleStep(idx)}
                       className={`p-3.5 rounded-xl border transition-all flex items-start gap-3.5 cursor-pointer select-none ${
                         isDone
-                          ? 'bg-[#121417] border-emerald-500/40 opacity-80'
-                          : 'bg-[#191c20] hover:bg-[#1e2127] border-[#282a2f] hover:border-[#2563eb]/40 shadow-sm'
+                          ? 'bg-[#06151e] border-emerald-500/40 opacity-80'
+                          : 'bg-[#06151e] hover:bg-[#06151e] border-white/10 hover:border-[#2563eb]/40 shadow-sm'
                       }`}
                     >
                       <button
@@ -603,13 +603,13 @@ ${recipe.nutritionTip}`;
                           <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#adc6ff]">
                             Paso {idx + 1}
                           </span>
-                          <span className="text-[10px] text-[#8d90a0]">
+                          <span className="text-[10px] text-[#898a8c]">
                             {isDone ? 'Completado' : 'Toca para marcar'}
                           </span>
                         </div>
                         <p
                           className={`text-xs sm:text-sm leading-relaxed ${
-                            isDone ? 'line-through text-[#8d90a0]' : 'text-[#e0e2ed]'
+                            isDone ? 'line-through text-[#898a8c]' : 'text-[#d6d6d6]'
                           }`}
                         >
                           {step}
@@ -626,14 +626,14 @@ ${recipe.nutritionTip}`;
           {activeTab === 'macros' && (
             <div className="space-y-3.5">
               {/* Tarjeta de Resumen Macronutricional */}
-              <div className="bg-[#191c20] p-4 rounded-xl border border-[#282a2f] space-y-3">
+              <div className="bg-[#06151e] p-4 rounded-xl border border-white/10 space-y-3">
                 <h4 className="text-xs font-black uppercase tracking-wider text-[#adc6ff] flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px]">pie_chart</span>
                   Distribución Calórica y Macronutrientes
                 </h4>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <div className="bg-[#14161a] p-2.5 rounded-xl border border-blue-500/20 text-center">
+                  <div className="bg-[#06151e] p-2.5 rounded-xl border border-blue-500/20 text-center">
                     <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider block">
                       Proteína
                     </span>
@@ -645,7 +645,7 @@ ${recipe.nutritionTip}`;
                     </span>
                   </div>
 
-                  <div className="bg-[#14161a] p-2.5 rounded-xl border border-emerald-500/20 text-center">
+                  <div className="bg-[#06151e] p-2.5 rounded-xl border border-emerald-500/20 text-center">
                     <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">
                       Carbohidratos
                     </span>
@@ -657,7 +657,7 @@ ${recipe.nutritionTip}`;
                     </span>
                   </div>
 
-                  <div className="bg-[#14161a] p-2.5 rounded-xl border border-amber-500/20 text-center">
+                  <div className="bg-[#06151e] p-2.5 rounded-xl border border-amber-500/20 text-center">
                     <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
                       Grasas Saludables
                     </span>
@@ -669,7 +669,7 @@ ${recipe.nutritionTip}`;
                     </span>
                   </div>
 
-                  <div className="bg-[#14161a] p-2.5 rounded-xl border border-purple-500/20 text-center">
+                  <div className="bg-[#06151e] p-2.5 rounded-xl border border-purple-500/20 text-center">
                     <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider block">
                       Calorías Totales
                     </span>
@@ -684,12 +684,12 @@ ${recipe.nutritionTip}`;
               </div>
 
               {/* Tip del Nutricionista MAXFORM */}
-              <div className="p-4 bg-gradient-to-br from-blue-950/40 via-[#191c20] to-[#16181d] border border-blue-500/30 rounded-xl space-y-1.5 shadow-md">
+              <div className="p-4 bg-gradient-to-br from-blue-950/40 via-[#06151e] to-[#06151e] border border-blue-500/30 rounded-xl space-y-1.5 shadow-md">
                 <div className="flex items-center gap-1.5 text-[#adc6ff] text-xs font-black uppercase tracking-wider">
                   <span className="material-symbols-outlined text-[18px] text-[#adc6ff]">lightbulb</span>
                   <span>Tip del Nutricionista Deportivo MAX</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#c3c6d7] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#d6d6d6] leading-relaxed">
                   {recipe.nutritionTip}
                 </p>
               </div>
@@ -698,7 +698,7 @@ ${recipe.nutritionTip}`;
         </div>
 
         {/* Footer con Botón de Registro Gamificado */}
-        <div className="p-4 bg-[#14161a] border-t border-[#282a2f] flex-shrink-0">
+        <div className="p-4 bg-[#06151e] border-t border-white/10 flex-shrink-0">
           {loggedSuccess ? (
             <div className="w-full py-3 bg-emerald-500/20 border border-emerald-500/50 rounded-xl text-emerald-300 text-center font-bold text-sm flex items-center justify-center gap-2 animate-bounce">
               <span className="material-symbols-outlined text-[20px]">verified</span>

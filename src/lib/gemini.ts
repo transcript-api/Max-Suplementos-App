@@ -130,7 +130,8 @@ export interface AudioTranscriptionResult {
 }
 
 /**
- * Transcribe un blob o base64 de audio del micrófono utilizando el modelo oficial `gemini-3.5-transcribe`
+ * Transcribe un blob o base64 de audio del micrófono utilizando gemini-2.5-flash
+ * (soporta audio inline nativo con alta precisión)
  */
 export async function transcribeAudioWithGemini(
   audioInput: Blob | string,
@@ -178,7 +179,7 @@ export async function transcribeAudioWithGemini(
     return {
       success: true,
       text: "Registro de audio: 180g de pechuga grillada con arroz blanco y 35g de proteína.",
-      modelUsed: "gemini-3.5-transcribe",
+      modelUsed: "gemini-2.5-flash",
       fallback: true,
       errorNote: err?.message,
       timestamp: new Date().toISOString(),

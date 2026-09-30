@@ -85,7 +85,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             handleSend(res.text);
           }
         } catch (err) {
-          console.error('Error al transcribir con gemini-3.5-transcribe:', err);
+          console.error('Error al transcribir con gemini-2.5-flash:', err);
         } finally {
           setIsTranscribing(false);
         }
@@ -190,9 +190,9 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full rounded-2xl border dark:bg-[#191c20] bg-white dark:border-[#282a2f] border-slate-200 shadow-xl overflow-hidden">
+    <div className="flex flex-col w-full rounded-2xl border dark:bg-[#06151e] bg-white dark:border-white/10 border-slate-200 shadow-xl overflow-hidden">
       {/* Encabezado del Chat */}
-      <div className="p-4 border-b dark:border-[#282a2f] border-slate-200 flex items-center justify-between dark:bg-[#1d2024]/70 bg-slate-50">
+      <div className="p-4 border-b dark:border-white/10 border-slate-200 flex items-center justify-between dark:bg-[#06151e]/70 bg-slate-50">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#2563eb] text-white flex items-center justify-center shadow-md">
             <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
@@ -201,7 +201,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
             <h3 className="font-headline-md text-sm font-bold dark:text-white text-slate-800 flex items-center gap-1.5">
               MAX AI · Estimador de Comidas
             </h3>
-            <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+            <p className="text-xs dark:text-[#898a8c] text-slate-500">
               Ingresa lo que comiste para calcular proteínas y calorías
             </p>
           </div>
@@ -223,42 +223,42 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
               className={`max-w-[88%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
                 msg.sender === 'user'
                   ? 'bg-[#2563eb] text-white rounded-br-none shadow-md'
-                  : 'dark:bg-[#1d2024] bg-slate-100 dark:text-[#e2e2e8] text-slate-800 rounded-bl-none border dark:border-[#282a2f] border-slate-200'
+                  : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#d6d6d6] text-slate-800 rounded-bl-none border dark:border-white/10 border-slate-200'
               }`}
             >
               <p>{msg.text}</p>
 
               {/* Ficha de macronutrientes estructurada */}
               {msg.estimate && (
-                <div className="mt-3 pt-3 border-t dark:border-[#282a2f] border-slate-200 space-y-2">
+                <div className="mt-3 pt-3 border-t dark:border-white/10 border-slate-200 space-y-2">
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="dark:bg-[#191c20] bg-white p-2.5 rounded-xl border dark:border-[#282a2f] border-slate-200">
-                      <span className="text-[10px] uppercase font-bold dark:text-[#8d90a0] text-slate-400 block">
+                    <div className="dark:bg-[#06151e] bg-white p-2.5 rounded-xl border dark:border-white/10 border-slate-200">
+                      <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-400 block">
                         Proteína Estimada
                       </span>
                       <div className="flex items-baseline gap-1 mt-0.5">
                         <span className="text-lg font-bold text-[#2563eb] dark:text-[#b4c5ff]">
                           {msg.estimate.protein}
                         </span>
-                        <span className="text-xs dark:text-[#8d90a0] text-slate-500">gramos</span>
+                        <span className="text-xs dark:text-[#898a8c] text-slate-500">gramos</span>
                       </div>
                     </div>
 
-                    <div className="dark:bg-[#191c20] bg-white p-2.5 rounded-xl border dark:border-[#282a2f] border-slate-200">
-                      <span className="text-[10px] uppercase font-bold dark:text-[#8d90a0] text-slate-400 block">
+                    <div className="dark:bg-[#06151e] bg-white p-2.5 rounded-xl border dark:border-white/10 border-slate-200">
+                      <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-400 block">
                         Calorías Totales
                       </span>
                       <div className="flex items-baseline gap-1 mt-0.5">
                         <span className="text-lg font-bold dark:text-white text-slate-800">
                           {msg.estimate.calories}
                         </span>
-                        <span className="text-xs dark:text-[#8d90a0] text-slate-500">kcal</span>
+                        <span className="text-xs dark:text-[#898a8c] text-slate-500">kcal</span>
                       </div>
                     </div>
                   </div>
 
                   {msg.estimate.carbs !== undefined && msg.estimate.fats !== undefined && (
-                    <div className="flex items-center justify-between text-[11px] px-1 dark:text-[#8d90a0] text-slate-500">
+                    <div className="flex items-center justify-between text-[11px] px-1 dark:text-[#898a8c] text-slate-500">
                       <span>Carbohidratos: <strong>{msg.estimate.carbs}g</strong></span>
                       <span>Grasas: <strong>{msg.estimate.fats}g</strong></span>
                     </div>
@@ -296,7 +296,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
                 </div>
               )}
             </div>
-            <span className="text-[10px] dark:text-[#8d90a0] text-slate-400 mt-1 px-1">
+            <span className="text-[10px] dark:text-[#898a8c] text-slate-400 mt-1 px-1">
               {msg.timestamp}
             </span>
           </div>
@@ -311,13 +311,13 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
       </div>
 
       {/* Prompts Rápidos */}
-      <div className="px-4 py-2 border-t dark:border-[#282a2f] border-slate-200 flex gap-2 overflow-x-auto no-scrollbar dark:bg-[#1d2024]/40 bg-slate-50">
+      <div className="px-4 py-2 border-t dark:border-white/10 border-slate-200 flex gap-2 overflow-x-auto no-scrollbar dark:bg-[#06151e]/40 bg-slate-50">
         {quickPrompts.map((prompt) => (
           <button
             key={prompt}
             type="button"
             onClick={() => handleSend(prompt)}
-            className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full border dark:border-[#282a2f] border-slate-300 dark:bg-[#191c20] bg-white dark:text-[#c3c6d7] text-slate-700 hover:border-[#2563eb] hover:text-[#2563eb] transition-colors"
+            className="flex-shrink-0 text-xs px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-300 dark:bg-[#06151e] bg-white dark:text-[#d6d6d6] text-slate-700 hover:border-[#2563eb] hover:text-[#2563eb] transition-colors"
           >
             {prompt}
           </button>
@@ -330,20 +330,20 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
           e.preventDefault();
           handleSend();
         }}
-        className="p-3 border-t dark:border-[#282a2f] border-slate-200 flex items-center gap-2 dark:bg-[#191c20] bg-white"
+        className="p-3 border-t dark:border-white/10 border-slate-200 flex items-center gap-2 dark:bg-[#06151e] bg-white"
       >
-        {/* Botón Micrófono con gemini-3.5-transcribe */}
+        {/* Botón Micrófono con gemini-2.5-flash */}
         <button
           type="button"
           onClick={isRecording ? stopVoiceRecording : startVoiceRecording}
           disabled={loading || isTranscribing}
-          title={isRecording ? 'Detener y transcribir' : 'Grabar audio con micrófono (gemini-3.5-transcribe)'}
+          title={isRecording ? 'Detener y transcribir' : 'Grabar audio con micrófono (gemini-2.5-flash)'}
           className={`p-2.5 rounded-xl transition-all flex items-center justify-center shrink-0 ${
             isRecording
               ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400/50'
               : isTranscribing
               ? 'bg-purple-500/20 text-purple-400'
-              : 'dark:bg-[#1d2024] bg-slate-100 dark:text-[#8d90a0] text-slate-500 hover:text-white dark:hover:bg-[#282a2f]'
+              : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-500 hover:text-white dark:hover:bg-[#06151e]'
           }`}
         >
           <span className="material-symbols-outlined text-[19px]">
@@ -373,7 +373,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
               <button
                 type="button"
                 onClick={cancelVoiceRecording}
-                className="px-2 py-1 bg-[#282a2f] hover:bg-[#34373d] text-[#c3c6d7] rounded-lg text-xs transition-all"
+                className="px-2 py-1 bg-[#06151e] hover:bg-[#545a5b] text-[#d6d6d6] rounded-lg text-xs transition-all"
               >
                 Cancelar
               </button>
@@ -382,16 +382,16 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
         ) : isTranscribing ? (
           <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-purple-500/10 rounded-xl border border-purple-500/20 text-purple-300 text-xs">
             <div className="w-3.5 h-3.5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin shrink-0"></div>
-            <span className="font-semibold">Transcribiendo con gemini-3.5-transcribe...</span>
+            <span className="font-semibold">Transcribiendo con gemini-2.5-flash...</span>
           </div>
         ) : (
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Escribe o dicta por voz qué comiste (gemini-3.5-transcribe)..."
+            placeholder="Escribe o dicta por voz qué comiste (gemini-2.5-flash)..."
             disabled={loading}
-            className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#1d2024] bg-slate-100 dark:border-[#282a2f] border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#8d90a0] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
+            className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#06151e] bg-slate-100 dark:border-white/10 border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#898a8c] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563eb]"
           />
         )}
 

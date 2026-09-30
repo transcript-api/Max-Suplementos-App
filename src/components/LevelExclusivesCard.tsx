@@ -75,7 +75,7 @@ export const LevelExclusivesCard: React.FC<LevelExclusivesCardProps> = ({
         <button
           onClick={onOpenLevelModal}
           type="button"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all self-start sm:self-auto border dark:bg-[#15171e] bg-white shadow-sm hover:scale-[1.02]"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all self-start sm:self-auto border dark:bg-[#06151e] bg-white shadow-sm hover:scale-[1.02]"
           style={{
             borderColor: cooldown.isAllowed ? `${protocol.themeColor}55` : '#f59e0b55',
           }}
@@ -100,7 +100,7 @@ export const LevelExclusivesCard: React.FC<LevelExclusivesCardProps> = ({
 
       {/* Grid de Exigencias Específicas del Nivel */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">
-        <div className="p-2.5 rounded-xl dark:bg-[#12141a]/80 bg-white/80 border dark:border-[#22242b] border-slate-200/80">
+        <div className="p-2.5 rounded-xl dark:bg-[#06151e]/80 bg-white/80 border dark:border-white/10 border-slate-200/80">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
             Sesiones
           </span>
@@ -112,7 +112,7 @@ export const LevelExclusivesCard: React.FC<LevelExclusivesCardProps> = ({
           </span>
         </div>
 
-        <div className="p-2.5 rounded-xl dark:bg-[#12141a]/80 bg-white/80 border dark:border-[#22242b] border-slate-200/80">
+        <div className="p-2.5 rounded-xl dark:bg-[#06151e]/80 bg-white/80 border dark:border-white/10 border-slate-200/80">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
             Proteína / kg
           </span>
@@ -124,7 +124,7 @@ export const LevelExclusivesCard: React.FC<LevelExclusivesCardProps> = ({
           </span>
         </div>
 
-        <div className="p-2.5 rounded-xl dark:bg-[#12141a]/80 bg-white/80 border dark:border-[#22242b] border-slate-200/80">
+        <div className="p-2.5 rounded-xl dark:bg-[#06151e]/80 bg-white/80 border dark:border-white/10 border-slate-200/80">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
             Hidratación
           </span>
@@ -136,7 +136,7 @@ export const LevelExclusivesCard: React.FC<LevelExclusivesCardProps> = ({
           </span>
         </div>
 
-        <div className="p-2.5 rounded-xl dark:bg-[#12141a]/80 bg-white/80 border dark:border-[#22242b] border-slate-200/80">
+        <div className="p-2.5 rounded-xl dark:bg-[#06151e]/80 bg-white/80 border dark:border-white/10 border-slate-200/80">
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">
             Exigencia Form
           </span>
@@ -150,7 +150,7 @@ export const LevelExclusivesCard: React.FC<LevelExclusivesCardProps> = ({
       </div>
 
       {/* Regla exclusiva de tolerancia y aviso de nivel */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-2.5 border-t dark:border-[#22242b] border-slate-200/80 text-[11px]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-2.5 border-t dark:border-white/10 border-slate-200/80 text-[11px]">
         <div className="flex items-center gap-1.5 dark:text-slate-300 text-slate-600">
           <span className="font-bold text-slate-400">Tolerancia del Nivel:</span>
           <span>{protocol.formTolerance}</span>

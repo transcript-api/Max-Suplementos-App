@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { calculateLevelFromXP } from '../lib/gamification';
 import { LEVEL_PROTOCOLS, checkLevelCooldown, CooldownStatus } from '../lib/levelProtocols';
 import { CommitmentLevel } from '../types';
@@ -11,6 +11,8 @@ interface ProfileTabProps {
   streakDays: number;
   userName?: string;
   userEmail?: string;
+  userAvatar?: string;
+  onUpdateAvatar?: (avatarUrl: string | null) => void;
   isDemoMode?: boolean;
   isPro?: boolean;
   proExpiry?: string;
@@ -38,6 +40,8 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   streakDays,
   userName = 'Atleta',
   userEmail,
+  userAvatar,
+  onUpdateAvatar,
   isDemoMode = false,
   isPro = false,
   proExpiry,
@@ -67,8 +71,51 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const levelInfo = calculateLevelFromXP(xp);
+
+  // Redimensiona la foto elegida a un cuadrado chico antes de guardarla, para
+  // no inflar el estado del usuario (y su sincronización) con imágenes pesadas.
+  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setAvatarError('Elegí un archivo de imagen (JPG, PNG, etc).');
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      setAvatarError('La imagen es muy pesada (máx. 8MB).');
+      return;
+    }
+    setAvatarError(null);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const size = 256;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const scale = Math.max(size / img.width, size / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        onUpdateAvatar?.(dataUrl);
+      };
+      img.onerror = () => setAvatarError('No se pudo procesar esa imagen. Probá con otra.');
+      img.src = reader.result as string;
+    };
+    reader.onerror = () => setAvatarError('No se pudo leer el archivo. Probá de nuevo.');
+    reader.readAsDataURL(file);
+  };
 
   // Simulación de frecuencia cardíaca de wearable solo en modo demostración
   useEffect(() => {
@@ -117,19 +164,19 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           <head>
             <title>Informe MAXMIND - ${userName}</title>
             <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; color: #0f172a; max-width: 800px; margin: 0 auto; }
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px; color: #06151e; max-width: 800px; margin: 0 auto; }
               .header { border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
-              h1 { font-size: 22px; margin: 0; color: #0f172a; font-weight: 800; letter-spacing: -0.5px; }
-              .meta { color: #64748b; font-size: 13px; margin-top: 4px; }
-              .badge { background: #eff6ff; color: #2563eb; padding: 4px 10px; border-radius: 9999px; font-weight: bold; font-size: 12px; border: 1px solid #bfdbfe; }
+              h1 { font-size: 22px; margin: 0; color: #06151e; font-weight: 800; letter-spacing: -0.5px; }
+              .meta { color: #898a8c; font-size: 13px; margin-top: 4px; }
+              .badge { background: #ffffff; color: #2563eb; padding: 4px 10px; border-radius: 9999px; font-weight: bold; font-size: 12px; border: 1px solid #bfdbfe; }
               .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
-              .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
-              .card h3 { margin: 0; font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px; }
-              .card p { font-size: 22px; font-weight: 800; margin: 6px 0 0; color: #0f172a; }
-              .protocol-card { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 12px; padding: 18px; margin-bottom: 24px; }
+              .card { background: #ffffff; border: 1px solid #d6d6d6; border-radius: 12px; padding: 16px; }
+              .card h3 { margin: 0; font-size: 11px; text-transform: uppercase; color: #898a8c; font-weight: 700; letter-spacing: 0.5px; }
+              .card p { font-size: 22px; font-weight: 800; margin: 6px 0 0; color: #06151e; }
+              .protocol-card { background: #ffffff; border: 1px solid #d6d6d6; border-radius: 12px; padding: 18px; margin-bottom: 24px; }
               .protocol-card h3 { margin: 0 0 8px 0; font-size: 14px; font-weight: bold; }
-              .protocol-card p { font-size: 13px; line-height: 1.6; color: #334155; margin: 0; }
-              .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 16px; }
+              .protocol-card p { font-size: 13px; line-height: 1.6; color: #545a5b; margin: 0; }
+              .footer { font-size: 11px; color: #898a8c; text-align: center; margin-top: 40px; border-top: 1px solid #d6d6d6; padding-top: 16px; }
               @media print { body { padding: 20px; } }
             </style>
           </head>
@@ -208,10 +255,10 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 {isDemoMode ? 'DEMO' : 'EN VIVO'}
               </span>
             </div>
-            <p className="text-xs text-[#CBD5E1] mt-0.5">
+            <p className="text-xs text-[#d6d6d6] mt-0.5">
               {isDemoMode
                 ? 'Datos cargados para presentar a Max Suplementos (4.860 XP, 12 días, Nivel 7).'
-                : 'Cuenta limpia desde cero con progreso diario real y sincronización en Firestore.'}
+                : 'Cuenta limpia desde cero con progreso diario real y sincronización en Supabase.'}
             </p>
           </div>
         </div>
@@ -221,7 +268,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={() => onToggleDemoMode(!isDemoMode)}
-              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-[#101A2B] hover:bg-[#1E293B] border border-[#1E293B] text-xs font-bold text-white transition-all active:scale-95"
+              className="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-[#06151e] hover:bg-[#06151e] border border-white/10 text-xs font-bold text-white transition-all active:scale-95"
             >
               {isDemoMode ? 'Cambiar a Usuario Real (0 XP)' : 'Cargar Modo Demo Santiago'}
             </button>
@@ -254,27 +301,51 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Tarjeta de Perfil de Atleta */}
-      <div className="bg-[#101A2B] rounded-2xl p-6 border border-[#1E293B] shadow-xl relative overflow-hidden">
+      <div className="bg-[#06151e] rounded-2xl p-6 border border-white/10 shadow-xl relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-          <div className="relative">
-            <img
-              alt="Perfil Atleta"
-              className="w-20 h-20 rounded-full object-cover ring-2 ring-[#2563EB]"
-              src={isDemoMode
-                ? "https://lh3.googleusercontent.com/aida-public/AB6AXuB00Sme5qLyZzyIcklY0V1cNgikF0b-przMsFdt9GlxaDvjn41F6y-xbkVD5ke3cL80Ug9uhsWESJxMGuCMTNvUtMAnjCpU3FOpHn7ZRbCwS_U97WAfOyfA_iLMXBcCrxvgHFd_KuE_9H20o5rVMKworvuJ7T_KvRzBEfK5-8cWzNQyhT4Syy65tezqrvCui3VxNf0_ctWPMHP3yWL077ZYnGDwYAP6ukdWpgVJAQwJUFxXEam8u9NFkw"
-                : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
-              }
-            />
-            <span className="absolute bottom-0 right-0 bg-[#2563EB] text-white p-1 rounded-full text-xs">
-              ⭐
-            </span>
+          <div className="relative group">
+            {userAvatar ? (
+              <img
+                alt={`Perfil de ${userName}`}
+                className="w-20 h-20 rounded-full object-cover ring-2 ring-[#2563EB]"
+                src={userAvatar}
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-full ring-2 ring-[#2563EB] bg-gradient-to-tr from-blue-700 to-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
+                {userName ? userName.charAt(0).toUpperCase() : 'A'}
+              </div>
+            )}
+
+            {onUpdateAvatar && (
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                title="Cambiar foto de perfil"
+                aria-label="Cambiar foto de perfil"
+                className="absolute bottom-0 right-0 bg-[#2563EB] hover:bg-[#3B82F6] text-white p-1.5 rounded-full text-xs shadow-md border-2 border-[#06151e] transition-colors active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[14px] block">photo_camera</span>
+              </button>
+            )}
+            {onUpdateAvatar && (
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarFileChange}
+              />
+            )}
           </div>
 
           <div className="text-center sm:text-left flex-1">
+            {avatarError && (
+              <p className="text-xs text-rose-400 font-medium mb-1">{avatarError}</p>
+            )}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h2 className="font-headline-lg text-white font-bold text-xl sm:text-2xl">{userName}</h2>
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-[#898a8c]">
                   {isDemoMode ? 'Atleta de Rendimiento · Miembro Pro' : 'Atleta en Formación · Cuenta Personal'}
                 </p>
               </div>
@@ -288,17 +359,17 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-[#1E293B] text-center">
-              <div className="bg-[#0B1220] p-2.5 rounded-xl border border-[#1E293B]">
-                <span className="text-[11px] text-[#64748B] uppercase block font-bold">Experiencia</span>
+            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/10 text-center">
+              <div className="bg-[#06151e] p-2.5 rounded-xl border border-white/10">
+                <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Experiencia</span>
                 <span className="text-sm text-white font-bold">{xp.toLocaleString('es-ES')} XP</span>
               </div>
-              <div className="bg-[#0B1220] p-2.5 rounded-xl border border-[#1E293B]">
-                <span className="text-[11px] text-[#64748B] uppercase block font-bold">Peso actual</span>
+              <div className="bg-[#06151e] p-2.5 rounded-xl border border-white/10">
+                <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Peso actual</span>
                 <span className="text-sm text-white font-bold">{weightKg ? weightKg.toFixed(1).replace('.', ',') : (isDemoMode ? '72,4' : '70,0')} kg</span>
               </div>
-              <div className="bg-[#0B1220] p-2.5 rounded-xl border border-[#1E293B]">
-                <span className="text-[11px] text-[#64748B] uppercase block font-bold">Form media</span>
+              <div className="bg-[#06151e] p-2.5 rounded-xl border border-white/10">
+                <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Form media</span>
                 <span className="text-sm text-[#3B82F6] font-bold">{formScore}%</span>
               </div>
             </div>
@@ -310,8 +381,8 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       {onOpenPremium && (
         <div className={`p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg border ${
           isPro 
-            ? 'bg-gradient-to-r from-[#0F291E] to-[#0B1220] border-emerald-500/40'
-            : 'bg-gradient-to-r from-[#102A56] to-[#0B1220] border-[#2563EB]/40'
+            ? 'bg-gradient-to-r from-[#0F291E] to-[#06151e] border-emerald-500/40'
+            : 'bg-gradient-to-r from-[#102A56] to-[#06151e] border-[#2563EB]/40'
         }`}>
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border ${
@@ -330,7 +401,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[#CBD5E1]">
+              <p className="text-xs text-[#d6d6d6]">
                 {isPro 
                   ? `Suscripción Pro activa hasta ${proExpiry ? new Date(proExpiry).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '30 días'}. IA sin límites y 20% OFF en tienda.`
                   : 'Desbloquea el análisis con IA de comidas por foto y 20% OFF en suplementación.'}
@@ -375,14 +446,14 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         );
 
         return (
-          <div className="bg-[#1d2024] rounded-xl p-5 border border-[#282a2f] space-y-4">
+          <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">tune</span>
                   <h3 className="font-headline-md text-white font-bold">Protocolo de Nivel de Compromiso</h3>
                 </div>
-                <p className="text-xs text-[#8d90a0] mt-1">
+                <p className="text-xs text-[#898a8c] mt-1">
                   Ciclos cerrados de 14 días para asegurar adaptaciones fisiológicas reales sin alternar a capricho.
                 </p>
               </div>
@@ -391,7 +462,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
                 <button
                   type="button"
                   onClick={onOpenLevelModal}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border self-start sm:self-auto bg-[#14161c] text-white hover:scale-[1.02] shadow-sm flex items-center gap-1.5"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border self-start sm:self-auto bg-[#06151e] text-white hover:scale-[1.02] shadow-sm flex items-center gap-1.5"
                   style={{ borderColor: `${proto.themeColor}55` }}
                 >
                   {cooldown.isAllowed ? (
@@ -433,7 +504,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             </div>
 
             {/* Explicación científica del período de 14 días */}
-            <div className="p-3 bg-[#13151a] rounded-xl border border-[#23252b] text-xs text-slate-400 space-y-1">
+            <div className="p-3 bg-[#06151e] rounded-xl border border-white/10 text-xs text-slate-400 space-y-1">
               <span className="text-slate-300 font-bold block text-[11px]">
                 ⚖️ Por qué el protocolo exige 14 días:
               </span>
@@ -446,7 +517,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       })()}
 
       {/* Dispositivos Wearables Sincronizados */}
-      <div className="bg-[#1d2024] rounded-xl p-5 border border-[#282a2f] space-y-4">
+      <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 space-y-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">watch</span>
@@ -466,34 +537,34 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="p-3 bg-[#191c20] rounded-xl border border-[#282a2f] flex items-center justify-between">
+          <div className="p-3 bg-[#06151e] rounded-xl border border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-[11px] text-[#8d90a0] uppercase block font-bold">Frecuencia Cardíaca</span>
+              <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Frecuencia Cardíaca</span>
               <div className="flex items-baseline gap-1 mt-0.5">
                 <span className="text-xl font-bold text-white">{isDemoMode ? bpm : '--'}</span>
-                <span className="text-xs text-[#8d90a0]">BPM</span>
+                <span className="text-xs text-[#898a8c]">BPM</span>
               </div>
             </div>
             <span className={`material-symbols-outlined ${isDemoMode ? 'text-red-400 animate-pulse' : 'text-slate-600'} text-[24px]`}>favorite</span>
           </div>
 
-          <div className="p-3 bg-[#191c20] rounded-xl border border-[#282a2f] flex items-center justify-between">
+          <div className="p-3 bg-[#06151e] rounded-xl border border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-[11px] text-[#8d90a0] uppercase block font-bold">Calorías Activas</span>
+              <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Calorías Activas</span>
               <div className="flex items-baseline gap-1 mt-0.5">
                 <span className="text-xl font-bold text-white">{isDemoMode ? '540' : '--'}</span>
-                <span className="text-xs text-[#8d90a0]">kcal</span>
+                <span className="text-xs text-[#898a8c]">kcal</span>
               </div>
             </div>
             <span className={`material-symbols-outlined ${isDemoMode ? 'text-amber-400' : 'text-slate-600'} text-[24px]`}>local_fire_department</span>
           </div>
 
-          <div className="p-3 bg-[#191c20] rounded-xl border border-[#282a2f] flex items-center justify-between">
+          <div className="p-3 bg-[#06151e] rounded-xl border border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-[11px] text-[#8d90a0] uppercase block font-bold">Pasos Hoy</span>
+              <span className="text-[11px] text-[#898a8c] uppercase block font-bold">Pasos Hoy</span>
               <div className="flex items-baseline gap-1 mt-0.5">
                 <span className="text-xl font-bold text-white">{isDemoMode ? '8.420' : '--'}</span>
-                <span className="text-xs text-[#8d90a0]">pasos</span>
+                <span className="text-xs text-[#898a8c]">pasos</span>
               </div>
             </div>
             <span className={`material-symbols-outlined ${isDemoMode ? 'text-[#b4c5ff]' : 'text-slate-600'} text-[24px]`}>directions_walk</span>
@@ -508,12 +579,12 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Exportar Reportes y Datos */}
-      <div className="bg-[#1d2024] rounded-xl p-5 border border-[#282a2f] space-y-3">
+      <div className="bg-[#06151e] rounded-xl p-5 border border-white/10 space-y-3">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">ios_share</span>
           <h3 className="font-headline-md text-white font-bold">Exportar Telemetría e Informes</h3>
         </div>
-        <p className="text-xs text-[#8d90a0]">
+        <p className="text-xs text-[#898a8c]">
           Exporta tus datos estructurados para análisis en hojas de cálculo o envía un PDF a tu preparador físico.
         </p>
 
@@ -521,7 +592,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           <button
             type="button"
             onClick={handleExportCSV}
-            className="flex items-center justify-center gap-2 bg-[#191c20] hover:bg-[#282a2f] text-white p-3 rounded-xl border border-[#282a2f] text-xs font-bold transition-colors active:scale-95"
+            className="flex items-center justify-center gap-2 bg-[#06151e] hover:bg-[#06151e] text-white p-3 rounded-xl border border-white/10 text-xs font-bold transition-colors active:scale-95"
           >
             <span className="material-symbols-outlined text-[18px] text-[#b4c5ff]">table_view</span>
             <span>Descargar datos CSV</span>
@@ -530,7 +601,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           <button
             type="button"
             onClick={handleExportPDF}
-            className="flex items-center justify-center gap-2 bg-[#191c20] hover:bg-[#282a2f] text-white p-3 rounded-xl border border-[#282a2f] text-xs font-bold transition-colors active:scale-95"
+            className="flex items-center justify-center gap-2 bg-[#06151e] hover:bg-[#06151e] text-white p-3 rounded-xl border border-white/10 text-xs font-bold transition-colors active:scale-95"
           >
             <span className="material-symbols-outlined text-[18px] text-[#adc6ff]">picture_as_pdf</span>
             <span>Informe para Nutricionista (PDF)</span>
@@ -550,7 +621,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Aplicación Móvil PWA e Instalación Directa */}
-      <div className="bg-[#151a24] rounded-2xl p-5 border border-[#232b3b] space-y-3.5 shadow-xl">
+      <div className="bg-[#06151e] rounded-2xl p-5 border border-white/10 space-y-3.5 shadow-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-600/20 text-[#3b82f6] flex items-center justify-center">
@@ -573,7 +644,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           )}
         </div>
 
-        <div className="p-3 bg-[#0d1117] rounded-xl border border-[#1b2230] text-xs text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3 bg-[#06151e] rounded-xl border border-white/10 text-xs text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <span className="font-bold text-white block">
               {isAppInstalled ? '✅ App ejecutándose en modo nativo' : '📲 Descarga desde el navegador'}
@@ -599,7 +670,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
       </div>
 
       {/* Administración de Cuenta y Sesión */}
-      <div className="bg-[#101A2B] rounded-2xl p-5 border border-[#1E293B] space-y-4 shadow-xl">
+      <div className="bg-[#06151e] rounded-2xl p-5 border border-white/10 space-y-4 shadow-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#3B82F6] text-[22px]">manage_accounts</span>
@@ -615,7 +686,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onOpenOnboarding}
-              className="flex items-center justify-center gap-2 bg-[#151D30] hover:bg-[#1E293B] text-slate-200 p-3 rounded-xl border border-[#1E293B] text-xs font-bold transition-all active:scale-95"
+              className="flex items-center justify-center gap-2 bg-[#06151e] hover:bg-[#06151e] text-slate-200 p-3 rounded-xl border border-white/10 text-xs font-bold transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px] text-[#3B82F6]">tune</span>
               <span>Reconfigurar Metas</span>
@@ -626,7 +697,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onLogout}
-              className="flex items-center justify-center gap-2 bg-[#151D30] hover:bg-rose-500/20 text-rose-300 p-3 rounded-xl border border-[#1E293B] hover:border-rose-500/40 text-xs font-bold transition-all active:scale-95"
+              className="flex items-center justify-center gap-2 bg-[#06151e] hover:bg-rose-500/20 text-rose-300 p-3 rounded-xl border border-white/10 hover:border-rose-500/40 text-xs font-bold transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px]">logout</span>
               <span>Cerrar Sesión</span>
@@ -638,7 +709,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <button
               type="button"
               onClick={onOpenAdmin}
-              className="col-span-full flex items-center justify-center gap-2 bg-[#0f1929] hover:bg-[#162040] text-blue-300 p-3 rounded-xl border border-blue-900/50 hover:border-blue-700/60 text-xs font-bold transition-all active:scale-95"
+              className="col-span-full flex items-center justify-center gap-2 bg-[#06151e] hover:bg-[#162040] text-blue-300 p-3 rounded-xl border border-blue-900/50 hover:border-blue-700/60 text-xs font-bold transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px] text-blue-400">admin_panel_settings</span>
               <span>Panel Administrativo</span>
@@ -647,7 +718,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
         </div>
 
         {onDeleteAccount && !isDemoMode && (
-          <div className="pt-3 border-t border-[#1E293B]/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div>
               <span className="text-xs font-semibold text-rose-400 block">Zona de Peligro</span>
               <span className="text-[11px] text-slate-500">Eliminar permanentemente los datos locales y la cuenta de este dispositivo.</span>

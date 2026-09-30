@@ -216,8 +216,8 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
     if (active && payload && payload.length) {
       const data: ChartItemData = payload[0].payload;
       return (
-        <div className="p-3 rounded-xl dark:bg-[#191c20] bg-white border dark:border-[#282a2f] border-slate-200 shadow-xl text-xs space-y-1.5 min-w-[190px]">
-          <div className="flex items-center justify-between pb-1 border-b dark:border-[#282a2f] border-slate-200">
+        <div className="p-3 rounded-xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-xl text-xs space-y-1.5 min-w-[190px]">
+          <div className="flex items-center justify-between pb-1 border-b dark:border-white/10 border-slate-200">
             <span className="font-bold dark:text-white text-slate-900">{data.fullDate}</span>
             {data.isToday && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#2563eb]/20 text-[#b4c5ff] font-extrabold">
@@ -227,7 +227,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="dark:text-[#8d90a0] text-slate-500">
+            <span className="dark:text-[#898a8c] text-slate-500">
               {dateRange === '7days' ? 'Consumo:' : 'Promedio Diario:'}
             </span>
             <span className="font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">
@@ -237,7 +237,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
 
           {dateRange === '4weeks' && data.totalIntake !== undefined && (
             <div className="flex items-center justify-between">
-              <span className="dark:text-[#8d90a0] text-slate-500">Total Semana:</span>
+              <span className="dark:text-[#898a8c] text-slate-500">Total Semana:</span>
               <span className="font-bold dark:text-white text-slate-800">
                 {data.totalIntake.toLocaleString('es-ES')} g
               </span>
@@ -246,7 +246,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
 
           {dateRange === '4weeks' && data.daysMet !== undefined && (
             <div className="flex items-center justify-between">
-              <span className="dark:text-[#8d90a0] text-slate-500">Días en Meta:</span>
+              <span className="dark:text-[#898a8c] text-slate-500">Días en Meta:</span>
               <span className="font-bold text-emerald-500">
                 {data.daysMet} / 7 días
               </span>
@@ -254,12 +254,12 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
           )}
 
           <div className="flex items-center justify-between">
-            <span className="dark:text-[#8d90a0] text-slate-500">Meta Diaria:</span>
+            <span className="dark:text-[#898a8c] text-slate-500">Meta Diaria:</span>
             <span className="font-medium dark:text-white text-slate-800">{data.target} g</span>
           </div>
 
-          <div className="flex items-center justify-between pt-1 border-t dark:border-[#282a2f] border-slate-200">
-            <span className="dark:text-[#8d90a0] text-slate-500">Cumplimiento:</span>
+          <div className="flex items-center justify-between pt-1 border-t dark:border-white/10 border-slate-200">
+            <span className="dark:text-[#898a8c] text-slate-500">Cumplimiento:</span>
             <span
               className={`font-black ${
                 data.percentage >= 100
@@ -303,10 +303,10 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
   return (
     <section
       id="protein-compliance-weekly-section"
-      className="p-4 sm:p-5 rounded-2xl dark:bg-[#191c20] bg-white border dark:border-[#282a2f] border-slate-200 shadow-sm space-y-4"
+      className="p-4 sm:p-5 rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
     >
       {/* Encabezado Principal y Selectores */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-2 border-b dark:border-[#282a2f] border-slate-200">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-2 border-b dark:border-white/10 border-slate-200">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2 flex-wrap">
             <div className="w-7 h-7 rounded-lg bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] flex items-center justify-center">
@@ -325,7 +325,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               </span>
             )}
           </div>
-          <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+          <p className="text-xs dark:text-[#898a8c] text-slate-500">
             {dateRange === '7days'
               ? 'Monitoreo diario de consistencia para maximizar síntesis proteica miofibrilar y recuperación.'
               : 'Visión macro y acumulada de las últimas 4 semanas para evaluar adaptación y sobrecarga metabólica.'}
@@ -335,14 +335,14 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
         {/* Barra de Controles: Selector de Rango de Fechas + Switch Gramos/% */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Selector de Rango de Fechas (7 Días vs 4 Semanas) */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#111318] p-1 rounded-xl border dark:border-[#282a2f] border-slate-200">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#06151e] p-1 rounded-xl border dark:border-white/10 border-slate-200">
             <button
               type="button"
               onClick={() => setDateRange('7days')}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 dateRange === '7days'
                   ? 'bg-[#2563eb] text-white shadow-sm'
-                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+                  : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
               title="Ver los últimos 7 días detallados"
             >
@@ -355,7 +355,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 dateRange === '4weeks'
                   ? 'bg-[#2563eb] text-white shadow-sm'
-                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+                  : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
               title="Ver las últimas 4 semanas acumuladas"
             >
@@ -365,14 +365,14 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
           </div>
 
           {/* Switcher de visualización: Gramos vs Porcentaje */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#111318] p-1 rounded-xl border dark:border-[#282a2f] border-slate-200">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#06151e] p-1 rounded-xl border dark:border-white/10 border-slate-200">
             <button
               type="button"
               onClick={() => setViewMode('grams')}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'grams'
                   ? 'bg-[#2563eb] text-white shadow-sm'
-                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+                  : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
             >
               Gramos (g)
@@ -383,7 +383,7 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
               className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'percent'
                   ? 'bg-[#2563eb] text-white shadow-sm'
-                  : 'dark:text-[#8d90a0] text-slate-600 hover:text-white'
+                  : 'dark:text-[#898a8c] text-slate-600 hover:text-white'
               }`}
             >
               % Meta
@@ -395,15 +395,15 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
       {/* Tarjetas de Resumen KPI adaptadas al rango de fechas */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {/* KPI 1: Cumplimiento de Días o Semanas */}
-        <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
-          <span className="text-[10px] uppercase font-bold dark:text-[#8d90a0] text-slate-500 block">
+        <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-500 block">
             {dateRange === '7days' ? 'Días en Meta' : 'Semanas en Meta'}
           </span>
           <div className="flex items-baseline gap-1 mt-0.5">
             <span className="text-lg sm:text-xl font-extrabold dark:text-white text-slate-900">
               {daysMetCount}
             </span>
-            <span className="text-xs dark:text-[#8d90a0] text-slate-500">
+            <span className="text-xs dark:text-[#898a8c] text-slate-500">
               / {dateRange === '7days' ? '7 días' : '4 semanas'}
             </span>
           </div>
@@ -413,49 +413,49 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
         </div>
 
         {/* KPI 2: Promedio del Periodo */}
-        <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
-          <span className="text-[10px] uppercase font-bold dark:text-[#8d90a0] text-slate-500 block">
+        <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-500 block">
             {dateRange === '7days' ? 'Promedio Semanal' : 'Promedio 4 Semanas'}
           </span>
           <div className="flex items-baseline gap-1 mt-0.5">
             <span className="text-lg sm:text-xl font-extrabold text-[#2563eb] dark:text-[#b4c5ff]">
               {avgIntake}
             </span>
-            <span className="text-xs dark:text-[#8d90a0] text-slate-500">g / día</span>
+            <span className="text-xs dark:text-[#898a8c] text-slate-500">g / día</span>
           </div>
-          <span className="text-[10px] font-medium dark:text-[#8d90a0] text-slate-500 mt-0.5 block">
+          <span className="text-[10px] font-medium dark:text-[#898a8c] text-slate-500 mt-0.5 block">
             {avgPercentage}% de meta ({targetProtein}g)
           </span>
         </div>
 
         {/* KPI 3: Mejor Pico */}
-        <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
-          <span className="text-[10px] uppercase font-bold dark:text-[#8d90a0] text-slate-500 block">
+        <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-500 block">
             {dateRange === '7days' ? 'Pico Máximo' : 'Mejor Semana'}
           </span>
           <div className="flex items-baseline gap-1 mt-0.5">
             <span className="text-lg sm:text-xl font-extrabold text-emerald-500 dark:text-emerald-400">
               {maxIntake}
             </span>
-            <span className="text-xs dark:text-[#8d90a0] text-slate-500">
+            <span className="text-xs dark:text-[#898a8c] text-slate-500">
               {dateRange === '7days' ? 'g' : 'g/día'}
             </span>
           </div>
-          <span className="text-[10px] font-medium dark:text-[#8d90a0] text-slate-500 mt-0.5 block">
+          <span className="text-[10px] font-medium dark:text-[#898a8c] text-slate-500 mt-0.5 block">
             Rango anabólico óptimo
           </span>
         </div>
 
         {/* KPI 4: Estado en Vivo / Total Periodo */}
-        <div className="p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
-          <span className="text-[10px] uppercase font-bold dark:text-[#8d90a0] text-slate-500 block">
+        <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
+          <span className="text-[10px] uppercase font-bold dark:text-[#898a8c] text-slate-500 block">
             {dateRange === '7days' ? 'Hoy (En Vivo)' : 'Total 4 Semanas'}
           </span>
           <div className="flex items-baseline gap-1 mt-0.5">
             <span className="text-lg sm:text-xl font-extrabold dark:text-white text-slate-900">
               {dateRange === '7days' ? currentProtein : totalProteinPeriod.toLocaleString('es-ES')}
             </span>
-            <span className="text-xs dark:text-[#8d90a0] text-slate-500">
+            <span className="text-xs dark:text-[#898a8c] text-slate-500">
               {dateRange === '7days' ? `/ ${targetProtein}g` : 'g totales'}
             </span>
           </div>
@@ -476,8 +476,8 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
       </div>
 
       {/* Gráfico de Barras Recharts con Línea de Referencia */}
-      <div className="p-4 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200 space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs dark:text-[#8d90a0] text-slate-500">
+      <div className="p-4 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs dark:text-[#898a8c] text-slate-500">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span>
@@ -509,21 +509,21 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke={isDark ? '#282a2f' : '#e2e8f0'}
+                stroke={isDark ? '#06151e' : '#d6d6d6'}
                 vertical={false}
               />
               <XAxis
                 dataKey="day"
-                stroke={isDark ? '#8d90a0' : '#64748b'}
+                stroke={isDark ? '#898a8c' : '#898a8c'}
                 fontSize={12}
                 tickLine={false}
-                axisLine={{ stroke: isDark ? '#282a2f' : '#cbd5e1' }}
+                axisLine={{ stroke: isDark ? '#06151e' : '#d6d6d6' }}
               />
               <YAxis
-                stroke={isDark ? '#8d90a0' : '#64748b'}
+                stroke={isDark ? '#898a8c' : '#898a8c'}
                 fontSize={11}
                 tickLine={false}
-                axisLine={{ stroke: isDark ? '#282a2f' : '#cbd5e1' }}
+                axisLine={{ stroke: isDark ? '#06151e' : '#d6d6d6' }}
                 domain={viewMode === 'grams' ? [0, Math.max(180, maxIntake + 20)] : [0, 130]}
                 unit={viewMode === 'grams' ? 'g' : '%'}
               />
@@ -576,12 +576,12 @@ export const ProteinWeeklyChart: React.FC<ProteinWeeklyChartProps> = ({
       </div>
 
       {/* Nota de Rendimiento y Acceso Rápido */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl dark:bg-[#111318] bg-slate-50 border dark:border-[#282a2f] border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[18px] text-[#2563eb] flex-shrink-0">
             health_and_safety
           </span>
-          <p className="text-xs dark:text-[#c3c6d7] text-slate-600 leading-relaxed">
+          <p className="text-xs dark:text-[#d6d6d6] text-slate-600 leading-relaxed">
             {dateRange === '7days' ? (
               <>
                 Total acumulado semanal: <strong className="dark:text-white text-slate-900">{totalProteinPeriod.toLocaleString('es-ES')}g</strong> de proteína asimilada. Mantener este ritmo previene catabolismo durante descansos.

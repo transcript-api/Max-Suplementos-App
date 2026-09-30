@@ -40,16 +40,16 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-[#191c20] text-white rounded-2xl max-w-xl w-full border border-[#282a2f] shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
+      <div className="bg-[#06151e] text-white rounded-2xl max-w-xl w-full border border-white/10 shadow-2xl p-5 my-8 space-y-4 animate-fadeIn">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#282a2f] pb-3">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-[#adc6ff] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">clinical_notes</span>
             </div>
             <div>
               <h3 className="font-bold text-base text-white">Resumo para o Nutricionista</h3>
-              <p className="text-xs text-[#8d90a0]">
+              <p className="text-xs text-[#898a8c]">
                 Média diária do período em valores absolutos (g, mg, mcg), pronta para envio
               </p>
             </div>
@@ -57,7 +57,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
           <button
             type="button"
             onClick={onClose}
-            className="text-[#8d90a0] hover:text-white p-1 rounded-lg"
+            className="text-[#898a8c] hover:text-white p-1 rounded-lg"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -140,7 +140,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
 
         {/* Modal interno de Detalhe: "De onde vem cada grama" */}
         {selectedIngredient && (
-          <div className="p-3.5 rounded-xl bg-[#111318] border border-[#282a2f] space-y-2 animate-fadeIn">
+          <div className="p-3.5 rounded-xl bg-[#06151e] border border-white/10 space-y-2 animate-fadeIn">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-white flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-[#adc6ff]">pie_chart</span>
@@ -149,7 +149,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
               <button
                 type="button"
                 onClick={() => setSelectedIngredient(null)}
-                className="text-xs text-[#8d90a0] hover:text-white"
+                className="text-xs text-[#898a8c] hover:text-white"
               >
                 Fechar detalhe
               </button>
@@ -157,7 +157,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
 
             <div className="space-y-1">
               {selectedIngredient.sources.map((src, idx) => (
-                <div key={idx} className="flex items-center justify-between text-xs py-1 px-2 rounded bg-[#191c20]">
+                <div key={idx} className="flex items-center justify-between text-xs py-1 px-2 rounded bg-[#06151e]">
                   <div className="flex items-center gap-1.5">
                     <span className="text-white font-medium">{src.potName}</span>
                     {!src.isVerified && (
@@ -180,7 +180,7 @@ export const NutritionistSummaryModal: React.FC<NutritionistSummaryModalProps> =
           <button
             type="button"
             onClick={onClose}
-            className="w-1/3 py-2.5 rounded-xl bg-[#282a2f] hover:bg-[#35373d] text-xs font-bold text-[#c3c6d7]"
+            className="w-1/3 py-2.5 rounded-xl bg-[#06151e] hover:bg-[#545a5b] text-xs font-bold text-[#d6d6d6]"
           >
             Fechar
           </button>

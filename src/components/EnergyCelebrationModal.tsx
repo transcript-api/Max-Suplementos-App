@@ -30,7 +30,7 @@ export const EnergyCelebrationModal: React.FC<EnergyCelebrationModalProps> = ({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
       {/* Tarjeta de Celebración */}
-      <div className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#1e2330] via-[#161a24] to-[#0f1219] border border-amber-500/40 shadow-2xl text-center space-y-5 overflow-hidden">
+      <div className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#06151e] via-[#06151e] to-[#06151e] border border-amber-500/40 shadow-2xl text-center space-y-5 overflow-hidden">
         {/* Resplandor superior festivo */}
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-amber-500/25 via-blue-500/20 to-emerald-500/25 blur-3xl pointer-events-none rounded-full" />
 

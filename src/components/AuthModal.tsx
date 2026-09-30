@@ -63,7 +63,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-md bg-[#0B1220] border border-[#1E293B] rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 my-auto">
+      <div className="relative w-full max-w-md bg-[#06151e] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-white space-y-6 my-auto">
         {/* Encabezado con Logo y Marca MAXMIND */}
         <div className="flex flex-col items-center text-center space-y-2">
           <div className="mb-1">
@@ -83,7 +83,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {/* Pestañas de Cambio de Modo */}
         {mode !== 'recovery' && (
-          <div className="p-1 bg-[#151D30] rounded-xl flex items-center border border-[#1E293B]">
+          <div className="p-1 bg-[#06151e] rounded-xl flex items-center border border-white/10">
             <button
               type="button"
               onClick={() => { setMode('register'); setError(null); }}
@@ -127,7 +127,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <button
                   type="button"
                   onClick={onSwitchToDemo}
-                  className="py-2 px-3 bg-[#151D30] hover:bg-[#1E293B] text-slate-300 font-semibold text-xs rounded-xl border border-[#1E293B] transition-all flex items-center justify-center gap-1.5"
+                  className="py-2 px-3 bg-[#06151e] hover:bg-[#06151e] text-slate-300 font-semibold text-xs rounded-xl border border-white/10 transition-all flex items-center justify-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[16px]">play_circle</span>
                   <span>Demo Santiago</span>
@@ -177,7 +177,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ej. Martín"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#151D30] border border-[#1E293B] rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
                   />
                 </div>
               </div>
@@ -197,7 +197,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@email.com"
-                  className="w-full pl-10 pr-4 py-2.5 bg-[#151D30] border border-[#1E293B] rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
                 />
               </div>
             </div>
@@ -229,7 +229,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Mínimo 6 caracteres"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#151D30] border border-[#1E293B] rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
                   />
                 </div>
               </div>
@@ -251,7 +251,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Repite tu contraseña"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[#151D30] border border-[#1E293B] rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB] transition-colors"
                   />
                 </div>
               </div>
@@ -279,7 +279,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         {/* Opciones Inferiores y Modo Demo */}
-        <div className="pt-2 border-t border-[#1E293B] flex flex-col items-center gap-3">
+        <div className="pt-2 border-t border-white/10 flex flex-col items-center gap-3">
           {mode === 'recovery' ? (
             <button
               type="button"
@@ -296,7 +296,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 className="text-xs text-slate-400 hover:text-[#3B82F6] flex items-center gap-1.5 transition-colors"
               >
                 <span>O probar perfil de demostración</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#1E293B] text-slate-300">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#06151e] text-slate-300">
                   Santiago (12d racha)
                 </span>
               </button>

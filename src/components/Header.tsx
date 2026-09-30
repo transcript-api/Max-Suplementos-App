@@ -13,6 +13,7 @@ interface HeaderProps {
   isDemoMode?: boolean;
   onToggleDemoMode?: () => void;
   userName?: string;
+  userAvatar?: string;
   onOpenAudioTranscriber?: () => void;
   onDownloadApp?: () => void;
   isAppInstalled?: boolean;
@@ -29,6 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   isDemoMode = false,
   onToggleDemoMode,
   userName = 'Atleta',
+  userAvatar,
   onOpenAudioTranscriber,
   onDownloadApp,
   isAppInstalled = false,
@@ -48,16 +50,16 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="fixed top-0 inset-x-0 z-40 dark:bg-[#0c0e12]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-[#1d2024] border-slate-200 pt-safe transition-colors duration-200">
+    <header className="fixed top-0 inset-x-0 z-40 dark:bg-[#06151e]/90 bg-white/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b dark:border-white/10 border-slate-200 pt-safe transition-colors duration-200">
       <div className="h-16 px-4 max-w-[1280px] mx-auto flex items-center justify-between">
         {/* Logo & Marca MAXMIND (Sin fondo) */}
         <div className="flex items-center">
           <MaxMindLogo variant="horizontal" size="sm" isDark={isDark} />
         </div>
 
-        {/* Indicador de sincronización Offline/Firestore, Sección y Acciones */}
+        {/* Indicador de sincronización Offline/Supabase, Sección y Acciones */}
         <div className="flex items-center gap-2 sm:gap-2.5">
-          {/* Badge de Sincronización Offline / Firestore */}
+          {/* Badge de Sincronización Offline / Supabase */}
           {syncStatus && (
             <button
               type="button"
@@ -78,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-blue-500/15 text-blue-600 dark:text-[#b4c5ff] border-blue-500/30 animate-pulse'
                   : syncStatus.pendingCount > 0
                   ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border-amber-500/40'
-                  : 'dark:bg-[#191c20] bg-slate-100 dark:text-[#8d90a0] text-slate-600 dark:border-[#282a2f] border-slate-200'
+                  : 'dark:bg-[#06151e] bg-slate-100 dark:text-[#898a8c] text-slate-600 dark:border-white/10 border-slate-200'
               }`}
             >
               <span
@@ -140,23 +142,23 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
-          <span className="font-label-caps text-label-caps uppercase dark:text-[#8d90a0] text-slate-500 hidden lg:inline-block dark:bg-[#191c20] bg-slate-100 px-2.5 py-1 rounded-full border dark:border-[#282a2f] border-slate-200">
+          <span className="font-label-caps text-label-caps uppercase dark:text-[#898a8c] text-slate-500 hidden lg:inline-block dark:bg-[#06151e] bg-slate-100 px-2.5 py-1 rounded-full border dark:border-white/10 border-slate-200">
             {getTitle()}
           </span>
 
-          {/* Botón Transcriptor de Audio con Micrófono (gemini-3.5-transcribe) */}
+          {/* Botón Transcriptor de Audio con Micrófono (gemini-2.5-flash) */}
           {onOpenAudioTranscriber && (
             <button
               type="button"
               onClick={onOpenAudioTranscriber}
               aria-label="Transcribir audio con voz"
               title="Transcribir audio o comidas por voz"
-              className="p-2 rounded-xl dark:bg-[#191c20] bg-slate-100 dark:hover:bg-[#282a2f] hover:bg-slate-200 text-purple-500 dark:text-purple-400 border dark:border-[#282a2f] border-slate-200 transition-all flex items-center justify-center active:scale-95 group relative"
+              className="p-2 rounded-xl dark:bg-[#06151e] bg-slate-100 dark:hover:bg-[#06151e] hover:bg-slate-200 text-purple-500 dark:text-purple-400 border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95 group relative"
             >
               <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">
                 speech_to_text
               </span>
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-purple-500 ring-2 dark:ring-[#0c0e12] ring-white"></span>
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-purple-500 ring-2 dark:ring-white/10 ring-white"></span>
             </button>
           )}
 
@@ -167,7 +169,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onToggleDark}
               aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-              className="p-2 rounded-xl dark:bg-[#191c20] bg-slate-100 dark:hover:bg-[#282a2f] hover:bg-slate-200 text-slate-700 dark:text-[#b4c5ff] border dark:border-[#282a2f] border-slate-200 transition-all flex items-center justify-center active:scale-95"
+              className="p-2 rounded-xl dark:bg-[#06151e] bg-slate-100 dark:hover:bg-[#06151e] hover:bg-slate-200 text-slate-700 dark:text-[#b4c5ff] border dark:border-white/10 border-slate-200 transition-all flex items-center justify-center active:scale-95"
             >
               <span className="material-symbols-outlined text-[20px]">
                 {isDark ? 'light_mode' : 'dark_mode'}
@@ -183,18 +185,18 @@ export const Header: React.FC<HeaderProps> = ({
             title={`Perfil de ${userName}`}
             className="relative flex items-center justify-center p-0.5 rounded-full hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-[#2563eb] active:scale-95"
           >
-            {isDemoMode ? (
-              <img 
-                alt="Perfil de Santiago" 
-                className="w-8 h-8 rounded-full object-cover ring-1 ring-[#2563eb]/50" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB00Sme5qLyZzyIcklY0V1cNgikF0b-przMsFdt9GlxaDvjn41F6y-xbkVD5ke3cL80Ug9uhsWESJxMGuCMTNvUtMAnjCpU3FOpHn7ZRbCwS_U97WAfOyfA_iLMXBcCrxvgHFd_KuE_9H20o5rVMKworvuJ7T_KvRzBEfK5-8cWzNQyhT4Syy65tezqrvCui3VxNf0_ctWPMHP3yWL077ZYnGDwYAP6ukdWpgVJAQwJUFxXEam8u9NFkw"
+            {userAvatar ? (
+              <img
+                alt={`Perfil de ${userName}`}
+                className="w-8 h-8 rounded-full object-cover ring-1 ring-[#2563eb]/50"
+                src={userAvatar}
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-700 to-indigo-500 flex items-center justify-center text-white text-xs font-bold ring-1 ring-blue-400/50 shadow-sm">
                 {userName ? userName.charAt(0).toUpperCase() : 'A'}
               </div>
             )}
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#2563eb] ring-2 dark:ring-[#0c0e12] ring-white"></span>
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#2563eb] ring-2 dark:ring-white/10 ring-white"></span>
           </button>
         </div>
       </div>

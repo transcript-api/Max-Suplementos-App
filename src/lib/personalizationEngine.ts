@@ -87,10 +87,10 @@ export const AVAILABLE_GOALS: { id: PrimaryGoal; label: string; icon: string; de
 ];
 
 export const AVAILABLE_LEVELS: { id: CommitmentLevel; label: string; tag: string; color: string; description: string }[] = [
-  { id: 'Básico', label: 'Básico (Iniciación)', tag: 'TITANIO MATE', color: '#A1A1AA', description: '3 entrenos/semana, metas sencillas, foco en no abandonar' },
-  { id: 'Intermedio', label: 'Intermedio (Progreso)', tag: 'ACERO PULIDO', color: '#D4D4D8', description: '4 entrenos/semana, suplementación clave y balance calórico' },
-  { id: 'Avanzado', label: 'Avanzado (Alto Rendimiento)', tag: 'PLATINO RADIANTE', color: '#E4E4E7', description: '5 entrenos/semana, macros pesados y timing de tomas' },
-  { id: 'Extremo', label: 'Extremo (Tolerancia Cero)', tag: 'DIAMANTE ÉLITE', color: '#FFFFFF', description: 'Protocolo de competición, disciplina total, 6 tareas diarias' },
+  { id: 'Básico', label: 'Básico (Iniciación)', tag: 'TITANIO MATE', color: '#898a8c', description: '3 entrenos/semana, metas sencillas, foco en no abandonar' },
+  { id: 'Intermedio', label: 'Intermedio (Progreso)', tag: 'ACERO PULIDO', color: '#d6d6d6', description: '4 entrenos/semana, suplementación clave y balance calórico' },
+  { id: 'Avanzado', label: 'Avanzado (Alto Rendimiento)', tag: 'PLATINO RADIANTE', color: '#d6d6d6', description: '5 entrenos/semana, macros pesados y timing de tomas' },
+  { id: 'Extremo', label: 'Extremo (Tolerancia Cero)', tag: 'DIAMANTE ÉLITE', color: '#ffffff', description: 'Protocolo de competición, disciplina total, 6 tareas diarias' },
 ];
 
 export function normalizeGoal(rawGoal?: string): PrimaryGoal {
@@ -403,14 +403,14 @@ function buildKeyMetrics(
   modality: TrainingModality = 'gimnasio'
 ): KeyMetric[] {
   const allMetrics: KeyMetric[] = [
-    { id: 'protein', label: 'Proteína', icon: 'egg_alt', accentColor: '#D4D4D8', description: 'Gramos consumidos vs. tu meta diaria' },
-    { id: 'calories', label: 'Calorías', icon: 'local_fire_department', accentColor: '#E4E4E7', description: 'Balance calórico del día' },
-    { id: 'hydration', label: 'Hidratación', icon: 'water_drop', accentColor: '#A1A1AA', description: 'Litros consumidos hoy' },
-    { id: 'training', label: 'Entrenamiento', icon: 'fitness_center', accentColor: '#FFFFFF', description: 'Sesión completada del día' },
-    { id: 'sleep', label: 'Sueño', icon: 'bedtime', accentColor: '#71717A', description: 'Calidad de descanso nocturno' },
-    { id: 'supplements', label: 'Suplementos', icon: 'medication', accentColor: '#D4D4D8', description: 'Tomas completadas hoy' },
-    { id: 'streak', label: 'Racha', icon: 'local_fire_department', accentColor: '#FFFFFF', description: 'Días consecutivos completados' },
-    { id: 'carbs', label: 'Carbohidratos', icon: 'grain', accentColor: '#A1A1AA', description: 'Carbos consumidos vs. meta' },
+    { id: 'protein', label: 'Proteína', icon: 'egg_alt', accentColor: '#d6d6d6', description: 'Gramos consumidos vs. tu meta diaria' },
+    { id: 'calories', label: 'Calorías', icon: 'local_fire_department', accentColor: '#d6d6d6', description: 'Balance calórico del día' },
+    { id: 'hydration', label: 'Hidratación', icon: 'water_drop', accentColor: '#898a8c', description: 'Litros consumidos hoy' },
+    { id: 'training', label: 'Entrenamiento', icon: 'fitness_center', accentColor: '#ffffff', description: 'Sesión completada del día' },
+    { id: 'sleep', label: 'Sueño', icon: 'bedtime', accentColor: '#898a8c', description: 'Calidad de descanso nocturno' },
+    { id: 'supplements', label: 'Suplementos', icon: 'medication', accentColor: '#d6d6d6', description: 'Tomas completadas hoy' },
+    { id: 'streak', label: 'Racha', icon: 'local_fire_department', accentColor: '#ffffff', description: 'Días consecutivos completados' },
+    { id: 'carbs', label: 'Carbohidratos', icon: 'grain', accentColor: '#898a8c', description: 'Carbos consumidos vs. meta' },
   ];
 
   const priorityMap: Record<string, string[]> = {
@@ -505,10 +505,10 @@ function buildBadge(goal: string, level: CommitmentLevel) {
   };
 
   const levelColors: Record<CommitmentLevel, string> = {
-    Básico: '#A1A1AA',
-    Intermedio: '#D4D4D8',
-    Avanzado: '#E4E4E7',
-    Extremo: '#FFFFFF',
+    Básico: '#898a8c',
+    Intermedio: '#d6d6d6',
+    Avanzado: '#d6d6d6',
+    Extremo: '#ffffff',
   };
 
   const levelAlert: Record<CommitmentLevel, string | undefined> = {
@@ -520,7 +520,7 @@ function buildBadge(goal: string, level: CommitmentLevel) {
 
   return {
     modeBadge: `${level.toUpperCase()} · ${goalShort[goal] ?? 'PERSONALIZADO'}`,
-    modeBadgeColor: levelColors[level] ?? '#FFFFFF',
+    modeBadgeColor: levelColors[level] ?? '#ffffff',
     levelAlert: levelAlert[level],
   };
 }
@@ -598,7 +598,7 @@ export function getMealFocusTags(goal: string): string[] {
 }
 
 export function getCaloricBalanceColor(value: 'superavit' | 'deficit' | 'mantenimiento'): string {
-  return value === 'superavit' ? '#E4E4E7' : value === 'deficit' ? '#D4D4D8' : '#A1A1AA';
+  return value === 'superavit' ? '#d6d6d6' : value === 'deficit' ? '#d6d6d6' : '#898a8c';
 }
 
 export function getHomeWelcomeMessage(name: string, goal: string, level: CommitmentLevel): string {

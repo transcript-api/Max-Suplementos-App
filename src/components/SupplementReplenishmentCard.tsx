@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export interface SupplementItem {
   id: string;
@@ -81,8 +81,20 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
     return [];
   });
 
-  // Sincronizar cuando cambia el modo o los suplementos del usuario
+  // Sincronizar cuando cambia el modo o los suplementos del usuario.
+  // userSupplements puede llegar con una referencia nueva en cada render del
+  // padre aunque su contenido no haya cambiado; comparamos una firma estable
+  // para evitar re-sincronizar (y perder el progreso local de tomas) o entrar
+  // en un loop de renders.
+  const userSupplementsSignature = isDemoMode
+    ? 'demo'
+    : (userSupplements || []).map((s) => `${s.name}|${s.serving || ''}|${s.frequency || ''}`).join(';;');
+  const lastSyncedSignatureRef = useRef<string | null>(null);
+
   useEffect(() => {
+    if (lastSyncedSignatureRef.current === userSupplementsSignature) return;
+    lastSyncedSignatureRef.current = userSupplementsSignature;
+
     if (isDemoMode) {
       setSupplements(SANTIAGO_DEMO_SUPPLEMENTS);
     } else if (userSupplements && userSupplements.length > 0) {
@@ -101,7 +113,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
     } else {
       setSupplements([]);
     }
-  }, [isDemoMode, userSupplements]);
+  }, [isDemoMode, userSupplementsSignature]);
 
   const [referralCopied, setReferralCopied] = useState(false);
   const [reminderMessage, setReminderMessage] = useState<string | null>(null);
@@ -148,9 +160,9 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       {/* 1. Módulo de Reposición Inteligente de Suplementos */}
       <section
         id="supplement-replenishment-section"
-        className="p-5 rounded-2xl dark:bg-[#111318] bg-white border dark:border-[#282a2f] border-slate-200 shadow-sm space-y-4"
+        className="p-5 rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-[#282a2f] border-slate-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-white/10 border-slate-200">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-[#2563eb]/20 text-[#2563eb] dark:text-[#b4c5ff] flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">medication</span>
@@ -159,7 +171,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
               <h3 className="font-headline-md text-base font-bold dark:text-white text-slate-900">
                 Centro de Suplementación & Adherencia MAXFORM
               </h3>
-              <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+              <p className="text-xs dark:text-[#898a8c] text-slate-500">
                 Monitoreo de stock de tomas para no cortar la saturación de creatina ni la síntesis proteica.
               </p>
             </div>
@@ -231,10 +243,10 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         )}
 
         {supplements.length === 0 ? (
-          <div className="p-6 text-center rounded-xl border border-dashed dark:border-[#282a2f] border-slate-300 space-y-2">
+          <div className="p-6 text-center rounded-xl border border-dashed dark:border-white/10 border-slate-300 space-y-2">
             <span className="material-symbols-outlined text-3xl text-slate-400">medication</span>
             <h4 className="text-sm font-bold dark:text-white text-slate-800">Sin suplementos en tu protocolo</h4>
-            <p className="text-xs dark:text-[#8d90a0] text-slate-500 max-w-sm mx-auto">
+            <p className="text-xs dark:text-[#898a8c] text-slate-500 max-w-sm mx-auto">
               No has configurado suplementos activos aún. Puedes agregarlos desde tu perfil o configurar tu protocolo según tu nivel de compromiso.
             </p>
           </div>
@@ -250,13 +262,13 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                   className={`p-4 rounded-xl border flex flex-col justify-between transition-all ${
                     isLowStock
                       ? 'dark:bg-rose-950/20 bg-rose-50/50 border-rose-500/40'
-                      : 'dark:bg-[#191c20] bg-slate-50 border-slate-200 dark:border-[#282a2f]'
+                      : 'dark:bg-[#06151e] bg-slate-50 border-slate-200 dark:border-white/10'
                   }`}
                 >
                   <div className="space-y-2">
                     <div className="flex items-start justify-between gap-1">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-[#8d90a0] block">
+                        <span className="text-[10px] uppercase font-bold text-[#898a8c] block">
                           {sup.brand}
                         </span>
                         <h4 className="font-bold text-sm dark:text-white text-slate-900 leading-snug">
@@ -277,12 +289,12 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                     {/* Barra de progreso de dosis restantes */}
                     <div className="space-y-1">
                       <div className="flex justify-between text-xs">
-                        <span className="dark:text-[#8d90a0] text-slate-500">Restante:</span>
+                        <span className="dark:text-[#898a8c] text-slate-500">Restante:</span>
                         <span className="font-bold dark:text-white text-slate-800">
                           {sup.remainingServings} de {sup.totalServings} {sup.unit}
                         </span>
                       </div>
-                      <div className="w-full h-2 bg-slate-200 dark:bg-[#111318] rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-slate-200 dark:bg-[#06151e] rounded-full overflow-hidden">
                         <div
                           className={`h-full transition-all duration-500 rounded-full ${
                             isLowStock ? 'bg-rose-500' : 'bg-[#2563eb]'
@@ -292,18 +304,18 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                       </div>
                     </div>
 
-                    <p className="text-[11px] dark:text-[#8d90a0] text-slate-500 italic">
+                    <p className="text-[11px] dark:text-[#898a8c] text-slate-500 italic">
                       Dosis: {sup.dailyDose}
                     </p>
                   </div>
 
                   {/* Acciones del Suplemento */}
-                  <div className="pt-3 mt-2 border-t dark:border-[#282a2f] border-slate-200 space-y-2">
+                  <div className="pt-3 mt-2 border-t dark:border-white/10 border-slate-200 space-y-2">
                     <button
                       type="button"
                       onClick={() => handleTakeServing(sup.id, sup.name)}
                       disabled={sup.remainingServings === 0}
-                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#111318] bg-white hover:bg-slate-100 dark:hover:bg-[#20242b] border dark:border-[#282a2f] border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                      className="w-full py-1.5 px-3 rounded-lg dark:bg-[#06151e] bg-white hover:bg-slate-100 dark:hover:bg-[#06151e] border dark:border-white/10 border-slate-200 text-xs font-bold dark:text-white text-slate-800 transition-all flex items-center justify-center gap-1.5 active:scale-95"
                     >
                       <span className="material-symbols-outlined text-[16px] text-emerald-500">check</span>
                       <span>Tomar dosis hoy (-1 {sup.unit.split(' ')[0]})</span>
@@ -326,7 +338,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
                         <button
                           type="button"
                           onClick={() => handleToggleReminder(sup)}
-                          className="w-full py-1.5 px-2 rounded-lg border dark:border-[#282a2f] border-slate-200 text-[11px] text-[#2563eb] dark:text-[#b4c5ff] hover:bg-[#2563eb]/10 transition-colors flex items-center justify-center gap-1.5"
+                          className="w-full py-1.5 px-2 rounded-lg border dark:border-white/10 border-slate-200 text-[11px] text-[#2563eb] dark:text-[#b4c5ff] hover:bg-[#2563eb]/10 transition-colors flex items-center justify-center gap-1.5"
                         >
                           <span className="material-symbols-outlined text-[14px]">notifications_active</span>
                           <span>Recordarme reponer</span>
@@ -344,9 +356,9 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       {/* 2. Programa de Referidos & Crecimiento Viral */}
       <section
         id="athlete-referral-section"
-        className="p-5 rounded-2xl dark:bg-[#111318] bg-white border dark:border-[#282a2f] border-slate-200 shadow-sm space-y-4"
+        className="p-5 rounded-2xl dark:bg-[#06151e] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-[#282a2f] border-slate-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-white/10 border-slate-200">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">share_reviews</span>
@@ -355,7 +367,7 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
               <h3 className="font-headline-md text-base font-bold dark:text-white text-slate-900">
                 Programa de Referidos de Atletas
               </h3>
-              <p className="text-xs dark:text-[#8d90a0] text-slate-500">
+              <p className="text-xs dark:text-[#898a8c] text-slate-500">
                 Compartí tu código único con amigos del gimnasio y desbloqueá suplementos gratis.
               </p>
             </div>
@@ -366,13 +378,13 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         </div>
 
         {/* Tarjeta de Código */}
-        <div className="p-4 rounded-xl dark:bg-[#191c20] bg-slate-50 border dark:border-[#282a2f] border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-center sm:text-left space-y-0.5">
-            <span className="text-[10px] uppercase font-bold text-[#8d90a0] block">Tu Código Personal</span>
+            <span className="text-[10px] uppercase font-bold text-[#898a8c] block">Tu Código Personal</span>
             <div className="text-lg sm:text-xl font-mono font-black text-[#2563eb] dark:text-[#b4c5ff] tracking-wider">
               {referralCode}
             </div>
-            <p className="text-xs dark:text-[#c3c6d7] text-slate-600">
+            <p className="text-xs dark:text-[#d6d6d6] text-slate-600">
               Otorga <strong>15% OFF</strong> a tus invitados en su primera compra en MAX Suplementos.
             </p>
           </div>
@@ -391,29 +403,29 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
 
         {/* Niveles de Recompensas por Amigos Invitados */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <div className="p-3 rounded-xl dark:bg-[#191c20] bg-slate-50 border dark:border-[#282a2f] border-slate-200 space-y-1">
+          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-bold text-[#8d90a0]">Nivel 1 (1 Amigo)</span>
+              <span className="text-[10px] uppercase font-bold text-[#898a8c]">Nivel 1 (1 Amigo)</span>
               <span className="text-xs">🥉</span>
             </div>
             <h5 className="font-bold text-xs dark:text-white text-slate-900">7 Días MAXMIND Pro</h5>
-            <p className="text-[10px] dark:text-[#8d90a0] text-slate-500">
+            <p className="text-[10px] dark:text-[#898a8c] text-slate-500">
               Activación instantánea de análisis de comidas con IA ilimitado.
             </p>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#191c20] bg-slate-50 border dark:border-[#282a2f] border-slate-200 space-y-1">
+          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-amber-500">Nivel 2 (3 Amigos)</span>
               <span className="text-xs">🥈</span>
             </div>
             <h5 className="font-bold text-xs dark:text-white text-slate-900">Shaker Pro Térmico</h5>
-            <p className="text-[10px] dark:text-[#8d90a0] text-slate-500">
+            <p className="text-[10px] dark:text-[#898a8c] text-slate-500">
               Retiralo gratis en sucursal con tu ticket de canje.
             </p>
           </div>
 
-          <div className="p-3 rounded-xl dark:bg-[#191c20] bg-slate-50 border border-emerald-500/40 dark:bg-emerald-950/20 bg-emerald-50/50 space-y-1">
+          <div className="p-3 rounded-xl dark:bg-[#06151e] bg-slate-50 border border-emerald-500/40 dark:bg-emerald-950/20 bg-emerald-50/50 space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-emerald-500">Nivel 3 (5 Amigos)</span>
               <span className="text-xs">🥇</span>

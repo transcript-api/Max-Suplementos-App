@@ -35,20 +35,20 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
               Telemetría Biomecánica
             </span>
           </div>
-          <span className="font-label-caps text-label-caps text-[#8d90a0] bg-[#1d2024] px-2 py-0.5 rounded-full border border-[#282a2f]">
+          <span className="font-label-caps text-label-caps text-[#898a8c] bg-[#06151e] px-2 py-0.5 rounded-full border border-white/10">
             Sincronizado hoy
           </span>
         </div>
         <h1 className="font-headline-xl-mobile text-headline-xl-mobile text-white tracking-tight font-bold">
           Mi progreso
         </h1>
-        <p className="font-body-md text-body-md text-[#8d90a0]">
+        <p className="font-body-md text-body-md text-[#898a8c]">
           Consistencia y métricas biométricas de alto rendimiento
         </p>
       </div>
 
       {/* Selector de Períodos */}
-      <div className="p-1 bg-[#191c20] rounded-xl flex items-center justify-between gap-1 border border-[#282a2f]">
+      <div className="p-1 bg-[#06151e] rounded-xl flex items-center justify-between gap-1 border border-white/10">
         {(['Semana', 'Mes', '3 meses', 'Todo'] as const).map((item) => (
           <button
             key={item}
@@ -57,7 +57,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
             className={`flex-1 py-2 rounded-lg font-headline-md text-body-sm text-center transition-all ${
               period === item
                 ? 'bg-[#2563eb] text-white font-bold shadow-sm'
-                : 'text-[#8d90a0] hover:text-white font-medium'
+                : 'text-[#898a8c] hover:text-white font-medium'
             }`}
           >
             {item}
@@ -68,14 +68,14 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       {/* Tarjetas de Métricas Clave (Grid 2x2) */}
       <div className="grid grid-cols-2 gap-3">
         {/* Peso Actual */}
-        <div className="bg-[#1d2024] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-[#282a2f]">
+        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Peso actual</span>
+            <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Peso actual</span>
             <span className="material-symbols-outlined text-[#b4c5ff] text-[18px]">monitor_weight</span>
           </div>
           <div className="flex items-baseline gap-1 my-1">
             <span className="font-metric-stat text-metric-stat text-white font-bold">72,4</span>
-            <span className="font-body-sm text-body-sm text-[#8d90a0]">kg</span>
+            <span className="font-body-sm text-body-sm text-[#898a8c]">kg</span>
           </div>
           <div className="flex items-center gap-1 mt-1">
             <span className="material-symbols-outlined text-[#b4c5ff] text-[16px]">trending_down</span>
@@ -84,9 +84,9 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* Form Promedio */}
-        <div className="bg-[#1d2024] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-[#282a2f]">
+        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Form promedio</span>
+            <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Form promedio</span>
             <span className="material-symbols-outlined text-[#b4c5ff] text-[18px]">bolt</span>
           </div>
           <div className="flex items-baseline gap-1 my-1">
@@ -100,30 +100,30 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* Racha Activa */}
-        <div className="bg-[#1d2024] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-[#282a2f]">
+        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Racha activa</span>
+            <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Racha activa</span>
             <span className="material-symbols-outlined text-[#b4c5ff] text-[18px]">local_fire_department</span>
           </div>
           <div className="flex items-baseline gap-1 my-1">
             <span className="font-metric-stat text-metric-stat text-white font-bold">{streakDays}</span>
-            <span className="font-body-sm text-body-sm text-[#8d90a0]">días</span>
+            <span className="font-body-sm text-body-sm text-[#898a8c]">días</span>
           </div>
           <div className="flex items-center gap-1 mt-1">
-            <span className="material-symbols-outlined text-[#8d90a0] text-[16px]">military_tech</span>
-            <span className="font-body-sm text-body-sm text-[#8d90a0]">Récord: 18 días</span>
+            <span className="material-symbols-outlined text-[#898a8c] text-[16px]">military_tech</span>
+            <span className="font-body-sm text-body-sm text-[#898a8c]">Récord: 18 días</span>
           </div>
         </div>
 
         {/* XP Acumulado */}
-        <div className="bg-[#1d2024] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-[#282a2f]">
+        <div className="bg-[#06151e] p-4 rounded-xl flex flex-col justify-between shadow-md relative overflow-hidden border border-white/10">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">XP acumulado</span>
+            <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">XP acumulado</span>
             <span className="material-symbols-outlined text-[#b4c5ff] text-[18px]">stars</span>
           </div>
           <div className="flex items-baseline gap-1 my-1">
             <span className="font-metric-stat text-metric-stat text-white font-bold">{xp.toLocaleString('es-ES')}</span>
-            <span className="font-body-sm text-body-sm text-[#8d90a0]">XP</span>
+            <span className="font-body-sm text-body-sm text-[#898a8c]">XP</span>
           </div>
           <div className="flex items-center gap-1 mt-1">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#2563eb]"></span>
@@ -133,7 +133,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
       </div>
 
       {/* Sección TÚ VS. TÚ */}
-      <div className="bg-[#1d2024] p-5 rounded-xl shadow-lg relative overflow-hidden border border-[#282a2f]">
+      <div className="bg-[#06151e] p-5 rounded-xl shadow-lg relative overflow-hidden border border-white/10">
         <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#b4c5ff] text-[20px]">swap_calls</span>
@@ -144,21 +144,21 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
           </span>
         </div>
         
-        <p className="font-body-sm text-body-sm text-[#8d90a0] mt-1">
+        <p className="font-body-sm text-body-sm text-[#898a8c] mt-1">
           Superando tu propia marca histórica sin comparaciones externas.
         </p>
 
-        <div className="my-4 flex items-center justify-between p-4 bg-[#191c20] rounded-xl border border-[#282a2f]">
+        <div className="my-4 flex items-center justify-between p-4 bg-[#06151e] rounded-xl border border-white/10">
           <div className="flex flex-col">
-            <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Evolución neta</span>
+            <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Evolución neta</span>
             <span className="font-display-hero-mobile text-display-hero-mobile text-[#b4c5ff] tracking-tight font-extrabold">+12%</span>
-            <span className="font-body-sm text-body-sm text-[#8d90a0]">Mejora de ejecución</span>
+            <span className="font-body-sm text-body-sm text-[#898a8c]">Mejora de ejecución</span>
           </div>
           
           <div className="w-16 h-16 relative flex items-center justify-center">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
               <path 
-                className="text-[#333539]" 
+                className="text-[#545a5b]" 
                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
                 fill="none" 
                 stroke="currentColor" 
@@ -185,41 +185,41 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
               <span className="text-white font-semibold">Esta semana</span>
               <span className="text-[#b4c5ff] font-bold">84% de cumplimiento</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-[#333539] overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-[#545a5b] overflow-hidden">
               <div className="h-full bg-[#2563eb] rounded-full" style={{ width: '84%' }}></div>
             </div>
           </div>
           
           <div className="space-y-1">
             <div className="flex justify-between font-body-sm text-body-sm">
-              <span className="text-[#8d90a0]">Semana anterior</span>
-              <span className="text-[#8d90a0] font-semibold">72%</span>
+              <span className="text-[#898a8c]">Semana anterior</span>
+              <span className="text-[#898a8c] font-semibold">72%</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-[#333539] overflow-hidden">
-              <div className="h-full bg-[#8d90a0] rounded-full opacity-50" style={{ width: '72%' }}></div>
+            <div className="w-full h-2 rounded-full bg-[#545a5b] overflow-hidden">
+              <div className="h-full bg-[#898a8c] rounded-full opacity-50" style={{ width: '72%' }}></div>
             </div>
           </div>
         </div>
 
         {/* Mensaje de consistencia */}
-        <div className="mt-4 p-3 bg-[#333539]/40 rounded-lg flex items-start gap-2 border border-[#333539]">
+        <div className="mt-4 p-3 bg-[#545a5b]/40 rounded-lg flex items-start gap-2 border border-[#545a5b]">
           <span className="material-symbols-outlined text-[#b4c5ff] text-[18px] mt-0.5">verified</span>
-          <p className="font-body-sm text-body-sm text-[#e2e2e8] leading-snug">
+          <p className="font-body-sm text-body-sm text-[#d6d6d6] leading-snug">
             <strong className="text-[#b4c5ff]">Clave de la semana:</strong> Tu mayor aumento fue en regularidad de hidratación y descanso.
           </p>
         </div>
       </div>
 
       {/* Gráfico de Consistencia y Form Diaria */}
-      <div className="bg-[#1d2024] p-5 rounded-xl shadow-lg space-y-4 border border-[#282a2f]">
+      <div className="bg-[#06151e] p-5 rounded-xl shadow-lg space-y-4 border border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="font-label-caps text-label-caps text-[#8d90a0] uppercase font-bold">Ritmo Semanal</span>
+            <span className="font-label-caps text-label-caps text-[#898a8c] uppercase font-bold">Ritmo Semanal</span>
             <h2 className="font-headline-md text-headline-md text-white font-bold">Consistencia y Form Diaria</h2>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#191c20] px-2.5 py-1 rounded-full border border-[#282a2f]">
+          <div className="flex items-center gap-1.5 bg-[#06151e] px-2.5 py-1 rounded-full border border-white/10">
             <span className="w-2 h-2 rounded-full bg-[#2563eb]"></span>
-            <span className="font-body-sm text-body-sm text-[#8d90a0]">Semana actual</span>
+            <span className="font-body-sm text-body-sm text-[#898a8c]">Semana actual</span>
           </div>
         </div>
 
@@ -235,10 +235,10 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
             { day: 'Dom', val: 78, isPeak: false, isToday: true },
           ].map((bar) => (
             <div key={bar.day} className={`flex flex-col items-center gap-1 h-full justify-end ${bar.isToday ? 'relative' : ''}`}>
-              <span className={`font-label-caps text-[10px] ${bar.isPeak ? 'text-[#b4c5ff] font-bold' : bar.isToday ? 'text-white font-bold' : 'text-[#8d90a0]'}`}>
+              <span className={`font-label-caps text-[10px] ${bar.isPeak ? 'text-[#b4c5ff] font-bold' : bar.isToday ? 'text-white font-bold' : 'text-[#898a8c]'}`}>
                 {bar.val}%
               </span>
-              <div className={`w-full rounded-md ${bar.isToday ? 'bg-[#191c20] ring-1 ring-[#2563eb]' : 'bg-[#333539]'} h-32 flex flex-col justify-end p-0.5 overflow-hidden`}>
+              <div className={`w-full rounded-md ${bar.isToday ? 'bg-[#06151e] ring-1 ring-[#2563eb]' : 'bg-[#545a5b]'} h-32 flex flex-col justify-end p-0.5 overflow-hidden`}>
                 <div 
                   className={`w-full rounded-sm transition-all duration-700 ${
                     bar.isPeak ? 'bg-[#b4c5ff]' : 'bg-[#2563eb]'
@@ -246,7 +246,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
                   style={{ height: `${bar.val}%` }}
                 ></div>
               </div>
-              <span className={`font-body-sm text-body-sm ${bar.isToday ? 'text-[#b4c5ff] font-bold' : 'text-[#8d90a0]'}`}>
+              <span className={`font-body-sm text-body-sm ${bar.isToday ? 'text-[#b4c5ff] font-bold' : 'text-[#898a8c]'}`}>
                 {bar.day}
               </span>
             </div>
@@ -254,7 +254,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* Leyenda de estatus */}
-        <div className="flex items-center justify-between pt-1 text-[#8d90a0] font-body-sm text-body-sm">
+        <div className="flex items-center justify-between pt-1 text-[#898a8c] font-body-sm text-body-sm">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#b4c5ff]"></span>
             <span>Máximo (100%)</span>
@@ -264,20 +264,20 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
             <span>Estándar</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#333539]"></span>
+            <span className="w-2 h-2 rounded-full bg-[#545a5b]"></span>
             <span>Meta base</span>
           </div>
         </div>
       </div>
 
       {/* Galería Privada de Evolución Física */}
-      <div className="bg-[#1d2024] p-5 rounded-xl shadow-lg space-y-4 border border-[#282a2f]">
+      <div className="bg-[#06151e] p-5 rounded-xl shadow-lg space-y-4 border border-white/10">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-headline-md text-headline-md text-white font-bold">Registro visual de progreso</h2>
-            <p className="font-body-sm text-body-sm text-[#8d90a0]">Capturas biomecánicas estandarizadas</p>
+            <p className="font-body-sm text-body-sm text-[#898a8c]">Capturas biomecánicas estandarizadas</p>
           </div>
-          <div className="flex items-center gap-1.5 bg-[#191c20] px-2.5 py-1 rounded-full text-[#8d90a0] border border-[#282a2f]">
+          <div className="flex items-center gap-1.5 bg-[#06151e] px-2.5 py-1 rounded-full text-[#898a8c] border border-white/10">
             <span className="material-symbols-outlined text-[14px] text-[#b4c5ff]">lock</span>
             <span className="font-label-caps text-label-caps font-bold">Privado por defecto</span>
           </div>
@@ -286,26 +286,26 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         {/* Carrusel de fotos previas + Registro nuevo */}
         <div className="grid grid-cols-2 gap-3">
           {/* Registro anterior */}
-          <div className="bg-[#191c20] rounded-xl overflow-hidden flex flex-col relative border border-[#282a2f] group">
+          <div className="bg-[#06151e] rounded-xl overflow-hidden flex flex-col relative border border-white/10 group">
             <div className="h-48 w-full relative">
               <img 
                 alt="Registro físico anterior" 
                 className="w-full h-full object-cover" 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2HDmwkOxxQD0b6f5jzNrt9ZQeIAOaqY9OGoPwPcek43uThuHmRkl5JKf6LPZQtPkIflMTHibiRmUpynlYzTdek2L4w73fMPDOlkv-0VQPpozyZVHUgy3dWubGruSRiW5x80RTJXxS2Y-dtdSAJkJdrUIpBJ1M8PYG97RF36bXUkdanLdhCiQ1Epcil6ZPzMsZpHOS3eHDMFwwqrkZP99ZVC2RgyLhIq-2eaVyBn7OTHfH2G5DCKBd2w"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0e12] via-transparent to-transparent"></div>
-              <span className="absolute bottom-2 left-2 font-label-caps text-label-caps bg-[#1d2024]/90 backdrop-blur-md text-white px-2 py-0.5 rounded border border-[#282a2f]">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#06151e] via-transparent to-transparent"></div>
+              <span className="absolute bottom-2 left-2 font-label-caps text-label-caps bg-[#06151e]/90 backdrop-blur-md text-white px-2 py-0.5 rounded border border-white/10">
                 Hace 7 días
               </span>
             </div>
-            <div className="p-2.5 flex justify-between items-center text-[#8d90a0]">
+            <div className="p-2.5 flex justify-between items-center text-[#898a8c]">
               <span className="font-body-sm text-white font-bold">73,0 kg</span>
               <span className="material-symbols-outlined text-[16px] text-emerald-400">check_circle</span>
             </div>
           </div>
 
           {/* Tarjeta para capturar hoy */}
-          <div className="bg-[#191c20] rounded-xl overflow-hidden p-4 flex flex-col items-center justify-center text-center relative border-dashed border-2 border-[#333539] space-y-2">
+          <div className="bg-[#06151e] rounded-xl overflow-hidden p-4 flex flex-col items-center justify-center text-center relative border-dashed border-2 border-[#545a5b] space-y-2">
             {todayPhoto ? (
               <div className="w-full h-full relative rounded-lg overflow-hidden flex flex-col items-center">
                 <img src={todayPhoto} alt="Captura hoy" className="w-full h-36 object-cover rounded-lg" />
@@ -319,7 +319,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
                   <span className="material-symbols-outlined text-[24px]">photo_camera</span>
                 </div>
                 <span className="font-headline-md text-body-md text-white font-bold">Captura de hoy</span>
-                <span className="font-body-sm text-body-sm text-[#8d90a0]">Alineación con guía de silueta</span>
+                <span className="font-body-sm text-body-sm text-[#898a8c]">Alineación con guía de silueta</span>
                 
                 <label className="w-full mt-1 py-2 bg-[#2563eb] hover:bg-[#3b82f6] text-white rounded-lg font-headline-md text-body-sm flex items-center justify-center gap-1 active:scale-95 transition-all shadow-sm cursor-pointer">
                   <span className="material-symbols-outlined text-[16px]">add</span>
@@ -332,8 +332,8 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ xp, formScore, streakD
         </div>
 
         {/* Nota de seguridad criptográfica */}
-        <div className="flex items-center gap-2 pt-1 text-[#8d90a0]">
-          <span className="material-symbols-outlined text-[#8d90a0] text-[16px]">shield</span>
+        <div className="flex items-center gap-2 pt-1 text-[#898a8c]">
+          <span className="material-symbols-outlined text-[#898a8c] text-[16px]">shield</span>
           <span className="font-body-sm text-body-sm">Cifrado de extremo a extremo en dispositivo local y respaldo seguro.</span>
         </div>
       </div>

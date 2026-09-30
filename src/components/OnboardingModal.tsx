@@ -232,9 +232,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-xl bg-[#0B1220] border border-[#1E293B] rounded-3xl p-5 sm:p-7 shadow-2xl text-white space-y-6 my-auto">
+      <div className="relative w-full max-w-xl bg-[#06151e] border border-white/10 rounded-3xl p-5 sm:p-7 shadow-2xl text-white space-y-6 my-auto">
         {/* Encabezado con Indicador de Progreso Dinámico (1 / 6) */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2.5">
             <MaxMindLogo variant="symbol" size="xs" isDark={true} />
             <span className="font-bold text-xs uppercase tracking-wider text-[#3B82F6]">
@@ -250,7 +250,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     ? 'w-6 bg-[#2563EB]'
                     : s < step
                     ? 'w-2 bg-emerald-500'
-                    : 'w-2 bg-[#1E293B]'
+                    : 'w-2 bg-[#06151e]'
                 }`}
               />
             ))}
@@ -281,7 +281,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ejemplo: Santiago"
-                className="w-full px-4 py-3.5 bg-[#151D30] border border-[#1E293B] focus:border-[#2563EB] rounded-2xl text-base text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
+                className="w-full px-4 py-3.5 bg-[#06151e] border border-white/10 focus:border-[#2563EB] rounded-2xl text-base text-white placeholder-slate-500 focus:outline-none transition-all shadow-inner"
               />
               <p className="text-[11px] text-slate-500 mt-2">
                 Este nombre aparecerá en tu saludo matutino y en tu tarjeta de atleta.
@@ -312,13 +312,13 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     onClick={() => setGoal(opt.id)}
                     className={`flex items-start gap-3.5 p-3.5 rounded-2xl border text-left transition-all active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-[#1E293B] border-[#2563EB] text-white shadow-lg ring-1 ring-[#2563EB]/40'
-                        : 'bg-[#151D30] border-[#1E293B] text-slate-300 hover:border-slate-600'
+                        ? 'bg-[#06151e] border-[#2563EB] text-white shadow-lg ring-1 ring-[#2563EB]/40'
+                        : 'bg-[#06151e] border-white/10 text-slate-300 hover:border-slate-600'
                     }`}
                   >
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                        isSelected ? 'bg-[#2563EB] text-white' : 'bg-[#1E293B] text-slate-400'
+                        isSelected ? 'bg-[#2563EB] text-white' : 'bg-[#06151e] text-slate-400'
                       }`}
                     >
                       <span className="material-symbols-outlined text-[20px]">{opt.icon}</span>
@@ -352,7 +352,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             </div>
 
             {/* Aviso explicativo del protocolo de 14 días y oportunidad de cambio */}
-            <div className="p-3 rounded-xl bg-[#1E293B]/70 border border-[#2563EB]/40 text-xs text-blue-200 flex items-start gap-2.5">
+            <div className="p-3 rounded-xl bg-[#06151e]/70 border border-[#2563EB]/40 text-xs text-blue-200 flex items-start gap-2.5">
               <span className="text-base leading-none">⚖️</span>
               <div className="space-y-0.5">
                 <strong className="block text-blue-100 font-bold text-xs">
@@ -374,8 +374,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     onClick={() => setExperienceLevel(lvl.id)}
                     className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all active:scale-[0.99] flex flex-col gap-2 ${
                       isSelected
-                        ? 'bg-[#1E293B] border-[#2563EB] text-white ring-1 ring-[#2563EB]/40 shadow-lg'
-                        : 'bg-[#151D30] border-[#1E293B] text-slate-300 hover:border-slate-600'
+                        ? 'bg-[#06151e] border-[#2563EB] text-white ring-1 ring-[#2563EB]/40 shadow-lg'
+                        : 'bg-[#06151e] border-white/10 text-slate-300 hover:border-slate-600'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
@@ -428,7 +428,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     value={weight}
                     onChange={(e) => setWeight(e.target.value === '' ? '' : Number(e.target.value))}
                     placeholder="72"
-                    className="w-full px-3.5 py-3 bg-[#151D30] border border-[#1E293B] focus:border-[#2563EB] rounded-2xl text-sm text-white focus:outline-none"
+                    className="w-full px-3.5 py-3 bg-[#06151e] border border-white/10 focus:border-[#2563EB] rounded-2xl text-sm text-white focus:outline-none"
                   />
                   <span className="absolute right-3.5 top-3.5 text-xs text-slate-500 font-bold">kg</span>
                 </div>
@@ -446,7 +446,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     value={height}
                     onChange={(e) => setHeight(e.target.value === '' ? '' : Number(e.target.value))}
                     placeholder="175"
-                    className="w-full px-3.5 py-3 bg-[#151D30] border border-[#1E293B] focus:border-[#2563EB] rounded-2xl text-sm text-white focus:outline-none"
+                    className="w-full px-3.5 py-3 bg-[#06151e] border border-white/10 focus:border-[#2563EB] rounded-2xl text-sm text-white focus:outline-none"
                   />
                   <span className="absolute right-3.5 top-3.5 text-xs text-slate-500 font-bold">cm</span>
                 </div>
@@ -463,7 +463,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   value={age}
                   onChange={(e) => setAge(e.target.value === '' ? '' : Number(e.target.value))}
                   placeholder="25"
-                  className="w-full px-3.5 py-3 bg-[#151D30] border border-[#1E293B] focus:border-[#2563EB] rounded-2xl text-sm text-white focus:outline-none"
+                  className="w-full px-3.5 py-3 bg-[#06151e] border border-white/10 focus:border-[#2563EB] rounded-2xl text-sm text-white focus:outline-none"
                 />
               </div>
 
@@ -474,7 +474,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <select
                   value={activityLevel}
                   onChange={(e) => setActivityLevel(e.target.value as any)}
-                  className="w-full px-3 py-3 bg-[#151D30] border border-[#1E293B] focus:border-[#2563EB] rounded-2xl text-xs text-white focus:outline-none"
+                  className="w-full px-3 py-3 bg-[#06151e] border border-white/10 focus:border-[#2563EB] rounded-2xl text-xs text-white focus:outline-none"
                 >
                   <option value="Sedentario">Sedentario (Oficina)</option>
                   <option value="Ligero">Ligero (1–2 días activo)</option>
@@ -512,7 +512,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     className={`py-2.5 rounded-xl border text-center font-bold text-xs transition-all ${
                       trainingFrequency === freq
                         ? 'bg-[#2563EB] text-white border-[#2563EB] shadow-md'
-                        : 'bg-[#151D30] text-slate-400 border-[#1E293B] hover:border-slate-500'
+                        : 'bg-[#06151e] text-slate-400 border-white/10 hover:border-slate-500'
                     }`}
                   >
                     {freq} {freq === '0' ? 'días' : 'días'}
@@ -536,8 +536,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                       onClick={() => toggleTrainingType(opt.id)}
                       className={`p-2.5 rounded-xl border flex items-center gap-2 text-xs font-semibold transition-all ${
                         isSelected
-                          ? 'bg-[#1E293B] border-[#2563EB] text-white'
-                          : 'bg-[#151D30] border-[#1E293B] text-slate-400 hover:text-white'
+                          ? 'bg-[#06151e] border-[#2563EB] text-white'
+                          : 'bg-[#06151e] border-white/10 text-slate-400 hover:text-white'
                       }`}
                     >
                       <span className="material-symbols-outlined text-[18px]">
@@ -556,7 +556,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     value={otherTraining}
                     onChange={(e) => setOtherTraining(e.target.value)}
                     placeholder="Especifica tu deporte o disciplina"
-                    className="w-full px-3.5 py-2.5 bg-[#151D30] border border-[#1E293B] rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
+                    className="w-full px-3.5 py-2.5 bg-[#06151e] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2563EB]"
                   />
                 </div>
               )}
@@ -590,7 +590,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     className={`py-2 px-1 text-center rounded-xl border text-xs font-semibold transition-all truncate ${
                       diet === d
                         ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                        : 'bg-[#151D30] text-slate-400 border-[#1E293B]'
+                        : 'bg-[#06151e] text-slate-400 border-white/10'
                     }`}
                   >
                     {d}
@@ -613,7 +613,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     className={`py-2 rounded-xl border text-xs font-bold transition-all ${
                       usesSupplements === opt
                         ? 'bg-[#2563EB] text-white border-[#2563EB]'
-                        : 'bg-[#151D30] text-slate-400 border-[#1E293B]'
+                        : 'bg-[#06151e] text-slate-400 border-white/10'
                     }`}
                   >
                     {opt}
@@ -622,7 +622,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               </div>
 
               {usesSupplements === 'Sí' && (
-                <div className="p-3 bg-[#151D30] rounded-2xl border border-[#1E293B] space-y-2.5 animate-fadeIn">
+                <div className="p-3 bg-[#06151e] rounded-2xl border border-white/10 space-y-2.5 animate-fadeIn">
                   <span className="text-[11px] font-bold text-slate-300 block">
                     Selecciona tus suplementos:
                   </span>
@@ -636,8 +636,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                           onClick={() => toggleSupplement(supp)}
                           className={`p-2 rounded-xl border text-left text-xs font-semibold flex items-center justify-between ${
                             isChecked
-                              ? 'bg-[#1E293B] border-[#3B82F6] text-white'
-                              : 'bg-[#111827] border-[#1E293B] text-slate-400'
+                              ? 'bg-[#06151e] border-[#3B82F6] text-white'
+                              : 'bg-[#06151e] border-white/10 text-slate-400'
                           }`}
                         >
                           <span className="truncate">{supp}</span>
@@ -656,7 +656,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                     <select
                       value={suppTime}
                       onChange={(e) => setSuppTime(e.target.value)}
-                      className="bg-[#111827] border border-[#1E293B] text-white rounded-lg px-2 py-1 text-xs"
+                      className="bg-[#06151e] border border-white/10 text-white rounded-lg px-2 py-1 text-xs"
                     >
                       <option value="Mañana">Por la mañana</option>
                       <option value="Pre-entreno">Pre-entreno</option>
@@ -671,12 +671,12 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         )}
 
         {/* BOTONES DE NAVEGACIÓN */}
-        <div className="pt-3 border-t border-[#1E293B] flex items-center justify-between gap-3">
+        <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
           {step > 1 ? (
             <button
               type="button"
               onClick={handleBack}
-              className="px-4 py-2.5 rounded-xl border border-[#1E293B] text-slate-400 hover:text-white text-xs font-bold transition-colors"
+              className="px-4 py-2.5 rounded-xl border border-white/10 text-slate-400 hover:text-white text-xs font-bold transition-colors"
             >
               Anterior
             </button>
