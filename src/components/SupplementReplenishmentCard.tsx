@@ -115,14 +115,10 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
     }
   }, [isDemoMode, userSupplementsSignature]);
 
-  const [referralCopied, setReferralCopied] = useState(false);
   const [reminderMessage, setReminderMessage] = useState<string | null>(null);
-  const [takenToday, setTakenToday] = useState<Record<string, boolean>>(() => 
+  const [takenToday, setTakenToday] = useState<Record<string, boolean>>(() =>
     isDemoMode ? { creatina: true } : {}
   );
-
-  // Código único de referido para el usuario
-  const referralCode = `MAX-${userName.toUpperCase().replace(/\s+/g, '')}-777`;
 
   // Tomar una dosis diaria
   const handleTakeServing = (id: string, name: string) => {
@@ -138,15 +134,6 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
       onTakeServing(name);
     }
     setTakenToday((prev) => ({ ...prev, [id]: true }));
-  };
-
-  // Copiar código de referido
-  const handleCopyReferral = () => {
-    navigator.clipboard.writeText(
-      `¡Unite a MAXFORM con mi código de atleta ${referralCode} y llevate 15% OFF en tu primera compra en MAX Suplementos! https://maxform.app/ref/${referralCode}`
-    );
-    setReferralCopied(true);
-    setTimeout(() => setReferralCopied(false), 3000);
   };
 
   // Activar recordatorio de reposición para el usuario
@@ -353,90 +340,9 @@ export const SupplementReplenishmentCard: React.FC<SupplementReplenishmentCardPr
         )}
       </section>
 
-      {/* 2. Programa de Referidos & Crecimiento Viral */}
-      <section
-        id="athlete-referral-section"
-        className="p-5 rounded-2xl dark:bg-[#0a0a0a] bg-white border dark:border-white/10 border-slate-200 shadow-sm space-y-4"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b dark:border-white/10 border-slate-200">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[20px]">share_reviews</span>
-            </div>
-            <div>
-              <h3 className="font-headline-md text-base font-bold dark:text-white text-slate-900">
-                Programa de Referidos de Atletas
-              </h3>
-              <p className="text-xs dark:text-[#898a8c] text-slate-500">
-                Compartí tu código único con amigos del gimnasio y desbloqueá suplementos gratis.
-              </p>
-            </div>
-          </div>
-          <span className="self-start sm:self-auto px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-500 text-[11px] font-bold">
-            Ganas Vos & Gana Tu Amigo
-          </span>
-        </div>
-
-        {/* Tarjeta de Código */}
-        <div className="p-4 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-center sm:text-left space-y-0.5">
-            <span className="text-[10px] uppercase font-bold text-[#898a8c] block">Tu Código Personal</span>
-            <div className="text-lg sm:text-xl font-mono font-black text-[#ffffff] dark:text-[#d6d6d6] tracking-wider">
-              {referralCode}
-            </div>
-            <p className="text-xs dark:text-[#d6d6d6] text-slate-600">
-              Otorga <strong>15% OFF</strong> a tus invitados en su primera compra en MAX Suplementos.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleCopyReferral}
-            className="w-full sm:w-auto px-5 py-2.5 bg-[#0a0a0a] hover:bg-[#545a5b] text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-2"
-          >
-            <span className="material-symbols-outlined text-[16px]">
-              {referralCopied ? 'check' : 'content_copy'}
-            </span>
-            <span>{referralCopied ? '¡Enlace Copiado!' : 'Copiar Enlace de Invitación'}</span>
-          </button>
-        </div>
-
-        {/* Niveles de Recompensas por Amigos Invitados */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-bold text-[#898a8c]">Nivel 1 (1 Amigo)</span>
-              <span className="text-xs">🥉</span>
-            </div>
-            <h5 className="font-bold text-xs dark:text-white text-slate-900">7 Días MAXMIND Pro</h5>
-            <p className="text-[10px] dark:text-[#898a8c] text-slate-500">
-              Activación instantánea de análisis de comidas con IA ilimitado.
-            </p>
-          </div>
-
-          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border dark:border-white/10 border-slate-200 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-bold text-amber-500">Nivel 2 (3 Amigos)</span>
-              <span className="text-xs">🥈</span>
-            </div>
-            <h5 className="font-bold text-xs dark:text-white text-slate-900">Shaker Pro Térmico</h5>
-            <p className="text-[10px] dark:text-[#898a8c] text-slate-500">
-              Retiralo gratis en sucursal con tu ticket de canje.
-            </p>
-          </div>
-
-          <div className="p-3 rounded-xl dark:bg-[#0a0a0a] bg-slate-50 border border-emerald-500/40 dark:bg-emerald-950/20 bg-emerald-50/50 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-bold text-emerald-500">Nivel 3 (5 Amigos)</span>
-              <span className="text-xs">🥇</span>
-            </div>
-            <h5 className="font-bold text-xs dark:text-white text-slate-900">$15.000 de Crédito</h5>
-            <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-              Válido para canjear en Creatina o Proteína en MAX Suplementos.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Programa de Referidos: sacado de la UI por ahora (queda como idea
+          para más adelante -- ver git history de este archivo para el
+          markup completo si se retoma). */}
     </div>
   );
 };
