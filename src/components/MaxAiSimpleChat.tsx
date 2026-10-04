@@ -337,7 +337,7 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
           type="button"
           onClick={isRecording ? stopVoiceRecording : startVoiceRecording}
           disabled={loading || isTranscribing}
-          title={isRecording ? 'Detener y transcribir' : 'Grabar audio con micrófono (gemini-2.5-flash)'}
+          title={isRecording ? 'Detener y transcribir' : 'Grabar audio con micrófono'}
           className={`p-2.5 rounded-xl transition-all flex items-center justify-center shrink-0 ${
             isRecording
               ? 'bg-red-600 text-white animate-pulse ring-2 ring-red-400/50'
@@ -382,14 +382,14 @@ export const MaxAiSimpleChat: React.FC<MaxAiSimpleChatProps> = ({
         ) : isTranscribing ? (
           <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-purple-500/10 rounded-xl border border-purple-500/20 text-purple-300 text-xs">
             <div className="w-3.5 h-3.5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin shrink-0"></div>
-            <span className="font-semibold">Transcribiendo con gemini-2.5-flash...</span>
+            <span className="font-semibold">Transcribiendo audio...</span>
           </div>
         ) : (
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Escribe o dicta por voz qué comiste (gemini-2.5-flash)..."
+            placeholder="Escribe o dicta por voz qué comiste..."
             disabled={loading}
             className="flex-1 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border dark:bg-[#0a0a0a] bg-slate-100 dark:border-white/10 border-slate-300 dark:text-white text-slate-800 placeholder:dark:text-[#898a8c] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#ffffff]"
           />

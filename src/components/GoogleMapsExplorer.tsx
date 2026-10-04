@@ -18,7 +18,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
   isDark = true,
   defaultCategory = 'supplements',
   title = "Puntos de Nutrición & Fitness Cercanos",
-  subtitle = "Búsqueda verificada con Google Maps en tiempo real vía Gemini 3.5 Flash",
+  subtitle = "Búsqueda verificada con Google Maps en tiempo real",
   onSelectPlace,
 }) => {
   const [category, setCategory] = useState<'supplements' | 'gyms' | 'healthy_food' | 'custom'>(defaultCategory);
@@ -125,7 +125,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
               </h3>
               <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Google Maps · Gemini 3.5 Flash</span>
+                <span>Tiempo real</span>
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-[#898a8c]">
@@ -270,7 +270,7 @@ export const GoogleMapsExplorer: React.FC<GoogleMapsExplorerProps> = ({
         <div className="py-8 flex flex-col items-center justify-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-slate-300 dark:border-white/20 border-t-transparent animate-spin"></div>
           <p className="text-xs text-slate-500 dark:text-[#898a8c]">
-            Consultando Google Maps con Gemini 3.5 Flash para obtener lugares actualizados...
+            Consultando Google Maps para obtener lugares actualizados...
           </p>
         </div>
       )}

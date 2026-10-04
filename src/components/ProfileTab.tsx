@@ -70,7 +70,6 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
   const [bpm, setBpm] = useState(72);
   const [notificationStatus, setNotificationStatus] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
@@ -258,7 +257,7 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
             <p className="text-xs text-slate-700 dark:text-[#d6d6d6] mt-0.5">
               {isDemoMode
                 ? 'Datos cargados para presentar a Max Suplementos (4.860 XP, 12 días, Nivel 7).'
-                : 'Cuenta limpia desde cero con progreso diario real y sincronización en Supabase.'}
+                : 'Cuenta limpia desde cero con progreso diario real y sincronización en la nube.'}
             </p>
           </div>
         </div>
@@ -728,40 +727,6 @@ export const ProfileTab: React.FC<ProfileTabProps> = ({
           )}
         </div>
 
-        {onDeleteAccount && !isDemoMode && (
-          <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div>
-              <span className="text-xs font-semibold text-rose-400 block">Zona de Peligro</span>
-              <span className="text-[11px] text-slate-500">Eliminar permanentemente los datos locales y la cuenta de este dispositivo.</span>
-            </div>
-            {confirmDelete ? (
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={onDeleteAccount}
-                  className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-slate-900 dark:text-white text-xs font-bold transition-colors"
-                >
-                  Confirmar Eliminación
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setConfirmDelete(false)}
-                  className="px-2.5 py-1.5 rounded-lg bg-slate-700 text-slate-300 text-xs font-semibold"
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setConfirmDelete(true)}
-                className="text-xs font-bold text-rose-400 hover:text-rose-300 underline underline-offset-2"
-              >
-                Eliminar Cuenta y Datos
-              </button>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

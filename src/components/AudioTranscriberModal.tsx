@@ -28,12 +28,10 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
   const [transcription, setTranscription] = useState<AudioTranscriptionResult | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'mic' | 'upload'>('mic');
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<any>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Limpieza al desmontar o cerrar
   useEffect(() => {
@@ -104,7 +102,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
         const url = URL.createObjectURL(finalBlob);
         setAudioUrl(url);
 
-        // Auto-transcribir con gemini-2.5-flash
+        // Auto-transcribir
         await handleTranscribe(finalBlob, mimeType);
       };
 
@@ -161,40 +159,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
       setTranscription(result);
     } catch (err: any) {
       console.error('Error en transcripción:', err);
-      setErrorMsg(err.message || 'Error transcribiendo el audio con gemini-2.5-flash.');
-    } finally {
-      setIsTranscribing(false);
-    }
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setErrorMsg(null);
-    setAudioBlob(file);
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
-    const url = URL.createObjectURL(file);
-    setAudioUrl(url);
-
-    handleTranscribe(file, file.type || 'audio/mp3');
-  };
-
-  // Muestras de prueba pregrabadas para validar rápidamente
-  const handleSampleVoice = async (sampleText: string) => {
-    setIsTranscribing(true);
-    setErrorMsg(null);
-    setTranscription(null);
-    try {
-      // Simular latencia de procesamiento con gemini-2.5-flash
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setTranscription({
-        success: true,
-        text: sampleText,
-        modelUsed: 'gemini-2.5-flash',
-        mimeType: 'audio/webm',
-        timestamp: new Date().toISOString(),
-      });
+      setErrorMsg(err.message || 'Error transcribiendo el audio. Intentá de nuevo.');
     } finally {
       setIsTranscribing(false);
     }
@@ -246,27 +211,21 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div 
+      <div
         className="w-full max-w-lg bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         role="dialog"
         aria-modal="true"
       >
-        {/* Header con icono speech_to_text y Badge de Modelo */}
+        {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0a0a] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#ffffff]/20 text-slate-700 dark:text-[#d6d6d6] border border-[#ffffff]/30 flex items-center justify-center shadow-inner">
               <span className="material-symbols-outlined text-[24px]">speech_to_text</span>
             </div>
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
-                  Transcribir Audio
-                </h3>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide bg-purple-500/15 text-purple-300 border border-purple-500/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
-                  gemini-2.5-flash
-                </span>
-              </div>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
+                Transcribir Audio
+              </h3>
               <p className="text-xs text-slate-500 dark:text-[#898a8c] mt-0.5">
                 Habla por tu micrófono y transcribe tu voz con IA de alta precisión
               </p>
@@ -282,34 +241,6 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
           </button>
         </div>
 
-        {/* Selector de Modo: Micrófono vs Subir Audio */}
-        <div className="px-4 sm:px-5 pt-3 flex gap-2">
-          <button
-            type="button"
-            onClick={() => setActiveTab('mic')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
-              activeTab === 'mic'
-                ? 'bg-[#0a0a0a] text-slate-900 dark:text-white border-[#ffffff] shadow-md shadow-[#ffffff]/30'
-                : 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] border-slate-200 dark:border-white/10 hover:text-slate-900 dark:hover:text-white hover:bg-[#545a5b]'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[18px]">mic</span>
-            <span>Micrófono en vivo</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('upload')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
-              activeTab === 'upload'
-                ? 'bg-[#0a0a0a] text-slate-900 dark:text-white border-[#ffffff] shadow-md shadow-[#ffffff]/30'
-                : 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] border-slate-200 dark:border-white/10 hover:text-slate-900 dark:hover:text-white hover:bg-[#545a5b]'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[18px]">upload_file</span>
-            <span>Subir archivo de audio</span>
-          </button>
-        </div>
-
         {/* Contenido principal */}
         <div className="p-4 sm:p-5 overflow-y-auto space-y-4 no-scrollbar">
           {errorMsg && (
@@ -317,180 +248,107 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
               <span className="material-symbols-outlined text-[18px] text-rose-400 shrink-0">error</span>
               <div className="flex-1">
                 <p className="font-semibold">{errorMsg}</p>
-                <p className="text-[11px] text-rose-300/80 mt-1">
-                  Si tu navegador no tiene acceso al micrófono, puedes usar la pestaña &quot;Subir archivo de audio&quot; o las muestras de voz rápidas abajo.
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col items-center justify-center py-6 px-4 bg-white dark:bg-[#0a0a0a] rounded-2xl border border-slate-200 dark:border-white/10 text-center relative overflow-hidden">
+            {/* Animación de ondas de sonido mientras graba */}
+            {isRecording && (
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-20">
+                <div className="w-56 h-56 rounded-full bg-red-500/30 animate-ping"></div>
+              </div>
+            )}
+
+            {/* Botón Principal de Micrófono */}
+            <div className="relative mb-4">
+              {isRecording && (
+                <span className="absolute -inset-3 rounded-full bg-red-500/20 animate-pulse"></span>
+              )}
+              <button
+                type="button"
+                onClick={isRecording ? stopRecording : startRecording}
+                disabled={isTranscribing}
+                className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-xl active:scale-95 ${
+                  isRecording
+                    ? 'bg-red-600 text-slate-900 dark:text-white hover:bg-red-700 ring-4 ring-red-500/40 animate-pulse'
+                    : isTranscribing
+                    ? 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] cursor-not-allowed'
+                    : 'bg-gradient-to-tr from-white dark:from-[#0a0a0a] to-slate-300 dark:to-[#545a5b] text-slate-900 dark:text-white hover:scale-105 shadow-black/30'
+                }`}
+                title={isRecording ? 'Detener grabación' : 'Toca para grabar con micrófono'}
+              >
+                <span className="material-symbols-outlined text-[36px]">
+                  {isRecording ? 'stop' : 'mic'}
+                </span>
+              </button>
+            </div>
+
+            {/* Temporizador y Estado */}
+            {isRecording ? (
+              <div className="space-y-1">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                  <span className="text-xl font-mono font-bold text-slate-900 dark:text-white tracking-wider">
+                    {formatTimer(recordingSeconds)}
+                  </span>
+                </div>
+                <p className="text-xs text-red-400 font-semibold">
+                  Grabando tu voz con el micrófono... Habla claramente.
+                </p>
+
+                {/* Barras de audio simuladas */}
+                <div className="flex items-center justify-center gap-1 pt-2 h-6">
+                  <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.1s] h-4"></span>
+                  <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.3s] h-6"></span>
+                  <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.2s] h-3"></span>
+                  <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.4s] h-5"></span>
+                  <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.15s] h-4"></span>
+                </div>
+
+                <div className="flex gap-2 justify-center pt-3">
+                  <button
+                    type="button"
+                    onClick={stopRecording}
+                    className="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-slate-900 dark:text-white text-xs font-bold transition-all shadow-md"
+                  >
+                    Detener y Transcribir
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelRecording}
+                    className="px-3 py-1.5 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-700 dark:text-[#d6d6d6] text-xs font-semibold transition-all"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            ) : isTranscribing ? (
+              <div className="space-y-2 py-2">
+                <div className="w-8 h-8 mx-auto border-3 border-purple-500/20 border-t-purple-400 rounded-full animate-spin"></div>
+                <p className="text-xs font-bold text-purple-300">
+                  Transcribiendo audio...
                 </p>
               </div>
-            </div>
-          )}
-
-          {activeTab === 'mic' && (
-            <div className="flex flex-col items-center justify-center py-6 px-4 bg-white dark:bg-[#0a0a0a] rounded-2xl border border-slate-200 dark:border-white/10 text-center relative overflow-hidden">
-              {/* Animación de ondas de sonido mientras graba */}
-              {isRecording && (
-                <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-20">
-                  <div className="w-56 h-56 rounded-full bg-red-500/30 animate-ping"></div>
-                </div>
-              )}
-
-              {/* Botón Principal de Micrófono */}
-              <div className="relative mb-4">
-                {isRecording && (
-                  <span className="absolute -inset-3 rounded-full bg-red-500/20 animate-pulse"></span>
-                )}
-                <button
-                  type="button"
-                  onClick={isRecording ? stopRecording : startRecording}
-                  disabled={isTranscribing}
-                  className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-xl active:scale-95 ${
-                    isRecording
-                      ? 'bg-red-600 text-slate-900 dark:text-white hover:bg-red-700 ring-4 ring-red-500/40 animate-pulse'
-                      : isTranscribing
-                      ? 'bg-[#0a0a0a] text-slate-500 dark:text-[#898a8c] cursor-not-allowed'
-                      : 'bg-gradient-to-tr from-white dark:from-[#0a0a0a] to-slate-300 dark:to-[#545a5b] text-slate-900 dark:text-white hover:scale-105 shadow-black/30'
-                  }`}
-                  title={isRecording ? 'Detener grabación' : 'Toca para grabar con micrófono'}
-                >
-                  <span className="material-symbols-outlined text-[36px]">
-                    {isRecording ? 'stop' : 'mic'}
-                  </span>
-                </button>
+            ) : (
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                  {audioBlob ? 'Audio grabado listo' : 'Toca el micrófono para comenzar'}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-[#898a8c] max-w-xs mx-auto">
+                  {audioBlob
+                    ? 'Puedes escuchar la grabación abajo o grabar una nueva.'
+                    : 'Dicta tus comidas, entrenamientos, suplementos o preguntas para el coach.'}
+                </p>
               </div>
+            )}
 
-              {/* Temporizador y Estado */}
-              {isRecording ? (
-                <div className="space-y-1">
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-                    <span className="text-xl font-mono font-bold text-slate-900 dark:text-white tracking-wider">
-                      {formatTimer(recordingSeconds)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-red-400 font-semibold">
-                    Grabando tu voz con el micrófono... Habla claramente.
-                  </p>
-
-                  {/* Barras de audio simuladas */}
-                  <div className="flex items-center justify-center gap-1 pt-2 h-6">
-                    <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.1s] h-4"></span>
-                    <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.3s] h-6"></span>
-                    <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.2s] h-3"></span>
-                    <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.4s] h-5"></span>
-                    <span className="w-1 bg-red-400 rounded-full animate-bounce [animation-delay:0.15s] h-4"></span>
-                  </div>
-
-                  <div className="flex gap-2 justify-center pt-3">
-                    <button
-                      type="button"
-                      onClick={stopRecording}
-                      className="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-slate-900 dark:text-white text-xs font-bold transition-all shadow-md"
-                    >
-                      Detener y Transcribir
-                    </button>
-                    <button
-                      type="button"
-                      onClick={cancelRecording}
-                      className="px-3 py-1.5 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-700 dark:text-[#d6d6d6] text-xs font-semibold transition-all"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              ) : isTranscribing ? (
-                <div className="space-y-2 py-2">
-                  <div className="w-8 h-8 mx-auto border-3 border-purple-500/20 border-t-purple-400 rounded-full animate-spin"></div>
-                  <p className="text-xs font-bold text-purple-300">
-                    Transcribiendo audio con gemini-2.5-flash...
-                  </p>
-                  <p className="text-[11px] text-slate-500 dark:text-[#898a8c]">
-                    Decodificando ondas vocales y términos atléticos
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">
-                    {audioBlob ? 'Audio grabado listo' : 'Toca el micrófono para comenzar'}
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-[#898a8c] max-w-xs mx-auto">
-                    {audioBlob
-                      ? 'Puedes escuchar la grabación abajo o grabar una nueva.'
-                      : 'Dicta tus comidas, entrenamientos, suplementos o preguntas para el coach.'}
-                  </p>
-                </div>
-              )}
-
-              {/* Reproductor de audio si ya fue grabado */}
-              {audioUrl && !isRecording && (
-                <div className="mt-4 w-full max-w-xs">
-                  <audio controls src={audioUrl} className="w-full h-9 rounded-lg" />
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'upload' && (
-            <div className="flex flex-col items-center justify-center p-6 bg-white dark:bg-[#0a0a0a] rounded-2xl border border-dashed border-slate-200 dark:border-white/10 hover:border-[#ffffff]/50 transition-all text-center">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*,.mp3,.wav,.webm,.m4a,.ogg"
-                className="hidden"
-                onChange={handleFileUpload}
-              />
-              <div className="w-12 h-12 rounded-2xl bg-[#ffffff]/10 text-slate-700 dark:text-[#d6d6d6] flex items-center justify-center mb-3">
-                <span className="material-symbols-outlined text-[28px]">audio_file</span>
+            {/* Reproductor de audio si ya fue grabado */}
+            {audioUrl && !isRecording && (
+              <div className="mt-4 w-full max-w-xs">
+                <audio controls src={audioUrl} className="w-full h-9 rounded-lg" />
               </div>
-              <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">
-                Selecciona un archivo de audio para transcribir
-              </p>
-              <p className="text-xs text-slate-500 dark:text-[#898a8c] mb-4">
-                Formatos compatibles: MP3, WAV, WebM, M4A, OGG
-              </p>
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isTranscribing}
-                className="px-4 py-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-[#545a5b] text-slate-900 dark:text-white text-xs font-bold transition-all shadow-md flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-[16px]">folder_open</span>
-                <span>Explorar archivos</span>
-              </button>
-
-              {audioUrl && (
-                <div className="mt-4 w-full max-w-xs">
-                  <p className="text-[11px] text-slate-500 dark:text-[#898a8c] mb-1">Archivo cargado:</p>
-                  <audio controls src={audioUrl} className="w-full h-9 rounded-lg" />
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Muestras rápidas de voz preestablecidas */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 dark:text-[#898a8c] font-semibold flex items-center gap-1">
-                <span className="material-symbols-outlined text-[15px] text-slate-700 dark:text-[#d6d6d6]">record_voice_over</span>
-                O prueba una muestra rápida de voz deportiva:
-              </span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleSampleVoice('Almorcé 200 gramos de pechuga grillada con arroz integral y 38g de proteína.')}
-                className="p-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-left border border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-[#d6d6d6] hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-2 group"
-              >
-                <span className="material-symbols-outlined text-[16px] text-emerald-400 group-hover:scale-110 transition-transform">restaurant</span>
-                <span className="truncate">200g pechuga con arroz (38g prot)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSampleVoice('Tomé 5g de creatina Creapure y batido con 30g de proteína Isolate post entreno.')}
-                className="p-2 rounded-xl bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-left border border-slate-200 dark:border-white/10 text-xs text-slate-700 dark:text-[#d6d6d6] hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-2 group"
-              >
-                <span className="material-symbols-outlined text-[16px] text-purple-400 group-hover:scale-110 transition-transform">medication</span>
-                <span className="truncate">5g Creatina Creapure + Whey</span>
-              </button>
-            </div>
+            )}
           </div>
 
           {/* Resultado de la Transcripción */}
@@ -502,9 +360,6 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
                   <span className="text-xs font-bold text-slate-900 dark:text-white">Transcripción completada</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] text-purple-300 font-mono bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
-                    {transcription.modelUsed || 'gemini-2.5-flash'}
-                  </span>
                   <button
                     type="button"
                     onClick={copyToClipboard}
@@ -566,7 +421,7 @@ export const AudioTranscriberModal: React.FC<AudioTranscriberModalProps> = ({
         <div className="p-3 sm:p-4 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-[#0a0a0a] flex items-center justify-between text-xs text-slate-500 dark:text-[#898a8c]">
           <div className="flex items-center gap-1">
             <span className="material-symbols-outlined text-[14px] text-purple-400">mic</span>
-            <span>Entrada por voz &bull; Modelo oficial gemini-2.5-flash</span>
+            <span>Entrada por voz &bull; Transcripción automática con IA</span>
           </div>
           <button
             type="button"

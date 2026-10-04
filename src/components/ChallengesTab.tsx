@@ -17,26 +17,15 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
   const [rankingPeriod, setRankingPeriod] = useState<'semanal' | 'mensual' | 'global'>('semanal');
   const [reordered, setReordered] = useState<string | null>(null);
   const [claimedReward, setClaimedReward] = useState<string | null>(null);
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      user: 'Mateo R.',
-      badge: 'Nivel 8',
-      text: 'Completé la sesión de empuje pesado + 3L de agua hoy. ¡La racha no se corta!',
-      time: 'Hace 25 min',
-      likes: 14,
-      liked: false
-    },
-    {
-      id: 2,
-      user: 'Camila V.',
-      badge: 'Nivel 6',
-      text: 'Preparé el bowl de pollo con arroz de la recomendación de MAX AI. Delicioso y 42g de proteína clavados.',
-      time: 'Hace 1 hora',
-      likes: 22,
-      liked: true
-    }
-  ]);
+  const [posts, setPosts] = useState<Array<{
+    id: number;
+    user: string;
+    badge: string;
+    text: string;
+    time: string;
+    likes: number;
+    liked: boolean;
+  }>>([]);
 
   const [newPostText, setNewPostText] = useState('');
 
@@ -185,7 +174,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 <div>
                   <h4 className="font-body-md text-slate-900 dark:text-white font-bold">Hidratación Maestra</h4>
                   <p className="text-xs text-slate-500 dark:text-[#898a8c]">3L de agua 7 días continuos</p>
-                  <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6] font-semibold">5 / 7 días logrados</span>
+                  <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6] font-semibold">0 / 7 días logrados</span>
                 </div>
               </div>
               <span className="text-xs bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white px-2 py-1 rounded font-bold border border-slate-200 dark:border-white/10">
@@ -201,7 +190,7 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
                 <div>
                   <h4 className="font-body-md text-slate-900 dark:text-white font-bold">Sobrecarga Progresiva</h4>
                   <p className="text-xs text-slate-500 dark:text-[#898a8c]">Registrar 4 sesiones con RPE 8+</p>
-                  <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6] font-semibold">3 / 4 sesiones</span>
+                  <span className="text-[11px] text-slate-700 dark:text-[#d6d6d6] font-semibold">0 / 4 sesiones</span>
                 </div>
               </div>
               <span className="text-xs bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white px-2 py-1 rounded font-bold border border-slate-200 dark:border-white/10">
@@ -233,6 +222,11 @@ export const ChallengesTab: React.FC<ChallengesTabProps> = ({
 
             {/* Lista de posts */}
             <div className="space-y-2.5 pt-1">
+              {posts.length === 0 && (
+                <p className="text-xs text-slate-500 dark:text-[#898a8c] text-center py-3">
+                  Todavía no hay publicaciones. ¡Sé el primero en compartir tu progreso!
+                </p>
+              )}
               {posts.map((p) => (
                 <div key={p.id} className="p-3 bg-white dark:bg-[#0a0a0a] rounded-xl border border-slate-200 dark:border-white/10 space-y-1.5">
                   <div className="flex justify-between items-center text-xs">

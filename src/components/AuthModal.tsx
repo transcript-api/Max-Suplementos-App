@@ -110,13 +110,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* Banner de Modo Sin Supabase / Local */}
+        {/* Banner de Modo Local / Demo (inicio de sesión en la nube aún no disponible) */}
         {!isSupabaseConfigured() && (
           <div className="p-3.5 bg-white/40 border border-slate-300 dark:border-white/30 rounded-2xl text-xs space-y-2.5">
             <div className="flex items-start gap-2">
               <span className="material-symbols-outlined text-slate-900 dark:text-white text-[18px] shrink-0 mt-0.5">info</span>
               <p className="text-slate-300 text-[11px] leading-relaxed">
-                <strong>Modo Local / Demo activo:</strong> Supabase no está configurado en las variables de entorno. Para garantizar seguridad, no se almacenan contraseñas simuladas ni reversibles.
+                <strong>Modo Local / Demo activo:</strong> el inicio de sesión en la nube estará disponible próximamente. Por ahora podés continuar como Atleta Local o probar la demo.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 pt-1">

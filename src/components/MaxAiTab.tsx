@@ -77,7 +77,7 @@ export const CHAT_ROLES: ChatRoleDefinition[] = [
     icon: 'auto_awesome',
     badgeColor: 'text-emerald-400 border-emerald-500/30',
     badgeBg: 'bg-emerald-500/10',
-    description: 'Detecta automáticamente la complejidad y selecciona el modelo de Gemini óptimo.',
+    description: 'Detecta automáticamente la complejidad de tu consulta y elige el asistente óptimo.',
     quickPrompts: [
       '📍 Tiendas de suplementos cerca',
       '🏋️ Gimnasios cerca de mi ubicación',
@@ -631,7 +631,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                 <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base truncate">MAX AI Chatbot</span>
                 <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${activeRoleDef.badgeColor} ${activeRoleDef.badgeBg}`}>
                   <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
-                  {activeRoleDef.model}
+                  {activeRoleDef.taskType}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 dark:text-[#898a8c] truncate">
@@ -697,7 +697,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                     {role.shortName}
                   </div>
                   <div className="text-[10px] leading-tight text-slate-500 dark:text-[#898a8c] truncate">
-                    {role.model}
+                    {role.taskType}
                   </div>
                 </div>
               </button>
@@ -715,7 +715,7 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             onClick={() => handleSend(prompt)}
             className="whitespace-nowrap px-3 py-1.5 rounded-full bg-white dark:bg-[#0a0a0a] hover:bg-white dark:hover:bg-[#0a0a0a] text-slate-200 hover:text-slate-900 dark:hover:text-white text-xs border border-slate-200 dark:border-white/10 active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0"
           >
-            <span className="material-symbols-outlined text-[13px] text-slate-700 dark:text-[#d6d6d6]">sparkles</span>
+            <span className="material-symbols-outlined text-[13px] text-slate-700 dark:text-[#d6d6d6]">auto_awesome</span>
             <span>{prompt}</span>
           </button>
         ))}
@@ -756,18 +756,13 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
                       : 'bg-white dark:bg-[#0a0a0a] text-slate-700 dark:text-[#d6d6d6] rounded-bl-xs border border-slate-200 dark:border-white/10'
                   }`}
                 >
-                  {/* Model & Role Badge for AI messages */}
+                  {/* Role Badge for AI messages */}
                   {!isUser && (
                     <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-200 dark:border-white/10">
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs font-bold text-slate-900 dark:text-white">
                           {msg.roleName || 'MAX AI'}
                         </span>
-                        {msg.modelUsed && (
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-[#d6d6d6]">
-                            {msg.modelUsed}
-                          </span>
-                        )}
                       </div>
 
                       {/* Copy message button */}
@@ -931,18 +926,6 @@ export const MaxAiTab: React.FC<MaxAiTabProps> = ({
             <span className="material-symbols-outlined text-[19px]">photo_camera</span>
             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
           </label>
-
-          {/* Botón Transcriptor Completo de Audio */}
-          {onOpenAudioTranscriber && (
-            <button
-              type="button"
-              onClick={onOpenAudioTranscriber}
-              title="Abrir transcriptor de audio"
-              className="p-2 text-slate-500 dark:text-[#898a8c] hover:text-purple-400 hover:bg-white dark:hover:bg-[#0a0a0a] rounded-xl transition-colors flex items-center justify-center shrink-0"
-            >
-              <span className="material-symbols-outlined text-[19px]">speech_to_text</span>
-            </button>
-          )}
 
           {/* Botón Micrófono */}
           <button

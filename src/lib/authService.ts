@@ -161,7 +161,7 @@ class AuthService {
 
     if (!isSupabaseConfigured()) {
       throw new Error(
-        'El backend de autenticación en la nube (Supabase) no está configurado en las variables de entorno. ' +
+        'El inicio de sesión en la nube no está disponible por ahora. ' +
         'Para probar la aplicación puedes continuar en Modo Demo o como Atleta Local sin contraseña.'
       );
     }
@@ -218,7 +218,7 @@ class AuthService {
 
     if (!isSupabaseConfigured()) {
       throw new Error(
-        'El backend de autenticación en la nube (Supabase) no está configurado. ' +
+        'El inicio de sesión en la nube no está disponible por ahora. ' +
         'Para ingresar puedes usar el Modo Demo o continuar como Atleta Local.'
       );
     }
@@ -287,7 +287,7 @@ class AuthService {
     }
 
     if (!isSupabaseConfigured()) {
-      throw new Error('El servicio de recuperación de contraseñas requiere Supabase configurado.');
+      throw new Error('El servicio de recuperación de contraseñas no está disponible por ahora.');
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);

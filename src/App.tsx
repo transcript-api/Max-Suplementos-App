@@ -1995,7 +1995,6 @@ export default function App() {
         onToggleDemoMode={() => handleToggleDemoMode()}
         userName={userName}
         userAvatar={userState.avatarUrl}
-        onOpenAudioTranscriber={() => setIsAudioTranscriberOpen(true)}
         onDownloadApp={triggerInstall}
         isAppInstalled={isPwaInstalled}
       />
